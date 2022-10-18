@@ -67,7 +67,7 @@ void main(int argc, char *argv[]) {
     printf("Erreur d'arguments");
     exit(1);
   }
-  CSTree t = convertFileToCSTree(&argv[1]);
+  CSTree t = convertFileToCSTree(&argv[1]); //"../data/dico.txt"
   printCSTree(t);
   StaticTree st = exportStaticTree(t);
   
