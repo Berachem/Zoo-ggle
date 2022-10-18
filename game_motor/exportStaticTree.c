@@ -5,7 +5,7 @@
 #define NONE -1
 
 //définitions des structures
-typedef int Element;
+typedef char Element;
 
 typedef struct node{
     Element elem;
@@ -35,6 +35,22 @@ ArrayCell cons(Element elem ,int firstChild, int nSiblings){
     return l;
 }
 
+int size(CSTree t){
+    if (t == NULL) return 0;
+    return 1 + size(t->firstChild) + size(t->nextSibling);
+}
+
+int nSibling(CSTree t){
+    if(t==NULL){return 0;}
+    return 1 + nSibling(t->nextSibling);
+}
+
+int nChildren(CSTree t){
+    if(t==NULL){return 0;}
+    return nSibling(t->firstChild); 
+}
+
+
 int filltab(ArrayCell* tab,int size,int index,CSTree t){
     if(t==NULL){return size;}
 
@@ -63,4 +79,10 @@ StaticTree exportStaticTree(CSTree t){
     filltab(tab,nSibling(t),0,t);
     r.nodeArray = tab;
     return r;
+}
+
+void printStaticTree(StaticTree t){
+    for(int i=0; i<t.nNodes; i++){
+        printf("elem: %d, firstChild: %d, nSiblings: %d \n", t.nodeArray[i].elem, t.nodeArray[i].firstChild, t.nodeArray[i].nSiblings);
+    }
 }

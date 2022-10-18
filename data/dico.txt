@@ -1,0 +1,8 @@
+eau
+arbre
+chips
+chocolat
+pierre
+papier
+ciseaux
+tarte
