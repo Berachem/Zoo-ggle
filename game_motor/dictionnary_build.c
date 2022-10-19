@@ -76,4 +76,8 @@ void main() { //(int argc, char *argv[])
   StaticTree st = exportStaticTree(t);
   printStaticTree(st);  
   convertStaticToLex("../data/dico2.lex",st); // ne fonctionne pas totalement
+  
+  free(t);
+  free(st.nodeArray);
+
 }
