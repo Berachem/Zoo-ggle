@@ -27,7 +27,17 @@ void convertStaticToLex(char *filename, StaticTree t){
         exit(1);
     }
 
-    //cette partie marche wallah j'ai testé
+    char debut[] = "Nombre de noeud : ";
+    char fin[10];
+    sprintf(fin,"%d",t.nNodes);
+
+    //écrit un entete avec le nombre total de noeud
+    char total[strlen(debut)+strlen(fin)+1];
+    strcat(strcpy(total,debut),fin);
+    strcat(total,"\n");
+    fwrite(total,sizeof(total),1,file);
+
+    //cette partie ecrit tout les noeuds un par ligne
     for(int i=0;i<t.nNodes;i++){
         //j'initialise les 3 parties de ma chainse
         char noeud[10];
