@@ -177,7 +177,7 @@ StaticTree CSTreeToStaticTree(CSTree t){
 
 
 
-/* //transforme un CSTtree en StaticTree
+//transforme un CSTtree en StaticTree
 StaticTree exportStaticTree(CSTree t){
     
     //récupération de la taille de l'arbre
@@ -190,12 +190,12 @@ StaticTree exportStaticTree(CSTree t){
     filltab(tab,nSibling(t),0,t);
     r.nodeArray = tab;
     return r;
-} */
+} 
 
 //affichage d'un arbre static
 void printStaticTree(StaticTree t){
     for(int i=0; i<t.nNodes; i++){
-        printf("elem: %d, firstChild: %d, nSiblings: %d \n", t.nodeArray[i].elem, t.nodeArray[i].firstChild, t.nodeArray[i].nSiblings);
+        printf("elem: %c, firstChild: %d, nSiblings: %d \n", t.nodeArray[i].elem, t.nodeArray[i].firstChild, t.nodeArray[i].nSiblings);
     }
 }
 

@@ -40,12 +40,13 @@ void convertStaticToLex(char *filename, StaticTree t){
         sprintf(nombreFrere,"%d",t.nodeArray[i].nSiblings);           
 
         //je crée ma string à l'aide de la concatenation (format X;X;X)
-        char ligne[50];
+        char ligne[strlen(noeud)+strlen(indexEnfant)+strlen(nombreFrere)+3];
         strcat(strcpy(ligne,noeud),";");
         strcat(ligne,indexEnfant);
         strcat(ligne,";");
         strcat(ligne,nombreFrere);
-        printf("%s\n",ligne);
+        strcat(ligne,"\n");
+        //printf("%s",ligne);
 
         fwrite(ligne,sizeof(ligne),1,file);
     }
@@ -62,7 +63,7 @@ void main() { //(int argc, char *argv[])
   } */
   CSTree t = convertFileToCSTree("../data/dico.txt");
   printCSTree(t, 0);
-  StaticTree st = CSTreeToStaticTree(t);
+  StaticTree st = exportStaticTree(t);
   printStaticTree(st);  
-  //convertStaticToLex("../data/dico.lex",st); // ne fonctionne pas totalement
+  convertStaticToLex("../data/dico2.lex",st); // ne fonctionne pas totalement
 }
