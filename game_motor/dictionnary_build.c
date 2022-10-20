@@ -45,7 +45,7 @@ void convertStaticToLex(char *filename, StaticTree t){
         char nombreFrere[10];
 
         //je transtype mes cases de int à string
-        sprintf(noeud,"%d",t.nodeArray[i].elem);  
+        sprintf(noeud,"%c",t.nodeArray[i].elem);  
         sprintf(indexEnfant,"%d",t.nodeArray[i].firstChild);
         sprintf(nombreFrere,"%d",t.nodeArray[i].nSiblings);           
 
@@ -73,11 +73,11 @@ void main() { //(int argc, char *argv[])
   } */
   CSTree t = convertFileToCSTree("../data/dico.txt");
   printCSTree(t, 0);
-  StaticTree st = exportStaticTree(t);
-  printStaticTree(st);  
-  convertStaticToLex("../data/dico2.lex",st); // ne fonctionne pas totalement
+  //StaticTree st = exportStaticTree(t);
+  //printStaticTree(st);  
+  //convertStaticToLex("../data/dico.lex",st); // ne fonctionne pas totalement
   
   free(t);
-  free(st.nodeArray);
+  //free(st.nodeArray);
 
 }
