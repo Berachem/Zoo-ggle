@@ -65,19 +65,26 @@ void convertStaticToLex(char *filename, StaticTree t){
     fclose(file);
 }
 
+void freeCST(CSTree t){
+  if(t == NULL){return;}
+  freeCST(t->firstChild);
+  freeCST(t->nextSibling);
+  free(t);
+}
 
 void main() { //(int argc, char *argv[])
   /* if (argc != 3) {
     printf("Erreur d'arguments");
     exit(1);
   } */
+  printf("potato");
   CSTree t = convertFileToCSTree("../data/dico.txt");
   printCSTree(t, 0);
-  //StaticTree st = exportStaticTree(t);
+  //StaticTree st = CSTreeToStaticTree(t);
   //printStaticTree(st);  
   //convertStaticToLex("../data/dico.lex",st); // ne fonctionne pas totalement
   
-  free(t);
+  //freeCST(t);
   //free(st.nodeArray);
 
 }
