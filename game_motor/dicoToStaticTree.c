@@ -89,10 +89,11 @@ CSTree insert(CSTree t, char* word){
         t->elem = word[0];
         t->firstChild = NULL;
         t->nextSibling = NULL;
+        perror("YO :");
     }
     if(word[0] == t->elem){
         if(word[1] == '\0'){
-            t->firstChild = insert(t->firstChild, "\0");
+            t->firstChild = insert(t->firstChild, NULL);
         }else{
             t->firstChild = insert(t->firstChild, word+1);
         }
@@ -106,20 +107,25 @@ CSTree insert(CSTree t, char* word){
 // Fonction qui utilise un fichier de type dico.txt pour créer un CSTree correspondant à ce fichier
 CSTree convertFileToCSTree(char *filename) {
     //printf("function --> convertFileToCSTree\n");
+    perror("ERROR2 : ");
+    printf("%s",filename);
     FILE *file = fopen(filename, "r");
     printf("file opened\n");
-    
+    perror("ERROR3 : ");
     if (file == NULL) {
         printf("Error opening file!\n");
         exit(1);
     }
     char word[100];
     CSTree t = NULL;
-    
+    perror("ERROR4 : ");
     while (fscanf(file, "%s", word) != EOF) {
+        perror("ERROR DU WHILE : ");
         t = insert(t, word);
     }
+    perror("ERROR5 : ");
     fclose(file);
+    //perror("ERROR6 : ");
     return t;
 
 }
@@ -137,8 +143,6 @@ typedef struct {
     ArrayCell* nodeArray;
     unsigned int nNodes;
 } StaticTree;
-
-
 
 int filltab(ArrayCell* tab,int size,int index,CSTree t){
     if(t==NULL){return size;}

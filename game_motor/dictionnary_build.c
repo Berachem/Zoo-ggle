@@ -77,14 +77,14 @@ void main() { //(int argc, char *argv[])
     printf("Erreur d'arguments");
     exit(1);
   } */
-  printf("potato");
+  perror("ERROR : ");
   CSTree t = convertFileToCSTree("../data/dico.txt");
-  printCSTree(t, 0);
+  perror("ERROR : ");
+  //printCSTree(t, 0);
   //StaticTree st = CSTreeToStaticTree(t);
   //printStaticTree(st);  
   //convertStaticToLex("../data/dico.lex",st); // ne fonctionne pas totalement
   
-  //freeCST(t);
+  freeCST(t);
   //free(st.nodeArray);
-
 }
