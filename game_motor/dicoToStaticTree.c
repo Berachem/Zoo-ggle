@@ -71,6 +71,13 @@ int size(CSTree t){
     return 1 + size(t->firstChild) + size(t->nextSibling);
 }
 
+//renvoie le nombre de mots d'un arbre
+int nLeaves(CSTree t){
+    if (t == NULL) return 0;
+    if (t->firstChild == NULL && t->nextSibling == NULL) return 1;
+    return 0+nLeaves(t->firstChild)+nLeaves(t->nextSibling);
+}
+
 //renvoie le nombre de frère d'un noeud
 int nSibling(CSTree t){
     if(t==NULL){return 0;}
@@ -139,6 +146,7 @@ CSTree convertFileToCSTree(char *filename) {
 typedef struct {
     ArrayCell* nodeArray;
     unsigned int nNodes;
+    unsigned int nWord;
 } StaticTree;
 
 int filltab(ArrayCell* tab,int size,int index,CSTree t){
@@ -164,7 +172,6 @@ int filltab(ArrayCell* tab,int size,int index,CSTree t){
     return size;//on renvoit la taille du tableau afin d'actualiser la position pour les prochains appels récursif    
 }
 
-
 //transforme un CSTtree en StaticTree
 StaticTree exportStaticTree(CSTree t){
     
@@ -172,6 +179,7 @@ StaticTree exportStaticTree(CSTree t){
     int sizeOfTree = size(t);
     StaticTree r;
     r.nNodes = sizeOfTree;
+    r.nWord = nLeaves(t);
 
     //reservation mémoire du tableau et remplissage
     ArrayCell* tab = malloc(sizeof(ArrayCell*)*sizeOfTree);
@@ -182,10 +190,13 @@ StaticTree exportStaticTree(CSTree t){
 
 //affichage d'un arbre static
 void printStaticTree(StaticTree t){
+    printf("BOUP\n");
     for(int i=0; i<t.nNodes; i++){
         printf("elem: %c, firstChild: %d, nSiblings: %d \n", t.nodeArray[i].elem, t.nodeArray[i].firstChild, t.nodeArray[i].nSiblings);
     }
 }
+
+
 
 //======================================================
 //======================================================
@@ -202,7 +213,9 @@ StaticTree convertFileToStaticTree(char *filename) {
 
 }
 
- /*
+
+
+/*
     
 void main(){
    

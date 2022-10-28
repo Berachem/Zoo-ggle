@@ -15,9 +15,16 @@ $ dictionnary_build dico.txt dico.lex
 #include <string.h>
 #include "dicoToStaticTree.c"
 
+typedef struct
+{
+  int taille;
+  int mots;
+  int cellules;
+  int tailleCellule;
+}header;
 
-
-void convertStaticToLex(char *filename, StaticTree t){
+//fonction créant un fichier txt à partir d'un static tree
+void convertStaticToTXT(char *filename, StaticTree t){
 
     //c'est ici que ca plante (le fichier ne s'ouvre pas)
     FILE *file = fopen(filename, "w");
@@ -65,6 +72,36 @@ void convertStaticToLex(char *filename, StaticTree t){
     fclose(file);
 }
 
+//fonction créant le fichier .lex à partir d'un static tree
+void convertStaticToLex(char* filename,StaticTree t){
+  
+    //c'est ici que ca plante (le fichier ne s'ouvre pas)
+    FILE *file = fopen(filename, "w");
+    
+    if (file == NULL) {
+        printf("Error with file %s",*filename);
+        exit(1);
+    }
+
+    //cette partie écrit le header
+    header h;
+    h.cellules = t.nNodes;
+    h.tailleCellule = sizeof(ArrayCell);
+    h.mots = t.nWord;
+    h.taille = sizeof(header);
+
+    fwrite(&h,sizeof(header),1,file);
+
+    //cette partie ecrit tout les noeuds un par ligne
+    for(int i=0;i<t.nNodes;i++){
+      ArrayCell cell = (t.nodeArray[i]);
+      fwrite(&cell,sizeof(ArrayCell),1,file);
+    }
+
+
+    fclose(file);
+}
+
 void freeCST(CSTree t){
   if(t == NULL){return;}
   freeCST(t->firstChild);
@@ -81,7 +118,8 @@ void main() { //(int argc, char *argv[])
   printf("%d\n",size(t));
   //printCSTree(t, 0);
   StaticTree st = exportStaticTree(t);
-  printStaticTree(st);  
+  printf("BIP\n");
+  //printStaticTree(st);  
   convertStaticToLex("../data/dico.lex",st); // ne fonctionne pas totalement
   
   freeCST(t);
