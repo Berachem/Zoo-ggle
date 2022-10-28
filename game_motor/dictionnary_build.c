@@ -109,6 +109,15 @@ void freeCST(CSTree t){
   free(t);
 }
 
+ArrayCell readCellInFile(char* filename, int index){
+  FILE *file = fopen(filename, "r");
+
+  fseek(file, sizeof(header) + sizeof(ArrayCell)*index, SEEK_SET);
+  ArrayCell cell;
+  fread(&cell,sizeof(ArrayCell),1,file);
+  printf("%c, %d, %d \n",cell.elem,cell.firstChild,cell.nSiblings);
+}
+
 void main() { //(int argc, char *argv[])
   /* if (argc != 3) {
     printf("Erreur d'arguments");
@@ -121,7 +130,12 @@ void main() { //(int argc, char *argv[])
   printf("BIP\n");
   //printStaticTree(st);  
   convertStaticToLex("../data/dico.lex",st); // ne fonctionne pas totalement
-  
+  printf("BOUP\n");
+  readCellInFile("../data/dico.lex",0);
+  readCellInFile("../data/dico.lex",1);
+  readCellInFile("../data/dico.lex",2);
+  readCellInFile("../data/dico.lex",10);
+
   freeCST(t);
   free(st.nodeArray);
 }
