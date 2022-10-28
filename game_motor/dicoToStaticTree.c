@@ -41,12 +41,14 @@ typedef Node* CSTree;
 
 // affiche un CSTree avec les enfants et les frères (,) et les niveaux (|)
 void printCSTree(CSTree t, int level){
-    if(t==NULL){return;}
+    if(t->elem == '\0'){
+        printf("&");
+        return;}
     for(int i=0; i<level; i++){
         printf("|");
     }
     printf("%c", t->elem);
-    if(t->firstChild != NULL){
+    if(t->elem != '\0'){
         printf(",");
     }
     printf("\n");
@@ -89,17 +91,18 @@ CSTree insert(CSTree t, char* word){
         t->elem = word[0];
         t->firstChild = NULL;
         t->nextSibling = NULL;
-        perror("YO :");
-    }
-    if(word[0] == t->elem){
-        if(word[1] == '\0'){
-            t->firstChild = insert(t->firstChild, NULL);
-        }else{
-            t->firstChild = insert(t->firstChild, word+1);
+
+        if(word[0]=='\0'){
+            return t;
         }
+    }
+
+    if(word[0] == t->elem){
+        t->firstChild = insert(t->firstChild, word+1);
     }else{
         t->nextSibling = insert(t->nextSibling, word);
     }
+    
     return t;
 }
 
@@ -107,25 +110,19 @@ CSTree insert(CSTree t, char* word){
 // Fonction qui utilise un fichier de type dico.txt pour créer un CSTree correspondant à ce fichier
 CSTree convertFileToCSTree(char *filename) {
     //printf("function --> convertFileToCSTree\n");
-    perror("ERROR2 : ");
     printf("%s",filename);
     FILE *file = fopen(filename, "r");
     printf("file opened\n");
-    perror("ERROR3 : ");
     if (file == NULL) {
         printf("Error opening file!\n");
         exit(1);
     }
     char word[100];
     CSTree t = NULL;
-    perror("ERROR4 : ");
     while (fscanf(file, "%s", word) != EOF) {
-        perror("ERROR DU WHILE : ");
         t = insert(t, word);
     }
-    perror("ERROR5 : ");
     fclose(file);
-    //perror("ERROR6 : ");
     return t;
 
 }
@@ -167,18 +164,6 @@ int filltab(ArrayCell* tab,int size,int index,CSTree t){
     return size;//on renvoit la taille du tableau afin d'actualiser la position pour les prochains appels récursif    
 }
 
-//transforme un CSTtree en StaticTree
-StaticTree CSTreeToStaticTree(CSTree t){
-    StaticTree st;
-    st.nNodes = size(t);
-    st.nodeArray = malloc(sizeof(ArrayCell)*st.nNodes);
-    filltab(st.nodeArray,st.nNodes,0,t);
-    return st;
-}
-
-
-
-
 
 //transforme un CSTtree en StaticTree
 StaticTree exportStaticTree(CSTree t){
@@ -213,7 +198,7 @@ void printStaticTree(StaticTree t){
 
 // fonction qui renvoie un static tree à partir d'un fichier de type dico.txt
 StaticTree convertFileToStaticTree(char *filename) {
-    return CSTreeToStaticTree(convertFileToCSTree(filename));
+    return exportStaticTree(convertFileToCSTree(filename));
 
 }
 

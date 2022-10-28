@@ -23,7 +23,7 @@ void convertStaticToLex(char *filename, StaticTree t){
     FILE *file = fopen(filename, "w");
     
     if (file == NULL) {
-        printf("Error with file %s", *filename);
+        printf("Error with file %s",*filename);
         exit(1);
     }
 
@@ -77,14 +77,13 @@ void main() { //(int argc, char *argv[])
     printf("Erreur d'arguments");
     exit(1);
   } */
-  perror("ERROR : ");
   CSTree t = convertFileToCSTree("../data/dico.txt");
-  perror("ERROR : ");
+  printf("%d\n",size(t));
   //printCSTree(t, 0);
-  //StaticTree st = CSTreeToStaticTree(t);
-  //printStaticTree(st);  
-  //convertStaticToLex("../data/dico.lex",st); // ne fonctionne pas totalement
+  StaticTree st = exportStaticTree(t);
+  printStaticTree(st);  
+  convertStaticToLex("../data/dico.lex",st); // ne fonctionne pas totalement
   
   freeCST(t);
-  //free(st.nodeArray);
+  free(st.nodeArray);
 }
