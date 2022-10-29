@@ -118,11 +118,19 @@ ArrayCell readCellInFile(char* filename, int index){
   printf("%c, %d, %d \n",cell.elem,cell.firstChild,cell.nSiblings);
 }
 
-void main() { //(int argc, char *argv[])
-  /* if (argc != 3) {
-    printf("Erreur d'arguments");
-    exit(1);
-  } */
+void main(int argc, char *argv[]){
+  //on verifie qu'il y a bien 2 arguments et qu'ils ne sont pas renseignés alors on a comme valeur par défaut dico.txt et dico.lex
+  if(argc != 3){
+    if(argc == 1){
+      argv[1] = "../data/dico.txt";
+      argv[2] = "../data/dico.lex";
+    }else{
+      printf("Error : 2 arguments needed");
+      exit(1);
+    }
+  }
+
+  
   CSTree t = convertFileToCSTree("../data/dico.txt");
   printf("%d\n",size(t));
   //printCSTree(t, 0);
