@@ -174,13 +174,12 @@ int filltab(ArrayCell* tab,int size,int index,CSTree t){
 
 //transforme un CSTtree en StaticTree
 StaticTree exportStaticTree(CSTree t){
-    
     //récupération de la taille de l'arbre
     int sizeOfTree = size(t);
     StaticTree r;
     r.nNodes = sizeOfTree;
     r.nWord = nLeaves(t);
-
+    printf("OH");
     //reservation mémoire du tableau et remplissage
     ArrayCell* tab = malloc(sizeof(ArrayCell*)*sizeOfTree);
     filltab(tab,nSibling(t),0,t);
