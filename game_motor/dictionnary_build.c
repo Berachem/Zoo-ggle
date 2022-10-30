@@ -30,7 +30,7 @@ void convertStaticToTXT(char *filename, StaticTree t){
     FILE *file = fopen(filename, "w");
     
     if (file == NULL) {
-        printf("Error with file %s",*filename);
+        printf("Error with file %s",filename);
         exit(1);
     }
 
@@ -79,7 +79,7 @@ void convertStaticToLex(char* filename,StaticTree t){
     FILE *file = fopen(filename, "wb+");
     perror("Error 3.2");
     if (file == NULL) {
-        printf("Error with file %s",*filename);
+        printf("Error with file %s",filename);
         exit(1);
     }
     perror("Error 4");
