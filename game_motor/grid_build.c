@@ -36,45 +36,47 @@ void coord1D_to_2D(int k, grid g, int *i, int *j) {
 fonction qui renvoie un caractère aléatoire en fonction d'un fichier de fréquences
 de la forme : LETTRE FREQUENCE
 
+Pour cela, on parcourt le fichier et on calcule la somme des fréquences.
+ On tire un nombre aléatoire entre 0 et cette somme. 
+ Si ce nombre est inférieur à la fréquence de la lettre, on la renvoie.
+Sinon, on soustrait la fréquence de la lettre à la fréquence totale et on passe à la lettre suivante.
+
 */
-char random_letter(char *filename) {
-  FILE *f = fopen(filename, "r");
-  if (f == NULL) {
-    fprintf(stderr, "Error: cannot open file %s", filename);
+char lettre_aleatoire(char *filename) {
+  FILE *file = fopen(filename, "r");
+  if (file == NULL) {
+    printf("Error with file %s", *filename);
     exit(1);
   }
-  int total_freq = 0;
-  char c;
-  int freq;
-  // on calcule la fréquence totale des lettres
-  while (fscanf(f, "%c %d", &c, &freq) != EOF) {
-    total_freq += freq;
+
+  // on calcule la somme des fréquences
+  int somme = 0;
+  char lettre;
+  int frequence;
+  while (fscanf(file, "%c %d", &lettre, &frequence) != EOF) {
+    somme += frequence;
   }
-  fclose(f);
+  fclose(file);
 
-  f = fopen(filename, "r");
-  // pour chaque lettre, on tire un nombre aléatoire entre 1 et la fréquence totale
-  int random;
-  while (fscanf(f, "%c %d", &c, &freq) != EOF) {
-    random = rand() % total_freq + 1;
+  // on tire un nombre aléatoire entre 1 et la somme des fréquences
+  int tirage = rand() % somme + 1;
 
-    // si le nombre aléatoire est inférieur à la fréquence de la lettre, on la renvoie
-    if (random <= freq) {
-      fclose(f);
-      // affiche la lettre tirée
-      printf("LETTRE : %c\n", c);
-      return c;
-
-    }
-    // affiche la lettre actuekke avec sa fréquence et le nombre aléatoire
-    printf("LETTRE : %c FREQUENCE : %d RANDOM : %d\n", c, freq, random);
-    // sinon on décrémente la fréquence totale
-    total_freq -= freq;
+  // on reparcourt le fichier 
+  file = fopen(filename, "r");
+  while (fscanf(file, "%c %d",  &lettre, &frequence) != EOF) {
     
+    if (lettre != '\n' && tirage <= frequence) {
+      // affichage de la lettre tirée, avec sa fréquence et le tirage
+      //printf("ON A OBTENU LA LETTRE: %c FREQUENCE : %d tirage: %d FreqTotal: %d\n", lettre, frequence, tirage, somme);
+      return lettre;
+    } else {
+      somme -= frequence;
+    }
+    tirage = rand() % somme + 1;
   }
- 
-  
-  fclose(f);
+  fclose(file);
+
+  // on ne devrait jamais arriver ici
   return ' ';
 }
 
@@ -108,22 +110,20 @@ int main(int argc, char *argv[]) {
   g.nbc = width;
 
   // on crée un tableau de caractères
-  char grid[100];
+  g.grid = malloc(sizeof(char) * g.nbl * g.nbc);
+  
   // on remplit le tableau de caractères avec des lettres aléatoire
   for (int i = 0; i < height * width; i++) {
-    grid[i] = random_letter(filename);
+    g.grid[i] = lettre_aleatoire(filename);
   }
   // on ajoute le tableau de caractères à la structure de grid
-  g.grid = grid;
+  g.grid = g.grid;
   // on affiche la grille
   print_grid(g);
-  // on vide le
-
+  // on vide la grille
+  free(g.grid);
 
   return 0;
 
 
 }
-
-
-
