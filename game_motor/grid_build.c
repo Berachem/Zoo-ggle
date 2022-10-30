@@ -12,6 +12,7 @@ lue ligne par ligne, les cases sont séparées par des espaces.
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <time.h>
 
 // structure de données pour les grilles
 typedef struct {
@@ -31,6 +32,29 @@ void coord1D_to_2D(int k, grid g, int *i, int *j) {
   *j = k % g.nbc;
 }
 
+// fonction qui renvoie la liste des voisins d’une case
+int *neighbors(int i, int j, grid g) {
+  int *neighbors = malloc(4 * sizeof(int));
+  int k = 0;
+  if (i > 0) {
+    neighbors[k] = coord2D_to_1D(i - 1, j, g);
+    k++;
+  }
+  if (i < g.nbl - 1) {
+    neighbors[k] = coord2D_to_1D(i + 1, j, g);
+    k++;
+  }
+  if (j > 0) {
+    neighbors[k] = coord2D_to_1D(i, j - 1, g);
+    k++;
+  }
+  if (j < g.nbc - 1) {
+    neighbors[k] = coord2D_to_1D(i, j + 1, g);
+    k++;
+  }
+  neighbors[k] = -1;
+  return neighbors;
+}
 
 /*
 fonction qui renvoie un caractère aléatoire en fonction d'un fichier de fréquences
@@ -91,6 +115,8 @@ void print_grid(grid g) {
 }
 
 int main(int argc, char *argv[]) {
+  // initialisation du générateur de nombres aléatoires
+  srand( time( NULL ) );
   // on crée des arguments par défaut
   char *filename = "../data/frequences.txt";
   int height = 4;
