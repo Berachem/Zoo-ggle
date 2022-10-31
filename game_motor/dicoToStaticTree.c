@@ -154,7 +154,7 @@ int filltab(ArrayCell* tab,int size,int index,CSTree t){
 
     //stockage du nombre d'enfant et de la taille du tableau à l'instant de l'appel
     int enfant = nChildren(t);
-    int oldsize=size;
+    int oldsize=size;//on stocke la taille à l'instant de l'appel pour pouvoir ensuite contruire les enfants au bon endroit
 
     
     if(enfant==0){//si il n'y à pas d'enfant on construit le tuple sans se poser de question
@@ -162,7 +162,6 @@ int filltab(ArrayCell* tab,int size,int index,CSTree t){
     }else{        //si il y a des enfants on construit le tuple en présisant que le premier
                   //enfant se trouve au bout du tableau à l'instant de l'appel (donc à size)
         tab[index]=cons(t->elem,size,nSibling(t)-1);
-        int oldsize = size; //on stocke la taille à l'instant de l'appel pour pouvoir ensuite contruire les enfants au bon endroit
         size+=enfant;       //on actualise la taille nécéssaire du tableau après l'appel de la fonction
     }
     index+=1;
