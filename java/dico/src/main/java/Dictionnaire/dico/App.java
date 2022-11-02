@@ -3,7 +3,6 @@ package Dictionnaire.dico;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileReader;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 
@@ -34,10 +33,60 @@ public class App
 		return retour;
 	}
 	
+	
+	public static String cleanupExemple(String line) {
+		String retour = "";
+		boolean inAccolade = false;
+		boolean pipe = false;
+		boolean dontCopy = false;
+		
+		for(int i=0;i<line.length();i++) {
+		
+			char lettre = line.charAt(i);
+			
+			switch(lettre) {
+				case ']' :
+					inAccolade = false;
+					pipe = false;
+					dontCopy = true;
+					break;
+				case '}' :
+					inAccolade = false;
+					pipe =false;
+					dontCopy = true;
+					break;
+				case '[' :
+					inAccolade = true;
+					dontCopy = true;
+					break;
+				case '{' :
+					inAccolade = true;
+					dontCopy = true;
+					break;
+				case '|' :
+					pipe = true;
+					dontCopy = true;
+			}
+			
+			if(!dontCopy){
+				if(inAccolade && pipe){
+					continue;
+				}
+				retour+=lettre;
+			}
+			dontCopy = false;
+			
+		}
+		return retour;
+		
+		
+		
+	}
+	
     public static void main( String[] args )
     {
         // ===================A CHANGER EN FONCTION DE L'ENDROIT OU VOUS AVEZ MIS LE FICHIER XML===================
-        String xmlPath = "C:\\Users\\berac\\Desktop\\wiki-fr.xml"; // Path to the XML file
+        String xmlPath = "C:\\Users\\Jlwis\\Desktop\\wiki-fr.xml"; // Path to the XML file
 
 		// JOSHUA : "C:\\Users\\Jlwis\\Desktop\\wiki-fr.xml"
         // ========================================================================================================
@@ -69,7 +118,9 @@ public class App
 	        		if (estMot && estFR) {
 	        			System.out.println("MOT : "+ mot +"\n");
 		        		//System.out.println("NS : "+ nameSpace +"\n");
-		        		 definitions.stream().forEach(s -> System.out.println(s)) ;
+		        		 definitions.stream().forEach(s -> System.out.println(s));
+		        		 System.out.println("\n");
+		        		 exemples.stream().forEach(s -> System.out.println(s));
 	        		}
 	        		
 	        		
@@ -117,10 +168,10 @@ public class App
 	        	if(estFR && estMot){
 	        		if(line.startsWith("# ")) { 
 	        		//l'espace est important pour ne pas confondre avec les exemples (#*) ou autre (## par exemple)
-	        			definitions.add(line);
+	        			definitions.add(App.cleanupExemple(line));
 	        		}
 	        		else if (line.startsWith("#*")) {
-	        			exemples.add(line);
+	        			exemples.add(App.cleanupExemple(line));
 	        		}
 	        	}
 	        	
