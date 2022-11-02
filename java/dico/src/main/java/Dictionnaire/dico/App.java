@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileReader;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 
 
@@ -37,7 +38,9 @@ public class App
     public static void main( String[] args )
     {
         // ===================A CHANGER EN FONCTION DE L'ENDROIT OU VOUS AVEZ MIS LE FICHIER XML===================
-        String xmlPath = "C:\\Users\\Jlwis\\Desktop\\wiki-fr.xml"; // Path to the XML file
+        String xmlPath = "C:\\Users\\berac\\Desktop\\wiki-fr.xml"; // Path to the XML file
+
+		// JOSHUA : "C:\\Users\\Jlwis\\Desktop\\wiki-fr.xml"
         // ========================================================================================================
         
         
@@ -45,51 +48,55 @@ public class App
 	        //constructor of File class having file as argument
 	        File file=new File(xmlPath);
 	        //creates a buffer reader input stream
-	        BufferedReader reader = new BufferedReader(new FileReader(file));
+	        BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), "UTF-8"));
 	        System.out.println("file content: ");
 	        
-	        
-	        boolean estFR = false;
-	        boolean estMot = false;
+	        String page = "";
+	        String nameSpace = "";
 	        String mot = "";
+	        Boolean estMot = false;
+	        Boolean estFR = false;
+	        Boolean dansUnePage = false;
 	        ArrayList<String> definitions = new ArrayList<>();
+	        ArrayList<String> exemples = new ArrayList<>();
 	        
-	        boolean uneFois = false; //pour tester
+	      
 	        
 	        String line="";
 	        while((line=reader.readLine())!= null){
+	        	if (line.contains("</page>")) {
+	        		dansUnePage = false;
+	        		System.out.println(page);
+	        		
+	        		// remet à 0 les variable car on quitte une section <page>
+	        		page ="";
+	        		nameSpace = "";
+	        		mot = "";
+	        		estMot= false;
+	        		estFR = false;
+	        		definitions = new ArrayList<>();
+	        		exemples = new ArrayList<>();
+	        		
+	        		continue;
+	        	}
+	        	if (line.contains("<page>")) {
+	        		dansUnePage = true;
+	        		
+	        	}
+	        	page += line;
 	        	
 	        	if(line.contains("<title>")) {
-	        	//title nous indique un mot donc on pousse le mot déja stocké et on reset la recherche
-	        		
-	        		
-	        		/*
-	        		 * Insertion dans un txt
-	        		 */
-	        		
-	        		if(uneFois) {
-	        			System.out.println(mot);
-	        			System.out.println(definitions);
-	        			break;
-	        		}
-	        		
-	        		estFR = false;
-	        		estMot = false;
-	        		definitions.clear();
-	        		
-	        		
-	        		
-	        		uneFois = true;
-	        		
+	        		//title nous indique un mot donc on pousse le mot déja stocké et on reset la recherche
 	        		
 	        		mot = App.recupInterieurBalise(line);
+	        		System.out.println("MOT :" + mot+"\n");
 	        		continue;
 	        	}
 	        	
 	        	if(line.contains("<ns>")) {
 	        	//si ns = 0 c'est un mot sinon c'est autre chose dont on en veut pas
-	        		String nombre = App.recupInterieurBalise(line);
-	        		if(nombre.equals("0")) {
+	        		nameSpace = App.recupInterieurBalise(line);
+	        		if(nameSpace.equals("0")) {
 	        			estMot = true;
 	        			continue;
 	        		}
@@ -102,16 +109,16 @@ public class App
 	        	}
 	        	
 	        	if(estFR && estMot){
-	        		if(line.contains("# ")) { 
+	        		if(line.startsWith("# ")) { 
 	        		//l'espace est important pour ne pas confondre avec les exemples (#*) ou autre (## par exemple)
-	        			
-	        			/*
-	        			 * cleanup de line
-	        			 */
-	        			
 	        			definitions.add(line);
 	        		}
+	        		else if (line.startsWith("#*")) {
+	        			exemples.add(line);
+	        		}
 	        	}
+	        	
+	        	
 	        	
 	        }
 	        
