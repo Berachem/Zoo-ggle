@@ -66,10 +66,12 @@ public class App
 	        	if (line.contains("</page>")) {
 	        		dansUnePage = false;
 	        		//System.out.println(page);
+	        		if (estMot && estFR) {
+	        			System.out.println("MOT : "+ mot +"\n");
+		        		//System.out.println("NS : "+ nameSpace +"\n");
+		        		 definitions.stream().forEach(s -> System.out.println(s)) ;
+	        		}
 	        		
-	        		System.out.println("MOT : "+ mot +"\n");
-	        		System.out.println("NS : "+ nameSpace +"\n");
-	        		System.out.println("Df : "+ definitions +"\n");
 	        		
 	        		// remet à 0 les variable car on quitte une section <page>
 	        		page ="";
