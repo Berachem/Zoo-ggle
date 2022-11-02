@@ -23,13 +23,12 @@ public class App
 				interieur = true;
 				continue;
 			}
-			
+
+			if(lettre == '<' && interieur) {
+				break;
+			}
 			if(interieur) {
 				retour+=lettre;
-			}
-			
-			if(lettre == '<') {
-				break;
 			}
 		}
 		return retour;
@@ -66,7 +65,11 @@ public class App
 	        while((line=reader.readLine())!= null){
 	        	if (line.contains("</page>")) {
 	        		dansUnePage = false;
-	        		System.out.println(page);
+	        		//System.out.println(page);
+	        		
+	        		System.out.println("MOT : "+ mot +"\n");
+	        		System.out.println("NS : "+ nameSpace +"\n");
+	        		System.out.println("Df : "+ definitions +"\n");
 	        		
 	        		// remet à 0 les variable car on quitte une section <page>
 	        		page ="";
@@ -76,6 +79,8 @@ public class App
 	        		estFR = false;
 	        		definitions = new ArrayList<>();
 	        		exemples = new ArrayList<>();
+	        		
+	        	
 	        		
 	        		continue;
 	        	}
@@ -89,7 +94,6 @@ public class App
 	        		//title nous indique un mot donc on pousse le mot déja stocké et on reset la recherche
 	        		
 	        		mot = App.recupInterieurBalise(line);
-	        		System.out.println("MOT :" + mot+"\n");
 	        		continue;
 	        	}
 	        	
