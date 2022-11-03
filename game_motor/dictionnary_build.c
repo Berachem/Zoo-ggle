@@ -161,18 +161,20 @@ int dictionnary_lookup(char* filename, int index, char* mot){
 
 void main(int argc, char *argv[]){
   //on verifie qu'il y a bien 2 arguments et qu'ils ne sont pas renseignés alors on a comme valeur par défaut dico.txt et dico.lex
-  if(argc != 3){
-    if(argc == 1){
-      argv[1] = "../data/dico.txt";
-      argv[2] = "../data/dico.lex";
+  char * txtFile;
+  char * lexFile;
+
+    if(argc < 2 ){
+       txtFile= "../data/dico.txt";
+       lexFile= "../data/dico.lex";
     }else{
-      printf("Error : 2 arguments needed");
-      exit(1);
+        txtFile= argv[1];
+        lexFile= argv[2];
     }
-  }
+  
 
   
-  CSTree t = convertFileToCSTree("../data/dico.txt");
+  CSTree t = convertFileToCSTree(txtFile);
   perror("Error 1");
   // printf("%d\n",size(t));
   // printCSTree(t, 0);
@@ -182,7 +184,7 @@ void main(int argc, char *argv[]){
   // printf("BIP\n");
   // printStaticTree(st); 
   perror("Error 2.5"); 
-  convertStaticToLex("../data/dico.lex",st); // ne fonctionne pas totalement
+  convertStaticToLex(lexFile,st); // ne fonctionne pas totalement
   
 
   // printf("BOUP\n");
