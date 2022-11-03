@@ -86,9 +86,10 @@ public class App
     public static void main( String[] args )
     {
         // ===================A CHANGER EN FONCTION DE L'ENDROIT OU VOUS AVEZ MIS LE FICHIER XML===================
-        String xmlPath = "C:\\Users\\Jlwis\\Desktop\\wiki-fr.xml"; // Path to the XML file
+        String xmlPath = "C:\\Users\\berac\\Desktop\\wiki-fr.xml"; // Path to the XML file
 
 		// JOSHUA : "C:\\Users\\Jlwis\\Desktop\\wiki-fr.xml"
+		// BERA : "C:\\Users\\berac\\Desktop\\wiki-fr.xml"
         // ========================================================================================================
         
         
@@ -99,8 +100,11 @@ public class App
 	        BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), "UTF-8"));
 	        System.out.println("file content: ");
 	        
+			// =============CHOIX DE LA LANGUE CIBLEE=================
+			String langueCible = "fr"; // fr = francais, en = anglais, es = espagnol, de = allemand ...
+			// =======================================================
+
 			// on crée les varaibles qui nous serviront pour la suite
-			String langueCible = "fr";
 	        String page = "";
 	        String nameSpace = "";
 	        String mot = "";
