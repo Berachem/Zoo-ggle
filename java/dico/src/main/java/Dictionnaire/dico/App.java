@@ -33,10 +33,60 @@ public class App
 		return retour;
 	}
 	
+	
+	public static String cleanupExemple(String line) {
+		String retour = "";
+		boolean inAccolade = false;
+		boolean pipe = false;
+		boolean dontCopy = false;
+		
+		for(int i=0;i<line.length();i++) {
+		
+			char lettre = line.charAt(i);
+			
+			switch(lettre) {
+				case ']' :
+					inAccolade = false;
+					pipe = false;
+					dontCopy = true;
+					break;
+				case '}' :
+					inAccolade = false;
+					pipe =false;
+					dontCopy = true;
+					break;
+				case '[' :
+					inAccolade = true;
+					dontCopy = true;
+					break;
+				case '{' :
+					inAccolade = true;
+					dontCopy = true;
+					break;
+				case '|' :
+					pipe = true;
+					dontCopy = true;
+			}
+			
+			if(!dontCopy){
+				if(inAccolade && pipe){
+					continue;
+				}
+				retour+=lettre;
+			}
+			dontCopy = false;
+			
+		}
+		return retour;
+		
+		
+		
+	}
+	
     public static void main( String[] args )
     {
         // ===================A CHANGER EN FONCTION DE L'ENDROIT OU VOUS AVEZ MIS LE FICHIER XML===================
-        String xmlPath = "C:\\Users\\berac\\Desktop\\wiki-fr.xml"; // Path to the XML file
+        String xmlPath = "C:\\Users\\Jlwis\\Desktop\\wiki-fr.xml"; // Path to the XML file
 
 		// JOSHUA : "C:\\Users\\Jlwis\\Desktop\\wiki-fr.xml"
         // ========================================================================================================
