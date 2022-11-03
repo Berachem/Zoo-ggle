@@ -3,7 +3,6 @@ package Dictionnaire.dico;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileReader;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 
@@ -50,14 +49,22 @@ public class App
 	        BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), "UTF-8"));
 	        System.out.println("file content: ");
 	        
+			// on crée les varaibles qui nous serviront pour la suite
+			String langueCible = "fr";
 	        String page = "";
 	        String nameSpace = "";
 	        String mot = "";
 	        Boolean estMot = false;
-	        Boolean estFR = false;
+	        Boolean estBonneLangue = false;
 	        Boolean dansUnePage = false;
-	        ArrayList<String> definitions = new ArrayList<>();
-	        ArrayList<String> exemples = new ArrayList<>();
+	        ArrayList<String> definitionsNom = new ArrayList<>();
+	        ArrayList<String> definitionsVerbe = new ArrayList<>();
+
+			// on crée les json
+			String jsonEntete = "{" +"description : \"dictionnaire francais\","+ "created_on :"+ System.currentTimeMillis() +","+"language :"+"\""+langueCible+"\"";
+			String jsonMot = "";
+
+			
 	        
 	      
 	        
@@ -65,11 +72,20 @@ public class App
 	        while((line=reader.readLine())!= null){
 	        	if (line.contains("</page>")) {
 	        		dansUnePage = false;
-	        		//System.out.println(page);
-	        		if (estMot && estFR) {
-	        			System.out.println("MOT : "+ mot +"\n");
-		        		//System.out.println("NS : "+ nameSpace +"\n");
-		        		 definitions.stream().forEach(s -> System.out.println(s)) ;
+	        		
+					
+	        		if (estMot && estBonneLangue) {
+
+						// on affiche le mot et ses définitions 
+	        			System.out.println("\n\nMOT : "+ mot +"\n");
+						System.out.println("nom : \n");
+						definitionsNom.stream().forEach(s -> System.out.println(s)) ;
+						System.out.println("verbe : \n");
+						definitionsVerbe.stream().forEach(s -> System.out.println(s)) ;
+
+						// on crée un json du mot
+						jsonMot = "{" + "mot : " + mot + "," + "nom : " + definitionsNom + "," + "verbe : " + definitionsVerbe + "}";
+
 	        		}
 	        		
 	        		
@@ -78,9 +94,9 @@ public class App
 	        		nameSpace = "";
 	        		mot = "";
 	        		estMot= false;
-	        		estFR = false;
-	        		definitions = new ArrayList<>();
-	        		exemples = new ArrayList<>();
+	        		estBonneLangue = false;
+	        		definitionsNom = new ArrayList<>();
+	        		definitionsVerbe = new ArrayList<>();
 	        		
 	        	
 	        		
@@ -100,7 +116,7 @@ public class App
 	        	}
 	        	
 	        	if(line.contains("<ns>")) {
-	        	//si ns = 0 c'est un mot sinon c'est autre chose dont on en veut pas
+	        		//si ns = 0 c'est un mot sinon c'est autre chose dont on en veut pas
 	        		nameSpace = App.recupInterieurBalise(line);
 	        		if(nameSpace.equals("0")) {
 	        			estMot = true;
@@ -108,20 +124,20 @@ public class App
 	        		}
 	        	}
 	        	
-	        	if(line.contains("{{langue|fr}")) {
-	        	//on ne veut pas récupérer des mots qui ne sont pas en francais
-	        		estFR = true;
+	        	if(line.contains("{{langue|"+langueCible+"}}")) {
+	        		//on ne veut pas récupérer des mots qui ne sont pas en francais
+	        		estBonneLangue = true;
 	        		continue;
 	        	}
 	        	
-	        	if(estFR && estMot){
-	        		if(line.startsWith("# ")) { 
-	        		//l'espace est important pour ne pas confondre avec les exemples (#*) ou autre (## par exemple)
-	        			definitions.add(line);
+	        	if(estBonneLangue && estMot){
+					if (line.startsWith("# '")) {
+	        			definitionsVerbe.add(line.replaceFirst("# ", ""));
 	        		}
-	        		else if (line.startsWith("#*")) {
-	        			exemples.add(line);
+	        		else if(line.startsWith("# ")) { 
+						definitionsNom.add(line.replaceFirst("#", ""));
 	        		}
+	        		
 	        	}
 	        	
 	        	
