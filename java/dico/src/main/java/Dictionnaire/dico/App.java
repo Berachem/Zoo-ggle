@@ -225,7 +225,7 @@ public class App
 	        			definitionsVerbe.add('"'+line.replaceFirst("# ", "")+'"');
 	        		}
 	        		else if(line.startsWith("# ")) { 
-						definitionsNom.add('"'+line.replaceFirst("#", "")+'"');
+						definitionsNom.add('"'+line.replaceFirst("#", "").replaceFirst("</text>", "")+'"');
 	        		}
 	        		
 	        	}
