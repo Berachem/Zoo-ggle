@@ -110,9 +110,24 @@ void print_grid(grid g) {
     for (int j = 0; j < g.nbc; j++) {
       printf("%c ", g.grid[coord2D_to_1D(i, j,g)]);
     }
-    printf("\n");
   }
 }
+
+grid grid_build(char *filename, int nbl, int nbc) {
+  grid g;
+  g.nbl = nbl;
+  g.nbc = nbc;
+  g.grid = malloc(nbl * nbc * sizeof(char));
+  // on remplit le tableau de caractères avec des lettres aléatoire
+  for (int i = 0; i < nbl; i++) {
+    for (int j = 0; j < nbc; j++) {
+      g.grid[coord2D_to_1D(i, j, g)] = lettre_aleatoire(filename);
+    }
+  }
+  return g;
+}
+
+/* 
 
 int main(int argc, char *argv[]) {
   // initialisation du générateur de nombres aléatoires
@@ -131,19 +146,8 @@ int main(int argc, char *argv[]) {
     width = atoi(argv[3]);
   }
   // on crée une strucutre de grid
-  grid g;
-  g.nbl = height;
-  g.nbc = width;
+  grid g = grid_build(filename, height, width);
 
-  // on crée un tableau de caractères
-  g.grid = malloc(sizeof(char) * g.nbl * g.nbc);
-  
-  // on remplit le tableau de caractères avec des lettres aléatoire
-  for (int i = 0; i < height * width; i++) {
-    g.grid[i] = lettre_aleatoire(filename);
-  }
-  // on ajoute le tableau de caractères à la structure de grid
-  g.grid = g.grid;
   // on affiche la grille
   print_grid(g);
   // on vide la grille
@@ -153,3 +157,4 @@ int main(int argc, char *argv[]) {
 
 
 }
+ */
