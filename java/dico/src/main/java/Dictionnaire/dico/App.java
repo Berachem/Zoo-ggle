@@ -3,7 +3,9 @@ package Dictionnaire.dico;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileWriter;
 import java.io.InputStreamReader;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 
 
@@ -92,6 +94,19 @@ public class App
 		// BERA : "C:\\Users\\berac\\Desktop\\wiki-fr.xml"
         // ========================================================================================================
         
+
+		// créer un fichier dico.json.txt en mode écriture
+		File dicoJSON = new File("dico.json.txt");
+		if(dicoJSON.exists()) {
+			dicoJSON.delete();
+		}
+		try {
+			dicoJSON.createNewFile();
+		}catch(Exception e) {
+			System.out.println("Error while creating file");
+		}
+
+
         
         try{
 	        //constructor of File class having file as argument
@@ -115,13 +130,22 @@ public class App
 	        ArrayList<String> definitionsVerbe = new ArrayList<>();
 
 			// on crée les json
-			String jsonEntete = "{" +"description : \"dictionnaire francais\","+ "created_on :"+ System.currentTimeMillis() +","+"language :"+"\""+langueCible+"\"";
+			String jsonEntete = "{" +"\"description\" : \"dictionnaire francais\","+ "\"created_on\" :\""+ System.currentTimeMillis() +"\","+"\"language\" :"+"\""+langueCible+"\"}";
 			String jsonMot = "";
 
 			
 	        
-	      
-	        
+	      // écris l'entete du json avec UTF-8
+		  try {
+			  FileWriter writer = new FileWriter(dicoJSON, Charset.forName("UTF-8"));
+			  writer.write(jsonEntete+"\n");
+			  writer.close();
+		  } catch (Exception e) {
+			  System.out.println("Error while writing file");
+		  }
+
+
+
 	        String line="";
 	        while((line=reader.readLine())!= null){
 	        	if (line.contains("</page>")) {
@@ -137,8 +161,20 @@ public class App
 						System.out.println("verbe : \n");
 						definitionsVerbe.stream().forEach(s -> System.out.println(s)) ;
 
+						
+
 						// on crée un json du mot
-						jsonMot = "{" + "mot : " + mot + "," + "nom : " + definitionsNom + "," + "verbe : " + definitionsVerbe + "}";
+						jsonMot = "{" + "\"title\" : " + mot + "," + "\"definitions\":{\"nom\" : " + definitionsNom + "," + "\"verbe\" : " + definitionsVerbe + "}}";
+
+						 // append le mot dans le json avec UTF-8
+						try {
+							FileWriter writer = new FileWriter(dicoJSON, Charset.forName("UTF-8"), true);
+							writer.write(jsonMot+"\n");
+							writer.close();
+						} catch (Exception e) {
+							System.out.println("Error while writing file");
+						}
+
 
 	        		}
 	        		
@@ -186,10 +222,10 @@ public class App
 	        	
 	        	if(estBonneLangue && estMot){
 					if (line.startsWith("# '")) {
-	        			definitionsVerbe.add(line.replaceFirst("# ", ""));
+	        			definitionsVerbe.add('"'+line.replaceFirst("# ", "")+'"');
 	        		}
 	        		else if(line.startsWith("# ")) { 
-						definitionsNom.add(line.replaceFirst("#", ""));
+						definitionsNom.add('"'+line.replaceFirst("#", "")+'"');
 	        		}
 	        		
 	        	}
