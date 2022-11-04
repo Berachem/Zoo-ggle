@@ -222,7 +222,7 @@ public class App
 	        	
 	        	if(estBonneLangue && estMot){
 					if (line.startsWith("# '")) {
-	        			definitionsVerbe.add('"'+line.replaceFirst("# ", "")+'"');
+	        			definitionsVerbe.add('"'+line.replaceFirst("# ", "").replaceFirst("</text>", "")+'"');
 	        		}
 	        		else if(line.startsWith("# ")) { 
 						definitionsNom.add('"'+line.replaceFirst("#", "").replaceFirst("</text>", "")+'"');
