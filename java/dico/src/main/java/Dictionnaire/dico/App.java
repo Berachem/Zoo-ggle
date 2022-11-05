@@ -9,6 +9,7 @@ import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 
@@ -105,33 +106,33 @@ public class App
         // ========================================================================================================
         
         //création  du dictionnaire pour les fréquences
-        HashMap<String,Integer> lettres= new HashMap<>();
-        lettres.put("a", 0);
-        lettres.put("b", 0);
-        lettres.put("c", 0);
-        lettres.put("d", 0);
-        lettres.put("e", 0);
-        lettres.put("f", 0);
-        lettres.put("g", 0);
-        lettres.put("h", 0);
-        lettres.put("i", 0);
-        lettres.put("j", 0);
-        lettres.put("k", 0);
-        lettres.put("l", 0);
-        lettres.put("m", 0);
-        lettres.put("n", 0);
-        lettres.put("o", 0);
-        lettres.put("p", 0);
-        lettres.put("q", 0);
-        lettres.put("r", 0);
-        lettres.put("s", 0);
-        lettres.put("t", 0);
-        lettres.put("u", 0);
-        lettres.put("v", 0);
-        lettres.put("w", 0);
-        lettres.put("x", 0);
-        lettres.put("y", 0);
-        lettres.put("z", 0);
+        HashMap<String,Integer> dicoFreq= new HashMap<>();
+        dicoFreq.put("a", 0);
+        dicoFreq.put("b", 0);
+        dicoFreq.put("c", 0);
+        dicoFreq.put("d", 0);
+        dicoFreq.put("e", 0);
+        dicoFreq.put("f", 0);
+        dicoFreq.put("g", 0);
+        dicoFreq.put("h", 0);
+        dicoFreq.put("i", 0);
+        dicoFreq.put("j", 0);
+        dicoFreq.put("k", 0);
+        dicoFreq.put("l", 0);
+        dicoFreq.put("m", 0);
+        dicoFreq.put("n", 0);
+        dicoFreq.put("o", 0);
+        dicoFreq.put("p", 0);
+        dicoFreq.put("q", 0);
+        dicoFreq.put("r", 0);
+        dicoFreq.put("s", 0);
+        dicoFreq.put("t", 0);
+        dicoFreq.put("u", 0);
+        dicoFreq.put("v", 0);
+        dicoFreq.put("w", 0);
+        dicoFreq.put("x", 0);
+        dicoFreq.put("y", 0);
+        dicoFreq.put("z", 0);
         
 
 		// créer un fichier dico.json.txt en mode écriture
@@ -145,6 +146,16 @@ public class App
 			System.out.println("Error while creating file");
 		}
 
+		//créationdu fichier txt de fréquence
+		File dicoFrequence = new File("dicoFreq.txt");
+		if(dicoFrequence.exists()) {
+			dicoFrequence.delete();
+		}
+		try {
+			dicoFrequence.createNewFile();
+		}catch(Exception e) {
+			System.out.println("Error while creating file");
+		}
 
         
         try{
@@ -156,6 +167,10 @@ public class App
 	        
 	        //creation du writer pour le json
 	        FileWriter writer = new FileWriter(dicoJSON, Charset.forName("UTF-8"));
+	        
+	        //creation du writer pour le txt
+	        FileWriter writerFreq = new FileWriter(dicoFrequence, Charset.forName("UTF-8"));
+	        
 	        
 			// =============CHOIX DE LA LANGUE CIBLEE=================
 			String langueCible = "fr"; // fr = francais, en = anglais, es = espagnol, de = allemand ...
@@ -179,12 +194,6 @@ public class App
 	        
 			// écris l'entete du json avec UTF-8
 			writer.write(jsonEntete+"\n");
-		 
-		  
-		  
-		  
-
-
 
 	        String line="";
 	        while((line=reader.readLine())!= null){
@@ -201,14 +210,40 @@ public class App
 						//System.out.println("verbe : \n");
 						//definitionsVerbe.stream().forEach(s -> System.out.println(s)) ;
 
-						
-
 						// on crée un json du mot
 						jsonMot = "{" + "\"title\" : " + mot + "," + "\"definitions\":{\"nom\" : " + definitionsNom + "," + "\"verbe\" : " + definitionsVerbe + "}}";
 
-						 // append le mot dans le json avec UTF-8
+						// append le mot dans le json avec UTF-8
 						writer.write(jsonMot+"\n");
+						
+						
+						
+						//gestion des fréquences
+						
+							//on vire les accents pour simplifier 
+		        		List<Character> accent  = List.of('À', 'Á', 'Â', 'Ã', 'Ä', 'Å', 'Ç', 'È', 'É', 'Ê', 'Ë', 'Ì', 'Í', 'Î', 'Ï', 'Ò', 'Ó', 'Ô', 'Õ', 'Ö', 'Ù', 'Ú', 'Û', 'Ü', 'Ý', 'à', 'á', 'â', 'ã', 'ä', 'å', 'ç', 'è', 'é', 'ê', 'ë', 'ì', 'í', 'î', 'ï', 'ð', 'ò', 'ó', 'ô', 'õ', 'ö', 'ù', 'ú', 'û', 'ü', 'ý', 'ÿ');
+		        		List<Character> sansAccent = List.of('A', 'A', 'A', 'A', 'A', 'A', 'C', 'E', 'E', 'E', 'E', 'I', 'I', 'I', 'I', 'O', 'O', 'O', 'O', 'O', 'U', 'U', 'U', 'U', 'Y', 'a', 'a', 'a', 'a', 'a', 'a', 'c', 'e', 'e', 'e', 'e', 'i', 'i', 'i', 'i', 'o', 'o', 'o', 'o', 'o', 'o', 'u', 'u', 'u', 'u', 'y', 'y');
+		        		for(int i=0; i<accent.size();i++){
+		        			mot.replace(accent.get(i),sansAccent.get(i));
+		        		}
+		        			//mise en minuscule
+		        		mot.toLowerCase();
+		        		for(int i=0;i<mot.length();i++) {
+		        			char lettre = mot.charAt(i);
+		        			if(dicoFreq.containsKey(String.valueOf(lettre))){
+		        				dicoFreq.merge(String.valueOf(lettre), 1, Integer::sum);
+		        			}
+		        		}
+		        		System.out.println(dicoFreq);
+						
+						
+						
 	        		}
+	        		
+	        		
+	        		
+	        		
+	        		
 	        		
 	        		
 	        		// remet à 0 les variable car on quitte une section <page>
@@ -232,25 +267,7 @@ public class App
 	        	
 	        	if(line.contains("<title>")) {
 	        		//title nous indique un mot donc on pousse le mot déja stocké et on reset la recherche
-	        		
 	        		mot = App.recupInterieurBalise(line);
-	        		
-	        		//on vire les accents pour simplifier 
-	        		List<Character> accent  = List.of('À', 'Á', 'Â', 'Ã', 'Ä', 'Å', 'Ç', 'È', 'É', 'Ê', 'Ë', 'Ì', 'Í', 'Î', 'Ï', 'Ò', 'Ó', 'Ô', 'Õ', 'Ö', 'Ù', 'Ú', 'Û', 'Ü', 'Ý', 'à', 'á', 'â', 'ã', 'ä', 'å', 'ç', 'è', 'é', 'ê', 'ë', 'ì', 'í', 'î', 'ï', 'ð', 'ò', 'ó', 'ô', 'õ', 'ö', 'ù', 'ú', 'û', 'ü', 'ý', 'ÿ');
-	        		List<Character> sansAccent = List.of('A', 'A', 'A', 'A', 'A', 'A', 'C', 'E', 'E', 'E', 'E', 'I', 'I', 'I', 'I', 'O', 'O', 'O', 'O', 'O', 'U', 'U', 'U', 'U', 'Y', 'a', 'a', 'a', 'a', 'a', 'a', 'c', 'e', 'e', 'e', 'e', 'i', 'i', 'i', 'i', 'o', 'o', 'o', 'o', 'o', 'o', 'u', 'u', 'u', 'u', 'y', 'y');
-	        		for(int i=0; i<accent.size();i++){
-	        			mot.replace(accent.get(i),sansAccent.get(i));
-	        		}
-	        		//mise en minuscule
-	        		mot.toLowerCase();
-	        		for(int i=0;i<mot.length();i++) {
-	        			char lettre = mot.charAt(i);
-	        			if(lettres.containsKey(String.valueOf(lettre))){
-	        				lettres.merge(String.valueOf(lettre), 1, Integer::sum);
-	        			}
-	        		}
-	        		System.out.println(lettres);
-	        		
 	        		continue;
 	        	}
 	        	
@@ -283,9 +300,13 @@ public class App
 	        	
 	        }
 	        
+	        for(Map.Entry<String,Integer> entry : dicoFreq.entrySet()) {
+	        	writerFreq.write(entry.getKey()+" "+String.valueOf(entry.getValue())+"\n");
+	        } 
 	        //fermeture des différents buffers
 	        reader.close();
 	        writer.close();
+	        writerFreq.close();
 	    }
         catch(Exception e){
         	e.printStackTrace();
