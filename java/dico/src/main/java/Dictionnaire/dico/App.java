@@ -35,12 +35,11 @@ public class App
 		return retour;
 	}
 	
-	
 	public static String cleanupExemple(String line) {
 		String retour = "";
-		boolean inAccolade = false;
-		boolean pipe = false;
-		boolean dontCopy = false;
+		boolean inAccolade = false;//indique si l'on est dans une accolade/crochet
+		boolean pipe = false;	  //si il est à true alors on est derrière un | et il ne faut pas copier le contenu tant que l'on est dans une accolade/crochet
+		boolean dontCopy = false; //si il est à true le caractère courant ne sera pas copié
 		
 		for(int i=0;i<line.length();i++) {
 		
@@ -68,6 +67,15 @@ public class App
 				case '|' :
 					pipe = true;
 					dontCopy = true;
+					break;
+				case '#':
+					pipe=true;
+					dontCopy=true;
+					break;
+				case '\'':
+					dontCopy=true;
+					break;
+					
 			}
 			
 			if(!dontCopy){
@@ -88,7 +96,7 @@ public class App
     public static void main( String[] args )
     {
         // ===================A CHANGER EN FONCTION DE L'ENDROIT OU VOUS AVEZ MIS LE FICHIER XML===================
-        String xmlPath = "C:\\Users\\berac\\Desktop\\wiki-fr.xml"; // Path to the XML file
+        String xmlPath = "C:\\Users\\Jlwis\\Desktop\\wiki-fr.xml"; // Path to the XML file
 
 		// JOSHUA : "C:\\Users\\Jlwis\\Desktop\\wiki-fr.xml"
 		// BERA : "C:\\Users\\berac\\Desktop\\wiki-fr.xml"
@@ -109,11 +117,14 @@ public class App
 
         
         try{
-	        //constructor of File class having file as argument
+	        
+        	//creation du buffer de lecture du xml
 	        File file=new File(xmlPath);
-	        //creates a buffer reader input stream
 	        BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), "UTF-8"));
 	        System.out.println("file content: ");
+	        
+	        //creation du writer pour le json
+	        FileWriter writer = new FileWriter(dicoJSON, Charset.forName("UTF-8"));
 	        
 			// =============CHOIX DE LA LANGUE CIBLEE=================
 			String langueCible = "fr"; // fr = francais, en = anglais, es = espagnol, de = allemand ...
@@ -135,14 +146,12 @@ public class App
 
 			
 	        
-	      // écris l'entete du json avec UTF-8
-		  try {
-			  FileWriter writer = new FileWriter(dicoJSON, Charset.forName("UTF-8"));
-			  writer.write(jsonEntete+"\n");
-			  writer.close();
-		  } catch (Exception e) {
-			  System.out.println("Error while writing file");
-		  }
+			// écris l'entete du json avec UTF-8
+			writer.write(jsonEntete+"\n");
+		 
+		  
+		  
+		  
 
 
 
@@ -167,15 +176,7 @@ public class App
 						jsonMot = "{" + "\"title\" : " + mot + "," + "\"definitions\":{\"nom\" : " + definitionsNom + "," + "\"verbe\" : " + definitionsVerbe + "}}";
 
 						 // append le mot dans le json avec UTF-8
-						try {
-							FileWriter writer = new FileWriter(dicoJSON, Charset.forName("UTF-8"), true);
-							writer.write(jsonMot+"\n");
-							writer.close();
-						} catch (Exception e) {
-							System.out.println("Error while writing file");
-						}
-
-
+						writer.write(jsonMot+"\n");
 	        		}
 	        		
 	        		
@@ -222,10 +223,10 @@ public class App
 	        	
 	        	if(estBonneLangue && estMot){
 					if (line.startsWith("# '")) {
-	        			definitionsVerbe.add('"'+line.replaceFirst("# ", "").replaceFirst("</text>", "")+'"');
+	        			definitionsVerbe.add(App.cleanupExemple('"'+line.replaceFirst("# ", "").replaceFirst("</text>", "")+'"'));
 	        		}
 	        		else if(line.startsWith("# ")) { 
-						definitionsNom.add('"'+line.replaceFirst("#", "").replaceFirst("</text>", "")+'"');
+						definitionsNom.add(App.cleanupExemple('"'+line.replaceFirst("# ", "").replaceFirst("</text>", "")+'"'));
 	        		}
 	        		
 	        	}
@@ -234,8 +235,9 @@ public class App
 	        	
 	        }
 	        
-	        
+	        //fermeture des différents buffers
 	        reader.close();
+	        writer.close();
 	    }
         catch(Exception e){
         	e.printStackTrace();
