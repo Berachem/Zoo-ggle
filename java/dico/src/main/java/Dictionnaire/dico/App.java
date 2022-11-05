@@ -7,6 +7,8 @@ import java.io.FileWriter;
 import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 
 
@@ -102,6 +104,35 @@ public class App
 		// BERA : "C:\\Users\\berac\\Desktop\\wiki-fr.xml"
         // ========================================================================================================
         
+        //création  du dictionnaire pour les fréquences
+        HashMap<String,Integer> lettres= new HashMap<>();
+        lettres.put("a", 0);
+        lettres.put("b", 0);
+        lettres.put("c", 0);
+        lettres.put("d", 0);
+        lettres.put("e", 0);
+        lettres.put("f", 0);
+        lettres.put("g", 0);
+        lettres.put("h", 0);
+        lettres.put("i", 0);
+        lettres.put("j", 0);
+        lettres.put("k", 0);
+        lettres.put("l", 0);
+        lettres.put("m", 0);
+        lettres.put("n", 0);
+        lettres.put("o", 0);
+        lettres.put("p", 0);
+        lettres.put("q", 0);
+        lettres.put("r", 0);
+        lettres.put("s", 0);
+        lettres.put("t", 0);
+        lettres.put("u", 0);
+        lettres.put("v", 0);
+        lettres.put("w", 0);
+        lettres.put("x", 0);
+        lettres.put("y", 0);
+        lettres.put("z", 0);
+        
 
 		// créer un fichier dico.json.txt en mode écriture
 		File dicoJSON = new File("dico.json.txt");
@@ -165,10 +196,10 @@ public class App
 
 						// on affiche le mot et ses définitions 
 	        			System.out.println("\n\nMOT : "+ mot +"\n");
-						System.out.println("nom : \n");
-						definitionsNom.stream().forEach(s -> System.out.println(s)) ;
-						System.out.println("verbe : \n");
-						definitionsVerbe.stream().forEach(s -> System.out.println(s)) ;
+						//System.out.println("nom : \n");
+						//definitionsNom.stream().forEach(s -> System.out.println(s)) ;
+						//System.out.println("verbe : \n");
+						//definitionsVerbe.stream().forEach(s -> System.out.println(s)) ;
 
 						
 
@@ -203,6 +234,23 @@ public class App
 	        		//title nous indique un mot donc on pousse le mot déja stocké et on reset la recherche
 	        		
 	        		mot = App.recupInterieurBalise(line);
+	        		
+	        		//on vire les accents pour simplifier 
+	        		List<Character> accent  = List.of('À', 'Á', 'Â', 'Ã', 'Ä', 'Å', 'Ç', 'È', 'É', 'Ê', 'Ë', 'Ì', 'Í', 'Î', 'Ï', 'Ò', 'Ó', 'Ô', 'Õ', 'Ö', 'Ù', 'Ú', 'Û', 'Ü', 'Ý', 'à', 'á', 'â', 'ã', 'ä', 'å', 'ç', 'è', 'é', 'ê', 'ë', 'ì', 'í', 'î', 'ï', 'ð', 'ò', 'ó', 'ô', 'õ', 'ö', 'ù', 'ú', 'û', 'ü', 'ý', 'ÿ');
+	        		List<Character> sansAccent = List.of('A', 'A', 'A', 'A', 'A', 'A', 'C', 'E', 'E', 'E', 'E', 'I', 'I', 'I', 'I', 'O', 'O', 'O', 'O', 'O', 'U', 'U', 'U', 'U', 'Y', 'a', 'a', 'a', 'a', 'a', 'a', 'c', 'e', 'e', 'e', 'e', 'i', 'i', 'i', 'i', 'o', 'o', 'o', 'o', 'o', 'o', 'u', 'u', 'u', 'u', 'y', 'y');
+	        		for(int i=0; i<accent.size();i++){
+	        			mot.replace(accent.get(i),sansAccent.get(i));
+	        		}
+	        		//mise en minuscule
+	        		mot.toLowerCase();
+	        		for(int i=0;i<mot.length();i++) {
+	        			char lettre = mot.charAt(i);
+	        			if(lettres.containsKey(String.valueOf(lettre))){
+	        				lettres.merge(String.valueOf(lettre), 1, Integer::sum);
+	        			}
+	        		}
+	        		System.out.println(lettres);
+	        		
 	        		continue;
 	        	}
 	        	
