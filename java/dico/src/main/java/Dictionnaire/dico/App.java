@@ -16,6 +16,12 @@ import java.util.Map;
 public class App 
 {
 	
+	/**
+	 * Fonction qui récupère l'interieur d'une balise xml
+	 * 
+	 * @param line : la balise à décortiquer
+	 * @return l'interieur de la balise
+	 */
 	public static String recupInterieurBalise(String line) {
 		String retour = "";
 		boolean interieur = false;
@@ -38,6 +44,13 @@ public class App
 		return retour;
 	}
 	
+	
+	/**
+	 * Fonction qui nettoie les exemple du fichier xml
+	 * 
+	 * @param line : l'exemple à nettoyer
+	 * @return l'exemple propre
+	 */
 	public static String cleanupExemple(String line) {
 		String retour = "";
 		boolean inAccolade = false;//indique si l'on est dans une accolade/crochet
@@ -96,6 +109,31 @@ public class App
 		
 	}
 	
+	public static void resetFile(File file) {
+		if(file.exists()) {
+			file.delete();
+		}
+		try {
+			file.createNewFile();
+		}catch(Exception e) {
+			System.out.println("Error while creating file");
+		}
+	}
+	
+	public static String cleanupWord(String mot) {
+		
+		List<Character> accent  = List.of('À', 'Á', 'Â', 'Ã', 'Ä', 'Å', 'Ç', 'È', 'É', 'Ê', 'Ë', 'Ì', 'Í', 'Î', 'Ï', 'Ò', 'Ó', 'Ô', 'Õ', 'Ö', 'Ù', 'Ú', 'Û', 'Ü', 'Ý', 'à', 'á', 'â', 'ã', 'ä', 'å', 'ç', 'è', 'é', 'ê', 'ë', 'ì', 'í', 'î', 'ï', 'ð', 'ò', 'ó', 'ô', 'õ', 'ö', 'ù', 'ú', 'û', 'ü', 'ý', 'ÿ');
+		List<Character> sansAccent = List.of('A', 'A', 'A', 'A', 'A', 'A', 'C', 'E', 'E', 'E', 'E', 'I', 'I', 'I', 'I', 'O', 'O', 'O', 'O', 'O', 'U', 'U', 'U', 'U', 'Y', 'a', 'a', 'a', 'a', 'a', 'a', 'c', 'e', 'e', 'e', 'e', 'i', 'i', 'i', 'i', 'o', 'o', 'o', 'o', 'o', 'o', 'u', 'u', 'u', 'u', 'y', 'y');
+		for(int i=0; i<accent.size();i++){
+			mot.replace(accent.get(i),sansAccent.get(i));
+		}
+		
+		mot.toLowerCase();
+		
+		return mot;
+	}
+	
+	
     public static void main( String[] args )
     {
         // ===================A CHANGER EN FONCTION DE L'ENDROIT OU VOUS AVEZ MIS LE FICHIER XML===================
@@ -137,26 +175,11 @@ public class App
 
 		// créer un fichier dico.json.txt en mode écriture
 		File dicoJSON = new File("dico.json.txt");
-		if(dicoJSON.exists()) {
-			dicoJSON.delete();
-		}
-		try {
-			dicoJSON.createNewFile();
-		}catch(Exception e) {
-			System.out.println("Error while creating file");
-		}
+		App.resetFile(dicoJSON);
 
 		//créationdu fichier txt de fréquence
 		File dicoFrequence = new File("dicoFreq.txt");
-		if(dicoFrequence.exists()) {
-			dicoFrequence.delete();
-		}
-		try {
-			dicoFrequence.createNewFile();
-		}catch(Exception e) {
-			System.out.println("Error while creating file");
-		}
-
+		App.resetFile(dicoFrequence);
         
         try{
 	        
@@ -205,10 +228,10 @@ public class App
 
 						// on affiche le mot et ses définitions 
 	        			System.out.println("\n\nMOT : "+ mot +"\n");
-						//System.out.println("nom : \n");
-						//definitionsNom.stream().forEach(s -> System.out.println(s)) ;
-						//System.out.println("verbe : \n");
-						//definitionsVerbe.stream().forEach(s -> System.out.println(s)) ;
+						System.out.println("nom : \n");
+						definitionsNom.stream().forEach(s -> System.out.println(s)) ;
+						System.out.println("verbe : \n");
+						definitionsVerbe.stream().forEach(s -> System.out.println(s)) ;
 
 						// on crée un json du mot
 						jsonMot = "{" + "\"title\" : " + mot + "," + "\"definitions\":{\"nom\" : " + definitionsNom + "," + "\"verbe\" : " + definitionsVerbe + "}}";
@@ -221,13 +244,7 @@ public class App
 						//gestion des fréquences
 						
 							//on vire les accents pour simplifier 
-		        		List<Character> accent  = List.of('À', 'Á', 'Â', 'Ã', 'Ä', 'Å', 'Ç', 'È', 'É', 'Ê', 'Ë', 'Ì', 'Í', 'Î', 'Ï', 'Ò', 'Ó', 'Ô', 'Õ', 'Ö', 'Ù', 'Ú', 'Û', 'Ü', 'Ý', 'à', 'á', 'â', 'ã', 'ä', 'å', 'ç', 'è', 'é', 'ê', 'ë', 'ì', 'í', 'î', 'ï', 'ð', 'ò', 'ó', 'ô', 'õ', 'ö', 'ù', 'ú', 'û', 'ü', 'ý', 'ÿ');
-		        		List<Character> sansAccent = List.of('A', 'A', 'A', 'A', 'A', 'A', 'C', 'E', 'E', 'E', 'E', 'I', 'I', 'I', 'I', 'O', 'O', 'O', 'O', 'O', 'U', 'U', 'U', 'U', 'Y', 'a', 'a', 'a', 'a', 'a', 'a', 'c', 'e', 'e', 'e', 'e', 'i', 'i', 'i', 'i', 'o', 'o', 'o', 'o', 'o', 'o', 'u', 'u', 'u', 'u', 'y', 'y');
-		        		for(int i=0; i<accent.size();i++){
-		        			mot.replace(accent.get(i),sansAccent.get(i));
-		        		}
-		        			//mise en minuscule
-		        		mot.toLowerCase();
+		        		
 		        		for(int i=0;i<mot.length();i++) {
 		        			char lettre = mot.charAt(i);
 		        			if(dicoFreq.containsKey(String.valueOf(lettre))){
