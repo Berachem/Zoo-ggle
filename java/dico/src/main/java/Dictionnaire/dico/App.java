@@ -120,8 +120,8 @@ public class App
 		for(int i=0; i<accent.size();i++){
 			mot.replace(accent.get(i),sansAccent.get(i));
 		}
-		
 		mot.toLowerCase();
+		mot.replace("qu", "*");
 		
 		return mot;
 	}
@@ -176,6 +176,7 @@ public class App
         dicoFreq.put("x", 0);
         dicoFreq.put("y", 0);
         dicoFreq.put("z", 0);
+        dicoFreq.put("*", 0); //pour représenter les 'qu'
         
         return dicoFreq;
 	}
