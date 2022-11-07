@@ -63,9 +63,9 @@ int size(CSTree t){
 //renvoie le nombre de mots d'un arbre
 int nLeaves(CSTree t){
     if (t == NULL) return 0;
-    if (t->firstChild == NULL && t->nextSibling == NULL) return 1;
+    if (t->firstChild == NULL ) return 1;
     return 0+nLeaves(t->firstChild)+nLeaves(t->nextSibling);
-}
+}//FIXME nb de feuille 
 
 //renvoie le nombre de frère d'un noeud
 int nSibling(CSTree t){
@@ -165,7 +165,7 @@ StaticTree exportStaticTree(CSTree t){
     r.nWord = nLeaves(t);
     printf("OH");
     //reservation mémoire du tableau et remplissage
-    ArrayCell* tab = malloc(sizeof(ArrayCell*)*sizeOfTree);
+    ArrayCell* tab = malloc(sizeof(ArrayCell)*sizeOfTree);
     filltab(tab,nSibling(t),0,t);
     r.nodeArray = tab;
     return r;
