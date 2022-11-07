@@ -13,48 +13,8 @@ lue ligne par ligne, les cases sont séparées par des espaces.
 #include <string.h>
 #include <stdlib.h>
 #include <time.h>
+#include "grid.h"
 
-// structure de données pour les grilles
-typedef struct {
-    int nbl; // nombre de lignes
-    int nbc; // nombre de colonnes
-    char *grid; // tableau de caractères
-} grid;
-
-// fonction qui convertit des coordonnées 2D en 1D dans une grid
-int coord2D_to_1D(int i, int j, grid g) {
-  return i * g.nbc + j;
-}
-
-// fonction qui convertit des coordonnées 1D en 2D dans une grid
-void coord1D_to_2D(int k, grid g, int *i, int *j) {
-  *i = k / g.nbc;
-  *j = k % g.nbc;
-}
-
-// fonction qui renvoie la liste des voisins d’une case
-int *neighbors(int i, int j, grid g) {
-  int *neighbors = malloc(4 * sizeof(int));
-  int k = 0;
-  if (i > 0) {
-    neighbors[k] = coord2D_to_1D(i - 1, j, g);
-    k++;
-  }
-  if (i < g.nbl - 1) {
-    neighbors[k] = coord2D_to_1D(i + 1, j, g);
-    k++;
-  }
-  if (j > 0) {
-    neighbors[k] = coord2D_to_1D(i, j - 1, g);
-    k++;
-  }
-  if (j < g.nbc - 1) {
-    neighbors[k] = coord2D_to_1D(i, j + 1, g);
-    k++;
-  }
-  neighbors[k] = -1;
-  return neighbors;
-}
 
 /*
 fonction qui renvoie un caractère aléatoire en fonction d'un fichier de fréquences
@@ -108,7 +68,7 @@ char lettre_aleatoire(char *filename) {
 void print_grid(grid g) {
   for (int i = 0; i < g.nbl; i++) {
     for (int j = 0; j < g.nbc; j++) {
-      printf("%c ", g.grid[coord2D_to_1D(i, j,g)]);
+      printf("%c ", g.gridList[coord2D_to_1D(i, j,g)]);
     }
   }
 }
@@ -117,17 +77,17 @@ grid grid_build(char *filename, int nbl, int nbc) {
   grid g;
   g.nbl = nbl;
   g.nbc = nbc;
-  g.grid = malloc(nbl * nbc * sizeof(char));
+  g.gridList = malloc(nbl * nbc * sizeof(char));
   // on remplit le tableau de caractères avec des lettres aléatoire
   for (int i = 0; i < nbl; i++) {
     for (int j = 0; j < nbc; j++) {
-      g.grid[coord2D_to_1D(i, j, g)] = lettre_aleatoire(filename);
+      g.gridList[coord2D_to_1D(i, j, g)] = lettre_aleatoire(filename);
     }
   }
   return g;
 }
 
-/* 
+ 
 
 int main(int argc, char *argv[]) {
   // initialisation du générateur de nombres aléatoires
@@ -151,10 +111,10 @@ int main(int argc, char *argv[]) {
   // on affiche la grille
   print_grid(g);
   // on vide la grille
-  free(g.grid);
+  free(g.gridList);
 
   return 0;
 
 
 }
- */
+ 

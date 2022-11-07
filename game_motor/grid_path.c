@@ -1,4 +1,7 @@
-#include "grid_build.c"
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+#include "grid.h"
 
 
 /*
@@ -29,11 +32,15 @@ par des espaces)
 int grid_path_rec(char *word, int i, int j, grid g, int *visited) {
   int k = coord2D_to_1D(i, j, g);
   if (visited[k] == 1) {
+    printf("visited[%d] = %d\n", k, visited[k]);
+
     return 1;
   }
-  if (g.grid[k] != word[0]) {
+  if (g.gridList[k] != word[0]) {
+    printf("g.gridList[%d] = %c != word[0] = %c\n", k, g.gridList[k], word[0]);
     return 1;
   }
+  printf("g.gridList[%d] = %c == word[0] = %c\n", k, g.gridList[k], word[0]);
   if (strlen(word) == 1) {
     printf("%d ", k);
     return 0;
@@ -60,16 +67,12 @@ int grid_path_rec(char *word, int i, int j, grid g, int *visited) {
 }
 
 // fonction principale qui appelle grid_path_rec pour chaque case de la grille 
-int grid_path(char *word, int nbl, int nbc, char *gridList) {
-  grid g;
-  g.nbl = nbl;
-  g.nbc = nbc;
-  g.grid = gridList;
-  int *visited = malloc(nbl * nbc * sizeof(int));
-  memset(visited, 0, nbl * nbc * sizeof(int));
-  int i, j;
-  for (i = 0; i < nbl; i++) {
-    for (j = 0; j < nbc; j++) {
+int grid_path(char *word, grid g) {
+  int *visited = malloc(g.nbl * g.nbc * sizeof(int));
+  memset(visited, 0, g.nbl * g.nbc * sizeof(int));
+  int i, j; 
+  for (i = 0; i < g.nbl; i++) {
+    for (j = 0; j < g.nbc; j++) {
       if (grid_path_rec(word, i, j, g, visited) == 0) {
         printf("");
         free(visited);
@@ -83,7 +86,7 @@ int grid_path(char *word, int nbl, int nbc, char *gridList) {
 
 
 // main qui lit les arguments et appelle la fonction grid_path : un mot, une hauteur, une largeur, une succession de caractères (grille)
-//$ grid_path OUI 4 4 G A I R R U V E QU E O T A S M J
+//$ grid_path OUI 4 4 G A I R R U V E Q E O T A S M J
 //10 5 2
 //[valeur de sortie = 0]
 
@@ -100,9 +103,9 @@ int main(int argc, char *argv[]) {
     char* gridList = malloc((height * width) * sizeof(char));
 
     // on récupère tous les caractères de la grille dans une string
-    int j;
-    for (j = 0; j < height * width; j++) {
-      gridList[j] = argv[4][j]; // FIXME Berachem : Il faut bien arriver à récupérer les caractères de la grille
+    int i;
+    for (i = 4; i < argc; i++) {
+      strcat(gridList, argv[i]); 
     }
 
     // affiche toutes les variables
@@ -111,9 +114,16 @@ int main(int argc, char *argv[]) {
     printf("width: %d\n", width);
     printf("grid: %s\n", gridList);
 
+    // on construit la grille g
+    grid g;
+    g.nbl = height;
+    g.nbc = width;
+    g.gridList = gridList;
 
-    int result = grid_path(word, height, width, gridList);
-    printf("\nRESULT : %d", result);
+
+
+    int result = grid_path(word,g);
+    printf("\nRESULT : %d\n", result);
 
     // on libère la mémoire
     free(gridList);
@@ -126,5 +136,3 @@ int main(int argc, char *argv[]) {
 
 
     
-
-

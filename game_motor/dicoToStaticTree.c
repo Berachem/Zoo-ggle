@@ -11,17 +11,11 @@ dico.txt -> CSTree -> StaticTree
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "dicoToStaticTree.h"
 
 #define NONE -1
 
-//-----définitions des structures-----
-typedef char Element;
 
-typedef struct {
-    Element elem;
-    unsigned int firstChild;
-    unsigned int nSiblings;
-} ArrayCell;
 
 
 //======================================================
@@ -32,12 +26,7 @@ typedef struct {
 //======================================================
 //======================================================
 
-typedef struct node{
-    Element elem;
-    struct node* firstChild;
-    struct node* nextSibling;
-} Node;
-typedef Node* CSTree;
+
 
 // affiche un CSTree avec les enfants et les frères (,) et les niveaux (|)
 void printCSTree(CSTree t, int level){
@@ -74,9 +63,9 @@ int size(CSTree t){
 //renvoie le nombre de mots d'un arbre
 int nLeaves(CSTree t){
     if (t == NULL) return 0;
-    if (t->firstChild == NULL ) return 1;
+    if (t->firstChild == NULL && t->nextSibling == NULL) return 1;
     return 0+nLeaves(t->firstChild)+nLeaves(t->nextSibling);
-}//FIXME nb de feuille 
+}
 
 //renvoie le nombre de frère d'un noeud
 int nSibling(CSTree t){
@@ -143,11 +132,7 @@ CSTree convertFileToCSTree(char *filename) {
 //======================================================
 //======================================================
 
-typedef struct {
-    ArrayCell* nodeArray;
-    unsigned int nNodes;
-    unsigned int nWord;
-} StaticTree;
+
 
 int filltab(ArrayCell* tab,int size,int index,CSTree t){
     if(t==NULL){return size;}
@@ -180,7 +165,7 @@ StaticTree exportStaticTree(CSTree t){
     r.nWord = nLeaves(t);
     printf("OH");
     //reservation mémoire du tableau et remplissage
-    ArrayCell* tab = malloc(sizeof(ArrayCell)*sizeOfTree);
+    ArrayCell* tab = malloc(sizeof(ArrayCell*)*sizeOfTree);
     filltab(tab,nSibling(t),0,t);
     r.nodeArray = tab;
     return r;
@@ -213,15 +198,16 @@ StaticTree convertFileToStaticTree(char *filename) {
 
 
 
-/*
+
     
-void main(){
+int main(){
    
    
     CSTree t = convertFileToCSTree("../data/dico.txt");
     printf("CSTree : \n");
-    printCSTree(t, 0);
+    //printCSTree(t, 0);
     // affiche tous les frères d'un noeud
     printf("\nExemple --> nombre de freres de la racines : %d\n",nSibling(t));
      
-}*/
+    return 0;
+}
