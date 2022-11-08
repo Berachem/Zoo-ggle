@@ -1,24 +1,13 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-#include "grid.h"
+#include "../headers/grid_path.h"
 
 
 /*
-grid_path
-
 $ grid_path OUI 4 4 G A I R R U V E QU E O T A S M J
 10 5 2
 [valeur de sortie = 0]
-
-Teste si un mot donné est présent dans la grille, renvoie 0 si le mot est
-présent, 1 sinon. 
--> Si le mot est présent, on affiche le chemin emprunté (liste des indices des cases utilisées, séparés
-par des espaces).
--> Aucune sortie si le mot est absent, par exemple:
-
-$ grid_path TOIT 4 4 G A I R R U V E QU E O T A S M J
-[valeur de sortie = 1]
 
 */
 
@@ -101,6 +90,8 @@ int main(int argc, char *argv[]) {
     
     // on construit récupère tous les caractères de la grille dans une string
     char* gridList = malloc((height * width) * sizeof(char));
+
+
 
     // on récupère tous les caractères de la grille dans une string
     int i;

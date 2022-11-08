@@ -13,18 +13,12 @@ lue ligne par ligne, les cases sont séparées par des espaces.
 #include <string.h>
 #include <stdlib.h>
 #include <time.h>
-#include "grid.h"
+#include "../headers/grid_build.h"
 
 
 /*
-fonction qui renvoie un caractère aléatoire en fonction d'un fichier de fréquences
-de la forme : LETTRE FREQUENCE
-
-Pour cela, on parcourt le fichier et on calcule la somme des fréquences.
- On tire un nombre aléatoire entre 0 et cette somme. 
- Si ce nombre est inférieur à la fréquence de la lettre, on la renvoie.
-Sinon, on soustrait la fréquence de la lettre à la fréquence totale et on passe à la lettre suivante.
-
+fonction qui renvoie une lettre aléatoire en fonction d'un fichier fréquences
+de la forme: LETTRE FREQUENCE
 */
 char lettre_aleatoire(char *filename) {
   FILE *file = fopen(filename, "r");

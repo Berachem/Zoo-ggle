@@ -1,3 +1,12 @@
+/*
+dicoToStaticTree.h
+-----
+
+Rôle : prototypes des fonctions de dicoToStaticTree.c
+
+*/
+
+
 //-----définitions des structures-----
 typedef char Element;
 
