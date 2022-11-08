@@ -5,11 +5,13 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.InputStreamReader;
+import java.io.RandomAccessFile;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 public class App 
 {
@@ -120,7 +122,7 @@ public class App
 		for(int i=0; i<accent.size();i++){
 			mot.replace(accent.get(i),sansAccent.get(i));
 		}
-		mot.toLowerCase();
+		mot.toUpperCase();
 		mot.replace("qu", "*");
 		
 		return mot;
@@ -150,32 +152,32 @@ public class App
 	 */
 	public static HashMap<String,Integer> createDicoFreq(){
 		HashMap<String,Integer> dicoFreq= new HashMap<>();
-        dicoFreq.put("a", 0);
-        dicoFreq.put("b", 0);
-        dicoFreq.put("c", 0);
-        dicoFreq.put("d", 0);
-        dicoFreq.put("e", 0);
-        dicoFreq.put("f", 0);
-        dicoFreq.put("g", 0);
-        dicoFreq.put("h", 0);
-        dicoFreq.put("i", 0);
-        dicoFreq.put("j", 0);
-        dicoFreq.put("k", 0);
-        dicoFreq.put("l", 0);
-        dicoFreq.put("m", 0);
-        dicoFreq.put("n", 0);
-        dicoFreq.put("o", 0);
-        dicoFreq.put("p", 0);
-        dicoFreq.put("q", 0);
-        dicoFreq.put("r", 0);
-        dicoFreq.put("s", 0);
-        dicoFreq.put("t", 0);
-        dicoFreq.put("u", 0);
-        dicoFreq.put("v", 0);
-        dicoFreq.put("w", 0);
-        dicoFreq.put("x", 0);
-        dicoFreq.put("y", 0);
-        dicoFreq.put("z", 0);
+        dicoFreq.put("A", 0);
+        dicoFreq.put("B", 0);
+        dicoFreq.put("C", 0);
+        dicoFreq.put("D", 0);
+        dicoFreq.put("E", 0);
+        dicoFreq.put("F", 0);
+        dicoFreq.put("G", 0);
+        dicoFreq.put("H", 0);
+        dicoFreq.put("I", 0);
+        dicoFreq.put("J", 0);
+        dicoFreq.put("K", 0);
+        dicoFreq.put("L", 0);
+        dicoFreq.put("M", 0);
+        dicoFreq.put("N", 0);
+        dicoFreq.put("O", 0);
+        dicoFreq.put("P", 0);
+        dicoFreq.put("Q", 0);
+        dicoFreq.put("R", 0);
+        dicoFreq.put("S", 0);
+        dicoFreq.put("T", 0);
+        dicoFreq.put("U", 0);
+        dicoFreq.put("V", 0);
+        dicoFreq.put("W", 0);
+        dicoFreq.put("X", 0);
+        dicoFreq.put("Y", 0);
+        dicoFreq.put("Z", 0);
         dicoFreq.put("*", 0); //pour représenter les 'qu'
         
         return dicoFreq;
@@ -192,7 +194,7 @@ public class App
         
         //création  du dictionnaire pour les fréquences
         HashMap<String,Integer> dicoFreq = App.createDicoFreq();
-        
+        TreeMap<String,String> dicoOffsets = new TreeMap<>();
 
 		// créer un fichier dico.json.txt en mode écriture
 		File dicoJSON = new File("dico.json.txt");
@@ -201,6 +203,10 @@ public class App
 		//créationdu fichier txt de fréquence
 		File dicoFrequence = new File("dicoFreq.txt");
 		App.resetFile(dicoFrequence);
+		
+		//création du fichier dico.lex
+		File dicoLex = new File("dico.lex");
+		App.resetFile(dicoLex);
         
         try{
 	        
@@ -212,10 +218,15 @@ public class App
 	        System.out.println("file content: ");
 	        
 	        //creation du writer pour le json
-	        FileWriter writer = new FileWriter(dicoJSON, Charset.forName("UTF-8"));
+	        RandomAccessFile writer = new RandomAccessFile(dicoJSON, "rw");
 	        
 	        //creation du writer pour le txt
 	        FileWriter writerFreq = new FileWriter(dicoFrequence, Charset.forName("UTF-8"));
+	        
+	        //creation du writer pour le lex
+	        FileWriter writerLex = new FileWriter(dicoLex);
+	        
+	        
 	        // =======================================================
 	        
 	        
@@ -241,13 +252,14 @@ public class App
 			String jsonMot = "";
 
 			// écriture de l'entete du fichier json en UTF-8
-			writer.write(jsonEntete+"\n");
+			writer.writeChars(jsonEntete+"\n");
 			// =======================================================
 			
 			
 			
 			// ===== LECTURE ET ECRITURE DES DIFFERENTS FICHIERS =====
 	       
+			int avancement = 0 ;
 			String line="";
 	        while((line=reader.readLine())!= null){
 	        	
@@ -258,9 +270,16 @@ public class App
 	        		
 	        		if (estMot && estBonneLangue) {
 
+	        			
+	        			
 						//Actualisation du fichier json
-						jsonMot = "{" + "\"title\" : " + mot + "," + "\"definitions\":{\"nom\" : " + definitionsNom + "," + "\"verbe\" : " + definitionsVerbe + "}}";
-						writer.write(jsonMot+"\n");
+						long before = writer.getFilePointer();
+	        			jsonMot = "{" + "\"title\" : " + mot + "," + "\"definitions\":{\"nom\" : " + definitionsNom + "," + "\"verbe\" : " + definitionsVerbe + "}}";
+						writer.writeChars(jsonMot+"\n");
+						long after = writer.getFilePointer();
+						
+						//stockage des offsets
+						dicoOffsets.put(mot, before+" "+after+" ");
 						
 						
 						//Actualisation des fréquence de lettre
@@ -274,12 +293,18 @@ public class App
 		        		}
 		        		
 		        		//différents prints de debugs
+		        		/*
 	        			System.out.println("\n\nMOT : "+ mot +"\n");
 						System.out.println("nom : \n");
 						definitionsNom.stream().forEach(s -> System.out.println(s)) ;
 						System.out.println("verbe : \n");
 						definitionsVerbe.stream().forEach(s -> System.out.println(s)) ;
-		        		System.out.println(dicoFreq);		        		
+		        		System.out.println(dicoFreq);	
+		        		System.out.println(dicoOffsets);
+		        		*/
+		        		System.out.println(avancement);
+		        		avancement++;
+		        		
 	        		}
 	        		// remise à 0 des variable car on quitte une section <page>
 	        		page ="";
@@ -348,13 +373,18 @@ public class App
 	        //ecriture du fichier des fréquences 
 	        for(Map.Entry<String,Integer> entry : dicoFreq.entrySet()) {
 	        	writerFreq.write(entry.getKey()+" "+String.valueOf(entry.getValue())+"\n");
-	        } 
+	        }
+	        for(Map.Entry<String,String> entry : dicoOffsets.entrySet()) {
+	        	writerLex.write(entry.getValue());
+	        }
 	        
 	        
 	        //fermeture des différents buffers
 	        reader.close();
 	        writer.close();
 	        writerFreq.close();
+	        writerLex.close();
+	        System.out.println("finito pipo");
 	    }
         
         catch(Exception e){//catch car utilisation des bufferedReader/Writter
