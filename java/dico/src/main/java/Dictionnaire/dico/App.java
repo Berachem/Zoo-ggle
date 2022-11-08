@@ -184,10 +184,11 @@ public class App
     public static void main( String[] args )
     {
         // ===================A CHANGER EN FONCTION DE L'ENDROIT OU VOUS AVEZ MIS LE FICHIER XML===================
-        String xmlPath = "C:\\Users\\Jlwis\\Desktop\\wiki-fr.xml"; // Path to the XML file
+        String xmlPath = "C:\\Users\\berac\\Desktop\\wiki-fr.xml"; // Path to the XML file
 
+		// BERA : "C:\\Users\\berac\\Desktop\\wiki-fr.xml" 
 		// JOSHUA : "C:\\Users\\Jlwis\\Desktop\\wiki-fr.xml"
-		// BERA : "C:\\Users\\berac\\Desktop\\wiki-fr.xml"
+		
         // ========================================================================================================
         
         //création  du dictionnaire pour les fréquences
@@ -343,11 +344,11 @@ public class App
 	        }
 	        // =======================================================
 	        
-	        
-	        
+
+
 	        //ecriture du fichier des fréquences 
 	        for(Map.Entry<String,Integer> entry : dicoFreq.entrySet()) {
-	        	writerFreq.write(entry.getKey()+" "+String.valueOf(entry.getValue())+"\n");
+	        	writerFreq.write(entry.getKey().toUpperCase()+" "+String.valueOf(entry.getValue())+"\n");
 	        } 
 	        
 	        
