@@ -1,4 +1,6 @@
-#include "grid.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include "../headers/grid.h"
 
 // fonction qui convertit des coordonnées 2D en 1D dans une gri
 int coord2D_to_1D(int i, int j, grid g) {

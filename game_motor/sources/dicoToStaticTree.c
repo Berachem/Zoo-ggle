@@ -11,7 +11,7 @@ dico.txt -> CSTree -> StaticTree
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "dicoToStaticTree.h"
+#include "../headers/dicoToStaticTree.h"
 
 #define NONE -1
 

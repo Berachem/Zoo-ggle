@@ -13,7 +13,7 @@ $ dictionnary_build dico.txt dico.lex
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "dicoToStaticTree.h"
+#include "../headers/dicoToStaticTree.h"
 
 typedef struct
 {
