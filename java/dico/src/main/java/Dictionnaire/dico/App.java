@@ -3,9 +3,12 @@ package Dictionnaire.dico;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.InputStreamReader;
 import java.io.RandomAccessFile;
+import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -183,10 +186,12 @@ public class App
         return dicoFreq;
 	}
 	
-    public static void main( String[] args )
-    {
-        // ===================A CHANGER EN FONCTION DE L'ENDROIT OU VOUS AVEZ MIS LE FICHIER XML===================
-        String xmlPath = "C:\\Users\\berac\\Desktop\\wiki-fr.xml"; // Path to the XML file
+	/**
+	 * Fonction qui crée les différents fichiers demandés
+	 */
+	public static void makeDictionnaries() {
+		// ===================A CHANGER EN FONCTION DE L'ENDROIT OU VOUS AVEZ MIS LE FICHIER XML===================
+        String xmlPath = "C:\\Users\\Jlwis\\Desktop\\wiki-fr.xml"; // Path to the XML file
 
 		// BERA : "C:\\Users\\berac\\Desktop\\wiki-fr.xml" 
 		// JOSHUA : "C:\\Users\\Jlwis\\Desktop\\wiki-fr.xml"
@@ -225,7 +230,7 @@ public class App
 	        FileWriter writerFreq = new FileWriter(dicoFrequence, Charset.forName("UTF-8"));
 	        
 	        //creation du writer pour le lex
-	        FileWriter writerLex = new FileWriter(dicoLex);
+	        RandomAccessFile writerLex = new RandomAccessFile(dicoLex,"rw");
 	        
 	        
 	        // =======================================================
@@ -239,12 +244,12 @@ public class App
 			
 			// ============= INITIALISATION DES VARIABLES ============ 
 	        //creations des variables pour la lecture du fichier xml
-			String page = "";
+			//String page = "";
 	        String nameSpace = "";
 	        String mot = "";
 	        Boolean estMot = false;
 	        Boolean estBonneLangue = false;
-	        Boolean dansUnePage = false;
+	        //Boolean dansUnePage = false;
 	        ArrayList<String> definitionsNom = new ArrayList<>();
 	        ArrayList<String> definitionsVerbe = new ArrayList<>();
 
@@ -267,7 +272,7 @@ public class App
 	        	
 	        	//******** AJOUT DES MOTS AU DICTIONNAIRES ********
 	        	if (line.contains("</page>")) {
-	        		dansUnePage = false;
+	        		//dansUnePage = false;
 	        		
 	        		if (estMot && estBonneLangue) {
 
@@ -308,7 +313,7 @@ public class App
 		        		
 	        		}
 	        		// remise à 0 des variable car on quitte une section <page>
-	        		page ="";
+	        		//page ="";
 	        		nameSpace = "";
 	        		mot = "";
 	        		estMot= false;
@@ -327,12 +332,13 @@ public class App
 	        		//De la vienne les continue à chaque if.
 	        	
 	        	
-	        	
+	        	/*
 	        	if (line.contains("<page>")) {
 	        		dansUnePage = true;
 	        		continue;
 	        	}
 	        	page += line;
+	        	*/
 	        	
 	        	if(line.contains("<title>")) {
 	        		//title nous indique un mot donc on pousse le mot déja stocké et on reset la recherche
@@ -376,7 +382,9 @@ public class App
 	        	writerFreq.write(entry.getKey()+" "+String.valueOf(entry.getValue())+"\n");
 	        }
 	        for(Map.Entry<String,String> entry : dicoOffsets.entrySet()) {
-	        	writerLex.write(entry.getValue());
+	        	String offsets[] = (entry.getValue()).split(" ");;
+	        	writerLex.writeLong(Long.valueOf(offsets[0]));
+	        	writerLex.writeLong(Long.valueOf(offsets[1]));
 	        }
 	        
 	        
@@ -393,4 +401,83 @@ public class App
         }
         
     }
+	
+	/**
+	 * Fonction qui récupère le mot dans le json
+	 * 
+	 * @param word : mot à chercher
+	 * @return l'enregistrment json qui correspond à ce mot
+	 */
+	public static String getTheWord(String word) {
+		
+		//initialisation des fichiers
+		File jsonFile = new File("dico.json.txt");
+		File lexFile = new File("dico.lex");
+		
+		try {
+			
+			//initialisation des reader
+			RandomAccessFile jsonReader = new RandomAccessFile(jsonFile,"rw");
+			RandomAccessFile lexReader = new RandomAccessFile(lexFile,"rw");
+			
+			//recuperations des offsets
+			int compteur = 0;
+			
+			ArrayList<List<Long>> offsets = new ArrayList<>();
+			boolean firstplace = true;
+			Long offset;
+			long start = 0;
+			long end = 0;
+		
+			while((offset = lexReader.readLong()) != null ) {
+				System.out.println(compteur + " add offset "+offset);
+				compteur++;
+				if(firstplace){
+					start = offset;
+				}else {
+					end = offset;
+					offsets.add(List.of(start,end));
+				}
+				firstplace = !firstplace;	
+			}
+			
+			//lecture du premier enregistrement
+			StringBuilder enregistrement = new StringBuilder();
+			long debut = offsets.get(0).get(0);
+			long fin = offsets.get(0).get(1);
+			
+			lexReader.seek(debut);
+			
+			long pointeur = debut;
+			while((pointeur = lexReader.getFilePointer()) != fin) {
+				char lettre = lexReader.readChar();
+				System.out.println("lettre :" + lettre);
+				enregistrement.append(lettre);
+			}
+			System.out.println(enregistrement);
+			
+			
+			
+			//fermeture des Reader
+			jsonReader.close();
+			lexReader.close();
+			
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+			
+		
+		
+		
+		
+		return "boup";
+	}
+	
+    public static void main( String[] args )
+    {
+    	//App.makeDictionnaries();
+    	App.getTheWord(null);
+    } 
 }
