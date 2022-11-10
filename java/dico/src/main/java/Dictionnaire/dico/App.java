@@ -402,6 +402,41 @@ public class App
         
     }
 	
+	
+	
+	public static String readAword(RandomAccessFile jsonReader,long beginOffset,long endOffset ) {
+		
+		StringBuilder enregistrement = new StringBuilder();
+		boolean inWord = false;
+		
+		try {
+		
+			jsonReader.seek(beginOffset);
+			long pointeur = beginOffset;
+			while((pointeur = jsonReader.getFilePointer()) != endOffset) {
+				char lettre = jsonReader.readChar();
+				
+				if(lettre == ':') {//le premier : indique que l'on vien de passer le parametre "titre"
+					inWord = true;
+					continue;
+				}
+				if(lettre == ',') {
+					break;
+				}
+				
+				if(inWord) {
+					
+					enregistrement.append(lettre);
+				}
+				
+			}
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		System.out.println(enregistrement);
+		return enregistrement.substring(1);//on enlève le premier espace
+	}
+	
 	/**
 	 * Fonction qui récupère le mot dans le json
 	 * 
@@ -420,64 +455,79 @@ public class App
 			RandomAccessFile jsonReader = new RandomAccessFile(jsonFile,"rw");
 			RandomAccessFile lexReader = new RandomAccessFile(lexFile,"rw");
 			
-			//recuperations des offsets
-			int compteur = 0;
+			//variable utiles
+			long coupleSize = 16; //un long fait 8 bits donc 2 long font 16 logiquement
+			long lengthFichier = lexReader.length(); //je suppose qu'il me renvoie le nombre de bit
+			long numberOfCouple = lengthFichier/16;
+			long pireDesCas = lengthFichier/32;
 			
-			ArrayList<List<Long>> offsets = new ArrayList<>();
-			boolean firstplace = true;
-			Long offset;
-			long start = 0;
-			long end = 0;
-		
-			while((offset = lexReader.readLong()) != null ) {
-				System.out.println(compteur + " add offset "+offset);
-				compteur++;
-				if(firstplace){
-					start = offset;
+			//mise en place des premiers offsets
+			/*
+			long firstWordBegin = lexReader.readLong();
+			long firstWordEnd = lexReader.readLong();
+			lexReader.seek(lengthFichier-coupleSize);
+			long lastWordBegin = lexReader.readLong();
+			long lastWordEnd = lexReader.readLong();
+			*/
+			
+			lexReader.seek((numberOfCouple/2)*coupleSize);
+			long middleWordBegin = lexReader.readLong();
+			long middleWordEnd = lexReader.readLong();
+			long compteur = 0;
+			
+			//boucle de recherche
+			String readedWord="";
+			while(compteur<pireDesCas && !(readedWord = App.readAword(jsonReader, middleWordBegin, middleWordEnd)).equals(word)) {
+				
+				//verification du mot central
+				
+				
+				//actualisation des offsets
+				if(readedWord.compareTo(word)>=0) {
+					numberOfCouple /= 2;
+					lexReader.seek(lexReader.getFilePointer() - (numberOfCouple/2)*coupleSize);
+					middleWordBegin = lexReader.readLong();
+					middleWordEnd = lexReader.readLong();
 				}else {
-					end = offset;
-					offsets.add(List.of(start,end));
+					numberOfCouple /= 2; 
+					lexReader.seek(lexReader.getFilePointer() + (numberOfCouple/2)*coupleSize);
+					middleWordBegin = lexReader.readLong();
+					middleWordEnd = lexReader.readLong();
 				}
-				firstplace = !firstplace;	
+				compteur ++;
 			}
+		
 			
-			//lecture du premier enregistrement
-			StringBuilder enregistrement = new StringBuilder();
-			long debut = offsets.get(0).get(0);
-			long fin = offsets.get(0).get(1);
-			
-			lexReader.seek(debut);
-			
-			long pointeur = debut;
-			while((pointeur = lexReader.getFilePointer()) != fin) {
-				char lettre = lexReader.readChar();
-				System.out.println("lettre :" + lettre);
-				enregistrement.append(lettre);
+			//lecture de l'enregistrement
+			if(readedWord.equals(word)) {
+				StringBuilder enregistrement = new StringBuilder();
+				jsonReader.seek(middleWordBegin);
+				long pointeur = middleWordBegin;
+				while((pointeur = jsonReader.getFilePointer()) != middleWordEnd) {
+					char lettre = jsonReader.readChar();
+					enregistrement.append(lettre);
+				}
+				//fermeture des Reader
+				jsonReader.close();
+				lexReader.close();
+				
+				return enregistrement.toString();
 			}
-			System.out.println(enregistrement);
-			
-			
-			
 			//fermeture des Reader
 			jsonReader.close();
 			lexReader.close();
 			
+			return "Le mot n'as pas été trouvé";
 			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
-			
-		
-		
-		
-		
-		return "boup";
+		return "";
 	}
 	
     public static void main( String[] args )
     {
     	//App.makeDictionnaries();
-    	App.getTheWord(null);
+    	System.out.println(App.getTheWord("!"));
     } 
 }
