@@ -6,7 +6,7 @@ Rôle : prototypes des fonctions de grid_path.c
 
 */
 
-#include "../headers/grid.h"
+
 
 
 

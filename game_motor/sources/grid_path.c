@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include "../headers/grid.h"
 #include "../headers/grid_path.h"
 
 
@@ -8,6 +9,8 @@
 $ grid_path OUI 4 4 G A I R R U V E QU E O T A S M J
 10 5 2
 [valeur de sortie = 0]
+
+$ grid_path TOIT 4 4 G A I R R U V E QU E O T A S M J 
 
 */
 
@@ -87,16 +90,17 @@ int main(int argc, char *argv[]) {
     char *word = argv[1];
     int height = atoi(argv[2]);
     int width = atoi(argv[3]);
+
     
     // on construit récupère tous les caractères de la grille dans une string
     char* gridList = malloc((height * width) * sizeof(char));
-
 
 
     // on récupère tous les caractères de la grille dans une string
     int i;
     for (i = 4; i < argc; i++) {
       strcat(gridList, argv[i]); 
+
     }
 
     // affiche toutes les variables

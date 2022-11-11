@@ -163,8 +163,8 @@ void main(int argc, char *argv[]){
   char * lexFile;
 
     if(argc < 3 ){
-       txtFile= "../data/dico.txt";
-       lexFile= "../data/dico.lex";
+       txtFile= "../../data/dico.txt";
+       lexFile= "../../data/dico.lex";
     }else{
         txtFile= argv[1];
         lexFile= argv[2];
@@ -191,7 +191,7 @@ void main(int argc, char *argv[]){
   //printf("%d",dictionnary_lookup("../data/dico.lex",0,"eau"));
   
   //printf("%d",dictionnary_lookup("../data/dico.lex",0,"ciseau"));
-  printf("%d",dictionnary_lookup("../data/dico.lex",0,"chiot"));
+  printf("%d",dictionnary_lookup("../../data/dico.lex",0,"chiot"));
 
   freeCST(t);
   free(st.nodeArray);

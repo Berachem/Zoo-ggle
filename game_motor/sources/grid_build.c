@@ -13,6 +13,7 @@ lue ligne par ligne, les cases sont séparées par des espaces.
 #include <string.h>
 #include <stdlib.h>
 #include <time.h>
+#include "../headers/grid.h"
 #include "../headers/grid_build.h"
 
 
@@ -87,7 +88,7 @@ int main(int argc, char *argv[]) {
   // initialisation du générateur de nombres aléatoires
   srand( time( NULL ) );
   // on crée des arguments par défaut
-  char *filename = "../data/frequences.txt";
+  char *filename = "../../data/frequences.txt";
   int height = 4;
   int width = 4;
   if (argc > 1) {

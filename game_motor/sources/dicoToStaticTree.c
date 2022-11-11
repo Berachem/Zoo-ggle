@@ -200,14 +200,14 @@ StaticTree convertFileToStaticTree(char *filename) {
 
 
     
-int main(){
+/* int main(){
    
    
-    CSTree t = convertFileToCSTree("../data/dico.txt");
+    CSTree t = convertFileToCSTree("../../data/dico.txt");
     printf("CSTree : \n");
     //printCSTree(t, 0);
     // affiche tous les frères d'un noeud
     printf("\nExemple --> nombre de freres de la racines : %d\n",nSibling(t));
      
     return 0;
-}
+} */
