@@ -433,7 +433,6 @@ public class App
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
-		System.out.println(enregistrement);
 		return enregistrement.substring(1);//on enlève le premier espace
 	}
 	
@@ -459,17 +458,9 @@ public class App
 			long coupleSize = 16; //un long fait 8 bits donc 2 long font 16 logiquement
 			long lengthFichier = lexReader.length(); //je suppose qu'il me renvoie le nombre de bit
 			long numberOfCouple = lengthFichier/16;
-			long pireDesCas = lengthFichier/32;
+			long pireDesCas = Math.round(Math.log(numberOfCouple)) * numberOfCouple;//L'algorithme est en O(nLog(n))
 			
 			//mise en place des premiers offsets
-			/*
-			long firstWordBegin = lexReader.readLong();
-			long firstWordEnd = lexReader.readLong();
-			lexReader.seek(lengthFichier-coupleSize);
-			long lastWordBegin = lexReader.readLong();
-			long lastWordEnd = lexReader.readLong();
-			*/
-			
 			lexReader.seek((numberOfCouple/2)*coupleSize);
 			long middleWordBegin = lexReader.readLong();
 			long middleWordEnd = lexReader.readLong();
@@ -480,17 +471,18 @@ public class App
 			while(compteur<pireDesCas && !(readedWord = App.readAword(jsonReader, middleWordBegin, middleWordEnd)).equals(word)) {
 				
 				//verification du mot central
-				
+				numberOfCouple /= 2;
+				if(numberOfCouple==0) {
+					numberOfCouple=2; //on veut toujours bouger d'au moins un
+				}
 				
 				//actualisation des offsets
 				if(readedWord.compareTo(word)>=0) {
-					numberOfCouple /= 2;
-					lexReader.seek(lexReader.getFilePointer() - (numberOfCouple/2)*coupleSize);
+					lexReader.seek(lexReader.getFilePointer() - ((numberOfCouple/2)+1)*coupleSize);
 					middleWordBegin = lexReader.readLong();
 					middleWordEnd = lexReader.readLong();
 				}else {
-					numberOfCouple /= 2; 
-					lexReader.seek(lexReader.getFilePointer() + (numberOfCouple/2)*coupleSize);
+					lexReader.seek(lexReader.getFilePointer() + ((numberOfCouple/2)+1)*coupleSize);
 					middleWordBegin = lexReader.readLong();
 					middleWordEnd = lexReader.readLong();
 				}
