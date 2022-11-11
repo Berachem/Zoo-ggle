@@ -185,12 +185,12 @@ void main(int argc, char *argv[]){
   
 
   // printf("BOUP\n");
-  //readCellInFile("../data/fr.lex",0);
-  //readCellInFile("../data/fr.lex",4);
-  //readCellInFile("../data/fr.lex",15);
-  //printf("%d",dictionnary_lookup("../data/dico.lex",0,"eau"));
+  //readCellInFile("../../data/fr.lex",0);
+  //readCellInFile("../../data/fr.lex",4);
+  //readCellInFile("../../data/fr.lex",15);
+  //printf("%d",dictionnary_lookup("../../data/dico.lex",0,"eau"));
   
-  //printf("%d",dictionnary_lookup("../data/dico.lex",0,"ciseau"));
+  //printf("%d",dictionnary_lookup("../../data/dico.lex",0,"ciseau"));
   printf("%d",dictionnary_lookup("../../data/dico.lex",0,"chiot"));
 
   freeCST(t);
