@@ -187,6 +187,23 @@ public class App
 	}
 	
 	/**
+	 * Fonction qui verifie si un mot est composé que de lettre
+	 * 
+	 * @param word : le mot a verifier
+	 * @return true si le mot est composé que de lettre false sinon
+	 */
+	public static boolean isAlpha(String word) {	
+		
+		for(int i=0;i<word.length();i++) {
+			char c = word.charAt(i);
+			if(!(c >= 'A' && c <= 'Z') && !(c >= 'a' && c <= 'z')) {
+				return false;
+			}	
+		}
+		return true;
+	}
+	
+	/**
 	 * Fonction qui crée les différents fichiers demandés
 	 */
 	public static void makeDictionnaries() {
@@ -221,7 +238,6 @@ public class App
         	//creation du buffer de lecture du xml
 	        File file=new File(xmlPath);
 	        BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), "UTF-8"));
-	        System.out.println("file content: ");
 	        
 	        //creation du writer pour le json
 	        RandomAccessFile writer = new RandomAccessFile(dicoJSON, "rw");
@@ -275,8 +291,6 @@ public class App
 	        		//dansUnePage = false;
 	        		
 	        		if (estMot && estBonneLangue) {
-
-	        			
 	        			
 						//Actualisation du fichier json
 						long before = writer.getFilePointer();
@@ -343,13 +357,16 @@ public class App
 	        	if(line.contains("<title>")) {
 	        		//title nous indique un mot donc on pousse le mot déja stocké et on reset la recherche
 	        		mot = App.recupInterieurBalise(line);
+	        		if(!App.isAlpha(mot)) {
+	        			mot = "";
+	        		}
 	        		continue;
 	        	}
 	        	
 	        	if(line.contains("<ns>")) {
 	        		//si ns = 0 c'est un mot sinon c'est autre chose dont on ne veut pas
 	        		nameSpace = App.recupInterieurBalise(line);
-	        		if(nameSpace.equals("0")) {
+	        		if(nameSpace.equals("0") && mot != "") {
 	        			estMot = true;
 	        			continue;
 	        		}
@@ -402,8 +419,14 @@ public class App
         
     }
 	
-	
-	
+	/**
+	 * Fonction qui lit un mot dans un enregistrment json
+	 * 
+	 * @param jsonReader : le fichier json dans lequel la lecture se fait
+	 * @param beginOffset : l'offset de début de l'enregistrement
+	 * @param endOffset : l'offset de fin de l'enregistrement
+	 * @return le mot contenu dans l'enregistrement
+	 */
 	public static String readAword(RandomAccessFile jsonReader,long beginOffset,long endOffset ) {
 		
 		StringBuilder enregistrement = new StringBuilder();
@@ -433,6 +456,7 @@ public class App
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
+		System.out.println(enregistrement);
 		return enregistrement.substring(1);//on enlève le premier espace
 	}
 	
@@ -458,7 +482,7 @@ public class App
 			long coupleSize = 16; //un long fait 8 bits donc 2 long font 16 logiquement
 			long lengthFichier = lexReader.length(); //je suppose qu'il me renvoie le nombre de bit
 			long numberOfCouple = lengthFichier/16;
-			long pireDesCas = Math.round(Math.log(numberOfCouple)) * numberOfCouple;//L'algorithme est en O(nLog(n))
+			long pireDesCas = Math.round(Math.log(numberOfCouple) * numberOfCouple);//L'algorithme est en O(nLog(n))
 			
 			//mise en place des premiers offsets
 			lexReader.seek((numberOfCouple/2)*coupleSize);
@@ -487,6 +511,7 @@ public class App
 					middleWordEnd = lexReader.readLong();
 				}
 				compteur ++;
+				System.out.println(pireDesCas + "/" + compteur);
 			}
 		
 			
@@ -520,6 +545,6 @@ public class App
     public static void main( String[] args )
     {
     	//App.makeDictionnaries();
-    	System.out.println(App.getTheWord("!"));
+    	System.out.println(App.getTheWord("sfnsfsi"));
     } 
 }
