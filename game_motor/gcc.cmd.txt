@@ -15,3 +15,7 @@ cd "../sources"; if ($?) { gcc -g dictionnary_build.c grid_path.c solve.c -o sol
 
 ## dictionnary_lookup.c
 cd "../sources"; if ($?) { gcc -g dicoToStaticTree.c  dictionnary_lookup.c -o dictionnary_lookup } ; if ($?) { .\dictionnary_lookup ../../data/fr.lex BONJ}
+
+
+##solve 
+cd "../sources"; if ($?) { gcc -g dicoToStaticTree.c  dictionnary_lookup.c grid.c grid_path.c solve.c -o solve } ; if ($?) { .\solve}
