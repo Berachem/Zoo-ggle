@@ -1,8 +1,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "../headers/dicoToStaticTree.h"
 #include "../headers/dictionnary_build.h"
-#include "../headers/grid_path.h"
+
+
+
+
 
   // Fonction de lecture d'une cellule de tableau dans un fichier lex
 ArrayCell readCellInFile(char* filename, int index){
@@ -11,7 +15,7 @@ ArrayCell readCellInFile(char* filename, int index){
   fseek(file, sizeof(header) + sizeof(ArrayCell)*index, SEEK_SET); // Pour aller a l'index de la cellule cherchee on va 
   ArrayCell cell;                                                  // a la taille du header plus la taille des cellules precedentes
   fread(&cell,sizeof(ArrayCell),1,file);                          // Puis on lit cette cellule avant la renvoyer
-  printf("%c, %d, %d \n",cell.elem,cell.firstChild,cell.nSiblings);
+  // printf("%c, %d, %d \n",cell.elem,cell.firstChild,cell.nSiblings);
   return cell;
 }
 
@@ -51,8 +55,25 @@ int dictionnary_lookup(char* filename, char* mot) {
     return dictionnary_lookup_rec(filename,0,mot);
 }
   
-void main(int argc, char *argv[]){
-    printf("YES");
+/*
+
+$ dictionnary_lookup dico.lex BONJOUR
+[valeur de sortie = 0]
+Recherche si un mot (BONJOUR) est dans un dictionnaire (dico.lex). Renvoie 0 si le mot est présent, 1 si c’est un
+préfixe valide d’un mot présent (par exemple, BONJ), 2 sinon. Aucune sortie n’est attendue
+
+*/
+int main(int argc, char *argv[]){
+  if (argc < 3){
+    printf("Erreur : nombre d'arguments incorrect\n");
+    exit(1);
+  }
+  int res = dictionnary_lookup(argv[1],argv[2]);
+  printf("Resultat : %d \n", res);
+
+  return res;
+
+
   //readCellInFile("../../data/fr.lex",0);
   //readCellInFile("../../data/fr.lex",4);
   //readCellInFile("../../data/fr.lex",15);
@@ -60,4 +81,7 @@ void main(int argc, char *argv[]){
   
   //printf("%d",dictionnary_lookup("../../data/dico.lex",0,"ciseau"));
   //printf("%d",dictionnary_lookup("../../data/dico.lex",0,"chiot"));
-  }
+
+
+
+}

@@ -10,5 +10,8 @@ cd "../sources"; if ($?) { gcc -g grid.c grid_path.c -o grid_path } ; if ($?) { 
 ## grid_build.c
 cd "../sources"; if ($?) { gcc -g grid.c grid_build.c -o grid_build } ; if ($?) { .\grid_build }
 
-## solve.cd
+## solve.c
 cd "../sources"; if ($?) { gcc -g dictionnary_build.c grid_path.c solve.c -o solve } ; if ($?) { .\solve }
+
+## dictionnary_lookup.c
+cd "../sources"; if ($?) { gcc -g dicoToStaticTree.c  dictionnary_lookup.c -o dictionnary_lookup } ; if ($?) { .\dictionnary_lookup ../../data/fr.lex BONJ}

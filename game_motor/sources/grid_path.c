@@ -25,7 +25,6 @@ int grid_path_rec(char *word, int i, int j, grid g, int *visited) {
   int k = coord2D_to_1D(i, j, g);
   if (visited[k] == 1) {
     printf("visited[%d] = %d\n", k, visited[k]);
-
     return 1;
   }
   if (g.gridList[k] != word[0]) {
@@ -79,29 +78,25 @@ int grid_path(char *word, grid g) {
 
 // main qui lit les arguments et appelle la fonction grid_path : un mot, une hauteur, une largeur, une succession de caractères (grille)
 //$ grid_path OUI 4 4 G A I R R U V E Q E O T A S M J
-//10 5 2
+//10 5 2 
 //[valeur de sortie = 0]
 
 int main(int argc, char *argv[]) {
   if (argc < 5) {
     printf("Usage: %s word height width grid", argv[0]);
     return 1;
-    }
+  }
     char *word = argv[1];
     int height = atoi(argv[2]);
     int width = atoi(argv[3]);
 
     
-    // on construit récupère tous les caractères de la grille dans une string
-    char* gridList = malloc((height * width) * sizeof(char));
-
-
     // on récupère tous les caractères de la grille dans une string
+    char* gridList = malloc(height * width * sizeof(char));
     
     int i;
     for (i = 4; i < argc; i++) {
-      strcat(gridList, argv[i]); 
-
+      strcpy(gridList + (i - 4) * sizeof(char), argv[i]);
     }
 
     // affiche toutes les variables
