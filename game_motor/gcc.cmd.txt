@@ -10,3 +10,5 @@ cd "../sources"; if ($?) { gcc -g grid.c grid_path.c -o grid_path } ; if ($?) { 
 ## grid_build.c
 cd "../sources"; if ($?) { gcc -g grid.c grid_build.c -o grid_build } ; if ($?) { .\grid_build }
 
+## solve.cd
+cd "../sources"; if ($?) { gcc -g dictionnary_build.c grid_path.c solve.c -o solve } ; if ($?) { .\solve }

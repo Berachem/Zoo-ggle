@@ -97,6 +97,7 @@ int main(int argc, char *argv[]) {
 
 
     // on récupère tous les caractères de la grille dans une string
+    
     int i;
     for (i = 4; i < argc; i++) {
       strcat(gridList, argv[i]); 

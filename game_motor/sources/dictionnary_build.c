@@ -14,14 +14,7 @@ $ dictionnary_build dico.txt dico.lex
 #include <stdlib.h>
 #include <string.h>
 #include "../headers/dicoToStaticTree.h"
-
-typedef struct
-{
-  int taille;
-  int mots;
-  int cellules;
-  int tailleCellule;
-}header;
+#include "../headers/dictionnary_build.h"
 
 //fonction créant un fichier txt à partir d'un static tree
 void convertStaticToTXT(char *filename, StaticTree t){
@@ -112,51 +105,6 @@ void freeCST(CSTree t){
   free(t);
 }
 
-// Fonction de lecture d'une cellule de tableau dans un fichier lex
-ArrayCell readCellInFile(char* filename, int index){
-  FILE *file = fopen(filename, "rb");
-
-  fseek(file, sizeof(header) + sizeof(ArrayCell)*index, SEEK_SET); // Pour aller a l'index de la cellule cherchée on va 
-  ArrayCell cell;                                                  // à la taille du header plus la taille des cellules précédentes
-  fread(&cell,sizeof(ArrayCell),1,file);                          // Puis on lit cette cellule avant la renvoyer
-  printf("%c, %d, %d \n",cell.elem,cell.firstChild,cell.nSiblings);
-  return cell;
-}
-
-
-// FIXME Lucas passer en fonction récursive correspondant à l'énoncé
-// Fonction récursive qui vérifier si un mot est dans le fichier lex, renvoie 0 si il y est, 1 si c'est un préfixe existant et 0 sinon
-int dictionnary_lookup(char* filename, int index, char* mot){ //Le premier index transmis à l'appel de la fonction doit être 0 pour tester depuis le début du fichier
-  //printf("\n\n", mot);
-  //printf("Mot: %s \n", mot);
-  ArrayCell cell = readCellInFile(filename, index); // Dans un premier temps on récupère la cellule à l'index indiqué
-  //printf("lettre : %c \n", cell.elem);
-  //printf("Lettre de mon mot %c \n", mot[0]);
-  if (cell.elem == mot[0]){   //Si l'élément récupérer dans la cellule correspond à la 1ere lettre de notre mot :
-    //printf("-egal\n");
-    if (mot[0]=='\0'){
-      //printf("-fin de mot\n");
-      return 0;               // Si c'est la fin du mot on renvoie 0 pour dire que le mot est trouvé
-    }else{
-      //printf("Lettre suivante \n");
-      return dictionnary_lookup(filename, cell.firstChild, mot+1); // Sinon on continue à chercher le mot en passant à la lettre suivante
-    }
-  }else{
-    //printf("Lettre pas egale >:C , nb de freres = %d\n", cell.nSiblings);
-    if (mot[0]=='\0'){
-      return 1;   // Si on arrive à la fin de notre mot, mais qu'il n'a pas de fin de mot dans le dico lex on renvoie 1 pour préciser qu'il s'agit d'un préfixe
-    } else if (cell.nSiblings>0){
-      //printf("Allons voir son frère\n");
-      return dictionnary_lookup(filename, index+1, mot);  //Si ce n'est pas la fin du mot mais qu'aucune lettre ne corresponde dans le fichier lex on renvoit 2
-    }else{
-      return 2;
-    }
-  }
-}
-
-
-
-
 void main(int argc, char *argv[]){
   //on verifie qu'il y a bien 2 arguments et qu'ils ne sont pas renseignés alors on a comme valeur par défaut dico.txt et dico.lex
   char * txtFile;
@@ -184,15 +132,7 @@ void main(int argc, char *argv[]){
   convertStaticToLex(lexFile,st); // ne fonctionne pas totalement
   
 
-  // printf("BOUP\n");
-  //readCellInFile("../../data/fr.lex",0);
-  //readCellInFile("../../data/fr.lex",4);
-  //readCellInFile("../../data/fr.lex",15);
-  //printf("%d",dictionnary_lookup("../../data/dico.lex",0,"eau"));
-  
-  //printf("%d",dictionnary_lookup("../../data/dico.lex",0,"ciseau"));
-  printf("%d",dictionnary_lookup("../../data/dico.lex",0,"chiot"));
-
+  //printf("BOUP\n");
   freeCST(t);
   free(st.nodeArray);
   
