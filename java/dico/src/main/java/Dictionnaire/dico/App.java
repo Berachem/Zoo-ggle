@@ -113,10 +113,10 @@ public class App
 	}
 	
 	/**
-	 * Prend un mot, en enleve les accents et le met en minuscule
+	 * Prend un mot, en enleve les accents et le met en majuscule
 	 * 
 	 * @param mot : mot à nettoyer
-	 * @return le mot en minuscule sans ses accents
+	 * @return le mot en majuscule sans ses accents
 	 */
 	public static String cleanupWord(String mot) {
 		
@@ -125,9 +125,8 @@ public class App
 		for(int i=0; i<accent.size();i++){
 			mot.replace(accent.get(i),sansAccent.get(i));
 		}
-		mot.toUpperCase();
 		mot.replace("qu", "*");
-		
+		mot.toUpperCase();
 		return mot;
 	}
 	
@@ -196,7 +195,7 @@ public class App
 		
 		for(int i=0;i<word.length();i++) {
 			char c = word.charAt(i);
-			if(!(c >= 'A' && c <= 'Z') && !(c >= 'a' && c <= 'z')) {
+			if(!Character.isAlphabetic(c)) { //cette méthode prend en compte les accents (é == true)
 				return false;
 			}	
 		}
@@ -220,7 +219,7 @@ public class App
         TreeMap<String,String> dicoOffsets = new TreeMap<>();
 
 		// créer un fichier dico.json.txt en mode écriture
-		File dicoJSON = new File("dico.json.txt");
+		File dicoJSON = new File("dico.json");
 		App.resetFile(dicoJSON);
 
 		//créationdu fichier txt de fréquence
@@ -280,8 +279,6 @@ public class App
 			
 			
 			// ===== LECTURE ET ECRITURE DES DIFFERENTS FICHIERS =====
-	       
-			int avancement = 0 ;
 			String line="";
 	        while((line=reader.readLine())!= null){
 	        	
@@ -303,7 +300,7 @@ public class App
 						
 						
 						//Actualisation des fréquence de lettre
-						mot = App.cleanupWord(mot); 
+						mot = App.cleanupWord(mot);
 		        		
 		        		for(int i=0;i<mot.length();i++) {
 		        			char lettre = mot.charAt(i);
@@ -322,8 +319,6 @@ public class App
 		        		System.out.println(dicoFreq);	
 		        		System.out.println(dicoOffsets);
 		        		*/
-		        		System.out.println(avancement);
-		        		avancement++;
 		        		
 	        		}
 	        		// remise à 0 des variable car on quitte une section <page>
@@ -398,6 +393,7 @@ public class App
 	        for(Map.Entry<String,Integer> entry : dicoFreq.entrySet()) {
 	        	writerFreq.write(entry.getKey()+" "+String.valueOf(entry.getValue())+"\n");
 	        }
+	        //ecriture du fichier des offsets
 	        for(Map.Entry<String,String> entry : dicoOffsets.entrySet()) {
 	        	String offsets[] = (entry.getValue()).split(" ");;
 	        	writerLex.writeLong(Long.valueOf(offsets[0]));
@@ -410,7 +406,7 @@ public class App
 	        writer.close();
 	        writerFreq.close();
 	        writerLex.close();
-	        System.out.println("finito pipo");
+	        //System.out.println("finito pipo");
 	    }
         
         catch(Exception e){//catch car utilisation des bufferedReader/Writter
@@ -456,7 +452,7 @@ public class App
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
-		System.out.println(enregistrement);
+		//System.out.println(enregistrement);
 		return enregistrement.substring(1);//on enlève le premier espace
 	}
 	
@@ -482,13 +478,14 @@ public class App
 			long coupleSize = 16; //un long fait 8 bits donc 2 long font 16 logiquement
 			long lengthFichier = lexReader.length(); //je suppose qu'il me renvoie le nombre de bit
 			long numberOfCouple = lengthFichier/16;
-			long pireDesCas = Math.round(Math.log(numberOfCouple) * numberOfCouple);//L'algorithme est en O(nLog(n))
+			long pireDesCas = Math.round(Math.log(numberOfCouple)/Math.log(2))+10;//L'algorithme est en théorie O(Log(n)) mais pas exactement à l'execution
+			long compteur = 0;
 			
 			//mise en place des premiers offsets
 			lexReader.seek((numberOfCouple/2)*coupleSize);
 			long middleWordBegin = lexReader.readLong();
 			long middleWordEnd = lexReader.readLong();
-			long compteur = 0;
+			
 			
 			//boucle de recherche
 			String readedWord="";
@@ -496,7 +493,7 @@ public class App
 				
 				//verification du mot central
 				numberOfCouple /= 2;
-				if(numberOfCouple==0) {
+				if(numberOfCouple<=1) {
 					numberOfCouple=2; //on veut toujours bouger d'au moins un
 				}
 				
@@ -511,7 +508,7 @@ public class App
 					middleWordEnd = lexReader.readLong();
 				}
 				compteur ++;
-				System.out.println(pireDesCas + "/" + compteur);
+				//System.out.println(compteur + "/" + pireDesCas);
 			}
 		
 			
@@ -539,12 +536,12 @@ public class App
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return "";
+		return "Ce message n'est pas sensé s'afficher";
 	}
 	
     public static void main( String[] args )
     {
     	//App.makeDictionnaries();
-    	System.out.println(App.getTheWord("sfnsfsi"));
+    	//System.out.println(App.getTheWord("azithromycine"));
     } 
 }
