@@ -12,9 +12,11 @@ import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.TreeSet;
 
 public class App 
 {
@@ -113,21 +115,20 @@ public class App
 	}
 	
 	/**
-	 * Prend un mot, en enleve les accents et le met en majuscule
+	 * Prend un mot et le normalise
 	 * 
 	 * @param mot : mot à nettoyer
 	 * @return le mot en majuscule sans ses accents
 	 */
-	public static String cleanupWord(String mot) {
+	public static String normalise(String mot) {
 		
-		List<Character> accent  = List.of('À', 'Á', 'Â', 'Ã', 'Ä', 'Å', 'Ç', 'È', 'É', 'Ê', 'Ë', 'Ì', 'Í', 'Î', 'Ï', 'Ò', 'Ó', 'Ô', 'Õ', 'Ö', 'Ù', 'Ú', 'Û', 'Ü', 'Ý', 'à', 'á', 'â', 'ã', 'ä', 'å', 'ç', 'è', 'é', 'ê', 'ë', 'ì', 'í', 'î', 'ï', 'ð', 'ò', 'ó', 'ô', 'õ', 'ö', 'ù', 'ú', 'û', 'ü', 'ý', 'ÿ');
-		List<Character> sansAccent = List.of('A', 'A', 'A', 'A', 'A', 'A', 'C', 'E', 'E', 'E', 'E', 'I', 'I', 'I', 'I', 'O', 'O', 'O', 'O', 'O', 'U', 'U', 'U', 'U', 'Y', 'a', 'a', 'a', 'a', 'a', 'a', 'c', 'e', 'e', 'e', 'e', 'i', 'i', 'i', 'i', 'o', 'o', 'o', 'o', 'o', 'o', 'u', 'u', 'u', 'u', 'y', 'y');
+		List<Character> accent  = List.of('À', 'Á', 'Â', 'Ã', 'Ä', 'Å', 'Ç', 'È', 'É', 'Ê', 'Ë', 'Ì', 'Í', 'Î', 'Ï', 'Ò', 'Ó', 'Ô', 'Õ', 'Ö', 'Ù', 'Ú', 'Û', 'Ü', 'Ý');
+		List<Character> sansAccent = List.of('A', 'A', 'A', 'A', 'A', 'A', 'C', 'E', 'E', 'E', 'E', 'I', 'I', 'I', 'I', 'O', 'O', 'O', 'O', 'O', 'U', 'U', 'U', 'U', 'Y');
+		String copie = mot.toUpperCase();
 		for(int i=0; i<accent.size();i++){
-			mot.replace(accent.get(i),sansAccent.get(i));
+			copie = copie.replace(accent.get(i),sansAccent.get(i));
 		}
-		mot.replace("qu", "*");
-		mot.toUpperCase();
-		return mot;
+		return copie;
 	}
 	
 	/**
@@ -143,6 +144,28 @@ public class App
 			file.createNewFile();
 		}catch(Exception e) {
 			System.out.println("Error while creating file");
+		}
+	}
+	
+	/**
+	 * Fonction qui ajoute une valeur au dicoSemiOffset
+	 * 
+	 * @param dicoSemiOffset : le dictionnaire complexe auquel on veut ajouter une valeur
+	 * @param mot : le mot à ajouter
+	 * @param beforeMot : l'offset du début du mot
+	 * @param afterMot : l'offset de la fin du mot
+	 */
+	public static void addSemiOffset(TreeMap<String,TreeMap<String,String>> dicoSemiOffset,String mot,long beforeMot,long afterMot){
+		
+		String normalise = App.normalise(mot);
+		System.out.println(normalise);
+		
+		if(dicoSemiOffset.containsKey(normalise)) {
+			dicoSemiOffset.get(normalise).put(mot, beforeMot+" "+afterMot);
+		}else {
+			TreeMap<String,String> newValue = new TreeMap<>();
+			newValue.put(mot, beforeMot+" "+afterMot);
+			dicoSemiOffset.put(normalise, newValue);
 		}
 	}
 	
@@ -216,7 +239,7 @@ public class App
         
         //création  du dictionnaire pour les fréquences
         HashMap<String,Integer> dicoFreq = App.createDicoFreq();
-        TreeMap<String,String> dicoOffsets = new TreeMap<>();
+        TreeMap<String,TreeMap<String,String>> dicoSemiOffsets = new TreeMap<>();
 
 		// créer un fichier dico.json.txt en mode écriture
 		File dicoJSON = new File("dico.json");
@@ -225,6 +248,10 @@ public class App
 		//créationdu fichier txt de fréquence
 		File dicoFrequence = new File("dicoFreq.txt");
 		App.resetFile(dicoFrequence);
+		
+		//création du fichier d'entreDeux
+		File semiDicoLex = new File("semiDico.lex");
+		App.resetFile(semiDicoLex);
 		
 		//création du fichier dico.lex
 		File dicoLex = new File("dico.lex");
@@ -243,6 +270,9 @@ public class App
 	        
 	        //creation du writer pour le txt
 	        FileWriter writerFreq = new FileWriter(dicoFrequence, Charset.forName("UTF-8"));
+	        
+	        //création du writer pour le fichier d'entre deux
+	        RandomAccessFile writerSemiLex = new RandomAccessFile(semiDicoLex,"rw");
 	        
 	        //creation du writer pour le lex
 	        RandomAccessFile writerLex = new RandomAccessFile(dicoLex,"rw");
@@ -279,6 +309,7 @@ public class App
 			
 			
 			// ===== LECTURE ET ECRITURE DES DIFFERENTS FICHIERS =====
+			long avancement = 0;
 			String line="";
 	        while((line=reader.readLine())!= null){
 	        	
@@ -290,17 +321,17 @@ public class App
 	        		if (estMot && estBonneLangue) {
 	        			
 						//Actualisation du fichier json
-						long before = writer.getFilePointer();
+						long beforeMot = writer.getFilePointer();
 	        			jsonMot = "{" + "\"title\" : " + mot + "," + "\"definitions\":{\"nom\" : " + definitionsNom + "," + "\"verbe\" : " + definitionsVerbe + "}}";
 						writer.writeChars(jsonMot+"\n");
-						long after = writer.getFilePointer();
+						long afterMot = writer.getFilePointer();
 						
 						//stockage des offsets
-						dicoOffsets.put(mot, before+" "+after+" ");
-						
+						App.addSemiOffset(dicoSemiOffsets, mot, beforeMot, afterMot);
 						
 						//Actualisation des fréquence de lettre
-						mot = App.cleanupWord(mot);
+						mot = App.normalise(mot);
+						mot.replace("qu", "*");
 		        		
 		        		for(int i=0;i<mot.length();i++) {
 		        			char lettre = mot.charAt(i);
@@ -318,8 +349,9 @@ public class App
 						definitionsVerbe.stream().forEach(s -> System.out.println(s)) ;
 		        		System.out.println(dicoFreq);	
 		        		System.out.println(dicoOffsets);
-		        		*/
-		        		
+		        		*/	
+		        		System.out.println(avancement);
+	        			avancement++;
 	        		}
 	        		// remise à 0 des variable car on quitte une section <page>
 	        		//page ="";
@@ -393,20 +425,32 @@ public class App
 	        for(Map.Entry<String,Integer> entry : dicoFreq.entrySet()) {
 	        	writerFreq.write(entry.getKey()+" "+String.valueOf(entry.getValue())+"\n");
 	        }
-	        //ecriture du fichier des offsets
-	        for(Map.Entry<String,String> entry : dicoOffsets.entrySet()) {
-	        	String offsets[] = (entry.getValue()).split(" ");;
-	        	writerLex.writeLong(Long.valueOf(offsets[0]));
-	        	writerLex.writeLong(Long.valueOf(offsets[1]));
+	        //ecriture du semiOffsets et Offset en parrallele
+	        ArrayList<Long> dicoOffsets = new ArrayList<>();
+	        for(Map.Entry<String,TreeMap<String,String>> entry : dicoSemiOffsets.entrySet()) {
+	        	
+	        	Long before = writerSemiLex.getFilePointer();
+	        	
+	        	writerSemiLex.writeChars(entry.getKey());
+	        	 for(Map.Entry<String,String> deepEntry : entry.getValue().entrySet()) {
+	        		String offsets[] = (deepEntry.getValue()).split(" ");;
+	        		writerSemiLex.writeLong(Long.valueOf(offsets[0]));
+	        		writerSemiLex.writeLong(Long.valueOf(offsets[1]));
+	        	 }
+	        	 
+	        	 Long after = writerSemiLex.getFilePointer();
+	        	 
+	        	 writerLex.writeLong(before);
+	        	 writerLex.writeLong(after);
 	        }
-	        
 	        
 	        //fermeture des différents buffers
 	        reader.close();
 	        writer.close();
 	        writerFreq.close();
 	        writerLex.close();
-	        //System.out.println("finito pipo");
+	        writerSemiLex.close();
+	        System.out.println("finito pipo");
 	    }
         
         catch(Exception e){//catch car utilisation des bufferedReader/Writter
@@ -541,7 +585,7 @@ public class App
 	
     public static void main( String[] args )
     {
-    	//App.makeDictionnaries();
+    	App.makeDictionnaries();
     	//System.out.println(App.getTheWord("azithromycine"));
     } 
 }
