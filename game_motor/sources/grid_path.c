@@ -26,7 +26,7 @@ renvoie 0 si le mot est
 présent, 1 sinon. Si le mot est présent, on affiche le chemin emprunté (liste des indices des cases utilisées, séparés
 par des espaces)
 */
-int grid_path_rec(char *word, int i, int j, grid g, int *visited) {
+int grid_path_rec(char *word, int i, int j, grid g, int *visited, int *casesLettreDuMot, int *indiceParcoursCasesLettreDuMot) {
   int flagAlreadyFound = 0;
 
   int k = coord2D_to_1D(i, j, g);
@@ -43,7 +43,9 @@ int grid_path_rec(char *word, int i, int j, grid g, int *visited) {
   printf("g.gridList[%d] = %c == word[0] = %c (1 lettre trouvee) \n", k, g.gridList[k], word[0]);
   if (strlen(word) == 1) {
     // si le mot ne contient qu'une seule lettre (donc c'est la dernière lettre du mot)
-    printf("%d ", k);
+    casesLettreDuMot[*indiceParcoursCasesLettreDuMot] = k;
+    *indiceParcoursCasesLettreDuMot += 1;
+    //printf("%d ", k);
     return 0;
   }
   printf("====================\n");
@@ -77,10 +79,12 @@ int grid_path_rec(char *word, int i, int j, grid g, int *visited) {
     
 
     // on appelle la fonction récursive sur tous les voisins sans s'arrêter à la première lettre trouvée
-    flagAlreadyFound = grid_path_rec(word+1, i_copy, j_copy, g, visited_copy);
+    flagAlreadyFound = grid_path_rec(word+1, i_copy, j_copy, g, visited_copy,casesLettreDuMot, indiceParcoursCasesLettreDuMot);
     if (flagAlreadyFound == 0) {
       // si la lettre a été trouvée, on affiche la case
-      printf("%d ", k);
+    casesLettreDuMot[*indiceParcoursCasesLettreDuMot] = k;
+    *indiceParcoursCasesLettreDuMot += 1;
+      //printf("%d ", k);
       return 0;
     }
     l++;
@@ -94,8 +98,11 @@ int grid_path_rec(char *word, int i, int j, grid g, int *visited) {
 
 }
 
-// fonction principale qui appelle grid_path_rec pour chaque case de la grille 
-int grid_path(char *word, grid g) {
+// fonction principale qui renvoie -1 si le mot n'est pas présent, 0 et la liste des indices des cases utilisées sinon
+int grid_path(char *word, grid g, int *casesLettreDuMot) {
+  int k = 0;
+  int indiceParcoursCasesLettreDuMot = 0;
+
   int *visited = malloc(g.nbl * g.nbc * sizeof(int));
   // on initialise le tableau visited à 0
   memset(visited, 0, g.nbl * g.nbc * sizeof(int));
@@ -103,13 +110,18 @@ int grid_path(char *word, grid g) {
   for (i = 0; i < g.nbl; i++) {
       for (j = 0; j < g.nbc; j++) {
         
-        if (word[0]==g.gridList[coord2D_to_1D(i,j,g)] && grid_path_rec(word, i, j, g, visited) == 0) {  
-          // si le mot est trouvé, depuis la case (i, j)
-          printf("on a trouve le mot %s depuis la case (%d, %d) \n", word, i, j);
-          printf("");
-          free(visited);
-          return 0;
-          }
+        if (word[0]==g.gridList[coord2D_to_1D(i,j,g)] && grid_path_rec(word, i, j, g, visited, casesLettreDuMot, &indiceParcoursCasesLettreDuMot) == 0) {  
+
+            printf("on a trouve le mot %s depuis la case (%d, %d) OU en 1D : %d\n", word, i, j, coord2D_to_1D(i,j,g));
+      
+            // si la première lettre du mot est trouvée, on l'ajoute à la liste des cases 
+            
+            free(visited);
+            return 0;
+          } 
+          else{
+            memset(visited, 0, g.nbl * g.nbc * sizeof(int));
+          } 
       }
     }
   
@@ -193,11 +205,26 @@ int main(int argc, char *argv[]) {
     printf("res = %d \n", res); 
     */
 
-    int result = grid_path(word,g);
+    // on crée une liste des cases parcourues pour former le mot (16 cases max)
+    int *casesIndicesMot = malloc(g.nbl * g.nbc * sizeof(int));
+    memset(casesIndicesMot, -1, g.nbl * g.nbc * sizeof(int));
+
+    int result = grid_path(word,g, casesIndicesMot);
     printf("\nRESULT : %d\n", result);
+
+    // on affiche la liste des cases parcourues pour former le mot dans le sens inverse
+    int k = g.nbl * g.nbc - 1;
+    while (k >= 0) {
+      if (casesIndicesMot[k]>=0){
+        printf("%d ", casesIndicesMot[k]);
+      }
+      
+      k--;
+    }
 
     // on libère la mémoire
     free(gridList);
+    free(casesIndicesMot);
 
 
     return result;
