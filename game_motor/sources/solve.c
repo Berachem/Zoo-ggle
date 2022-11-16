@@ -7,36 +7,38 @@
 #include "../headers/grid.h"
 #include "../headers/grid_path.h"
 
-char* solve_rec(char* filename, int minLenght, grid g, char allWords[], int index, char currentWord[]){
+char* solve_rec(char* filename, int minLenght, grid g, CSTree allWords, int index, char* currentWord, int* letterIndex){
     ArrayCell cell = readCellInFile(filename, index); 
-    printf("B");
-    printf("currentWord:%s et allWords : %s",currentWord,allWords);
-    char oldWord []="";
-    strcpy(oldWord,currentWord);
-    char lettre[] = {cell.elem};
-    strcat(currentWord,lettre);
-    printf("1");
+    //printf("B");
+    currentWord[*letterIndex] = cell.elem;
+    currentWord[(*letterIndex)+1]='\0';
+    //printf("currentWord:%s et allWords : %s",currentWord,allWords);
+    //char oldWord []="";
+    //strcpy(oldWord,currentWord);
+    //char lettre[] = {cell.elem};
+    //strcat(currentWord,lettre);
+    //printf("1");
     if (cell.elem == '\0' && strlen(currentWord)>=minLenght){
-      printf("C");
-        if (strlen(allWords)==0){
-            strcat(allWords, " ");
-        }
-        strcat(allWords,currentWord);
+      insert(allWords,currentWord);
     }
 
-    printf("2");
+    //printf("2");
     if((grid_path(currentWord, g)==0) && (cell.firstChild!=-1)){
-      printf("D");
-      allWords=solve_rec(filename, minLenght,g,allWords,cell.firstChild,currentWord);
+      //printf("D");
+      *letterIndex +=1;
+      solve_rec(filename, minLenght,g,allWords,cell.firstChild,currentWord,letterIndex);
+      //allWords=solve_rec(filename, minLenght,g,allWords,cell.firstChild,currentWord);
     }
     
-    printf("3");
+    //printf("3");
     if(cell.nSiblings!=0){
-      printf("E");
-      allWords=solve_rec(filename, minLenght,g ,allWords,index+1,oldWord);
+      //printf("E");
+      solve_rec(filename, minLenght,g ,allWords,index+1,currentWord,letterIndex);
+      //allWords=solve_rec(filename, minLenght,g ,allWords,index+1,oldWord);
     }
-    printf("U");
-    return allWords;
+    //printf("U");
+    *letterIndex -=1;
+    //return allWords;
 }
 
 
@@ -63,8 +65,21 @@ int dictionnary_lookup_rec(char* filename, int index, char* mot){ //Le premier i
 */
 
 
-char* solve(char* filename, int minLenght, grid g, char allWords[]){
-  return solve_rec(filename, minLenght, g, allWords, 0 ,"");
+char* solve(char* filename, int minLenght, grid g){
+  CSTree allWords = NULL;
+  int* letterIndex = malloc(sizeof(int));
+  *letterIndex = 0;
+  char* currentWord = malloc((g.nbc*g.nbl+1)*sizeof(char));
+  solve_rec(filename, minLenght, g, allWords, 0 ,currentWord, letterIndex);
+  StaticTree st = exportStaticTree(allWords);
+  //printf("LE CSTREE %c et %c", allWords->elem, allWords->firstChild->elem);
+  printf("JE VAIS PRINT");
+  printStaticTree(st);
+  // TODO : Utilisé le CS Tree genere pour en ressortir la liste de mot
+  free(letterIndex);
+  free(currentWord);
+  free(allWords);
+  return "";
 }
 
 
@@ -93,5 +108,5 @@ int main(int argc, char *argv[]){
     g.nbc = width;
     g.gridList = gridList;
     printf("AAAAA");
-    printf("%s", solve("../../data/dico.lex", 1, g, s));
+    printf("%s", solve("../../data/dico.lex", 1, g));
 }
