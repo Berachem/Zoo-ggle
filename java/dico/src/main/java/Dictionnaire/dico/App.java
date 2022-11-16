@@ -331,7 +331,7 @@ public class App
 						
 						//Actualisation des fréquence de lettre
 						mot = App.normalise(mot);
-						mot.replace("qu", "*");
+						mot.replace("QU", "*");
 		        		
 		        		for(int i=0;i<mot.length();i++) {
 		        			char lettre = mot.charAt(i);
