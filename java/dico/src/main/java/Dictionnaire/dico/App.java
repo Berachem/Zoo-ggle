@@ -431,7 +431,7 @@ public class App
 	        	
 	        	Long before = writerSemiLex.getFilePointer();
 	        	
-	        	writerSemiLex.writeChars(entry.getKey());
+	        	writerSemiLex.writeChars(entry.getKey()+":");
 	        	 for(Map.Entry<String,String> deepEntry : entry.getValue().entrySet()) {
 	        		String offsets[] = (deepEntry.getValue()).split(" ");;
 	        		writerSemiLex.writeLong(Long.valueOf(offsets[0]));
@@ -462,24 +462,29 @@ public class App
 	/**
 	 * Fonction qui lit un mot dans un enregistrment json
 	 * 
-	 * @param jsonReader : le fichier json dans lequel la lecture se fait
+	 * @param reader : le fichier json dans lequel la lecture se fait
 	 * @param beginOffset : l'offset de début de l'enregistrement
 	 * @param endOffset : l'offset de fin de l'enregistrement
 	 * @return le mot contenu dans l'enregistrement
 	 */
-	public static String readAword(RandomAccessFile jsonReader,long beginOffset,long endOffset ) {
+	public static String readAword(RandomAccessFile reader,long beginOffset,long endOffset,boolean isNormalized ) {
 		
 		StringBuilder enregistrement = new StringBuilder();
 		boolean inWord = false;
 		
 		try {
 		
-			jsonReader.seek(beginOffset);
+			reader.seek(beginOffset);
 			long pointeur = beginOffset;
-			while((pointeur = jsonReader.getFilePointer()) != endOffset) {
-				char lettre = jsonReader.readChar();
+			while((pointeur = reader.getFilePointer()) != endOffset) {
+				char lettre = reader.readChar();
 				
 				if(lettre == ':') {//le premier : indique que l'on vien de passer le parametre "titre"
+					
+					if(isNormalized) {
+						break;
+					}
+					
 					inWord = true;
 					continue;
 				}
@@ -487,7 +492,7 @@ public class App
 					break;
 				}
 				
-				if(inWord) {
+				if(inWord || isNormalized) {
 					
 					enregistrement.append(lettre);
 				}
@@ -497,25 +502,34 @@ public class App
 			e.printStackTrace();
 		}
 		//System.out.println(enregistrement);
+		
+		if(isNormalized) {
+			return enregistrement.toString();
+		}
+		
+		
 		return enregistrement.substring(1);//on enlève le premier espace
 	}
 	
 	/**
-	 * Fonction qui récupère le mot dans le json
+	 * Fonction qui récupère la postion du mot dans le dico.lex
 	 * 
 	 * @param word : mot à chercher
-	 * @return l'enregistrment json qui correspond à ce mot
+	 * @return l'offset de debut et de fin du mot recherché, une liste vide en cas de probleme
 	 */
-	public static String getTheWord(String word) {
+	public static List<Long> getTheNormalizedWordOffset(String word) {
+		
+		//normalisation
+		String normalizedWord = App.normalise(word);
 		
 		//initialisation des fichiers
-		File jsonFile = new File("dico.json.txt");
+		File semiDico = new File("semiDico.lex");
 		File lexFile = new File("dico.lex");
 		
 		try {
 			
 			//initialisation des reader
-			RandomAccessFile jsonReader = new RandomAccessFile(jsonFile,"rw");
+			RandomAccessFile jsonReader = new RandomAccessFile(semiDico,"rw");
 			RandomAccessFile lexReader = new RandomAccessFile(lexFile,"rw");
 			
 			//variable utiles
@@ -533,7 +547,7 @@ public class App
 			
 			//boucle de recherche
 			String readedWord="";
-			while(compteur<pireDesCas && !(readedWord = App.readAword(jsonReader, middleWordBegin, middleWordEnd)).equals(word)) {
+			while(compteur<pireDesCas && !(readedWord = App.readAword(jsonReader, middleWordBegin, middleWordEnd,true)).equals(normalizedWord)) {
 				
 				//verification du mot central
 				numberOfCouple /= 2;
@@ -542,7 +556,7 @@ public class App
 				}
 				
 				//actualisation des offsets
-				if(readedWord.compareTo(word)>=0) {
+				if(readedWord.compareTo(normalizedWord)>=0) {
 					lexReader.seek(lexReader.getFilePointer() - ((numberOfCouple/2)+1)*coupleSize);
 					middleWordBegin = lexReader.readLong();
 					middleWordEnd = lexReader.readLong();
@@ -557,35 +571,84 @@ public class App
 		
 			
 			//lecture de l'enregistrement
-			if(readedWord.equals(word)) {
-				StringBuilder enregistrement = new StringBuilder();
-				jsonReader.seek(middleWordBegin);
-				long pointeur = middleWordBegin;
-				while((pointeur = jsonReader.getFilePointer()) != middleWordEnd) {
-					char lettre = jsonReader.readChar();
-					enregistrement.append(lettre);
-				}
+			if(readedWord.equals(normalizedWord)) {
+				
 				//fermeture des Reader
 				jsonReader.close();
 				lexReader.close();
 				
-				return enregistrement.toString();
+				return List.of(middleWordBegin,middleWordEnd);
 			}
 			//fermeture des Reader
 			jsonReader.close();
 			lexReader.close();
 			
-			return "Le mot n'as pas été trouvé";
+			return new ArrayList<Long>();
 			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return "Ce message n'est pas sensé s'afficher";
+		return new ArrayList<Long>();
 	}
+	
+	public static void allTheWordsFromNormalized(List<Long> offsets){
+		
+		//preparation des fichier
+		File semiDicoFile = new File("semiDico.lex");
+		File jsonFile = new File("dico.json");
+		
+		//preparation de divers variables
+		long offsetBegin = offsets.get(0);
+		long offsetEnd = offsets.get(1);
+		
+		try {
+			//ouverture de fichier
+			RandomAccessFile semiDico = new RandomAccessFile(semiDicoFile,"rw");
+			RandomAccessFile json = new RandomAccessFile(jsonFile,"rw");
+			
+			//actualisation de la position
+			App.readAword(semiDico, offsetBegin, offsetEnd, true);
+			long position = semiDico.getFilePointer();
+			long length = offsetEnd - offsetBegin - (position - offsetBegin);
+			long numberOfCouple = length/16;
+			
+			for(int i=0;i<numberOfCouple;i++) {
+				
+				//preparation des variables de lecture
+				long wordBegin = semiDico.readLong();
+				long wordEnd = semiDico.readLong();
+				json.seek(wordBegin);
+				StringBuilder print =  new StringBuilder();
+				
+				//lecture du mot
+				long pointer = wordBegin;
+				while((pointer = json.getFilePointer()) != wordEnd) {
+					print.append(json.readChar());
+				}
+				
+				//ecriture du mot
+				System.out.println(print);
+			}
+			
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
 	
     public static void main( String[] args )
     {
-    	App.makeDictionnaries();
-    	//System.out.println(App.getTheWord("azithromycine"));
+    	//App.makeDictionnaries();
+    	
+    	
+    	List<Long> offsets = App.getTheNormalizedWordOffset("xylophone");
+    	if(offsets.isEmpty()) {
+    		System.out.println("le mot n'a pas ete trouve");
+    	}else {
+    		App.allTheWordsFromNormalized(offsets);
+    	}
+    	
+    	
+    	
     } 
 }
