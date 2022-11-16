@@ -4,28 +4,38 @@
 #include "../headers/dicoToStaticTree.h"
 #include "../headers/dictionnary_build.h"
 #include "../headers/dictionnary_lookup.h"
-#include "../headers/grid_path.h"
 #include "../headers/grid.h"
+#include "../headers/grid_path.h"
 
 char* solve_rec(char* filename, int minLenght, grid g, char allWords[], int index, char currentWord[]){
     ArrayCell cell = readCellInFile(filename, index); 
+    printf("B");
+    printf("currentWord:%s et allWords : %s",currentWord,allWords);
     char oldWord []="";
     strcpy(oldWord,currentWord);
     char lettre[] = {cell.elem};
     strcat(currentWord,lettre);
+    printf("1");
     if (cell.elem == '\0' && strlen(currentWord)>=minLenght){
+      printf("C");
         if (strlen(allWords)==0){
             strcat(allWords, " ");
         }
         strcat(allWords,currentWord);
     }
 
+    printf("2");
     if((grid_path(currentWord, g)==0) && (cell.firstChild!=-1)){
-        allWords=solve_rec(filename, minLenght,g,allWords,cell.firstChild,currentWord);
+      printf("D");
+      allWords=solve_rec(filename, minLenght,g,allWords,cell.firstChild,currentWord);
     }
+    
+    printf("3");
     if(cell.nSiblings!=0){
-        allWords=solve_rec(filename, minLenght,g ,allWords,index+1,oldWord);
+      printf("E");
+      allWords=solve_rec(filename, minLenght,g ,allWords,index+1,oldWord);
     }
+    printf("U");
     return allWords;
 }
 
@@ -54,21 +64,23 @@ int dictionnary_lookup_rec(char* filename, int index, char* mot){ //Le premier i
 
 
 char* solve(char* filename, int minLenght, grid g, char allWords[]){
-    solve_rec(filename, minLenght, g, allWords, 0 ,"");
+  return solve_rec(filename, minLenght, g, allWords, 0 ,"");
 }
 
 
 int main(int argc, char *argv[]){
+  /*
     if (argc < 3){
         printf("Erreur : nombre d'arguments incorrect\n");
         exit(1);
-    }
-    char* s;
+    }*/
+    char s[]="";
 
     int height = 4;
     int width = 4;
 
-    char* gridList = "EAUXRBRXXXEXXXX";
+    char* gridList = "eauxrbrxxxexxxxx";
+
     /*
     // affiche toutes les variables
     printf("height: %d\n", height);
@@ -80,5 +92,6 @@ int main(int argc, char *argv[]){
     g.nbl = height;
     g.nbc = width;
     g.gridList = gridList;
+    printf("AAAAA");
     printf("%s", solve("../../data/dico.lex", 1, g, s));
 }

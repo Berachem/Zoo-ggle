@@ -79,8 +79,7 @@ int nChildren(CSTree t){
     return nSibling(t->firstChild); 
 }
 
-// fonction récurssive qui renvoie insère chaque lettre d'un mot dans un CSTree
-// fonction récurssive qui renvoie insère chaque lettre d'un mot dans un CSTree en finissant par un \0
+// fonction récurssive qui insère chaque lettre d'un mot dans un CSTree en finissant par un \0
 CSTree insert(CSTree t, char* word){
     if(t==NULL){
         t = malloc(sizeof(Node));
