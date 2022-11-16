@@ -591,6 +591,30 @@ public class App
 		return new ArrayList<Long>();
 	}
 	
+	/**
+	 * Fonction qui indique si un mot est normalisé
+	 * 
+	 * @param word : le mot a verifier
+	 * @return true si le mot est normalizé false sinon
+	 */
+	public static boolean isNormalized(String word) {
+		
+		for(int i=0;i<word.length();i++) {
+			char c = word.charAt(i);
+			if(c<'A' || c>'Z') {
+				return false;
+			}
+		}
+		
+		return true;
+		
+	}
+	
+	/**
+	 * Affiche toutes les possibilitées d'un mot normalisé
+	 * 
+	 * @param offsets : la liste des offsets de début et de fin de l'enregistrement du mot normalisé
+	 */
 	public static void allTheWordsFromNormalized(List<Long> offsets){
 		
 		//preparation des fichier
@@ -639,9 +663,10 @@ public class App
     public static void main( String[] args )
     {
     	//App.makeDictionnaries();
+    	String mot = "xylophone";
     	
     	
-    	List<Long> offsets = App.getTheNormalizedWordOffset("xylophone");
+    	List<Long> offsets = App.getTheNormalizedWordOffset(mot);
     	if(offsets.isEmpty()) {
     		System.out.println("le mot n'a pas ete trouve");
     	}else {
