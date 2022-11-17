@@ -460,11 +460,12 @@ public class App
     }
 	
 	/**
-	 * Fonction qui lit un mot dans un enregistrment json
+	 * Fonction qui lit un mot dans un enregistrment json/normalisé
 	 * 
 	 * @param reader : le fichier json dans lequel la lecture se fait
 	 * @param beginOffset : l'offset de début de l'enregistrement
 	 * @param endOffset : l'offset de fin de l'enregistrement
+	 * @param isNormalized : indique ce le mot à lire est normalisé ou non
 	 * @return le mot contenu dans l'enregistrement
 	 */
 	public static String readAword(RandomAccessFile reader,long beginOffset,long endOffset,boolean isNormalized ) {
@@ -512,6 +513,75 @@ public class App
 	}
 	
 	/**
+	 * Fonction qui fait la recherche dichotomique d'un mot et renvoie les offsets de ce dernier
+	 * 
+	 * @param word : le mot à chercher
+	 * @param isNormalized : indique si le mot à chercher est normalisé ou non
+	 * @param numberOfCouple : le nombre de couple
+	 * @param coupleSize : la taille d'un couple
+	 * @param lexReader : le fichier index binaire
+	 * @param wordReader : le fichier ou se lis le mot
+	 * @return une Liste des offsets de début et fin du mot
+	 */
+	public static List<Long> dichotomicSearch(String word,boolean isNormalized ,long numberOfCouple,long coupleSize,RandomAccessFile lexReader,RandomAccessFile wordReader ){
+		
+		//mise en place de variables utiles
+		long pireDesCas = Math.round(Math.log(numberOfCouple)/Math.log(2))+10;//L'algorithme est en théorie O(Log(n)) mais pas exactement à l'execution
+		long compteur = 0;
+		
+		try {
+		
+			//mise en place des premiers offsets
+			if(isNormalized) {
+				lexReader.seek((numberOfCouple/2)*coupleSize);
+			}else {
+				lexReader.seek(lexReader.getFilePointer()+((numberOfCouple/2)*coupleSize));
+			}
+			long middleWordBegin = lexReader.readLong();
+			long middleWordEnd = lexReader.readLong();
+			
+			
+			//boucle de recherche
+			String readedWord="";
+			while(compteur<pireDesCas && !(readedWord = App.readAword(wordReader, middleWordBegin, middleWordEnd,isNormalized)).equals(word)) {
+				
+				//verification du mot central
+				numberOfCouple /= 2;
+				if(numberOfCouple<=1) {
+					numberOfCouple=2; //on veut toujours bouger d'au moins un
+				}
+				
+				//actualisation des offsets
+				if(readedWord.compareTo(word)>=0) {
+					lexReader.seek(lexReader.getFilePointer() - ((numberOfCouple/2)+1)*coupleSize);
+					middleWordBegin = lexReader.readLong();
+					middleWordEnd = lexReader.readLong();
+				}else {
+					lexReader.seek(lexReader.getFilePointer() + ((numberOfCouple/2)+1)*coupleSize);
+					middleWordBegin = lexReader.readLong();
+					middleWordEnd = lexReader.readLong();
+				}
+				compteur ++;
+				//System.out.println(compteur + "/" + pireDesCas);
+			}
+		
+			
+			//lecture de l'enregistrement
+			if(readedWord.equals(word)) {
+				
+				
+				
+				return List.of(middleWordBegin,middleWordEnd);
+			}
+			return new ArrayList<Long>();
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		return new ArrayList<Long>();
+	}
+	
+	
+	/**
 	 * Fonction qui récupère la postion du mot dans le dico.lex
 	 * 
 	 * @param word : mot à chercher
@@ -529,61 +599,23 @@ public class App
 		try {
 			
 			//initialisation des reader
-			RandomAccessFile jsonReader = new RandomAccessFile(semiDico,"rw");
+			RandomAccessFile semiReader = new RandomAccessFile(semiDico,"rw");
 			RandomAccessFile lexReader = new RandomAccessFile(lexFile,"rw");
 			
 			//variable utiles
 			long coupleSize = 16; //un long fait 8 bits donc 2 long font 16 logiquement
 			long lengthFichier = lexReader.length(); //je suppose qu'il me renvoie le nombre de bit
-			long numberOfCouple = lengthFichier/16;
-			long pireDesCas = Math.round(Math.log(numberOfCouple)/Math.log(2))+10;//L'algorithme est en théorie O(Log(n)) mais pas exactement à l'execution
-			long compteur = 0;
+			long numberOfCouple = lengthFichier/coupleSize;
 			
-			//mise en place des premiers offsets
-			lexReader.seek((numberOfCouple/2)*coupleSize);
-			long middleWordBegin = lexReader.readLong();
-			long middleWordEnd = lexReader.readLong();
+			//recuperation du resultat
+			List<Long> retour = App.dichotomicSearch(normalizedWord, true, numberOfCouple, coupleSize, lexReader, semiReader);
 			
-			
-			//boucle de recherche
-			String readedWord="";
-			while(compteur<pireDesCas && !(readedWord = App.readAword(jsonReader, middleWordBegin, middleWordEnd,true)).equals(normalizedWord)) {
-				
-				//verification du mot central
-				numberOfCouple /= 2;
-				if(numberOfCouple<=1) {
-					numberOfCouple=2; //on veut toujours bouger d'au moins un
-				}
-				
-				//actualisation des offsets
-				if(readedWord.compareTo(normalizedWord)>=0) {
-					lexReader.seek(lexReader.getFilePointer() - ((numberOfCouple/2)+1)*coupleSize);
-					middleWordBegin = lexReader.readLong();
-					middleWordEnd = lexReader.readLong();
-				}else {
-					lexReader.seek(lexReader.getFilePointer() + ((numberOfCouple/2)+1)*coupleSize);
-					middleWordBegin = lexReader.readLong();
-					middleWordEnd = lexReader.readLong();
-				}
-				compteur ++;
-				//System.out.println(compteur + "/" + pireDesCas);
-			}
-		
-			
-			//lecture de l'enregistrement
-			if(readedWord.equals(normalizedWord)) {
-				
-				//fermeture des Reader
-				jsonReader.close();
-				lexReader.close();
-				
-				return List.of(middleWordBegin,middleWordEnd);
-			}
 			//fermeture des Reader
-			jsonReader.close();
+			semiReader.close();
 			lexReader.close();
 			
-			return new ArrayList<Long>();
+			return retour;
+			
 			
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -660,17 +692,65 @@ public class App
 	}
 	
 	
+	public static void onlyTheOneWord(List<Long> offsets, String word) {
+		
+		//initialisation des fichiers
+		File lexFile = new File("semiDico.lex");
+		File jsonFile = new File("dico.json");
+		
+		try {
+			
+			//initialisation des RandomAccessFile
+			RandomAccessFile lexReader = new RandomAccessFile(lexFile,"rw");
+			RandomAccessFile jsonReader = new RandomAccessFile(jsonFile,"rw");
+			
+			//initialisation des variables pour la recherche dichotomique
+			long offsetBegin = offsets.get(0);
+			long offsetEnd = offsets.get(1);
+			App.readAword(lexReader, offsetBegin, offsetEnd, true);
+			long position = lexReader.getFilePointer();
+			long length = offsetEnd - offsetBegin - (position - offsetBegin);
+			long coupleSize = 16;
+			long numberOfCouple = length/coupleSize;
+			
+			//recuperation et affichage des resultats
+			List<Long> finalOffsets = App.dichotomicSearch(word, false, numberOfCouple, coupleSize, lexReader, jsonReader);
+
+			StringBuilder print = new StringBuilder();
+			long wordBegin = finalOffsets.get(0);
+			long wordEnd = finalOffsets.get(1);
+			
+			jsonReader.seek(wordBegin);
+			long pointer = wordBegin;
+			while((pointer = jsonReader.getFilePointer()) != wordEnd) {
+				print.append(jsonReader.readChar());
+			}
+			System.out.println(print);
+			
+			//fermeture des Reader
+			jsonReader.close();
+			lexReader.close();
+			
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	
     public static void main( String[] args )
     {
     	//App.makeDictionnaries();
-    	String mot = "xylophone";
-    	
+    	String mot = "PATATE";
     	
     	List<Long> offsets = App.getTheNormalizedWordOffset(mot);
     	if(offsets.isEmpty()) {
     		System.out.println("le mot n'a pas ete trouve");
     	}else {
-    		App.allTheWordsFromNormalized(offsets);
+    		if(App.isNormalized(mot)) {
+    			App.allTheWordsFromNormalized(offsets);
+    		}else {
+    			App.onlyTheOneWord(offsets, mot);
+    		}
     	}
     	
     	
