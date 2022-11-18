@@ -458,7 +458,11 @@ public class DictionaryMaker
 		// BERA : "C:\\Users\\berac\\Desktop\\wiki-fr.xml" 
 		// JOSHUA : "C:\\Users\\Jlwis\\Desktop\\wiki-fr.xml"
         // ========================================================================================================
+    	String fichierLecture = args[0];
+    	fichierLecture = fichierLecture.replace("\\","\\\\");//vive les charactères d'échapement
+    	String lang = args[1];
+    	String fichierSauvegarde = args[3];
     	
-    	DictionaryMaker.makeDictionnaries("C:\\Users\\Jlwis\\Desktop\\wiki-fr.xml","fr","dico");
+    	DictionaryMaker.makeDictionnaries(fichierLecture,lang,fichierSauvegarde);
     } 
 }

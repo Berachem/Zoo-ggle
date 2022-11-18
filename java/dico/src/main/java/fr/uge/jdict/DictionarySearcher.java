@@ -289,8 +289,9 @@ public class DictionarySearcher {
 	
 	public static void main( String[] args )
     {
-    	String mot = "petit";
-    	String path = "dico";
+    	
+    	String path = args[0];
+    	String mot = args[1];
     	
     	List<Long> offsets = DictionarySearcher.getTheNormalizedWordOffset(mot, path);
     	if(offsets.isEmpty()) {
