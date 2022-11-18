@@ -1,4 +1,4 @@
-package Dictionnaire.dico;
+package fr.uge;
 
 public class test {
 

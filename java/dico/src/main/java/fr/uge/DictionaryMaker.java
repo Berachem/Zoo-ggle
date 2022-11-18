@@ -1,4 +1,4 @@
-package Dictionnaire.dico;
+package fr.uge;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -18,7 +18,7 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
-public class App 
+public class DictionaryMaker 
 {
 	
 	/**
@@ -27,7 +27,7 @@ public class App
 	 * @param line : la balise à décortiquer
 	 * @return l'interieur de la balise
 	 */
-	public static String recupInterieurBalise(String line) {
+	public static String recupInsideBeacon(String line) {
 		String retour = "";
 		boolean interieur = false;
 		for(int i=0;i<line.length();i++) {
@@ -120,7 +120,7 @@ public class App
 	 * @param mot : mot à nettoyer
 	 * @return le mot en majuscule sans ses accents
 	 */
-	public static String normalise(String mot) {
+	public static String normalize(String mot) {
 		
 		List<Character> accent  = List.of('À', 'Á', 'Â', 'Ã', 'Ä', 'Å', 'Ç', 'È', 'É', 'Ê', 'Ë', 'Ì', 'Í', 'Î', 'Ï', 'Ò', 'Ó', 'Ô', 'Õ', 'Ö', 'Ù', 'Ú', 'Û', 'Ü', 'Ý');
 		List<Character> sansAccent = List.of('A', 'A', 'A', 'A', 'A', 'A', 'C', 'E', 'E', 'E', 'E', 'I', 'I', 'I', 'I', 'O', 'O', 'O', 'O', 'O', 'U', 'U', 'U', 'U', 'Y');
@@ -157,8 +157,7 @@ public class App
 	 */
 	public static void addSemiOffset(TreeMap<String,TreeMap<String,String>> dicoSemiOffset,String mot,long beforeMot,long afterMot){
 		
-		String normalise = App.normalise(mot);
-		System.out.println(normalise);
+		String normalise = DictionaryMaker.normalize(mot);
 		
 		if(dicoSemiOffset.containsKey(normalise)) {
 			dicoSemiOffset.get(normalise).put(mot, beforeMot+" "+afterMot);
@@ -228,45 +227,38 @@ public class App
 	/**
 	 * Fonction qui crée les différents fichiers demandés
 	 */
-	public static void makeDictionnaries() {
-		// ===================A CHANGER EN FONCTION DE L'ENDROIT OU VOUS AVEZ MIS LE FICHIER XML===================
-        String xmlPath = "C:\\Users\\Jlwis\\Desktop\\wiki-fr.xml"; // Path to the XML file
-
-		// BERA : "C:\\Users\\berac\\Desktop\\wiki-fr.xml" 
-		// JOSHUA : "C:\\Users\\Jlwis\\Desktop\\wiki-fr.xml"
-		
-        // ========================================================================================================
+	public static void makeDictionnaries(String path,String lang,String returnName) {
         
         //création  du dictionnaire pour les fréquences
-        HashMap<String,Integer> dicoFreq = App.createDicoFreq();
+        HashMap<String,Integer> dicoFreq = DictionaryMaker.createDicoFreq();
         TreeMap<String,TreeMap<String,String>> dicoSemiOffsets = new TreeMap<>();
 
 		// créer un fichier dico.json.txt en mode écriture
-		File dicoJSON = new File("dico.json");
-		App.resetFile(dicoJSON);
+		File dicoJSON = new File(returnName+".json");
+		DictionaryMaker.resetFile(dicoJSON);
 
 		//créationdu fichier txt de fréquence
 		File dicoFrequence = new File("dicoFreq.txt");
-		App.resetFile(dicoFrequence);
+		DictionaryMaker.resetFile(dicoFrequence);
 		
 		//création du fichier d'entreDeux
-		File semiDicoLex = new File("semiDico.lex");
-		App.resetFile(semiDicoLex);
+		File semiDicoLex = new File("semi"+returnName+".lex");
+		DictionaryMaker.resetFile(semiDicoLex);
 		
 		//création du fichier dico.lex
-		File dicoLex = new File("dico.lex");
-		App.resetFile(dicoLex);
+		File dicoLex = new File(returnName+".lex");
+		DictionaryMaker.resetFile(dicoLex);
         
         try{
 	        
         	
         	// ============= CREATION DES ENTREE SORTIES =============
         	//creation du buffer de lecture du xml
-	        File file=new File(xmlPath);
+	        File file=new File(path);
 	        BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), "UTF-8"));
 	        
 	        //creation du writer pour le json
-	        RandomAccessFile writer = new RandomAccessFile(dicoJSON, "rw");
+	        RandomAccessFile writerJson = new RandomAccessFile(dicoJSON, "rw");
 	        
 	        //creation du writer pour le txt
 	        FileWriter writerFreq = new FileWriter(dicoFrequence, Charset.forName("UTF-8"));
@@ -282,7 +274,7 @@ public class App
 	        
 	        
 			// =============CHOIX DE LA LANGUE CIBLEE=================
-			String langueCible = "fr"; // fr = francais, en = anglais, es = espagnol, de = allemand ...
+			String langueCible = lang; // fr = francais, en = anglais, es = espagnol, de = allemand ...
 			// =======================================================
 
 			
@@ -303,7 +295,7 @@ public class App
 			String jsonMot = "";
 
 			// écriture de l'entete du fichier json en UTF-8
-			writer.writeChars(jsonEntete+"\n");
+			writerJson.writeChars(jsonEntete+"\n");
 			// =======================================================
 			
 			
@@ -321,17 +313,18 @@ public class App
 	        		if (estMot && estBonneLangue) {
 	        			
 						//Actualisation du fichier json
-						long beforeMot = writer.getFilePointer();
+						long beforeMot = writerJson.getFilePointer();
 	        			jsonMot = "{" + "\"title\" : " + mot + "," + "\"definitions\":{\"nom\" : " + definitionsNom + "," + "\"verbe\" : " + definitionsVerbe + "}}";
-						writer.writeChars(jsonMot+"\n");
-						long afterMot = writer.getFilePointer();
+						writerJson.writeChars(jsonMot+"\n");
+						long afterMot = writerJson.getFilePointer();
+						System.out.println(beforeMot+" "+afterMot);
 						
 						//stockage des offsets
-						App.addSemiOffset(dicoSemiOffsets, mot, beforeMot, afterMot);
+						DictionaryMaker.addSemiOffset(dicoSemiOffsets, mot, beforeMot, afterMot);
 						
 						//Actualisation des fréquence de lettre
-						mot = App.normalise(mot);
-						mot.replace("QU", "*");
+						mot = DictionaryMaker.normalize(mot);
+						mot = mot.replace("QU", "*");
 		        		
 		        		for(int i=0;i<mot.length();i++) {
 		        			char lettre = mot.charAt(i);
@@ -383,8 +376,8 @@ public class App
 	        	
 	        	if(line.contains("<title>")) {
 	        		//title nous indique un mot donc on pousse le mot déja stocké et on reset la recherche
-	        		mot = App.recupInterieurBalise(line);
-	        		if(!App.isAlpha(mot)) {
+	        		mot = DictionaryMaker.recupInsideBeacon(line);
+	        		if(!DictionaryMaker.isAlpha(mot)) {
 	        			mot = "";
 	        		}
 	        		continue;
@@ -392,7 +385,7 @@ public class App
 	        	
 	        	if(line.contains("<ns>")) {
 	        		//si ns = 0 c'est un mot sinon c'est autre chose dont on ne veut pas
-	        		nameSpace = App.recupInterieurBalise(line);
+	        		nameSpace = DictionaryMaker.recupInsideBeacon(line);
 	        		if(nameSpace.equals("0") && mot != "") {
 	        			estMot = true;
 	        			continue;
@@ -408,10 +401,10 @@ public class App
 	        	//****** GESTION DES DEFINITIONS ******
 	        	if(estBonneLangue && estMot){
 					if (line.startsWith("# '")) {
-	        			definitionsVerbe.add(App.cleanupExemple('"'+line.replaceFirst("# ", "").replaceFirst("</text>", "")+'"'));
+	        			definitionsVerbe.add(DictionaryMaker.cleanupExemple('"'+line.replaceFirst("# ", "").replaceFirst("</text>", "")+'"'));
 	        		}
 	        		else if(line.startsWith("# ")) { 
-						definitionsNom.add(App.cleanupExemple('"'+line.replaceFirst("# ", "").replaceFirst("</text>", "")+'"'));
+						definitionsNom.add(DictionaryMaker.cleanupExemple('"'+line.replaceFirst("# ", "").replaceFirst("</text>", "")+'"'));
 	        		}
 	        		
 	        	}
@@ -426,7 +419,6 @@ public class App
 	        	writerFreq.write(entry.getKey()+" "+String.valueOf(entry.getValue())+"\n");
 	        }
 	        //ecriture du semiOffsets et Offset en parrallele
-	        ArrayList<Long> dicoOffsets = new ArrayList<>();
 	        for(Map.Entry<String,TreeMap<String,String>> entry : dicoSemiOffsets.entrySet()) {
 	        	
 	        	Long before = writerSemiLex.getFilePointer();
@@ -446,7 +438,7 @@ public class App
 	        
 	        //fermeture des différents buffers
 	        reader.close();
-	        writer.close();
+	        writerJson.close();
 	        writerFreq.close();
 	        writerLex.close();
 	        writerSemiLex.close();
@@ -459,301 +451,14 @@ public class App
         
     }
 	
-	/**
-	 * Fonction qui lit un mot dans un enregistrment json/normalisé
-	 * 
-	 * @param reader : le fichier json dans lequel la lecture se fait
-	 * @param beginOffset : l'offset de début de l'enregistrement
-	 * @param endOffset : l'offset de fin de l'enregistrement
-	 * @param isNormalized : indique ce le mot à lire est normalisé ou non
-	 * @return le mot contenu dans l'enregistrement
-	 */
-	public static String readAword(RandomAccessFile reader,long beginOffset,long endOffset,boolean isNormalized ) {
-		
-		StringBuilder enregistrement = new StringBuilder();
-		boolean inWord = false;
-		
-		try {
-		
-			reader.seek(beginOffset);
-			long pointeur = beginOffset;
-			while((pointeur = reader.getFilePointer()) != endOffset) {
-				char lettre = reader.readChar();
-				
-				if(lettre == ':') {//le premier : indique que l'on vien de passer le parametre "titre"
-					
-					if(isNormalized) {
-						break;
-					}
-					
-					inWord = true;
-					continue;
-				}
-				if(lettre == ',') {
-					break;
-				}
-				
-				if(inWord || isNormalized) {
-					
-					enregistrement.append(lettre);
-				}
-				
-			}
-		}catch(Exception e) {
-			e.printStackTrace();
-		}
-		//System.out.println(enregistrement);
-		
-		if(isNormalized) {
-			return enregistrement.toString();
-		}
-		
-		
-		return enregistrement.substring(1);//on enlève le premier espace
-	}
-	
-	/**
-	 * Fonction qui fait la recherche dichotomique d'un mot et renvoie les offsets de ce dernier
-	 * 
-	 * @param word : le mot à chercher
-	 * @param isNormalized : indique si le mot à chercher est normalisé ou non
-	 * @param numberOfCouple : le nombre de couple
-	 * @param coupleSize : la taille d'un couple
-	 * @param lexReader : le fichier index binaire
-	 * @param wordReader : le fichier ou se lis le mot
-	 * @return une Liste des offsets de début et fin du mot
-	 */
-	public static List<Long> dichotomicSearch(String word,boolean isNormalized ,long numberOfCouple,long coupleSize,RandomAccessFile lexReader,RandomAccessFile wordReader ){
-		
-		//mise en place de variables utiles
-		long pireDesCas = Math.round(Math.log(numberOfCouple)/Math.log(2))+10;//L'algorithme est en théorie O(Log(n)) mais pas exactement à l'execution
-		long compteur = 0;
-		
-		try {
-		
-			//mise en place des premiers offsets
-			if(isNormalized) {
-				lexReader.seek((numberOfCouple/2)*coupleSize);
-			}else {
-				lexReader.seek(lexReader.getFilePointer()+((numberOfCouple/2)*coupleSize));
-			}
-			long middleWordBegin = lexReader.readLong();
-			long middleWordEnd = lexReader.readLong();
-			
-			
-			//boucle de recherche
-			String readedWord="";
-			while(compteur<pireDesCas && !(readedWord = App.readAword(wordReader, middleWordBegin, middleWordEnd,isNormalized)).equals(word)) {
-				
-				//verification du mot central
-				numberOfCouple /= 2;
-				if(numberOfCouple<=1) {
-					numberOfCouple=2; //on veut toujours bouger d'au moins un
-				}
-				
-				//actualisation des offsets
-				if(readedWord.compareTo(word)>=0) {
-					lexReader.seek(lexReader.getFilePointer() - ((numberOfCouple/2)+1)*coupleSize);
-					middleWordBegin = lexReader.readLong();
-					middleWordEnd = lexReader.readLong();
-				}else {
-					lexReader.seek(lexReader.getFilePointer() + ((numberOfCouple/2)+1)*coupleSize);
-					middleWordBegin = lexReader.readLong();
-					middleWordEnd = lexReader.readLong();
-				}
-				compteur ++;
-				//System.out.println(compteur + "/" + pireDesCas);
-			}
-		
-			
-			//lecture de l'enregistrement
-			if(readedWord.equals(word)) {
-				
-				
-				
-				return List.of(middleWordBegin,middleWordEnd);
-			}
-			return new ArrayList<Long>();
-		}catch(Exception e) {
-			e.printStackTrace();
-		}
-		return new ArrayList<Long>();
-	}
-	
-	
-	/**
-	 * Fonction qui récupère la postion du mot dans le dico.lex
-	 * 
-	 * @param word : mot à chercher
-	 * @return l'offset de debut et de fin du mot recherché, une liste vide en cas de probleme
-	 */
-	public static List<Long> getTheNormalizedWordOffset(String word) {
-		
-		//normalisation
-		String normalizedWord = App.normalise(word);
-		
-		//initialisation des fichiers
-		File semiDico = new File("semiDico.lex");
-		File lexFile = new File("dico.lex");
-		
-		try {
-			
-			//initialisation des reader
-			RandomAccessFile semiReader = new RandomAccessFile(semiDico,"rw");
-			RandomAccessFile lexReader = new RandomAccessFile(lexFile,"rw");
-			
-			//variable utiles
-			long coupleSize = 16; //un long fait 8 bits donc 2 long font 16 logiquement
-			long lengthFichier = lexReader.length(); //je suppose qu'il me renvoie le nombre de bit
-			long numberOfCouple = lengthFichier/coupleSize;
-			
-			//recuperation du resultat
-			List<Long> retour = App.dichotomicSearch(normalizedWord, true, numberOfCouple, coupleSize, lexReader, semiReader);
-			
-			//fermeture des Reader
-			semiReader.close();
-			lexReader.close();
-			
-			return retour;
-			
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return new ArrayList<Long>();
-	}
-	
-	/**
-	 * Fonction qui indique si un mot est normalisé
-	 * 
-	 * @param word : le mot a verifier
-	 * @return true si le mot est normalizé false sinon
-	 */
-	public static boolean isNormalized(String word) {
-		
-		for(int i=0;i<word.length();i++) {
-			char c = word.charAt(i);
-			if(c<'A' || c>'Z') {
-				return false;
-			}
-		}
-		
-		return true;
-		
-	}
-	
-	/**
-	 * Affiche toutes les possibilitées d'un mot normalisé
-	 * 
-	 * @param offsets : la liste des offsets de début et de fin de l'enregistrement du mot normalisé
-	 */
-	public static void allTheWordsFromNormalized(List<Long> offsets){
-		
-		//preparation des fichier
-		File semiDicoFile = new File("semiDico.lex");
-		File jsonFile = new File("dico.json");
-		
-		//preparation de divers variables
-		long offsetBegin = offsets.get(0);
-		long offsetEnd = offsets.get(1);
-		
-		try {
-			//ouverture de fichier
-			RandomAccessFile semiDico = new RandomAccessFile(semiDicoFile,"rw");
-			RandomAccessFile json = new RandomAccessFile(jsonFile,"rw");
-			
-			//actualisation de la position
-			App.readAword(semiDico, offsetBegin, offsetEnd, true);
-			long position = semiDico.getFilePointer();
-			long length = offsetEnd - offsetBegin - (position - offsetBegin);
-			long numberOfCouple = length/16;
-			
-			for(int i=0;i<numberOfCouple;i++) {
-				
-				//preparation des variables de lecture
-				long wordBegin = semiDico.readLong();
-				long wordEnd = semiDico.readLong();
-				json.seek(wordBegin);
-				StringBuilder print =  new StringBuilder();
-				
-				//lecture du mot
-				long pointer = wordBegin;
-				while((pointer = json.getFilePointer()) != wordEnd) {
-					print.append(json.readChar());
-				}
-				
-				//ecriture du mot
-				System.out.println(print);
-			}
-			
-		}catch(Exception e) {
-			e.printStackTrace();
-		}
-	}
-	
-	
-	public static void onlyTheOneWord(List<Long> offsets, String word) {
-		
-		//initialisation des fichiers
-		File lexFile = new File("semiDico.lex");
-		File jsonFile = new File("dico.json");
-		
-		try {
-			
-			//initialisation des RandomAccessFile
-			RandomAccessFile lexReader = new RandomAccessFile(lexFile,"rw");
-			RandomAccessFile jsonReader = new RandomAccessFile(jsonFile,"rw");
-			
-			//initialisation des variables pour la recherche dichotomique
-			long offsetBegin = offsets.get(0);
-			long offsetEnd = offsets.get(1);
-			App.readAword(lexReader, offsetBegin, offsetEnd, true);
-			long position = lexReader.getFilePointer();
-			long length = offsetEnd - offsetBegin - (position - offsetBegin);
-			long coupleSize = 16;
-			long numberOfCouple = length/coupleSize;
-			
-			//recuperation et affichage des resultats
-			List<Long> finalOffsets = App.dichotomicSearch(word, false, numberOfCouple, coupleSize, lexReader, jsonReader);
-
-			StringBuilder print = new StringBuilder();
-			long wordBegin = finalOffsets.get(0);
-			long wordEnd = finalOffsets.get(1);
-			
-			jsonReader.seek(wordBegin);
-			long pointer = wordBegin;
-			while((pointer = jsonReader.getFilePointer()) != wordEnd) {
-				print.append(jsonReader.readChar());
-			}
-			System.out.println(print);
-			
-			//fermeture des Reader
-			jsonReader.close();
-			lexReader.close();
-			
-		}catch(Exception e) {
-			e.printStackTrace();
-		}
-	}
-	
 	
     public static void main( String[] args )
     {
-    	//App.makeDictionnaries();
-    	String mot = "PATATE";
+    	// ===================A CHANGER EN FONCTION DE L'ENDROIT OU VOUS AVEZ MIS LE FICHIER XML===================
+		// BERA : "C:\\Users\\berac\\Desktop\\wiki-fr.xml" 
+		// JOSHUA : "C:\\Users\\Jlwis\\Desktop\\wiki-fr.xml"
+        // ========================================================================================================
     	
-    	List<Long> offsets = App.getTheNormalizedWordOffset(mot);
-    	if(offsets.isEmpty()) {
-    		System.out.println("le mot n'a pas ete trouve");
-    	}else {
-    		if(App.isNormalized(mot)) {
-    			App.allTheWordsFromNormalized(offsets);
-    		}else {
-    			App.onlyTheOneWord(offsets, mot);
-    		}
-    	}
-    	
-    	
-    	
+    	DictionaryMaker.makeDictionnaries("C:\\Users\\Jlwis\\Desktop\\wiki-fr.xml","fr","dico");
     } 
 }
