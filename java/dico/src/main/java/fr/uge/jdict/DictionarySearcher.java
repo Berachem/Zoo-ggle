@@ -1,14 +1,10 @@
 package fr.uge.jdict;
 
-import java.io.EOFException;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
 import java.util.List;
-
 import fr.uge.DictionaryMaker;
-import fr.uge.test;
 
 public class DictionarySearcher {
 	
@@ -376,6 +372,8 @@ public class DictionarySearcher {
 	/* Main
 	 * @param arg[0] : le chemin
 	 * @param arg[1] : le mot à rechercher
+	 * commande : java DictionarySearcher.java path word
+	 * javac DictionarySearcher.java
 	 */
 	public static void main( String[] args )
     {
@@ -386,6 +384,8 @@ public class DictionarySearcher {
 
 		String path = args[0];
 		String mot = args[1];
+
+		System.out.println("ARGUMENTS ! "+path+" : "+mot);
 
     	boolean yaml = true;
     	String retour = "";
