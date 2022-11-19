@@ -1,5 +1,6 @@
 package fr.uge.jdict;
 
+import java.io.EOFException;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.RandomAccessFile;
@@ -7,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import fr.uge.DictionaryMaker;
+import fr.uge.test;
 
 public class DictionarySearcher {
 	
@@ -42,16 +44,20 @@ public class DictionarySearcher {
 					break;
 				}
 				
-				if(inWord || isNormalized) {
+				if((inWord || isNormalized) && lettre!='"') {
 					enregistrement.append(lettre);
 				}
 				
 			}
 		}catch(Exception e) {
 			e.printStackTrace();
-		}
+			return ""; //Le calcul du pire des cas n'est pas exact (parfois il est trop grand de 1), 
+					   //il arrive donc parfois qu'un dépassement arrive
+					   //mais seulement dans les cas ou le mots n'est pas dans le dictionnaire
+		}/*catch(Exception e) {
+			e.printStackTrace();
+		}*/
 		
- 
 		if(isNormalized) {
 			return enregistrement.toString();
 		}
@@ -87,7 +93,6 @@ public class DictionarySearcher {
 			//boucle de recherche
 			String readedWord="";
 			while((compteur<=pireDesCas) && !(readedWord = DictionarySearcher.readAword(wordReader, middleWordBegin, middleWordEnd,isNormalized)).equals(word)) {
-				
 				//verification du mot central
 				numberOfCouple /= 2;
 				if(numberOfCouple<=1) {
@@ -186,7 +191,7 @@ public class DictionarySearcher {
 	 * 
 	 * @param offsets : la liste des offsets de début et de fin de l'enregistrement du mot normalisé
 	 */
-	public static void allTheWordsFromNormalized(List<Long> offsets,String path){
+	public static String allTheWordsFromNormalized(List<Long> offsets,String path){
 		
 		//preparation des fichier
 		File semiDicoFile = new File("semi"+path+".lex");
@@ -207,27 +212,31 @@ public class DictionarySearcher {
 			long length = offsetEnd - offsetBegin - (position - offsetBegin);
 			long numberOfCouple = length/16;
 			
+			//ecriture du retour
+			StringBuilder print =  new StringBuilder();
 			for(int i=0;i<numberOfCouple;i++) {
 				
 				//preparation des variables de lecture
 				long wordBegin = semiDico.readLong();
 				long wordEnd = semiDico.readLong();
 				json.seek(wordBegin);
-				StringBuilder print =  new StringBuilder();
+				
 				
 				//lecture du mot
 				long pointer = wordBegin;
 				while((pointer = json.getFilePointer()) != wordEnd) {
 					print.append(json.readChar());
 				}
-				
-				//ecriture du mot
-				System.out.println(print);
 			}
+			
+			//ecriture du mot
+			return print.toString();
 			
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
+		
+		return "Ceci ne devrait pas apparaitre";
 	}
 	
 	
@@ -237,7 +246,7 @@ public class DictionarySearcher {
 	 * @param offsets : le début/fin de l'enregistrement du semiDico
 	 * @param word : le mot à chercher
 	 */
-	public static void onlyTheOneWord(List<Long> offsets, String word,String path) {
+	public static String onlyTheOneWord(List<Long> offsets, String word,String path) {
 		
 		//initialisation des fichiers
 		File lexFile = new File("semi"+path+".lex");
@@ -262,10 +271,10 @@ public class DictionarySearcher {
 			List<Long> finalOffsets = DictionarySearcher.dichotomicSearch(word, false, numberOfCouple, coupleSize, lexReader, jsonReader);
 			
 			if(finalOffsets.isEmpty()) {
-				System.out.println("le mot n'a pas ete trouve");
-				return;
+				return "le mot n'a pas ete trouve";
 			}
 			
+			//creation du retour
 			StringBuilder print = new StringBuilder();
 			long wordBegin = finalOffsets.get(0);
 			long wordEnd = finalOffsets.get(1);
@@ -275,33 +284,131 @@ public class DictionarySearcher {
 			while((pointer = jsonReader.getFilePointer()) != wordEnd) {
 				print.append(jsonReader.readChar());
 			}
-			System.out.println(print);
 			
 			//fermeture des Reader
 			jsonReader.close();
 			lexReader.close();
 			
+			return print.toString();
+			
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
+		
+		return "Ceci ne devrait pas apparaitre";
+	}
+	
+	/** 
+	 * Gère le changement de ligne d'un enregistrment yaml
+	 * 
+	 * @param retour : le StringBuilder
+	 * @param numberOfSpace : la hauteur actuel dans l'enregistrment
+	 * @param inList : indique si on est à l'interieur d'une liste ou non
+	 * @return le stringBuilder auquel on à ajouter le saut de ligne et la bonne profondeur
+	 */
+	private static StringBuilder changeLine(StringBuilder retour,int numberOfSpace,boolean inList) {
+		retour.append("\n");
+		for(int j=0;j<numberOfSpace;j++) {
+			retour.append(" ");
+		}
+		if(inList) {
+			retour.append("-");
+		}
+		
+		return retour;
+	}
+	
+	/**
+	 * Transforme un enregistrment json en enregistrement yaml
+	 * 
+	 * @param json : l'enregistrement à modifier
+	 * @return une chaine de charactère sous format yaml
+	 */
+	public static String jsonToYaml(String json) {
+		
+		StringBuilder retour = new StringBuilder();
+		int numberOfSpace=0;
+		boolean inList = false;
+		boolean inWord = false;
+		
+		for(int i = 0;i<json.length();i++) {
+			char lettre = json.charAt(i);
+			
+			if(lettre == '{') {
+				if(numberOfSpace == 0) {
+					retour.append("\n---");
+				}
+				retour = DictionarySearcher.changeLine(retour, numberOfSpace, inList);
+				numberOfSpace++;
+				
+			}else if(lettre == '}') {
+				numberOfSpace--;
+				
+			}else if(lettre == ':') {
+				retour.append(": ");
+				
+			}else if(lettre == '"') {
+				inWord = !inWord;
+			}else if(lettre == ','){
+				retour = DictionarySearcher.changeLine(retour, numberOfSpace, inList);
+				
+			}else if(lettre == '['){
+				numberOfSpace++;
+				inList = true;
+				retour = DictionarySearcher.changeLine(retour, numberOfSpace, inList);
+				
+			}else if(lettre == ']') {
+				numberOfSpace--;
+				inList = false;
+				
+			}else if(inWord && (Character.isAlphabetic(lettre) || lettre == ' ')) {
+				retour.append(lettre);
+				
+			}
+			
+		}
+		
+		return retour.toString();
+		
+		
 	}
 	
 	
 	public static void main( String[] args )
     {
     	
-    	String path = args[0];
-    	String mot = args[1];
+    	String path = "dico"; //args[0];
+    	String mot = "vache"; //args[1];
+    	boolean yaml = true;
+    	String retour = "";
     	
+    	//gestion de l'écriture en yaml
+    	if(mot.contains("yaml:")) {
+    		yaml = true;
+    		mot.replace("yaml:", "");
+    	}
+    	
+    	//recuperation du mot normalisé
     	List<Long> offsets = DictionarySearcher.getTheNormalizedWordOffset(mot, path);
     	if(offsets.isEmpty()) {
     		System.out.println("le mot n'a pas ete trouve");
+    		
+    	//affichage des resultats
     	}else {
+    		
+    		//recuperation des resultats
     		if(DictionarySearcher.isNormalized(mot)) {
-    			DictionarySearcher.allTheWordsFromNormalized(offsets, path);
-    		}else {
-    			DictionarySearcher.onlyTheOneWord(offsets, mot, path);
+    			retour = DictionarySearcher.allTheWordsFromNormalized(offsets, path);
+    		}else { 
+    			retour = DictionarySearcher.onlyTheOneWord(offsets, mot, path);
     		}
+    		
+    		//gestion du yaml
+    		if(yaml && !retour.equals("le mot n'a pas ete trouve")) {  
+    			System.out.println(DictionarySearcher.jsonToYaml(retour));
+    		}else {
+    			System.out.println(retour);
+    		} 		
     	}
     } 
 	

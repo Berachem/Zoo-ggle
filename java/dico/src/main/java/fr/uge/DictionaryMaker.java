@@ -314,7 +314,7 @@ public class DictionaryMaker
 	        			
 						//Actualisation du fichier json
 						long beforeMot = writerJson.getFilePointer();
-	        			jsonMot = "{" + "\"title\" : " + mot + "," + "\"definitions\":{\"nom\" : " + definitionsNom + "," + "\"verbe\" : " + definitionsVerbe + "}}";
+	        			jsonMot = "{" + "\"title\" : \"" + mot + "\"," + "\"definitions\":{\"nom\" : " + definitionsNom + "," + "\"verbe\" : " + definitionsVerbe + "}}";
 						writerJson.writeChars(jsonMot+"\n");
 						long afterMot = writerJson.getFilePointer();
 						System.out.println(beforeMot+" "+afterMot);
@@ -401,10 +401,10 @@ public class DictionaryMaker
 	        	//****** GESTION DES DEFINITIONS ******
 	        	if(estBonneLangue && estMot){
 					if (line.startsWith("# '")) {
-	        			definitionsVerbe.add(DictionaryMaker.cleanupExemple('"'+line.replaceFirst("# ", "").replaceFirst("</text>", "")+'"'));
+	        			definitionsVerbe.add(DictionaryMaker.cleanupExemple('"'+line.replaceFirst("# ", " ").replaceFirst("</text>", "")+'"'));
 	        		}
 	        		else if(line.startsWith("# ")) { 
-						definitionsNom.add(DictionaryMaker.cleanupExemple('"'+line.replaceFirst("# ", "").replaceFirst("</text>", "")+'"'));
+						definitionsNom.add(DictionaryMaker.cleanupExemple('"'+line.replaceFirst("# ", " ").replaceFirst("</text>", "")+'"'));
 	        		}
 	        		
 	        	}
@@ -458,10 +458,10 @@ public class DictionaryMaker
 		// BERA : "C:\\Users\\berac\\Desktop\\wiki-fr.xml" 
 		// JOSHUA : "C:\\Users\\Jlwis\\Desktop\\wiki-fr.xml"
         // ========================================================================================================
-    	String fichierLecture = args[0];
-    	fichierLecture = fichierLecture.replace("\\","\\\\");//vive les charactères d'échapement
-    	String lang = args[1];
-    	String fichierSauvegarde = args[3];
+    	String fichierLecture = "C:\\Users\\Jlwis\\Desktop\\wiki-fr.xml"; //args[0];
+    	//fichierLecture = fichierLecture.replace("\\","\\\\");//vive les charactères d'échapement
+    	String lang ="fr"; //args[1];
+    	String fichierSauvegarde ="dico"; //args[3];
     	
     	DictionaryMaker.makeDictionnaries(fichierLecture,lang,fichierSauvegarde);
     } 
