@@ -373,12 +373,20 @@ public class DictionarySearcher {
 		
 	}
 	
-	
+	/* Main
+	 * @param arg[0] : le chemin
+	 * @param arg[1] : le mot à rechercher
+	 */
 	public static void main( String[] args )
     {
-    	
-    	String path = "dico"; //args[0];
-    	String mot = "vache"; //args[1];
+		if (args.length != 2) {
+			System.out.println("Il faut 2 arguments : le chemin et le mot à rechercher");
+			return;
+		}
+
+		String path = args[0];
+		String mot = args[1];
+
     	boolean yaml = true;
     	String retour = "";
     	

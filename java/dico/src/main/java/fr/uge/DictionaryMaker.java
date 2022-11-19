@@ -452,17 +452,35 @@ public class DictionaryMaker
     }
 	
 	
+	 /*
+	  * Main 
+	  * @param: args[0] = fichier xml à traiter
+	  * @param: args[1] = langue cible
+	  * @param: args[2] = fichier de sauvegarde
+	  */
     public static void main( String[] args )
-    {
-    	// ===================A CHANGER EN FONCTION DE L'ENDROIT OU VOUS AVEZ MIS LE FICHIER XML===================
+	    // ===================A CHANGER EN FONCTION DE L'ENDROIT OU VOUS AVEZ MIS LE FICHIER XML===================
 		// BERA : "C:\\Users\\berac\\Desktop\\wiki-fr.xml" 
 		// JOSHUA : "C:\\Users\\Jlwis\\Desktop\\wiki-fr.xml"
         // ========================================================================================================
-    	String fichierLecture = "C:\\Users\\Jlwis\\Desktop\\wiki-fr.xml"; //args[0];
-    	//fichierLecture = fichierLecture.replace("\\","\\\\");//vive les charactères d'échapement
-    	String lang ="fr"; //args[1];
-    	String fichierSauvegarde ="dico"; //args[3];
-    	
-    	DictionaryMaker.makeDictionnaries(fichierLecture,lang,fichierSauvegarde);
+    {
+		String fichierSauvegarde;
+		String langueCible;
+		String fichierXML;
+
+		if (args.length != 3) {
+			fichierXML = "C:\\Users\\Jlwis\\Desktop\\wiki-fr.xml"; //args[0];
+			//fichierLecture = fichierLecture.replace("\\","\\\\");//vive les charactères d'échapement
+			langueCible ="fr"; //args[1];
+			fichierSauvegarde ="dico"; //args[3];
+		}
+		else{
+			//on récupère les arguments
+			fichierXML = args[0];
+			langueCible = args[1];
+			fichierSauvegarde = args[2];
+		}
+		
+    	DictionaryMaker.makeDictionnaries(fichierXML,langueCible,fichierSauvegarde);
     } 
 }
