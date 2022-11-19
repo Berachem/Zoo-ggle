@@ -19,3 +19,6 @@ cd "../sources"; if ($?) { gcc -g dicoToStaticTree.c  dictionnary_lookup.c -o di
 
 ##solve 
 cd "../sources"; if ($?) { gcc -g dicoToStaticTree.c  dictionnary_lookup.c grid.c grid_path.c solve.c -o solve } ; if ($?) { .\solve}
+
+##score_by_lenght
+cd "../sources"; if ($?) { gcc score_by_lenght.c -o score_by_lenght } ; if ($?) { .\score_by_lenght OUI VIE}
