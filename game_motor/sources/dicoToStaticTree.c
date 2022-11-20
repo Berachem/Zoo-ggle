@@ -81,6 +81,7 @@ int nChildren(CSTree t){
 
 // fonction récurssive qui insère chaque lettre d'un mot dans un CSTree en finissant par un \0
 CSTree insert(CSTree t, char* word){
+    //printf("MOT:%s\n", word);
     if(t==NULL){
         t = malloc(sizeof(Node));
         t->elem = word[0];
@@ -91,6 +92,7 @@ CSTree insert(CSTree t, char* word){
             return t;
         }
     }
+    //printf("ELEM :%c \n",t->elem);
 
     if(word[0] == t->elem){
         t->firstChild = insert(t->firstChild, word+1);
@@ -162,7 +164,6 @@ StaticTree exportStaticTree(CSTree t){
     StaticTree r;
     r.nNodes = sizeOfTree;
     r.nWord = nLeaves(t);
-    printf("OH");
     //reservation mémoire du tableau et remplissage
     ArrayCell* tab = malloc(sizeof(ArrayCell)*sizeOfTree);
     filltab(tab,nSibling(t),0,t);

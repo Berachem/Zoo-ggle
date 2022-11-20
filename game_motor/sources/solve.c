@@ -7,62 +7,53 @@
 #include "../headers/grid.h"
 #include "../headers/grid_path.h"
 
-char* solve_rec(char* filename, int minLenght, grid g, CSTree allWords, int index, char* currentWord, int* letterIndex){
+CSTree solve_rec(char* filename, int minLenght, grid g, CSTree allWords, int index, char* currentWord, int* letterIndex, int* casesIndicesMot){
     ArrayCell cell = readCellInFile(filename, index); 
-    //printf("B");
+    memset(casesIndicesMot, -1, g.nbl * g.nbc * sizeof(int));
     currentWord[*letterIndex] = cell.elem;
     currentWord[(*letterIndex)+1]='\0';
-    //printf("currentWord:%s et allWords : %s",currentWord,allWords);
-    //char oldWord []="";
-    //strcpy(oldWord,currentWord);
-    //char lettre[] = {cell.elem};
-    //strcat(currentWord,lettre);
-    //printf("1");
     if (cell.elem == '\0' && strlen(currentWord)>=minLenght){
-      insert(allWords,currentWord);
+      allWords = insert(allWords,currentWord);
     }
 
-    //printf("2");
-    if((grid_path(currentWord, g)==0) && (cell.firstChild!=-1)){
-      //printf("D");
+    if((grid_path(currentWord, g, casesIndicesMot)==0) && (cell.firstChild!=-1)){
       *letterIndex +=1;
-      solve_rec(filename, minLenght,g,allWords,cell.firstChild,currentWord,letterIndex);
-      //allWords=solve_rec(filename, minLenght,g,allWords,cell.firstChild,currentWord);
+      allWords = solve_rec(filename, minLenght,g,allWords,cell.firstChild,currentWord,letterIndex,casesIndicesMot);
     }
-    
-    //printf("3");
     if(cell.nSiblings!=0){
-      //printf("E");
-      solve_rec(filename, minLenght,g ,allWords,index+1,currentWord,letterIndex);
-      //allWords=solve_rec(filename, minLenght,g ,allWords,index+1,oldWord);
+      allWords = solve_rec(filename, minLenght,g ,allWords,index+1,currentWord,letterIndex,casesIndicesMot);
     }
-    //printf("U");
     *letterIndex -=1;
-    //return allWords;
+    return allWords;
 }
 
-
-/*
-int dictionnary_lookup_rec(char* filename, int index, char* mot){ //Le premier index transmis a l'appel de la fonction doit être 0 pour tester depuis le debut du fichier
-  ArrayCell cell = readCellInFile(filename, index); // Dans un premier temps on recupere la cellule a l'index indique
-  if (cell.elem == mot[0]){   //Si l'element recuperer dans la cellule correspond a la 1ere lettre de notre mot :
-    if (mot[0]=='\0'){
-      return 0;               // Si c'est la fin du mot on renvoie 0 pour dire que le mot est trouve
-    }else{
-      return dictionnary_lookup_rec(filename, cell.firstChild, mot+1); // Sinon on continue a chercher le mot en passant a la lettre suivante
-    }
-  }else{
-    //printf("Lettre pas egale >:C , nb de freres = %d\n", cell.nSiblings);
-    if (mot[0]=='\0'){
-      return 1;   // Si on arrive a la fin de notre mot, mais qu'il n'a pas de fin de mot dans le dico lex on renvoie 1 pour preciser qu'il s'agit d'un prefixe
-    } else if (cell.nSiblings>0){
-      return dictionnary_lookup_rec(filename, index+1, mot);  //Si ce n'est pas la fin du mot mais qu'aucune lettre ne corresponde dans le fichier lex on renvoit 2
-    }else{
-      return 2;
-    }
+char* writeAWord(char* wordsList, int* writtingIndex, char* currentWord){
+  int i =0;
+  while(currentWord[i]!='\0'){
+    wordsList[*writtingIndex]=currentWord[i];
+    i++;
+    *writtingIndex =*writtingIndex+1;
   }
+  wordsList[*writtingIndex]=' ';
+  *writtingIndex =*writtingIndex+1;
+  return wordsList;
 }
-*/
+
+char* treeToWordsList(StaticTree st,char* wordsList, int* listWrittingIndex, char* currentWord, int wordWrittingIndex, int tableIndex){
+  ArrayCell cell = st.nodeArray[tableIndex];
+  currentWord[wordWrittingIndex] = cell.elem;
+  if (cell.elem=='\0'){
+    wordsList = writeAWord(wordsList, listWrittingIndex,currentWord);
+  }
+  if(cell.firstChild!=-1){
+    wordsList = treeToWordsList(st,wordsList, listWrittingIndex, currentWord, wordWrittingIndex+1, cell.firstChild);
+  }
+  if(cell.nSiblings!=0){
+    wordsList = treeToWordsList(st,wordsList, listWrittingIndex, currentWord, wordWrittingIndex, tableIndex+1);
+  }
+  currentWord[wordWrittingIndex] = '\0';
+  return wordsList;
+}
 
 
 char* solve(char* filename, int minLenght, grid g){
@@ -70,15 +61,30 @@ char* solve(char* filename, int minLenght, grid g){
   int* letterIndex = malloc(sizeof(int));
   *letterIndex = 0;
   char* currentWord = malloc((g.nbc*g.nbl+1)*sizeof(char));
-  solve_rec(filename, minLenght, g, allWords, 0 ,currentWord, letterIndex);
+  int *casesIndicesMot = malloc(g.nbl * g.nbc * sizeof(int));
+  memset(casesIndicesMot, -1, g.nbl * g.nbc * sizeof(int));
+  allWords = solve_rec(filename, minLenght, g, allWords, 0 ,currentWord, letterIndex, casesIndicesMot);
+  
   StaticTree st = exportStaticTree(allWords);
-  //printf("LE CSTREE %c et %c", allWords->elem, allWords->firstChild->elem);
-  printf("JE VAIS PRINT");
-  printStaticTree(st);
-  // TODO : Utilisé le CS Tree genere pour en ressortir la liste de mot
+  //printStaticTree(st);
+  
+  free(casesIndicesMot);
   free(letterIndex);
   free(currentWord);
+
+  // TODO : Utilisé le CS Tree genere pour en ressortir la liste de mot
+  
+  char* wordsList = malloc(sizeof(char)*(st.nWord*g.nbc*g.nbl));
+  memset(wordsList, '\0', sizeof(char)*(st.nWord*g.nbc*g.nbl));
+  memset(currentWord, '\0', (g.nbc*g.nbl+1)*sizeof(char));
+  int* listWrittingIndex = malloc(sizeof(int));
+  *listWrittingIndex = 0;
+  wordsList = treeToWordsList(st,wordsList,listWrittingIndex,currentWord,0,0);
+  printf("fin %s", wordsList);
+
   free(allWords);
+  free(listWrittingIndex);
+  
   return "";
 }
 
@@ -107,6 +113,5 @@ int main(int argc, char *argv[]){
     g.nbl = height;
     g.nbc = width;
     g.gridList = gridList;
-    printf("AAAAA");
     printf("%s", solve("../../data/dico.lex", 1, g));
 }
