@@ -133,7 +133,7 @@ public class DictionarySearcher {
 		String normalizedWord = DictionaryMaker.normalize(word);
 		
 		//initialisation des fichiers
-		File semiDico = new File("semi"+path+".lex");
+		File semiDico = new File(path+"semi.lex");
 		File lexFile = new File(path+".lex");
 		
 		try {
@@ -190,7 +190,7 @@ public class DictionarySearcher {
 	public static String allTheWordsFromNormalized(List<Long> offsets,String path){
 		
 		//preparation des fichier
-		File semiDicoFile = new File("semi"+path+".lex");
+		File semiDicoFile = new File(path+"semi.lex");
 		File jsonFile = new File(path+".json");
 		
 		//preparation de divers variables
@@ -245,7 +245,7 @@ public class DictionarySearcher {
 	public static String onlyTheOneWord(List<Long> offsets, String word,String path) {
 		
 		//initialisation des fichiers
-		File lexFile = new File("semi"+path+".lex");
+		File lexFile = new File(path+"semi.lex");
 		File jsonFile = new File(path+".json");
 		
 		try {
@@ -377,6 +377,7 @@ public class DictionarySearcher {
 	 */
 	public static void main( String[] args )
     {
+		/*
 		if (args.length != 2) {
 			System.out.println("Il faut 2 arguments : le chemin et le mot à rechercher");
 			return;
@@ -384,16 +385,20 @@ public class DictionarySearcher {
 
 		String path = args[0];
 		String mot = args[1];
+		*/
+		
+		String path = "dico";
+		String mot = "ZZZ";
 
 		System.out.println("ARGUMENTS ! "+path+" : "+mot);
 
-    	boolean yaml = true;
+    	boolean yaml = false;
     	String retour = "";
     	
     	//gestion de l'écriture en yaml
     	if(mot.contains("yaml:")) {
     		yaml = true;
-    		mot.replace("yaml:", "");
+    		mot = mot.replace("yaml:", "");
     	}
     	
     	//recuperation du mot normalisé

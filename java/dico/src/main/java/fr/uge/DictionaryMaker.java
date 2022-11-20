@@ -3,20 +3,15 @@ package fr.uge;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.InputStreamReader;
 import java.io.RandomAccessFile;
-import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
-import java.util.TreeSet;
 
 public class DictionaryMaker 
 {
@@ -128,6 +123,16 @@ public class DictionaryMaker
 		for(int i=0; i<accent.size();i++){
 			copie = copie.replace(accent.get(i),sansAccent.get(i));
 		}
+		copie = copie.replace("Œ", "OE");
+		
+		for(int i=0;i<copie.length();i++) {//il reste des mots qui sont composé de lettre que non francaise (ʻOKINA) que nous ne pouvons donc pas écrire.
+			char c = copie.charAt(i);
+			if(c<'A' || c>'Z') {
+				return "";
+			}
+		}
+		
+		
 		return copie;
 	}
 	
@@ -242,7 +247,7 @@ public class DictionaryMaker
 		DictionaryMaker.resetFile(dicoFrequence);
 		
 		//création du fichier d'entreDeux
-		File semiDicoLex = new File("semi"+returnName+".lex");
+		File semiDicoLex = new File(returnName+"semi.lex");
 		DictionaryMaker.resetFile(semiDicoLex);
 		
 		//création du fichier dico.lex
@@ -310,7 +315,7 @@ public class DictionaryMaker
 	        	if (line.contains("</page>")) {
 	        		//dansUnePage = false;
 	        		
-	        		if (estMot && estBonneLangue) {
+	        		if (estMot && estBonneLangue && !(DictionaryMaker.normalize(mot)).equals("")){
 	        			
 						//Actualisation du fichier json
 						long beforeMot = writerJson.getFilePointer();
