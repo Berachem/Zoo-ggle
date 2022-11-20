@@ -75,7 +75,7 @@ public class DictionarySearcher {
 	 */
 	public static List<Long> dichotomicSearch(String word,boolean isNormalized ,long numberOfCouple,long coupleSize,RandomAccessFile lexReader,RandomAccessFile wordReader ){
 		//mise en place de variables utiles
-		long pireDesCas = Math.round(Math.log(numberOfCouple)/Math.log(2));//L'algorithme est en théorie O(Log(n)) mais pas exactement à l'execution
+		long pireDesCas = Math.round(Math.log(numberOfCouple)/Math.log(2))+12;//L'algorithme est en théorie O(Log(n)) mais pas exactement à l'execution
 		long compteur = 0;
 		
 		try {
@@ -377,7 +377,7 @@ public class DictionarySearcher {
 	 */
 	public static void main( String[] args )
     {
-		/*
+		
 		if (args.length != 2) {
 			System.out.println("Il faut 2 arguments : le chemin et le mot à rechercher");
 			return;
@@ -385,10 +385,10 @@ public class DictionarySearcher {
 
 		String path = args[0];
 		String mot = args[1];
-		*/
 		
-		String path = "dico";
-		String mot = "ZZZ";
+		
+		//String path = "dico";
+		//String mot = "ZZZZZZZZ";
 
 		System.out.println("ARGUMENTS ! "+path+" : "+mot);
 

@@ -6,13 +6,13 @@ import java.io.RandomAccessFile;
 public class NormalizedExtractor {
 
 	public static void main(String[] args) {
-		/*
+		
 		if(args.length!=1) {
 			System.out.println("Il ne faut qu'un unique argument : le chmein vers le fichier de lecture");
 			return;
 		}
-		*/
-		String path ="dico"; //args[0];
+		String path = args[0];
+		//String path ="dico";
 		
 		//création des fichiers
 		File semiFile = new File(path+"semi.lex");

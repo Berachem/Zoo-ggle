@@ -306,7 +306,7 @@ public class DictionaryMaker
 			
 			
 			// ===== LECTURE ET ECRITURE DES DIFFERENTS FICHIERS =====
-			long avancement = 0;
+			//long avancement = 0;
 			String line="";
 	        while((line=reader.readLine())!= null){
 	        	
@@ -322,7 +322,7 @@ public class DictionaryMaker
 	        			jsonMot = "{" + "\"title\" : \"" + mot + "\"," + "\"definitions\":{\"nom\" : " + definitionsNom + "," + "\"verbe\" : " + definitionsVerbe + "}}";
 						writerJson.writeChars(jsonMot+"\n");
 						long afterMot = writerJson.getFilePointer();
-						System.out.println(beforeMot+" "+afterMot);
+						//System.out.println(beforeMot+" "+afterMot);
 						
 						//stockage des offsets
 						DictionaryMaker.addSemiOffset(dicoSemiOffsets, mot, beforeMot, afterMot);
@@ -347,9 +347,10 @@ public class DictionaryMaker
 						definitionsVerbe.stream().forEach(s -> System.out.println(s)) ;
 		        		System.out.println(dicoFreq);	
 		        		System.out.println(dicoOffsets);
+		        		//System.out.println(avancement);
+	        			//avancement++;
 		        		*/	
-		        		System.out.println(avancement);
-	        			avancement++;
+		        		
 	        		}
 	        		// remise à 0 des variable car on quitte une section <page>
 	        		//page ="";
@@ -447,7 +448,7 @@ public class DictionaryMaker
 	        writerFreq.close();
 	        writerLex.close();
 	        writerSemiLex.close();
-	        System.out.println("finito pipo");
+	        System.out.println("Les fichiers ont bien été créés");
 	    }
         
         catch(Exception e){//catch car utilisation des bufferedReader/Writter
