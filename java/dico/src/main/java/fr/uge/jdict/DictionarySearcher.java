@@ -324,6 +324,8 @@ public class DictionarySearcher {
 		
 		StringBuilder retour = new StringBuilder();
 		int numberOfSpace=0;
+		int numberOfacolade=0;
+		int numberOfcrochet=0;
 		boolean inList = false;
 		boolean inWord = false;
 		
@@ -334,11 +336,25 @@ public class DictionarySearcher {
 				if(numberOfSpace == 0) {
 					retour.append("\n---");
 				}
-				retour = DictionarySearcher.changeLine(retour, numberOfSpace, inList);
+				if(numberOfacolade == 0) {
+					retour = DictionarySearcher.changeLine(retour, numberOfSpace, inList);
+				}else if(numberOfacolade == 1){
+					retour = DictionarySearcher.changeLine(retour, numberOfSpace, inList);
+				}else {
+					retour.append(lettre);
+				}
+				
 				numberOfSpace++;
+				numberOfacolade++;
 				
 			}else if(lettre == '}') {
+				
+				if(numberOfacolade > 2) {
+					retour.append(lettre);
+				}
+				
 				numberOfSpace--;
+				numberOfacolade--;
 				
 			}else if(lettre == ':') {
 				retour.append(": ");
@@ -348,16 +364,24 @@ public class DictionarySearcher {
 			}else if(lettre == ','){
 				retour = DictionarySearcher.changeLine(retour, numberOfSpace, inList);
 				
-			}else if(lettre == '['){
-				numberOfSpace++;
-				inList = true;
-				retour = DictionarySearcher.changeLine(retour, numberOfSpace, inList);
+			}else if(lettre == '[' && !inList){	
+				numberOfcrochet++;
+				if(numberOfcrochet<=1) {
+					inList = true;
+					numberOfSpace++;
+					retour = DictionarySearcher.changeLine(retour, numberOfSpace, inList);
+				}
 				
-			}else if(lettre == ']') {
-				numberOfSpace--;
-				inList = false;
 				
-			}else if(inWord && (Character.isAlphabetic(lettre) || lettre == ' ')) {
+			}else if(lettre == ']' && inList) {
+				numberOfcrochet--;
+				if(numberOfcrochet==0) {
+					inList = false;
+					numberOfSpace--;
+				}
+				
+				
+			}else if(inWord && (lettre != '"')) {
 				retour.append(lettre);
 				
 			}
@@ -377,18 +401,19 @@ public class DictionarySearcher {
 	 */
 	public static void main( String[] args )
     {
-		
+		/*
 		if (args.length != 2) {
 			System.out.println("Il faut 2 arguments : le chemin et le mot à rechercher");
 			return;
 		}
+		
 
 		String path = args[0];
 		String mot = args[1];
+		*/
 		
-		
-		//String path = "dico";
-		//String mot = "ZZZZZZZZ";
+		String path = "dico";
+		String mot = "yaml:ABEILLE";
 
 		System.out.println("ARGUMENTS ! "+path+" : "+mot);
 

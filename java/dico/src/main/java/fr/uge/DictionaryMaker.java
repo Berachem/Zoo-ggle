@@ -243,7 +243,7 @@ public class DictionaryMaker
 		DictionaryMaker.resetFile(dicoJSON);
 
 		//créationdu fichier txt de fréquence
-		File dicoFrequence = new File("dicoFreq.txt");
+		File dicoFrequence = new File(returnName+"Freq.txt");
 		DictionaryMaker.resetFile(dicoFrequence);
 		
 		//création du fichier d'entreDeux
@@ -347,9 +347,10 @@ public class DictionaryMaker
 						definitionsVerbe.stream().forEach(s -> System.out.println(s)) ;
 		        		System.out.println(dicoFreq);	
 		        		System.out.println(dicoOffsets);
-		        		//System.out.println(avancement);
-	        			//avancement++;
+		        		System.out.println(avancement);
+	        			avancement++
 		        		*/	
+		        		;
 		        		
 	        		}
 	        		// remise à 0 des variable car on quitte une section <page>
@@ -407,10 +408,10 @@ public class DictionaryMaker
 	        	//****** GESTION DES DEFINITIONS ******
 	        	if(estBonneLangue && estMot){
 					if (line.startsWith("# '")) {
-	        			definitionsVerbe.add(DictionaryMaker.cleanupExemple('"'+line.replaceFirst("# ", " ").replaceFirst("</text>", "")+'"'));
+	        			definitionsVerbe.add('"'+line.replaceFirst("# ", " ").replaceFirst("</text>", "")+'"');
 	        		}
 	        		else if(line.startsWith("# ")) { 
-						definitionsNom.add(DictionaryMaker.cleanupExemple('"'+line.replaceFirst("# ", " ").replaceFirst("</text>", "")+'"'));
+						definitionsNom.add('"'+line.replaceFirst("# ", " ").replaceFirst("</text>", "")+'"');
 	        		}
 	        		
 	        	}
