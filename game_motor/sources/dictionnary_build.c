@@ -66,14 +66,9 @@ void convertStaticToTXT(char *filename, StaticTree t){
 }
 //fonction créant le fichier .lex à partir d'un static tree
 void convertStaticToLex(char* filename,StaticTree t){
-    printf("nom fichier : %s \n", filename);
-    perror("Error 3");
     //c'est ici que ca plante (le fichier ne s'ouvre pas)
     FILE *file = fopen(filename, "wb");
-    perror("Error 3.2");
-    printf("nom fichier : %s\n", filename);
     if (file == NULL) {
-        printf("Error with file %s",filename);
         exit(1);
     }
     perror("Error 4");
@@ -83,10 +78,7 @@ void convertStaticToLex(char* filename,StaticTree t){
     h.tailleCellule = sizeof(ArrayCell);
     h.mots = t.nWord;
     h.taille = sizeof(header);
-    printf("nb cell : %d, tailleCell : %d, nb mots : %d, taille header : %d \n",h.cellules,h.taille,h.mots,h.taille);
-    perror("Error 4.5");
     fwrite(&h,sizeof(header),1,file);
-    perror("Error 5");
     //cette partie ecrit tout les noeuds un par ligne
     for(int i=0;i<t.nNodes;i++){
       perror("Error 6");
@@ -120,15 +112,11 @@ void main(int argc, char *argv[]){
   
 
   CSTree t = convertFileToCSTree(txtFile);
-  perror("Error 1");
   // printf("%d\n",size(t));
   //printCSTree(t, 0);
   StaticTree st = exportStaticTree(t);
-  perror("Error 2");
   
-  // printf("BIP\n");
   //printStaticTree(st); 
-  perror("Error 2.5"); 
   convertStaticToLex(lexFile,st); // ne fonctionne pas totalement
   
 

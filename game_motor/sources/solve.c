@@ -64,8 +64,9 @@ char* solve(char* filename, int minLenght, grid g){
   int *casesIndicesMot = malloc(g.nbl * g.nbc * sizeof(int));
   memset(casesIndicesMot, -1, g.nbl * g.nbc * sizeof(int));
   allWords = solve_rec(filename, minLenght, g, allWords, 0 ,currentWord, letterIndex, casesIndicesMot);
-  
+  printf("Fin de grid !");
   StaticTree st = exportStaticTree(allWords);
+  printf("Apres static tree");
   //printStaticTree(st);
   
   free(casesIndicesMot);
@@ -73,7 +74,7 @@ char* solve(char* filename, int minLenght, grid g){
   free(currentWord);
 
   // TODO : Utilisé le CS Tree genere pour en ressortir la liste de mot
-  
+  printf("BUG!");
   char* wordsList = malloc(sizeof(char)*(st.nWord*g.nbc*g.nbl));
   memset(wordsList, '\0', sizeof(char)*(st.nWord*g.nbc*g.nbl));
   memset(currentWord, '\0', (g.nbc*g.nbl+1)*sizeof(char));
@@ -90,25 +91,23 @@ char* solve(char* filename, int minLenght, grid g){
 
 
 int main(int argc, char *argv[]){
-  if (argc < 5) {
-    printf("Usage: %s word height width grid", argv[0]);
+  if (argc < 4) {
+    printf("Usage: %s height width grid", argv[0]);
     return 1;
   }
-    char *word = argv[1];
-    int height = atoi(argv[2]);
-    int width = atoi(argv[3]);
+    int height = atoi(argv[1]);
+    int width = atoi(argv[2]);
 
     
     // on récupère tous les caractères de la grille dans une string
     char* gridList = malloc(height * width * sizeof(char));
     
     int i;
-    for (i = 4; i < argc; i++) {
-      strcpy(gridList + (i - 4) * sizeof(char), argv[i]);
+    for (i = 3; i < argc; i++) {
+      strcpy(gridList + (i - 3) * sizeof(char), argv[i]);
     }
 
     // affiche toutes les variables
-    printf("word: %s\n", word);
     printf("height: %d\n", height);
     printf("width: %d\n", width);
     //printf("grid: %s\n", gridList);
@@ -118,5 +117,5 @@ int main(int argc, char *argv[]){
     g.nbl = height;
     g.nbc = width;
     g.gridList = gridList;
-    printf("%s", solve("../../data/dico.lex", 1, g));
+    printf("%s", solve("../../data/listeMot.lex", 1, g));
 }
