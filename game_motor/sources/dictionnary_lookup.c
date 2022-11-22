@@ -63,6 +63,7 @@ Recherche si un mot (BONJOUR) est dans un dictionnaire (dico.lex). Renvoie 0 si 
 préfixe valide d’un mot présent (par exemple, BONJ), 2 sinon. Aucune sortie n’est attendue
 
 */
+/*
 int main(int argc, char *argv[]){
   if (argc < 3){
     printf("Erreur : nombre d'arguments incorrect\n");
@@ -85,3 +86,4 @@ int main(int argc, char *argv[]){
 
 
 }
+*/

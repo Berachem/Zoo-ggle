@@ -111,8 +111,8 @@ void main(int argc, char *argv[]){
   char * lexFile;
 
     if(argc < 3 ){
-       txtFile= "../../data/dico.txt";
-       lexFile= "../../data/dico.lex";
+       txtFile= "../../data/listeMot.txt";
+       lexFile= "../../data/listeMot.lex";
     }else{
         txtFile= argv[1];
         lexFile= argv[2];
