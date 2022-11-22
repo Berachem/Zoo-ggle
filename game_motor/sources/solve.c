@@ -90,24 +90,29 @@ char* solve(char* filename, int minLenght, grid g){
 
 
 int main(int argc, char *argv[]){
-  /*
-    if (argc < 3){
-        printf("Erreur : nombre d'arguments incorrect\n");
-        exit(1);
-    }*/
-    char s[]="";
+  if (argc < 5) {
+    printf("Usage: %s word height width grid", argv[0]);
+    return 1;
+  }
+    char *word = argv[1];
+    int height = atoi(argv[2]);
+    int width = atoi(argv[3]);
 
-    int height = 4;
-    int width = 4;
+    
+    // on récupère tous les caractères de la grille dans une string
+    char* gridList = malloc(height * width * sizeof(char));
+    
+    int i;
+    for (i = 4; i < argc; i++) {
+      strcpy(gridList + (i - 4) * sizeof(char), argv[i]);
+    }
 
-    char* gridList = "eauxrbrxxxexxxxx";
-
-    /*
     // affiche toutes les variables
+    printf("word: %s\n", word);
     printf("height: %d\n", height);
     printf("width: %d\n", width);
-    printf("grid: %s\n", gridList);
-    */
+    //printf("grid: %s\n", gridList);
+    
     // on construit la grille g
     grid g;
     g.nbl = height;
