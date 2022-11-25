@@ -11,7 +11,7 @@ dico.txt -> CSTree -> StaticTree
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "../headers/dicoToStaticTree.h"
+#include "../headers/dictionnary.h"
 
 #define NONE -1
 
@@ -196,6 +196,143 @@ StaticTree convertFileToStaticTree(char *filename) {
 
 }
 
+
+
+//======================================================
+//======================================================
+
+            // for DICTIONNARY LOOKUP
+
+//======================================================
+//======================================================
+
+  // Fonction de lecture d'une cellule de tableau dans un fichier lex
+ArrayCell readCellInFile(char* filename, int index){
+  FILE *file = fopen(filename, "rb");
+
+  fseek(file, sizeof(header) + sizeof(ArrayCell)*index, SEEK_SET); // Pour aller a l'index de la cellule cherchee on va 
+  ArrayCell cell;                                                  // a la taille du header plus la taille des cellules precedentes
+  fread(&cell,sizeof(ArrayCell),1,file);                          // Puis on lit cette cellule avant la renvoyer
+  return cell;
+}
+
+
+
+// Fonction recursive qui verifier si un mot est dans le fichier lex, renvoie 0 si il y est, 1 si c'est un prefixe existant et 0 sinon
+int dictionnary_lookup_rec(char* filename, int index, char* mot){ //Le premier index transmis a l'appel de la fonction doit être 0 pour tester depuis le debut du fichier
+  ArrayCell cell = readCellInFile(filename, index); // Dans un premier temps on recupere la cellule a l'index indique
+  if (cell.elem == mot[0]){   //Si l'element recuperer dans la cellule correspond a la 1ere lettre de notre mot :
+    if (mot[0]=='\0'){
+      return 0;               // Si c'est la fin du mot on renvoie 0 pour dire que le mot est trouve
+    }else{
+      return dictionnary_lookup_rec(filename, cell.firstChild, mot+1); // Sinon on continue a chercher le mot en passant a la lettre suivante
+    }
+  }else{
+    if (mot[0]=='\0'){
+      return 1;   // Si on arrive a la fin de notre mot, mais qu'il n'a pas de fin de mot dans le dico lex on renvoie 1 pour preciser qu'il s'agit d'un prefixe
+    } else if (cell.nSiblings>0){
+      return dictionnary_lookup_rec(filename, index+1, mot);  //Si ce n'est pas la fin du mot mais qu'aucune lettre ne corresponde dans le fichier lex on renvoit 2
+    }else{
+      return 2;
+    }
+  }
+}
+
+// fonction principale qui appelle dictionnary_lookup_rec
+int dictionnary_lookup(char* filename, char* mot) {
+    return dictionnary_lookup_rec(filename,0,mot);
+}
+
+//fonction créant un fichier txt à partir d'un static tree
+void convertStaticToTXT(char *filename, StaticTree t){
+
+    //c'est ici que ca plante (le fichier ne s'ouvre pas)
+    FILE *file = fopen(filename, "w");
+    
+    if (file == NULL) {
+        printf("Error with file %s",filename);
+        exit(1);
+    }
+
+    char debut[] = "Nombre de noeud : ";
+    char fin[10];
+    sprintf(fin,"%d",t.nNodes);
+
+    //écrit un entete avec le nombre total de noeud
+    char total[strlen(debut)+strlen(fin)+1];
+    strcat(strcpy(total,debut),fin);
+    strcat(total,"\n");
+    fwrite(total,sizeof(total),1,file);
+
+    //cette partie ecrit tout les noeuds un par ligne
+    for(int i=0;i<t.nNodes;i++){
+        //j'initialise les 3 parties de ma chainse
+        char noeud[10];
+        char indexEnfant[10]; 
+        char nombreFrere[10];
+
+        //je transtype mes cases de int à string
+        sprintf(noeud,"%c",t.nodeArray[i].elem);  
+        sprintf(indexEnfant,"%d",t.nodeArray[i].firstChild);
+        sprintf(nombreFrere,"%d",t.nodeArray[i].nSiblings);           
+
+        //je crée ma string à l'aide de la concatenation (format X;X;X)
+        char ligne[strlen(noeud)+strlen(indexEnfant)+strlen(nombreFrere)+3];
+        strcat(strcpy(ligne,noeud),";");
+        strcat(ligne,indexEnfant);
+        strcat(ligne,";");
+        strcat(ligne,nombreFrere);
+        strcat(ligne,"\n");
+        //printf("%s",ligne);
+
+        fwrite(ligne,sizeof(ligne),1,file);
+    }
+
+
+    fclose(file);
+}
+//fonction créant le fichier .lex à partir d'un static tree
+void convertStaticToLex(char* filename,StaticTree t){
+    //c'est ici que ca plante (le fichier ne s'ouvre pas)
+    FILE *file = fopen(filename, "wb");
+    if (file == NULL) {
+        exit(1);
+    }
+    perror("Error 4");
+    //cette partie écrit le header
+    header h;
+    h.cellules = t.nNodes;
+    h.tailleCellule = sizeof(ArrayCell);
+    h.mots = t.nWord;
+    h.taille = sizeof(header);
+    fwrite(&h,sizeof(header),1,file);
+    //cette partie ecrit tout les noeuds un par ligne
+    for(int i=0;i<t.nNodes;i++){
+      perror("Error 6");
+      ArrayCell cell = (t.nodeArray[i]);
+      fwrite(&cell,sizeof(ArrayCell),1,file);
+    }
+
+
+    fclose(file);
+}
+
+void freeCST(CSTree t){
+  if(t == NULL){return;}
+  freeCST(t->firstChild);
+  freeCST(t->nextSibling);
+  free(t);
+}
+
+
+
+//======================================================
+//======================================================
+
+            // for DICTIONNARY BUILD
+
+//======================================================
+//======================================================
 
 
 

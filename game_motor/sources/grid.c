@@ -288,3 +288,5 @@ int grid_path(char *word, grid g, int *casesLettreDuMot) {
 }
 
 
+
+
