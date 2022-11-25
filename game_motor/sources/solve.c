@@ -5,7 +5,6 @@
 #include "../headers/dictionnary_build.h"
 #include "../headers/dictionnary_lookup.h"
 #include "../headers/grid.h"
-#include "../headers/grid_path.h"
 
 CSTree solve_rec(char* filename, int minLenght, grid g, CSTree allWords, int index, char* currentWord, int* letterIndex, int* casesIndicesMot){
     ArrayCell cell = readCellInFile(filename, index); 
