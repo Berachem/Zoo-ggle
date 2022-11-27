@@ -1,11 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "../headers/dicoToStaticTree.h"
-#include "../headers/dictionnary_build.h"
-#include "../headers/dictionnary_lookup.h"
+#include "../headers/dictionnary.h"
 #include "../headers/grid.h"
-#include "../headers/grid_path.h"
 
 CSTree solve_rec(char* filename, int minLenght, grid g, CSTree allWords, int index, char* currentWord, int* letterIndex, int* casesIndicesMot){
     ArrayCell cell = readCellInFile(filename, index); 
@@ -57,12 +54,17 @@ char* treeToWordsList(StaticTree st,char* wordsList, int* listWrittingIndex, cha
 
 
 char* solve(char* filename, int minLenght, grid g){
+  
   CSTree allWords = NULL;
   int* letterIndex = malloc(sizeof(int));
   *letterIndex = 0;
+  
   char* currentWord = malloc((g.nbc*g.nbl+1)*sizeof(char));
+  printf("TEST1");
   int *casesIndicesMot = malloc(g.nbl * g.nbc * sizeof(int));
+  
   memset(casesIndicesMot, -1, g.nbl * g.nbc * sizeof(int));
+  
   allWords = solve_rec(filename, minLenght, g, allWords, 0 ,currentWord, letterIndex, casesIndicesMot);
   printf("Fin de grid !");
   StaticTree st = exportStaticTree(allWords);

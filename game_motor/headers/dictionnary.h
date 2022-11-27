@@ -1,8 +1,8 @@
 /*
-dicoToStaticTree.h
+dictionnary.h
 -----
 
-Rôle : prototypes des fonctions de dicoToStaticTree.c
+Rôle : prototypes des fonctions de dictionnary.c
 
 */
 
@@ -60,6 +60,21 @@ void printStaticTree(StaticTree t);
 StaticTree convertFileToStaticTree(char *filename);
 
 
+ArrayCell readCellInFile(char* filename, int index);
+int dictionnary_lookup_rec(char* filename, int index, char* mot);
+int dictionnary_lookup(char* filename, char* mot);
 
 
+typedef struct
+{
+  int taille;
+  int mots;
+  int cellules;
+  int tailleCellule;
+}header;
 
+void convertStaticToTXT(char *filename, StaticTree t);
+
+void convertStaticToLex(char* filename,StaticTree t);
+
+void freeCST(CSTree t);
