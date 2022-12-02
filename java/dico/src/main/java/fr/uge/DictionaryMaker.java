@@ -306,7 +306,7 @@ public class DictionaryMaker
 			
 			
 			// ===== LECTURE ET ECRITURE DES DIFFERENTS FICHIERS =====
-			//long avancement = 0;
+			long avancement = 0;
 			String line="";
 	        while((line=reader.readLine())!= null){
 	        	
@@ -347,10 +347,11 @@ public class DictionaryMaker
 						definitionsVerbe.stream().forEach(s -> System.out.println(s)) ;
 		        		System.out.println(dicoFreq);	
 		        		System.out.println(dicoOffsets);
-		        		System.out.println(avancement);
-	        			avancement++
+		        		
 		        		*/	
-		        		;
+		        		
+		        		System.out.println(avancement+" mot créés");
+	        			avancement++;
 		        		
 	        		}
 	        		// remise à 0 des variable car on quitte une section <page>
@@ -474,7 +475,7 @@ public class DictionaryMaker
 		String fichierSauvegarde;
 		String langueCible;
 		String fichierXML;
-
+		
 		if (args.length != 3) {
 			fichierXML = "C:\\Users\\Jlwis\\Desktop\\wiki-fr.xml"; //args[0];
 			//fichierLecture = fichierLecture.replace("\\","\\\\");//vive les charactères d'échapement
@@ -487,6 +488,7 @@ public class DictionaryMaker
 			langueCible = args[1];
 			fichierSauvegarde = args[2];
 		}
+		
 		
     	DictionaryMaker.makeDictionnaries(fichierXML,langueCible,fichierSauvegarde);
     } 
