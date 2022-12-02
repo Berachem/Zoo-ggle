@@ -7,6 +7,26 @@ import java.util.List;
 public class NormalizedExtractor {
 
 	/**
+	 * Permet de trouver le nombre d'occurence d'un mot dans une String
+	 * 
+	 * @param line : la ligne dans laquelle on recherche
+	 * @param word : le mot a rechercher
+	 * @return
+	 */
+	public static int findOccurences(String line,String word) {
+		int indexStart = 0;
+		int taille = word.length();
+		int compteur = 0;
+		int indexTrouve;
+		while(indexStart<line.length() && (indexTrouve = line.indexOf(word,indexStart)) != -1) {
+			compteur++;
+			indexStart=taille+indexTrouve;
+		}
+		return compteur;
+	}
+
+	
+	/**
 	 * Renvoie tout les mots du dictionnaire sous forme normalisée, dans la sortie courante
 	 * 
 	 * @param path le chemin vers le fichier
@@ -31,8 +51,6 @@ public class NormalizedExtractor {
 				System.out.println(DictionarySearcher.readAword(semi, start, end, true).replace("QU", "*"));
 			}
 			
-			System.out.println("finitio pipo");
-			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -40,6 +58,7 @@ public class NormalizedExtractor {
 	
 	/**
 	 * Renvoie tout les mots normalisés du dictionnaire qui correspondent aux paramètres dans la sortie courantes
+	 * Les paramètres acceptés : "nom propre" , "nom", "verbe", "adjectif"
 	 * 
 	 * @param path : le chemin vers le fichier
 	 * @param param : la liste des parametres a verifier
@@ -63,7 +82,7 @@ public class NormalizedExtractor {
 				adjectif=true;
 			}
 		}
-		List<Boolean> parameters = List.of(verb,properName,name,adjectif);
+		
 		
 		//création des fichiers
 		File semiFile = new File(path+"semi.lex");
@@ -74,16 +93,47 @@ public class NormalizedExtractor {
 			RandomAccessFile semi = new RandomAccessFile(semiFile,"rw");
 			RandomAccessFile lex = new RandomAccessFile(lexFile, "rw");
 			
-			//sortie
+			//tests et sortie
 			long EOF = lex.length();
 			String word = "";
 			String def = "";
 			long pointer;
+			int nombreDef;
 			while((pointer = lex.getFilePointer())!=EOF) {
 				long start = lex.readLong();
 				long end = lex.readLong();
 				word = DictionarySearcher.readAword(semi, start, end, true).replace("QU", "*");
 				def = DictionarySearcher.allTheWordsFromNormalized(List.of(start,end), path);
+				
+				nombreDef = NormalizedExtractor.findOccurences(def, "title");
+				
+				if(properName) {
+					if(def.contains("Nom de famille") || def.contains("prénom")) {
+						System.out.println(word);
+						continue;
+					}
+				}  
+				if(verb) {
+					if(NormalizedExtractor.findOccurences(def, "\"verbe\" : []")<nombreDef) {
+						System.out.println(word);
+						continue;
+					}	
+				}
+				if(name) {
+					if(NormalizedExtractor.findOccurences(def, "\"nom\" : []")<nombreDef) {
+						System.out.println(word);
+						continue;
+					}	
+				}
+				if(adjectif) {
+					if(def.contains("Qui est") || def.contains("Dont")) {
+						System.out.println(word);
+						continue;
+					}
+				}
+				
+				
+				
 			}
 			
 			System.out.println("finitio pipo");
@@ -116,5 +166,10 @@ public class NormalizedExtractor {
 			NormalizedExtractor.parameterExtractor(path, param);
 			return;
 		}
+		
+		
+		//String path = "dico";
+		//String param[] = {"adjectif"};
+		//NormalizedExtractor.parameterExtractor(path, param);
 	}
 }

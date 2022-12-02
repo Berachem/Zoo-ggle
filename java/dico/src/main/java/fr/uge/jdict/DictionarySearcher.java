@@ -393,6 +393,7 @@ public class DictionarySearcher {
 	public static void main( String[] args )
     {
 		
+		
 		if (args.length != 2) {
 			System.out.println("Il faut 2 arguments : le chemin et le mot à rechercher");
 			return;
@@ -403,8 +404,9 @@ public class DictionarySearcher {
 		String mot = args[1];
 		
 		
+		
 		//String path = "dico";
-		//String mot = "yaml:ABEILLE";
+		//String mot = "yaml:AB";
 
 		System.out.println("ARGUMENTS ! "+path+" : "+mot);
 

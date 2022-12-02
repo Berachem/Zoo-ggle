@@ -1,6 +1,5 @@
 package fr.uge;
 
-import fr.uge.jdict.DictionarySearcher;
 
 public class test {
 
@@ -8,8 +7,18 @@ public class test {
 	
 	
 	public static void main(String[] args) {
-		System.out.println(Character.isAlphabetic('Ɩ'));
-		System.out.println(DictionarySearcher.isNormalized("ŒUVRONS"));
+		String s = "papopuppoipupupo";
+		String recherche = "po";
+		int indexStart = 0;
+		int taille = recherche.length();
+		int compteur = 0;
+		int indexTrouve;
+		while(indexStart<s.length() && (indexTrouve = s.indexOf(recherche,indexStart)) != -1) {
+			compteur++;
+			
+			indexStart=taille+indexTrouve;
+		}
+		System.out.println(compteur);
 	}
 
 }
