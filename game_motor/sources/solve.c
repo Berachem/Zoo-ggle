@@ -4,6 +4,7 @@
 #include "../headers/dictionnary.h"
 #include "../headers/grid.h"
 
+/* ANCIENNE VERSION
 CSTree solve_rec(char* filename, int minLenght, grid g, CSTree allWords, int index, char* currentWord, int* letterIndex, int* casesIndicesMot){
     ArrayCell cell = readCellInFile(filename, index); 
     memset(casesIndicesMot, -1, g.nbl * g.nbc * sizeof(int));
@@ -89,6 +90,60 @@ char* solve(char* filename, int minLenght, grid g){
   free(listWrittingIndex);
   
   return "";
+}*/
+
+
+void solve_rec(char* filename, int minLenght, grid g, int index, char* currentWord, int* letterIndex, int* casesIndicesMot){
+  //printf("Ouvervture fichier \n");
+    ArrayCell cell = readCellInFile(filename, index); 
+    //printf("Ouverture réussie\n");
+    memset(casesIndicesMot, -1, g.nbl * g.nbc * sizeof(int));
+    currentWord[*letterIndex] = cell.elem;
+    currentWord[(*letterIndex)+1]='\0';
+    printf("Le mot actuel est %s \n", currentWord);
+    if (cell.elem == '\0' && strlen(currentWord)>=minLenght){
+      //allWords = insert(allWords,currentWord);
+      printf("%s est valide ",currentWord);
+    }
+
+    if((grid_path(currentWord, g, casesIndicesMot)==0) && (cell.firstChild!=-1)){
+      *letterIndex +=1;
+      //printf("%s est préfixe \n",currentWord);
+      solve_rec(filename, minLenght,g,cell.firstChild,currentWord,letterIndex,casesIndicesMot);
+    }
+    if(cell.nSiblings!=0){
+      solve_rec(filename, minLenght,g,index+1,currentWord,letterIndex,casesIndicesMot);
+    }
+    //printf("JE REMONT !");
+    //printf("Mot en remontée : %s",currentWord);
+    *letterIndex -=1;
+}
+
+
+
+char* solve(char* filename, int minLenght, grid g){
+  
+  //CSTree allWords = NULL;
+  int* letterIndex = malloc(sizeof(int));
+  *letterIndex = 0;
+  
+  char* currentWord = malloc((g.nbc*g.nbl+1)*sizeof(char));
+  //printf("TEST1");
+  int *casesIndicesMot = malloc(g.nbl * g.nbc * sizeof(int));
+  
+  memset(casesIndicesMot, -1, g.nbl * g.nbc * sizeof(int));
+  
+  solve_rec(filename, minLenght, g, 0 ,currentWord, letterIndex, casesIndicesMot);
+  printf("Fin de grid !");
+  //StaticTree st = exportStaticTree(allWords);
+  printf("Apres static tree");
+  //printStaticTree(st);
+  
+  free(casesIndicesMot);
+  free(letterIndex);
+  free(currentWord);
+  
+  return "";
 }
 
 
@@ -110,8 +165,8 @@ int main(int argc, char *argv[]){
     }
 
     // affiche toutes les variables
-    printf("height: %d\n", height);
-    printf("width: %d\n", width);
+    //printf("height: %d\n", height);
+    //printf("width: %d\n", width);
     //printf("grid: %s\n", gridList);
     
     // on construit la grille g
@@ -119,5 +174,5 @@ int main(int argc, char *argv[]){
     g.nbl = height;
     g.nbc = width;
     g.gridList = gridList;
-    printf("%s", solve("../../data/listeMot.lex", 1, g));
+    printf("%s", solve("../../data/listeMot.lex", 4, g));
 }

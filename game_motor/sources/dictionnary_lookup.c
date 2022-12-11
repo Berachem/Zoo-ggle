@@ -31,10 +31,10 @@ int main(int argc, char *argv[]){
   //readCellInFile("../../data/fr.lex",0);
   //readCellInFile("../../data/fr.lex",4);
   //readCellInFile("../../data/fr.lex",15);
-  //printf("%d",dictionnary_lookup("../../data/dico.lex",0,"eau"));
+  //printf("%d",dictionnary_lookup("../../data/dico.lex","eau"));
   
-  //printf("%d",dictionnary_lookup("../../data/dico.lex",0,"ciseau"));
-  //printf("%d",dictionnary_lookup("../../data/dico.lex",0,"chiot"));
+  //printf("%d",dictionnary_lookup("../../data/dico.lex","ciseau"));
+  //printf("%d",dictionnary_lookup("../../data/dico.lex","chiot"));
 
 
 
