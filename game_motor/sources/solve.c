@@ -106,7 +106,7 @@ void solve_rec(char* filename, int minLenght, grid g, int index, char* currentWo
       printf("%s est valide ",currentWord);
     }
 
-    if((grid_path(currentWord, g, casesIndicesMot)==0) && (cell.firstChild!=-1)){
+    if((grid_path(currentWord, g, casesIndicesMot,0)==0) && (cell.firstChild!=-1)){
       *letterIndex +=1;
       //printf("%s est préfixe \n",currentWord);
       solve_rec(filename, minLenght,g,cell.firstChild,currentWord,letterIndex,casesIndicesMot);

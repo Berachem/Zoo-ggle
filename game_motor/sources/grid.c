@@ -184,21 +184,21 @@ renvoie 0 si le mot est
 présent, 1 sinon. Si le mot est présent, on affiche le chemin emprunté (liste des indices des cases utilisées, séparés
 par des espaces)
 */
-int grid_path_rec(char *word, int i, int j, grid g, int *visited, int *casesLettreDuMot, int *indiceParcoursCasesLettreDuMot) {
+int grid_path_rec(char *word, int i, int j, grid g, int *visited, int *casesLettreDuMot, int *indiceParcoursCasesLettreDuMot, int showLogs) {
   int flagAlreadyFound = 0;
 
   int k = coord2D_to_1D(i, j, g);
   if (visited[k] == 1) {
     // si la case a déjà été visitée
-    printf("visited[%d] = %d (lettre g.gridList[%d] = %c) \n", k, visited[k], k, g.gridList[k]);
+    if (showLogs) printf("visited[%d] = %d (lettre g.gridList[%d] = %c) \n", k, visited[k], k, g.gridList[k]);
     return 1;
   }
   if (g.gridList[k] != word[0]) {
     // si la lettre de la case n'est pas la première lettre du mot
-    printf("g.gridList[%d] = %c != word[0] = %c\n", k, g.gridList[k], word[0]);
+    if (showLogs) printf("g.gridList[%d] = %c != word[0] = %c\n", k, g.gridList[k], word[0]);
     return 1;
   }
-  printf("g.gridList[%d] = %c == word[0] = %c (1 lettre trouvee) \n", k, g.gridList[k], word[0]);
+  if (showLogs) printf("g.gridList[%d] = %c == word[0] = %c (1 lettre trouvee) \n", k, g.gridList[k], word[0]);
   if (strlen(word) == 1) {
     // si le mot ne contient qu'une seule lettre (donc c'est la dernière lettre du mot)
     casesLettreDuMot[*indiceParcoursCasesLettreDuMot] = k;
@@ -206,9 +206,9 @@ int grid_path_rec(char *word, int i, int j, grid g, int *visited, int *casesLett
     //printf("%d ", k);
     return 0;
   }
-  printf("====================\n");
-  displayGridIn2DWithHighlightInRed(g, i, j);
-  printf("====================\n");
+  if (showLogs)printf("====================\n");
+  if (showLogs) displayGridIn2DWithHighlightInRed(g, i, j);
+  if (showLogs)printf("====================\n");
 
   // on marque la case comme visitée
   visited[k] = 1;
@@ -218,7 +218,7 @@ int grid_path_rec(char *word, int i, int j, grid g, int *visited, int *casesLett
   // affiche la liste des voisins et leurs valeurs
   int p=0;
   for (p=0; p<8; p++) {
-    printf("VOISIN -> (lettre g.gridList[%d] = %c) \n", neighbors_list[p], g.gridList[neighbors_list[p]]);
+    if (showLogs) printf("VOISIN -> (lettre g.gridList[%d] = %c) \n", neighbors_list[p], g.gridList[neighbors_list[p]]);
   }
   
   
@@ -233,11 +233,11 @@ int grid_path_rec(char *word, int i, int j, grid g, int *visited, int *casesLett
     coord1D_to_2D(neighbors_list[l], g, &i_copy, &j_copy);
 
     // affichage de la grille avec la case en surbrillance
-    displayGridIn2DWithHighlightInGreen(g, i_copy, j_copy);
+    if (showLogs) displayGridIn2DWithHighlightInGreen(g, i_copy, j_copy);
     
 
     // on appelle la fonction récursive sur tous les voisins sans s'arrêter à la première lettre trouvée
-    flagAlreadyFound = grid_path_rec(word+1, i_copy, j_copy, g, visited_copy,casesLettreDuMot, indiceParcoursCasesLettreDuMot);
+    flagAlreadyFound = grid_path_rec(word+1, i_copy, j_copy, g, visited_copy,casesLettreDuMot, indiceParcoursCasesLettreDuMot, showLogs);
     if (flagAlreadyFound == 0) {
       // si la lettre a été trouvée, on affiche la case
     casesLettreDuMot[*indiceParcoursCasesLettreDuMot] = k;
@@ -257,7 +257,7 @@ int grid_path_rec(char *word, int i, int j, grid g, int *visited, int *casesLett
 }
 
 // fonction principale qui renvoie -1 si le mot n'est pas présent, 0 et la liste des indices des cases utilisées sinon
-int grid_path(char *word, grid g, int *casesLettreDuMot) {
+int grid_path(char *word, grid g, int *casesLettreDuMot, int showLogs) {
   int k = 0;
   int indiceParcoursCasesLettreDuMot = 0;
 
@@ -268,9 +268,9 @@ int grid_path(char *word, grid g, int *casesLettreDuMot) {
   for (i = 0; i < g.nbl; i++) {
       for (j = 0; j < g.nbc; j++) {
         
-        if (word[0]==g.gridList[coord2D_to_1D(i,j,g)] && grid_path_rec(word, i, j, g, visited, casesLettreDuMot, &indiceParcoursCasesLettreDuMot) == 0) {  
+        if (word[0]==g.gridList[coord2D_to_1D(i,j,g)] && grid_path_rec(word, i, j, g, visited, casesLettreDuMot, &indiceParcoursCasesLettreDuMot, showLogs) == 0) {  
 
-            printf("on a trouve le mot %s depuis la case (%d, %d) OU en 1D : %d\n", word, i, j, coord2D_to_1D(i,j,g));
+            if (showLogs) printf("on a trouve le mot %s depuis la case (%d, %d) OU en 1D : %d\n", word, i, j, coord2D_to_1D(i,j,g));
       
             // si la première lettre du mot est trouvée, on l'ajoute à la liste des cases 
             

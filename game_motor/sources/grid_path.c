@@ -88,7 +88,7 @@ int main(int argc, char *argv[]) {
     int *casesIndicesMot = malloc(g.nbl * g.nbc * sizeof(int));
     memset(casesIndicesMot, -1, g.nbl * g.nbc * sizeof(int));
 
-    int result = grid_path(word,g, casesIndicesMot);
+    int result = grid_path(word,g, casesIndicesMot,1);
     printf("\nRESULT : %d\n", result);
 
     // on affiche la liste des cases parcourues pour former le mot dans le sens inverse

@@ -47,7 +47,7 @@ void print_grid(grid g);
 grid grid_build(char *filename, int nbl, int nbc);
 
 // recherche récursive de le mot dans une grille à partir d'une position (i,j) 
-int grid_path_rec(char *word, int i, int j, grid g, int *visited, int *casesLettreDuMot, int *indiceParcoursCasesLettreDuMot);
+int grid_path_rec(char *word, int i, int j, grid g, int *visited, int *casesLettreDuMot, int *indiceParcoursCasesLettreDuMot, int showLogs);
 
 // renvoie 1 si le mot est présent dans la grille, 0 sinon
-int grid_path(char *word, grid g, int *casesLettreDuMot);
+int grid_path(char *word, grid g, int *casesLettreDuMot, int showLogs);
