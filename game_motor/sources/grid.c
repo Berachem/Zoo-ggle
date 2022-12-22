@@ -243,12 +243,11 @@ int grid_path_rec(char *word, int i, int j, grid g, int *visited, int *casesLett
     casesLettreDuMot[*indiceParcoursCasesLettreDuMot] = k;
     *indiceParcoursCasesLettreDuMot += 1;
       //printf("%d ", k);
+      free(visited_copy);
       return 0;
     }
+    free(visited_copy);
     l++;
-
-    
-  
 
   }
   free(neighbors_list);
@@ -273,7 +272,8 @@ int grid_path(char *word, grid g, int *casesLettreDuMot, int showLogs) {
             if (showLogs) printf("on a trouve le mot %s depuis la case (%d, %d) OU en 1D : %d\n", word, i, j, coord2D_to_1D(i,j,g));
       
             // si la première lettre du mot est trouvée, on l'ajoute à la liste des cases 
-            
+            casesLettreDuMot[indiceParcoursCasesLettreDuMot] = k;
+            indiceParcoursCasesLettreDuMot += 1;
             free(visited);
             return 0;
           } 
@@ -286,7 +286,6 @@ int grid_path(char *word, grid g, int *casesLettreDuMot, int showLogs) {
   free(visited);
   return 1;
 }
-
 
 
 
