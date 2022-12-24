@@ -100,47 +100,57 @@ grid createGrid(int nbl, int nbc, char *gridList) {
 
 
 
-/*
-fonction qui renvoie une lettre aléatoire en fonction d'un fichier fréquences
-de la forme: LETTRE FREQUENCE
-*/
-char lettre_aleatoire(char *filename) {
-  FILE *file = fopen(filename, "r");
-  if (file == NULL) {
-    printf("Error with file %s", *filename);
-    exit(1);
-  }
+// Structure pour stocker une lettre et sa fréquence
+typedef struct {
+    char letter;
+    int frequency;
+} Letter;
 
-  // on calcule la somme des fréquences
-  int somme = 0;
-  char lettre;
-  int frequence;
-  while (fscanf(file, "%c %d", &lettre, &frequence) != EOF) {
-    somme += frequence;
-  }
-  fclose(file);
-
-  // on tire un nombre aléatoire entre 1 et la somme des fréquences
-  int tirage = rand() % somme + 1;
-
-  // on reparcourt le fichier 
-  file = fopen(filename, "r");
-  while (fscanf(file, "%c %d",  &lettre, &frequence) != EOF) {
-    
-    if (lettre != '\n' && tirage <= frequence) {
-      // affichage de la lettre tirée, avec sa fréquence et le tirage
-      //printf("ON A OBTENU LA LETTRE: %c FREQUENCE : %d tirage: %d FreqTotal: %d\n", lettre, frequence, tirage, somme);
-      return lettre;
-    } else {
-      somme -= frequence;
+// Fonction pour lire les fréquences depuis le fichier
+// letters : tableau de lettres à remplir
+// filename : nom du fichier à lire
+void readFrequencies(Letter* letters, const char* filename) {
+    // Ouvre le fichier en lecture
+    FILE* file = fopen(filename, "r");
+    if (file == NULL) {
+        perror("Error opening file");
+        exit(EXIT_FAILURE);
     }
-    tirage = rand() % somme + 1;
-  }
-  fclose(file);
 
-  // on ne devrait jamais arriver ici
-  return ' ';
+    // Lit chaque ligne du fichier et stocke la lettre et la fréquence dans le tableau de lettres
+    char line[256];
+    int i = 0;
+    while (fgets(line, sizeof(line), file)) {
+        sscanf(line, "%c %d", &letters[i].letter, &letters[i].frequency);
+        i++;
+    }
+
+    // Ferme le fichier
+    fclose(file);
 }
+
+// Fonction pour générer une lettre aléatoire en fonction de ses fréquences
+// letters : tableau de lettres et de fréquences
+// size : nombre de lettres dans le tableau
+// total : total des fréquences
+char generateRandomLetter(Letter* letters, int size, int total) {
+    // Génère un nombre aléatoire entre 0 et le total des fréquences
+    int randInt = rand() % total;
+
+    // Parcourt le tableau de lettres et soustrait la fréquence de chaque lettre au nombre aléatoire
+    // Si le nombre aléatoire est inférieur à 0, on renvoie la lettre
+    int i;
+    for (i = 0; i < size; i++) {
+        randInt -= letters[i].frequency;
+        if (randInt < 0) {
+            return letters[i].letter;
+        }
+    }
+
+    // Si on arrive ici, c'est qu'il y a eu un problème
+    printf("Error generating random letter");
+}
+
 
 // fonction qui affiche une grille à une dimension
 void print_grid(grid g) {
@@ -151,7 +161,26 @@ void print_grid(grid g) {
   }
 }
 
+// fonction qui affiche une grille à deux dimensions
+void print_grid2D(grid g) {
+  for (int i = 0; i < g.nbl; i++) {
+    for (int j = 0; j < g.nbc; j++) {
+      printf("%c ", g.gridList[coord2D_to_1D(i, j, g)]);
+    }
+    printf("\n");
+  }
+}
+
 grid grid_build(char *filename, int nbl, int nbc) {
+  Letter letters[27];
+  // on lit les fréquences des lettres dans le fichier
+  readFrequencies(letters, filename);
+  // on calcule le total des fréquences
+  int total = 0;
+  for (int i = 0; i < 27; i++) {
+    total += letters[i].frequency;
+  }
+  
   grid g;
   g.nbl = nbl;
   g.nbc = nbc;
@@ -159,7 +188,9 @@ grid grid_build(char *filename, int nbl, int nbc) {
   // on remplit le tableau de caractères avec des lettres aléatoire
   for (int i = 0; i < nbl; i++) {
     for (int j = 0; j < nbc; j++) {
-      g.gridList[coord2D_to_1D(i, j, g)] = lettre_aleatoire(filename);
+      // utilise la fonction generateRandomLetter 
+      g.gridList[coord2D_to_1D(i, j, g)] = generateRandomLetter(letters, 27, total);
+      
     }
   }
   return g;
@@ -225,7 +256,7 @@ int grid_path_rec(char *word, int i, int j, grid g, int *visited, int *casesLett
 
   // on parcourt la liste des voisins
  int  l = 0;
-  while (neighbors_list[l] >=0 && is_in_list(neighbors_list, neighbors_list[l])==1) {  // tant qu'on n'est pas arrivé à la fin de la liste
+  while (neighbors_list[l] >=0 ) {  // tant qu'on n'est pas arrivé à la fin de la liste
     // on récupère les coordonnées du voisin
     int *visited_copy = malloc(g.nbl * g.nbc * sizeof(int));
     memcpy(visited_copy, visited, g.nbl * g.nbc * sizeof(int));
@@ -271,9 +302,7 @@ int grid_path(char *word, grid g, int *casesLettreDuMot, int showLogs) {
 
             if (showLogs) printf("on a trouve le mot %s depuis la case (%d, %d) OU en 1D : %d\n", word, i, j, coord2D_to_1D(i,j,g));
       
-            // si la première lettre du mot est trouvée, on l'ajoute à la liste des cases 
-            casesLettreDuMot[indiceParcoursCasesLettreDuMot] = k;
-            indiceParcoursCasesLettreDuMot += 1;
+    
             free(visited);
             return 0;
           } 
