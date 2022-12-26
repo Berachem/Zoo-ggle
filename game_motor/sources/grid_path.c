@@ -74,7 +74,7 @@ int main(int argc, char *argv[]) {
     g.gridList = gridList;
 
     printf("grid: \n");
-    displayGridIn2D(g);
+    print_grid2D(g);
 /* 
     // test de la fonction grid_path_rec
 
@@ -84,9 +84,15 @@ int main(int argc, char *argv[]) {
     printf("res = %d \n", res); 
     */
 
-    // on crée une liste des cases parcourues pour former le mot (16 cases max)
-    int *casesIndicesMot = malloc(g.nbl * g.nbc * sizeof(int));
-    memset(casesIndicesMot, -1, g.nbl * g.nbc * sizeof(int));
+    // on crée une liste des cases parcourues pour former le mot (taille du mot  = nb cases max)
+    int *casesIndicesMot = malloc(strlen(word) * sizeof(int));
+    memset(casesIndicesMot, -1, strlen(word) * sizeof(int));
+
+   /*  printf("casesIndicesMot: \n");
+    for (i = 0; i < strlen(word); i++) {
+      printf("%d ", casesIndicesMot[i]);
+    }
+    printf("\n"); */
 
     int result = grid_path(word,g, casesIndicesMot,1);
     printf("\nRESULT : %d\n", result);

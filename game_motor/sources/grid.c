@@ -20,20 +20,9 @@ void coord1D_to_2D(int k, grid g, int *i, int *j) {
   *j = k % g.nbc;
 }
 
-// fonction qui affiche une grille à une dimension en 2D
-void displayGridIn2D(grid g) {
-  int i;
-  for (i = 0; i < g.nbl; i++) {
-    int j;
-    for (j = 0; j < g.nbc; j++) {
-      printf("%c ", g.gridList[coord2D_to_1D(i, j, g)]);
-    }
-    printf("\n");
-  }
-}
 
 // affiche une grille à une dimension en 2D avec une case en surbrillance
-void displayGridIn2DWithHighlightInRed(grid g, int i, int j) {
+void print_grid2DWithHighlightInRed(grid g, int i, int j) {
   int k;
   for (k = 0; k < g.nbl; k++) {
     int l;
@@ -48,7 +37,7 @@ void displayGridIn2DWithHighlightInRed(grid g, int i, int j) {
   }
 }
 
-void displayGridIn2DWithHighlightInGreen(grid g, int i, int j){
+void print_grid2DWithHighlightInGreen(grid g, int i, int j){
   int k;
   for (k = 0; k < g.nbl; k++) {
     int l;
@@ -64,28 +53,20 @@ void displayGridIn2DWithHighlightInGreen(grid g, int i, int j){
 }
 
 // fonction qui renvoie la liste des voisins d’une case dans le sens des aiguilles d’une montre 
-int *neighbors(int i, int j, grid g) {
-  int *neighborsList = malloc(8 * sizeof(int));
-  // initialisation de la liste des voisins à -1
-  int p;
-  for (p = 0; p < 8; p++) {
-    neighborsList[p] = -1;
-  }
-
+int getNeighbors(int i, int j,grid g, int* neighbors) {
   int k = 0;
   int l;
-  for (l = i - 1; l <= i + 1; l++) {
+  for (l = i-1; l <= i+1; l++) {
     int m;
-    for (m = j - 1; m <= j + 1; m++) {
+    for (m = j-1; m <= j+1; m++) {
       if (l >= 0 && l < g.nbl && m >= 0 && m < g.nbc && !(l == i && m == j)) {
-        neighborsList[k] = coord2D_to_1D(l, m, g);
+        neighbors[k] = coord2D_to_1D(l, m, g);
         k++;
       }
     }
   }
-  return neighborsList;
+  return k;
 
-  
 
 }
 
@@ -125,6 +106,17 @@ void readFrequencies(Letter* letters, const char* filename) {
         i++;
     }
 
+    // On mélange le tableau de lettres pour avoir une distribution aléatoire 
+/*       int j;
+      for (j = 0; j < 200; j++) {
+          int k = rand() % 26;
+          int l = rand() % 26;
+          Letter temp = letters[k];
+          letters[k] = letters[l];
+          letters[l] = temp;
+        }  */
+      
+
     // Ferme le fichier
     fclose(file);
 }
@@ -134,21 +126,23 @@ void readFrequencies(Letter* letters, const char* filename) {
 // size : nombre de lettres dans le tableau
 // total : total des fréquences
 char generateRandomLetter(Letter* letters, int size, int total) {
-    // Génère un nombre aléatoire entre 0 et le total des fréquences
-    int randInt = rand() % total;
-
     // Parcourt le tableau de lettres et soustrait la fréquence de chaque lettre au nombre aléatoire
     // Si le nombre aléatoire est inférieur à 0, on renvoie la lettre
     int i;
+    int randInt;
+    //printf("\n total : %i", total);
     for (i = 0; i < size; i++) {
-        randInt -= letters[i].frequency;
-        if (randInt < 0) {
+      // Génère un nombre aléatoire entre 0 et le total des fréquences
+       randInt = rand() % total*150;
+        // printf("\n%c %d %i %.1f", letters[i].letter, letters[i].frequency, randInt, ((float)  letters[i].frequency/total)*100); 
+        if (randInt < letters[i].frequency) {
             return letters[i].letter;
         }
+        randInt -= letters[i].frequency;
     }
 
-    // Si on arrive ici, c'est qu'il y a eu un problème
-    printf("Error generating random letter");
+    // Si on arrive ici on renvoie la dernière lettre du tableau (au hasard)
+    return letters[size - 1].letter;
 }
 
 
@@ -193,6 +187,8 @@ grid grid_build(char *filename, int nbl, int nbc) {
       
     }
   }
+
+
   return g;
 }
 
@@ -216,9 +212,8 @@ présent, 1 sinon. Si le mot est présent, on affiche le chemin emprunté (liste
 par des espaces)
 */
 int grid_path_rec(char *word, int i, int j, grid g, int *visited, int *casesLettreDuMot, int *indiceParcoursCasesLettreDuMot, int showLogs) {
-  int flagAlreadyFound = 0;
-
   int k = coord2D_to_1D(i, j, g);
+
   if (visited[k] == 1) {
     // si la case a déjà été visitée
     if (showLogs) printf("visited[%d] = %d (lettre g.gridList[%d] = %c) \n", k, visited[k], k, g.gridList[k]);
@@ -238,44 +233,41 @@ int grid_path_rec(char *word, int i, int j, grid g, int *visited, int *casesLett
     return 0;
   }
   if (showLogs)printf("====================\n");
-  if (showLogs) displayGridIn2DWithHighlightInRed(g, i, j);
+  if (showLogs) print_grid2DWithHighlightInRed(g, i, j);
   if (showLogs)printf("====================\n");
 
   // on marque la case comme visitée
   visited[k] = 1;
   // on récupère la liste des voisins de la case
-  int *neighbors_list = neighbors(i, j, g);
+  int *neighbors_list = malloc(8 * sizeof(int));
+  int neighbors_list_size = getNeighbors(i, j, g, neighbors_list);
 
   // affiche la liste des voisins et leurs valeurs
   int p=0;
   for (p=0; p<8; p++) {
     if (showLogs) printf("VOISIN -> (lettre g.gridList[%d] = %c) \n", neighbors_list[p], g.gridList[neighbors_list[p]]);
   }
-  
-  
-
   // on parcourt la liste des voisins
  int  l = 0;
-  while (neighbors_list[l] >=0 ) {  // tant qu'on n'est pas arrivé à la fin de la liste
+ for (l; l < neighbors_list_size; l++){  // tant qu'on n'est pas arrivé à la fin de la liste
     // on récupère les coordonnées du voisin
     int *visited_copy = malloc(g.nbl * g.nbc * sizeof(int));
     memcpy(visited_copy, visited, g.nbl * g.nbc * sizeof(int));
-    int i_copy, j_copy;
-    coord1D_to_2D(neighbors_list[l], g, &i_copy, &j_copy);
+    
+    int i_neighbor, j_neighbor;
+    coord1D_to_2D(neighbors_list[l], g, &i_neighbor, &j_neighbor);
 
     // affichage de la grille avec la case en surbrillance
-    if (showLogs) displayGridIn2DWithHighlightInGreen(g, i_copy, j_copy);
+    if (showLogs) print_grid2DWithHighlightInGreen(g, i_neighbor, j_neighbor);
     
-
     // on appelle la fonction récursive sur tous les voisins sans s'arrêter à la première lettre trouvée
-    flagAlreadyFound = grid_path_rec(word+1, i_copy, j_copy, g, visited_copy,casesLettreDuMot, indiceParcoursCasesLettreDuMot, showLogs);
-    if (flagAlreadyFound == 0) {
-      // si la lettre a été trouvée, on affiche la case
-    casesLettreDuMot[*indiceParcoursCasesLettreDuMot] = k;
-    *indiceParcoursCasesLettreDuMot += 1;
-      //printf("%d ", k);
-      free(visited_copy);
-      return 0;
+    if (grid_path_rec(word+1, i_neighbor, j_neighbor, g, visited_copy,casesLettreDuMot, indiceParcoursCasesLettreDuMot, showLogs) == 0) {
+        // si la lettre a été trouvée, on affiche la case
+        casesLettreDuMot[*indiceParcoursCasesLettreDuMot] = k;
+        *indiceParcoursCasesLettreDuMot += 1;
+          //printf("%d ", k);
+          free(visited_copy);
+          return 0;
     }
     free(visited_copy);
     l++;
@@ -288,21 +280,22 @@ int grid_path_rec(char *word, int i, int j, grid g, int *visited, int *casesLett
 
 // fonction principale qui renvoie -1 si le mot n'est pas présent, 0 et la liste des indices des cases utilisées sinon
 int grid_path(char *word, grid g, int *casesLettreDuMot, int showLogs) {
-  int k = 0;
   int indiceParcoursCasesLettreDuMot = 0;
 
   int *visited = malloc(g.nbl * g.nbc * sizeof(int));
+  perror("grid_path");
   // on initialise le tableau visited à 0
   memset(visited, 0, g.nbl * g.nbc * sizeof(int));
+
   int i, j; 
   for (i = 0; i < g.nbl; i++) {
       for (j = 0; j < g.nbc; j++) {
+        printf("on cherche le mot %s depuis la case (%d, %d) OU en 1D : %d\n", word, i, j, coord2D_to_1D(i,j,g));
         
         if (word[0]==g.gridList[coord2D_to_1D(i,j,g)] && grid_path_rec(word, i, j, g, visited, casesLettreDuMot, &indiceParcoursCasesLettreDuMot, showLogs) == 0) {  
 
             if (showLogs) printf("on a trouve le mot %s depuis la case (%d, %d) OU en 1D : %d\n", word, i, j, coord2D_to_1D(i,j,g));
-      
-    
+
             free(visited);
             return 0;
           } 
@@ -311,10 +304,7 @@ int grid_path(char *word, grid g, int *casesLettreDuMot, int showLogs) {
           } 
       }
     }
-  
+
   free(visited);
   return 1;
 }
-
-
-

@@ -19,7 +19,8 @@ lue ligne par ligne, les cases sont séparées par des espaces.
 
 int main(int argc, char *argv[]) {
   // initialisation du générateur de nombres aléatoires
-  srand( time( NULL ) );
+  srand(time(NULL));
+  
   // on crée des arguments par défaut
   char *filename = "../../data/frequences.txt";
   int height = 4;

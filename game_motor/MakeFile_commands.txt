@@ -9,7 +9,7 @@ gcc -g dictionnary.c dictionnary_build.c -o dictionnary_build  ; .\dictionnary_b
 gcc -g grid.c grid_path.c -o grid_path  ; .\grid_path OUI 4 4 A L M L O P M I Y U O E R E T Y  
 
 ## grid_build.c
-gcc -g grid.c grid_build.c -o grid_build  ; .\grid_build 
+gcc -g grid.c grid_build.c -o grid_build  ; .\grid_build ../../data/frequences.txt 4 4
 
 ## dictionnary_lookup.c
 gcc -g dictionnary.c  dictionnary_lookup.c -o dictionnary_lookup  ; .\dictionnary_lookup ../../data/fr.lex BONJ
