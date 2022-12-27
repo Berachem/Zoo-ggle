@@ -126,6 +126,9 @@ void readFrequencies(Letter* letters, const char* filename) {
 // size : nombre de lettres dans le tableau
 // total : total des fréquences
 char generateRandomLetter(Letter* letters, int size, int total) {
+      // initialisation du générateur de nombres aléatoires
+      srand(time(NULL));
+
     // Parcourt le tableau de lettres et soustrait la fréquence de chaque lettre au nombre aléatoire
     // Si le nombre aléatoire est inférieur à 0, on renvoie la lettre
     int i;
@@ -133,7 +136,7 @@ char generateRandomLetter(Letter* letters, int size, int total) {
     //printf("\n total : %i", total);
     for (i = 0; i < size; i++) {
       // Génère un nombre aléatoire entre 0 et le total des fréquences
-       randInt = rand() % total*150;
+       randInt = rand() % total;
         // printf("\n%c %d %i %.1f", letters[i].letter, letters[i].frequency, randInt, ((float)  letters[i].frequency/total)*100); 
         if (randInt < letters[i].frequency) {
             return letters[i].letter;
