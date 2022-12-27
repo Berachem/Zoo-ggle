@@ -286,21 +286,23 @@ int grid_path(char *word, grid g, int *casesLettreDuMot, int showLogs) {
   int indiceParcoursCasesLettreDuMot = 0;
 
   int *visited = malloc(g.nbl * g.nbc * sizeof(int));
-  perror("grid_path");
+  
   // on initialise le tableau visited à 0
   memset(visited, 0, g.nbl * g.nbc * sizeof(int));
 
   int i, j; 
   for (i = 0; i < g.nbl; i++) {
       for (j = 0; j < g.nbc; j++) {
-        printf("on cherche le mot %s depuis la case (%d, %d) OU en 1D : %d\n", word, i, j, coord2D_to_1D(i,j,g));
+        if (showLogs) printf("on cherche le mot %s depuis la case (%d, %d) OU en 1D : %d\n", word, i, j, coord2D_to_1D(i,j,g));
         
-        if (word[0]==g.gridList[coord2D_to_1D(i,j,g)] && grid_path_rec(word, i, j, g, visited, casesLettreDuMot, &indiceParcoursCasesLettreDuMot, showLogs) == 0) {  
+        if (word[0]==g.gridList[coord2D_to_1D(i,j,g)] ) {  
+            if (grid_path_rec(word, i, j, g, visited, casesLettreDuMot, &indiceParcoursCasesLettreDuMot, showLogs) == 0) {
 
-            if (showLogs) printf("on a trouve le mot %s depuis la case (%d, %d) OU en 1D : %d\n", word, i, j, coord2D_to_1D(i,j,g));
+              if (showLogs) printf("on a trouve le mot %s depuis la case (%d, %d) OU en 1D : %d\n", word, i, j, coord2D_to_1D(i,j,g));
 
-            free(visited);
-            return 0;
+              free(visited);
+              return 0;
+            }
           } 
           else{
             memset(visited, 0, g.nbl * g.nbc * sizeof(int));
