@@ -91,34 +91,48 @@ char* solve(char* filename, int minLenght, grid g){
   
   return "";
 }*/
-
+void effaceMot(char* word, int beggining, int end){
+  for(int i = beggining; i<end; i++){
+    word[i]='\0';
+  }
+}
 
 void solve_rec(char* filename, int minLenght, grid g, int index, char* currentWord, int* letterIndex, int* casesIndicesMot){
-  //printf("Ouvervture fichier \n");
-    ArrayCell cell = readCellInFile(filename, index); 
-    //printf("Ouverture réussie\n");
+  
+    ArrayCell cell = readCellInFile(filename, index);
+    printf("Je lis la lettre %c dans la cellule %d\t",cell.elem, index);
+    
+    //printf("Elem : %c Enfant : %d NbFrr : %d \n",cell.elem,cell.firstChild,cell.nSiblings);
     memset(casesIndicesMot, -1, g.nbl * g.nbc * sizeof(int));
     currentWord[*letterIndex] = cell.elem;
-    currentWord[(*letterIndex)+1]='\0';
+    effaceMot(currentWord,(*letterIndex)+1,(g.nbc)*(g.nbl));
     printf("Le mot actuel est %s \n", currentWord);
     if (cell.elem == '\0' && strlen(currentWord)>=minLenght){
       //allWords = insert(allWords,currentWord);
-      printf("%s est valide ",currentWord);
+      printf("%s est valide \n",currentWord);
     }
 
     if((grid_path(currentWord, g, casesIndicesMot,0)==0) && (cell.firstChild!=-1)){
       *letterIndex +=1;
-      //printf("%s est préfixe \n",currentWord);
+      printf("%s est prefixe \n",currentWord);
       solve_rec(filename, minLenght,g,cell.firstChild,currentWord,letterIndex,casesIndicesMot);
+      *letterIndex-=1;
+      //printf("Mot en remontee : %s \n",currentWord);
+    }else{
+      printf("%s n'est pas dans la grille \n", currentWord);
     }
+    currentWord[(*letterIndex)+1]='\0';
     if(cell.nSiblings!=0){
+      //printf("Allons voir le prochain frere de : %s \n",currentWord);
       solve_rec(filename, minLenght,g,index+1,currentWord,letterIndex,casesIndicesMot);
+      currentWord[(*letterIndex)+1]='\0';
+      //printf("Je reviens de mon frere : %s \n",currentWord);
     }
-    //printf("JE REMONT !");
-    //printf("Mot en remontée : %s",currentWord);
-    *letterIndex -=1;
+    //printf("Je lisais la lettre : %c \n",cell.elem);
+    
+    //currentWord[letterIndex] = cell.elem;
+    //effaceMot(currentWord,(*letterIndex)+1,(g.nbc)*(g.nbl));
 }
-
 
 
 char* solve(char* filename, int minLenght, grid g){
