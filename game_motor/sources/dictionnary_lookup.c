@@ -24,7 +24,8 @@ int main(int argc, char *argv[]){
   }
   int res = dictionnary_lookup(argv[1],argv[2]);
   printf("Resultat : %d \n", res);
-
+  ArrayCell cell= readCellInFile("../../data/listeMot.lex",2042576);
+  printf("Elem : %c Enfant : %d NbFrr : %d",cell.elem,cell.firstChild,cell.nSiblings);
   return res;
 
 
