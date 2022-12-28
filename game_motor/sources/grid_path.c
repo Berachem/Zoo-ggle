@@ -39,15 +39,28 @@ R E T Y
 // renvoie 0 si le mot est présent, 1 sinon
 // en ne s'arrêtant pas à la première occurrence du mot
 
-
-
-
-
 int main(int argc, char *argv[]) {
+  // check if there is enough arguments
   if (argc < 5) {
-    printf("Usage: %s word height width grid", argv[0]);
-    return 1;
+    printf("Usage: %s word height width grid (check if there is enough arguments)", argv[0]);
+    return 5;
   }
+  // check if the word is a string
+  if (atoi(argv[1]) != 0) {
+    printf("Usage: %s word height width grid (check if the word is a string)", argv[0]);
+    return 6;
+  }
+  // check if the height and width are integers
+  if (atoi(argv[2]) == 0 || atoi(argv[3]) == 0) {
+    printf("Usage: %s word height width grid (check if the height and width are integers)", argv[0]);
+    return 6;
+  }
+  // check if height * width == grid length
+  if (atoi(argv[2]) * atoi(argv[3]) != argc - 4) {
+    printf("Usage: %s word height width grid (check if height * width == grid length)", argv[0]);
+    return 7;
+  }
+  
     char *word = argv[1];
     int height = atoi(argv[2]);
     int width = atoi(argv[3]);
@@ -106,6 +119,7 @@ int main(int argc, char *argv[]) {
       
       k--;
     }
+    printf("\n");
 
     // on libère la mémoire
     free(gridList);

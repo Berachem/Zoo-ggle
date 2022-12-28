@@ -91,6 +91,7 @@ typedef struct {
 // letters : tableau de lettres à remplir
 // filename : nom du fichier à lire
 void readFrequencies(Letter* letters, const char* filename) {
+  srand(time(NULL));
     // Ouvre le fichier en lecture
     FILE* file = fopen(filename, "r");
     if (file == NULL) {
@@ -106,16 +107,19 @@ void readFrequencies(Letter* letters, const char* filename) {
         i++;
     }
 
-    // On mélange le tableau de lettres pour avoir une distribution aléatoire 
-/*       int j;
+   /*  // On mélange le tableau de lettres pour avoir une distribution aléatoire 
+      int j;
       for (j = 0; j < 200; j++) {
-          int k = rand() % 26;
-          int l = rand() % 26;
+       
+          int k = rand() % 27;
+          int l = rand() % 27;
+          //printf('on echange %c et %c', letters[k].letter, letters[l].letter);
           Letter temp = letters[k];
           letters[k] = letters[l];
           letters[l] = temp;
-        }  */
-      
+          //printf("on a echange %c et %c", letters[k].letter, letters[l].letter);
+        }  
+       */
 
     // Ferme le fichier
     fclose(file);
@@ -126,26 +130,25 @@ void readFrequencies(Letter* letters, const char* filename) {
 // size : nombre de lettres dans le tableau
 // total : total des fréquences
 char generateRandomLetter(Letter* letters, int size, int total) {
-      // initialisation du générateur de nombres aléatoires
-      srand(time(NULL));
-
     // Parcourt le tableau de lettres et soustrait la fréquence de chaque lettre au nombre aléatoire
     // Si le nombre aléatoire est inférieur à 0, on renvoie la lettre
+    int total2 = total;
     int i;
     int randInt;
-    //printf("\n total : %i", total);
+    
     for (i = 0; i < size; i++) {
       // Génère un nombre aléatoire entre 0 et le total des fréquences
-       randInt = rand() % total;
-        // printf("\n%c %d %i %.1f", letters[i].letter, letters[i].frequency, randInt, ((float)  letters[i].frequency/total)*100); 
+       randInt = rand() % total2;
+          // printf("\nlettre : %c freq : %d random : %i pcent de chance : %.1f -> écart de : %i", letters[i].letter, letters[i].frequency, randInt, ((float)  letters[i].frequency/total)*100, randInt - letters[i].frequency); 
         if (randInt < letters[i].frequency) {
             return letters[i].letter;
         }
-        randInt -= letters[i].frequency;
+        total2 -= letters[i].frequency;
     }
+    printf("random : %i\n", randInt);
 
-    // Si on arrive ici on renvoie la dernière lettre du tableau (au hasard)
-    return letters[size - 1].letter;
+    // Si on arrive ici c'est qu'il y a eu un problème
+    return ' ';
 }
 
 
@@ -169,6 +172,9 @@ void print_grid2D(grid g) {
 }
 
 grid grid_build(char *filename, int nbl, int nbc) {
+  // initialisation du générateur de nombres aléatoires
+  srand(time(NULL));
+
   Letter letters[27];
   // on lit les fréquences des lettres dans le fichier
   readFrequencies(letters, filename);
@@ -227,12 +233,13 @@ int grid_path_rec(char *word, int i, int j, grid g, int *visited, int *casesLett
     if (showLogs) printf("g.gridList[%d] = %c != word[0] = %c\n", k, g.gridList[k], word[0]);
     return 1;
   }
-  if (showLogs) printf("g.gridList[%d] = %c == word[0] = %c (1 lettre trouvee) \n", k, g.gridList[k], word[0]);
+
   if (strlen(word) == 1) {
     // si le mot ne contient qu'une seule lettre (donc c'est la dernière lettre du mot)
+    if (showLogs) printf("g.gridList[%d] = %c == word[0] = %c (derniere lettre trouvee) \n", k, g.gridList[k], word[0]);
+    //printf("%d ", k);
     casesLettreDuMot[*indiceParcoursCasesLettreDuMot] = k;
     *indiceParcoursCasesLettreDuMot += 1;
-    //printf("%d ", k);
     return 0;
   }
   if (showLogs)printf("====================\n");
@@ -241,21 +248,19 @@ int grid_path_rec(char *word, int i, int j, grid g, int *visited, int *casesLett
 
   // on marque la case comme visitée
   visited[k] = 1;
+
   // on récupère la liste des voisins de la case
   int *neighbors_list = malloc(8 * sizeof(int));
   int neighbors_list_size = getNeighbors(i, j, g, neighbors_list);
 
-  // affiche la liste des voisins et leurs valeurs
-  int p=0;
-  for (p=0; p<8; p++) {
-    if (showLogs) printf("VOISIN -> (lettre g.gridList[%d] = %c) \n", neighbors_list[p], g.gridList[neighbors_list[p]]);
-  }
   // on parcourt la liste des voisins
  int  l = 0;
  for (l; l < neighbors_list_size; l++){  // tant qu'on n'est pas arrivé à la fin de la liste
-    // on récupère les coordonnées du voisin
-    int *visited_copy = malloc(g.nbl * g.nbc * sizeof(int));
-    memcpy(visited_copy, visited, g.nbl * g.nbc * sizeof(int));
+   
+
+     if (showLogs) printf("VOISIN -> (lettre g.gridList[%d] = %c) \n", neighbors_list[l], g.gridList[neighbors_list[l]]);
+
+
     
     int i_neighbor, j_neighbor;
     coord1D_to_2D(neighbors_list[l], g, &i_neighbor, &j_neighbor);
@@ -264,16 +269,16 @@ int grid_path_rec(char *word, int i, int j, grid g, int *visited, int *casesLett
     if (showLogs) print_grid2DWithHighlightInGreen(g, i_neighbor, j_neighbor);
     
     // on appelle la fonction récursive sur tous les voisins sans s'arrêter à la première lettre trouvée
-    if (grid_path_rec(word+1, i_neighbor, j_neighbor, g, visited_copy,casesLettreDuMot, indiceParcoursCasesLettreDuMot, showLogs) == 0) {
-        // si la lettre a été trouvée, on affiche la case
+    if (grid_path_rec(word+1, i_neighbor, j_neighbor, g, visited,casesLettreDuMot, indiceParcoursCasesLettreDuMot, showLogs) == 0) {
+        // si le mot est présent, on ajoute la case à la liste des cases utilisées
         casesLettreDuMot[*indiceParcoursCasesLettreDuMot] = k;
         *indiceParcoursCasesLettreDuMot += 1;
           //printf("%d ", k);
-          free(visited_copy);
+          free(neighbors_list);
           return 0;
     }
-    free(visited_copy);
-    l++;
+
+
 
   }
   free(neighbors_list);
@@ -293,9 +298,9 @@ int grid_path(char *word, grid g, int *casesLettreDuMot, int showLogs) {
   int i, j; 
   for (i = 0; i < g.nbl; i++) {
       for (j = 0; j < g.nbc; j++) {
-        if (showLogs) printf("on cherche le mot %s depuis la case (%d, %d) OU en 1D : %d\n", word, i, j, coord2D_to_1D(i,j,g));
         
         if (word[0]==g.gridList[coord2D_to_1D(i,j,g)] ) {  
+          if (showLogs) printf("on cherche le mot %s depuis la case (%d, %d) OU en 1D : %d\n", word, i, j, coord2D_to_1D(i,j,g));
             if (grid_path_rec(word, i, j, g, visited, casesLettreDuMot, &indiceParcoursCasesLettreDuMot, showLogs) == 0) {
 
               if (showLogs) printf("on a trouve le mot %s depuis la case (%d, %d) OU en 1D : %d\n", word, i, j, coord2D_to_1D(i,j,g));

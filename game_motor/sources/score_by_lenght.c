@@ -33,12 +33,22 @@ int scoreByWord(char *word) {
     return score;
 }
 
+
 int main(int argc, char *argv[]) {
+    if (argc < 2) {
+        printf("Usage: %s word1 word2 word3 ...", argv[0]);
+        return 5;
+    }
+    if (atoi(argv[1]) != 0) {
+        printf("Usage: %s word1 word2 word3 ... (check if the word is a string)", argv[0]);
+        return 6;
+    }
+
     int score = 0;
     for (int i = 1; i < argc; i++) {
         score += scoreByWord(argv[i]);
     }
-    printf("score : %d", score);
+    printf("score : %d\n", score);
     return 0;
 }
 

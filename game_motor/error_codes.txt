@@ -1,0 +1,7 @@
+0-> aucun soucis
+1 -> résultat négatif
+.
+.
+5 -> erreur nombre de paramètre
+6 -> erreur de type des paramètre (genre vérif que c bien un .exe ou .lex etc...)
+7 -> erreur de sens genre s'il passe largeur et longueur de 4 mais que la longueur de grille != 4²
