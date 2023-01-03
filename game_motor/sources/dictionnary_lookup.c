@@ -24,17 +24,18 @@ int main(int argc, char *argv[]){
   }
   int res = dictionnary_lookup(argv[1],argv[2]);
   printf("Resultat : %d \n", res);
-
+  ArrayCell cell= readCellInFile("../../data/listeMot.lex",2042576);
+  printf("Elem : %c Enfant : %d NbFrr : %d",cell.elem,cell.firstChild,cell.nSiblings);
   return res;
 
 
   //readCellInFile("../../data/fr.lex",0);
   //readCellInFile("../../data/fr.lex",4);
   //readCellInFile("../../data/fr.lex",15);
-  //printf("%d",dictionnary_lookup("../../data/dico.lex",0,"eau"));
+  //printf("%d",dictionnary_lookup("../../data/dico.lex","eau"));
   
-  //printf("%d",dictionnary_lookup("../../data/dico.lex",0,"ciseau"));
-  //printf("%d",dictionnary_lookup("../../data/dico.lex",0,"chiot"));
+  //printf("%d",dictionnary_lookup("../../data/dico.lex","ciseau"));
+  //printf("%d",dictionnary_lookup("../../data/dico.lex","chiot"));
 
 
 

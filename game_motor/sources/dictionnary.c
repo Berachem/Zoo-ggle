@@ -213,12 +213,13 @@ ArrayCell readCellInFile(char* filename, int index){
   fseek(file, sizeof(header) + sizeof(ArrayCell)*index, SEEK_SET); // Pour aller a l'index de la cellule cherchee on va 
   ArrayCell cell;                                                  // a la taille du header plus la taille des cellules precedentes
   fread(&cell,sizeof(ArrayCell),1,file);                          // Puis on lit cette cellule avant la renvoyer
+  fclose(file);
   return cell;
 }
 
 
 
-// Fonction recursive qui verifier si un mot est dans le fichier lex, renvoie 0 si il y est, 1 si c'est un prefixe existant et 0 sinon
+// Fonction recursive qui verifier si un mot est dans le fichier lex, renvoie 0 si il y est, 1 si c'est un prefixe existant et 2 sinon
 int dictionnary_lookup_rec(char* filename, int index, char* mot){ //Le premier index transmis a l'appel de la fonction doit être 0 pour tester depuis le debut du fichier
   ArrayCell cell = readCellInFile(filename, index); // Dans un premier temps on recupere la cellule a l'index indique
   if (cell.elem == mot[0]){   //Si l'element recuperer dans la cellule correspond a la 1ere lettre de notre mot :
@@ -308,7 +309,7 @@ void convertStaticToLex(char* filename,StaticTree t){
     fwrite(&h,sizeof(header),1,file);
     //cette partie ecrit tout les noeuds un par ligne
     for(int i=0;i<t.nNodes;i++){
-      perror("Error 6");
+      //perror("Error 6");
       ArrayCell cell = (t.nodeArray[i]);
       fwrite(&cell,sizeof(ArrayCell),1,file);
     }

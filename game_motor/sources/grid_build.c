@@ -16,28 +16,51 @@ lue ligne par ligne, les cases sont séparées par des espaces.
 #include "../headers/grid.h"
 
 
-
 int main(int argc, char *argv[]) {
-  // initialisation du générateur de nombres aléatoires
-  srand( time( NULL ) );
+
   // on crée des arguments par défaut
   char *filename = "../../data/frequences.txt";
   int height = 4;
   int width = 4;
-  if (argc > 1) {
-    filename = argv[1];
+
+  // check if there is enough arguments
+  if (argc != 4) {
+    printf("Usage: %s filename height width (check if there is enough arguments)\n", argv[0]);
+    return 5;
   }
-  if (argc > 2) {
-    height = atoi(argv[2]);
+  // check if the height and width are integers
+  if (atoi(argv[2]) == 0 || atoi(argv[3]) == 0) {
+    printf("Usage: %s filename height width (check if the height and width are integers)\n", argv[0]);
+    return 6;
   }
-  if (argc > 3) {
-    width = atoi(argv[3]);
+  // check if filename is a string and contains .txt
+  if (strstr(argv[1], ".txt") == NULL) {
+    printf("Usage: %s filename height width (check if filename is a string and contains .txt)\n", argv[0]);
+    return 6;
   }
+  // check if height == width
+  if (atoi(argv[2]) != atoi(argv[3])) {
+    printf("Usage: %s filename height width (check if height == width)\n", argv[0]);
+    return 7;
+  }
+
+
+  // on récupère les arguments
+  filename = argv[1];
+  height = atoi(argv[2]);
+  width = atoi(argv[3]);
+
+  //affiche
+ 
   // on crée une strucutre de grid
   grid g = grid_build(filename, height, width);
 
   // on affiche la grille
   print_grid(g);
+  printf("\n");
+
+  // affiche en 2D
+  //print_grid2D(g);
   // on vide la grille
   free(g.gridList);
 

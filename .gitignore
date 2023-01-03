@@ -1,8 +1,9 @@
 // enlève tous les fichiers .exe 
+
+!*.*
 *.exe 
 .vscode
 .dist
 *.class
 .o
-!*.*
 
