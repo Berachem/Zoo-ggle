@@ -136,7 +136,7 @@ public class NormalizedExtractor {
 				
 			}
 			
-			System.out.println("finitio pipo");
+			//System.out.println("finitio pipo");
 			
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -144,6 +144,8 @@ public class NormalizedExtractor {
 	}
 	
 	public static void main(String[] args) {
+		
+		//java -classpath "Zoo-ggle\java\dico\target\classes" fr.uge.jdict.NormalizedExtractor "Zoo-ggle\java\dico\dico" adjectif,verbe
 		
 		if(args.length==0) {
 			System.out.println("Nombres d'arguments incorrect : il manque le nom du fichier et les paramètres (optionnel)");

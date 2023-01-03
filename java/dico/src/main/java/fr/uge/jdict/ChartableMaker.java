@@ -9,6 +9,8 @@ public class ChartableMaker {
 
 	public static void main(String[] args) {
 		
+		//java -classpath "Zoo-ggle\java\dico\target\classes" fr.uge.jdict.ChartableMaker "Zoo-ggle\java\dico\dico"
+		
 		if (args.length != 1) {
 			System.out.println("Il faut 1 arguments : le chemin");
 			return;

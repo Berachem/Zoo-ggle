@@ -193,6 +193,12 @@ public class DictionarySearcher {
 		File semiDicoFile = new File(path+"semi.lex");
 		File jsonFile = new File(path+".json");
 		
+		//verification
+		if((!semiDicoFile.exists()) || (!jsonFile.exists())) {
+			System.out.println("Probleme à l'ouverture des fichiers");
+			return "Le mot n'as pas ete trouve";
+		}
+		
 		//preparation de divers variables
 		long offsetBegin = offsets.get(0);
 		long offsetEnd = offsets.get(1);
@@ -247,6 +253,12 @@ public class DictionarySearcher {
 		//initialisation des fichiers
 		File lexFile = new File(path+"semi.lex");
 		File jsonFile = new File(path+".json");
+		
+		//verification
+		if((!lexFile.exists()) || (!jsonFile.exists())) {
+			System.out.println("Probleme à l'ouverture des fichiers");
+			return "Le mot n'as pas ete trouve";
+		}
 		
 		try {
 			
@@ -393,6 +405,8 @@ public class DictionarySearcher {
 	public static void main( String[] args )
     {
 		
+		//java -classpath "Zoo-ggle\java\dico\target\classes" fr.uge.jdict.DictionarySearcher "Zoo-ggle\java\dico\dico" yaml:CONSTITUTION
+	
 		
 		if (args.length != 2) {
 			System.out.println("Il faut 2 arguments : le chemin et le mot à rechercher");
@@ -405,8 +419,11 @@ public class DictionarySearcher {
 		
 		
 		
-		//String path = "dico";
-		//String mot = "yaml:AB";
+		/*
+		String path = "dico";
+		String mot = "yaml:CONSTITUTION";
+		*/
+		
 
 		System.out.println("ARGUMENTS ! "+path+" : "+mot);
 

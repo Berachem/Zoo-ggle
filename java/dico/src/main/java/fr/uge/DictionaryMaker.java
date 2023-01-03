@@ -467,6 +467,11 @@ public class DictionaryMaker
 	  * @param: args[2] = fichier de sauvegarde
 	  */
     public static void main( String[] args )
+    
+    	//java -classpath "Zoo-ggle\java\dico\target\classes" fr.uge.jdict.DictionaryMaker XML LANG SORTIE
+    
+    //java -classpath "Zoo-ggle\java\dico\target\classes" fr.uge.jdict.DictionaryMake "C:\Users\Jlwis\Desktop\wiki-fr.xml" fr dico
+    
 	    // ===================A CHANGER EN FONCTION DE L'ENDROIT OU VOUS AVEZ MIS LE FICHIER XML===================
 		// BERA : "C:\\Users\\berac\\Desktop\\wiki-fr.xml" 
 		// JOSHUA : "C:\\Users\\Jlwis\\Desktop\\wiki-fr.xml"
