@@ -20,8 +20,20 @@ préfixe valide d’un mot présent (par exemple, BONJ), 2 sinon. Aucune sortie 
 int main(int argc, char *argv[]){
   if (argc < 3){
     printf("Erreur : nombre d'arguments incorrect\n");
-    exit(1);
+    return ERROR_PARAM_NUMBER
   }
+  if (strstr(argv[1], ".lex") == NULL) {
+    printf("Usage: %s filename height width (check if filename is a string and contains .lex)\n", argv[0]);
+    return ERROR_PARAM_TYPE;
+  }
+  // check if the word is a string
+  if (atoi(argv[2]) != 0) {
+    printf("Usage: %s word height width grid (check if the word is a string)", argv[0]);
+    return ERROR_PARAM_TYPE;
+  }
+
+
+  
   int res = dictionnary_lookup(argv[1],argv[2]);
   printf("Resultat : %d \n", res);
   ArrayCell cell= readCellInFile("../../data/listeMot.lex",2042576);

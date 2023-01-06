@@ -4,7 +4,7 @@
 
 ## dictionnary_build.c
 gcc -g dictionnary.c dictionnary_build.c -o dictionnary_build  ; 
-.\dictionnary_build  
+.\dictionnary_build ../../data/listeMot.txt ../../data/listeMot.lex
 
 ## grid_path.c
 gcc -g grid.c grid_path.c -o grid_path  ; 

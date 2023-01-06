@@ -8,20 +8,22 @@
 #define NELEMS(x)  (sizeof(x) / sizeof((x)[0]))
 
 
-
-// fonction qui convertit des coordonnées 2D en 1D dans une gri
+// fonction qui convertit des coordonnées 2D en 1D dans une grid
+// i = ligne, j = colonne
 int coord2D_to_1D(int i, int j, grid g) {
   return i * g.nbc + j;
 }
 
 // fonction qui convertit des coordonnées 1D en 2D dans une grid
+// k = indice, i = ligne, j = colonne
+// on suppose que k est compris entre 0 et nbl*nbc
 void coord1D_to_2D(int k, grid g, int *i, int *j) {
   *i = k / g.nbc;
   *j = k % g.nbc;
 }
 
 
-// affiche une grille à une dimension en 2D avec une case en surbrillance
+// affiche une grille à une dimension en 2D avec une case en surbrillance ROUGE
 void print_grid2DWithHighlightInRed(grid g, int i, int j) {
   int k;
   for (k = 0; k < g.nbl; k++) {
@@ -36,7 +38,7 @@ void print_grid2DWithHighlightInRed(grid g, int i, int j) {
     printf("\n");
   }
 }
-
+// affiche une grille à une dimension en 2D avec une case en surbrillance VERT
 void print_grid2DWithHighlightInGreen(grid g, int i, int j){
   int k;
   for (k = 0; k < g.nbl; k++) {
@@ -53,6 +55,10 @@ void print_grid2DWithHighlightInGreen(grid g, int i, int j){
 }
 
 // fonction qui renvoie la liste des voisins d’une case dans le sens des aiguilles d’une montre 
+// (en partant du voisin en haut à gauche)
+// i = ligne, j = colonne
+// neighbors = tableau de taille 8
+// renvoie le nombre de voisins
 int getNeighbors(int i, int j,grid g, int* neighbors) {
   int k = 0;
   int l;
@@ -66,11 +72,11 @@ int getNeighbors(int i, int j,grid g, int* neighbors) {
     }
   }
   return k;
-
-
 }
 
 // fonction qui renvoie une grid à partir d'une longueur, d'une largeur et d'une liste de caractères
+// nbl = nombre de lignes, nbc = nombre de colonnes, gridList = liste de caractères
+
 grid createGrid(int nbl, int nbc, char *gridList) {
   grid g;
   g.nbl = nbl;
@@ -82,12 +88,15 @@ grid createGrid(int nbl, int nbc, char *gridList) {
 
 
 // Structure pour stocker une lettre et sa fréquence
+// letter : lettre
+// frequency : fréquence de la lettre
 typedef struct {
     char letter;
     int frequency;
 } Letter;
 
-// Fonction pour lire les fréquences depuis le fichier
+// Fonction pour lire les fréquences depuis le fichier : 
+// elle lit chaque ligne du fichier et stocke la lettre et la fréquence dans le tableau de lettres
 // letters : tableau de lettres à remplir
 // filename : nom du fichier à lire
 void readFrequencies(Letter* letters, const char* filename) {
@@ -142,6 +151,7 @@ char generateRandomLetter(Letter* letters, int size, int total) {
 
 
 // fonction qui affiche une grille à une dimension
+// g : grille
 void print_grid(grid g) {
   for (int i = 0; i < g.nbl; i++) {
     for (int j = 0; j < g.nbc; j++) {
@@ -151,6 +161,7 @@ void print_grid(grid g) {
 }
 
 // fonction qui affiche une grille à deux dimensions
+// g : grille
 void print_grid2D(grid g) {
   for (int i = 0; i < g.nbl; i++) {
     for (int j = 0; j < g.nbc; j++) {
@@ -160,7 +171,10 @@ void print_grid2D(grid g) {
   }
 }
 
-void shuffleList(Letter* letters, int size) {
+// fonction qui mélange les lettres du tableau
+// letters : tableau de lettres
+// size : taille du tableau
+void shuffleLettersList(Letter* letters, int size) {
   int i;
   for (i = 0; i < size; i++) {
     int j = rand() % size;
@@ -170,18 +184,23 @@ void shuffleList(Letter* letters, int size) {
   }
 }
 
+// fonction qui construit une grille aléatoire de taille nbl x nbc
+// filename : nom du fichier contenant les fréquences des lettres
+// nbl : nombre de lignes
+// nbc : nombre de colonnes
 grid grid_build(char *filename, int nbl, int nbc) {
  
-  Letter letters[27];
+  Letter letters[TAILLE_ALPHABET];
   // on lit les fréquences des lettres dans le fichier
   readFrequencies(letters, filename);
   // on calcule le total des fréquences
   int total = 0;
-  for (int i = 0; i < 27; i++) {
+  for (int i = 0; i < TAILLE_ALPHABET; i++) {
     total += letters[i].frequency;
   }
 
-  shuffleList(letters, 27);
+  // on mélange les lettres pour avoir un ordre aléatoire
+  shuffleLettersList(letters, TAILLE_ALPHABET);
   
   grid g;
   g.nbl = nbl;
@@ -191,17 +210,17 @@ grid grid_build(char *filename, int nbl, int nbc) {
   for (int i = 0; i < nbl; i++) {
     for (int j = 0; j < nbc; j++) {
       // utilise la fonction generateRandomLetter 
-      g.gridList[coord2D_to_1D(i, j, g)] = generateRandomLetter(letters, 27, total);
+      g.gridList[coord2D_to_1D(i, j, g)] = generateRandomLetter(letters, TAILLE_ALPHABET, total);
       
     }
   }
-
-
   return g;
 }
 
 
-// renvoie 1 si le chiffre est présent dans la liste, 0 sinon
+// fonction qui renvoie 1 si le mot est présent dans la grille, 0 sinon
+// number : nombre à chercher
+// list : tableau d'entiers
 int is_in_list(int *list, int number) {
   int i = 0;
   while (list[i] >= 0) {
@@ -214,11 +233,11 @@ int is_in_list(int *list, int number) {
 }
 
 
-/*
-renvoie 0 si le mot est
-présent, 1 sinon. Si le mot est présent, on affiche le chemin emprunté (liste des indices des cases utilisées, séparés
-par des espaces)
-*/
+// fonction récursive qui renvoie 1 si le mot est présent dans la grille, 0 sinon
+// word : mot à chercher
+// g : grille
+// showLogs : affiche les logs si 1
+// return : 1 si le mot est présent, 0 sinon
 int grid_path_rec(char *word, int i, int j, grid g, int *visited, int *casesLettreDuMot, int *indiceParcoursCasesLettreDuMot, int showLogs) {
   int k = coord2D_to_1D(i, j, g);
 
@@ -279,7 +298,12 @@ int grid_path_rec(char *word, int i, int j, grid g, int *visited, int *casesLett
 
 }
 
-// fonction principale qui renvoie -1 si le mot n'est pas présent, 0 et la liste des indices des cases utilisées sinon
+// fonction principale qui renvoie 1 si le mot est présent dans la grille, 0 sinon
+// word : mot à chercher
+// g : grille
+// showLogs : affiche les logs si 1
+// casesLettreDuMot : tableau qui contiendra les cases utilisées pour trouver le mot
+// return : 1 si le mot est présent, 0 sinon
 int grid_path(char *word, grid g, int *casesLettreDuMot, int showLogs) {
   int indiceParcoursCasesLettreDuMot = 0;
 

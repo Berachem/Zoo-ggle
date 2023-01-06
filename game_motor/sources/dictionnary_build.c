@@ -21,14 +21,27 @@ void main(int argc, char *argv[]){
   //on verifie qu'il y a bien 2 arguments et qu'ils ne sont pas renseignés alors on a comme valeur par défaut dico.txt et dico.lex
   char * txtFile;
   char * lexFile;
-
-    if(argc < 3 ){
-       txtFile= "../../data/listeMot.txt";
+/* FOR TEST
+      txtFile= "../../data/listeMot.txt";
        lexFile= "../../data/listeMot.lex";
-    }else{
-        txtFile= argv[1];
-        lexFile= argv[2];
-    }
+*/
+   // gestion des codes d'erreur
+  if (argc != 3) {
+    printf("Usage: %s filename height width (check if there is enough arguments)\n", argv[0]);
+    return ERROR_PARAM_NUMBER;
+  }
+  // check if filename is a string and contains .txt
+  if (strstr(argv[1], ".txt") == NULL) {
+    printf("Usage: %s filename height width (check if filename is a string and contains .txt)\n", argv[0]);
+    return ERROR_PARAM_TYPE;
+  }
+  // check if filename is a string and contains .txt
+  if (strstr(argv[2], ".lex") == NULL) {
+    printf("Usage: %s filename height width (check if filename is a string and contains .lex)\n", argv[0]);
+    return ERROR_PARAM_TYPE;
+  }
+  txtFile = argv[1];
+  lexFile = argv[2];
   
 
   CSTree t = convertFileToCSTree(txtFile);
