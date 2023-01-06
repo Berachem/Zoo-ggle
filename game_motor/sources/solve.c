@@ -73,7 +73,7 @@ char* solve(char* filename, int minLenght, grid g){
 int main(int argc, char *argv[]){
   if (argc < 5) {
     printf("Usage: %s height width grid", argv[0]);
-    return 1;
+    return ERROR_PARAM_NUMBER;
   }
     int minLength = atoi(argv[1]);
     int height = atoi(argv[2]);

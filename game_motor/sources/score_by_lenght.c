@@ -12,6 +12,12 @@ On pourra avoir plusieurs exécutables correspondant à plusieurs choix de polit
 #include <stdlib.h>
 #include <string.h>
 
+// codes d'erreur
+#define ERROR_OPENING_FILE 151
+#define ERROR_PARAM_NUMBER 253
+#define ERROR_PARAM_TYPE 254
+#define ERROR_PARAM_SENSE 255
+
 int scoreByWord(char *word) {
     /*
     Mot de 3 ou 4 lettres : 1 point. Mot de 5 lettres : 2 points. Mot de 6 lettres : 3 points. Mot de 7 lettres : 5 points.
@@ -37,11 +43,11 @@ int scoreByWord(char *word) {
 int main(int argc, char *argv[]) {
     if (argc < 2) {
         printf("Usage: %s word1 word2 word3 ...", argv[0]);
-        return 5;
+        return ERROR_PARAM_NUMBER;
     }
     if (atoi(argv[1]) != 0) {
         printf("Usage: %s word1 word2 word3 ... (check if the word is a string)", argv[0]);
-        return 6;
+        return ERROR_PARAM_TYPE;
     }
 
     int score = 0;

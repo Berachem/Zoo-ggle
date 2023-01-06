@@ -20,29 +20,31 @@ int main(int argc, char *argv[]) {
 
   // on crée des arguments par défaut
   char *filename = "../../data/frequences.txt";
-  int height = 4;
-  int width = 4;
+  int height = HAUTEUR_PAR_DEFAUT;
+  int width = LARGEUR_PAR_DEFAUT;
 
   // check if there is enough arguments
   if (argc != 4) {
     printf("Usage: %s filename height width (check if there is enough arguments)\n", argv[0]);
-    return 5;
+    return ERROR_PARAM_NUMBER;
   }
   // check if the height and width are integers
   if (atoi(argv[2]) == 0 || atoi(argv[3]) == 0) {
     printf("Usage: %s filename height width (check if the height and width are integers)\n", argv[0]);
-    return 6;
+    return ERROR_PARAM_TYPE;
   }
   // check if filename is a string and contains .txt
   if (strstr(argv[1], ".txt") == NULL) {
     printf("Usage: %s filename height width (check if filename is a string and contains .txt)\n", argv[0]);
-    return 6;
+    return ERROR_PARAM_TYPE;
   }
   // check if height == width
   if (atoi(argv[2]) != atoi(argv[3])) {
     printf("Usage: %s filename height width (check if height == width)\n", argv[0]);
-    return 7;
+    return ERROR_PARAM_SENSE;
   }
+  // initialisation du générateur de nombres aléatoires
+  srand(time(NULL));
 
 
   // on récupère les arguments

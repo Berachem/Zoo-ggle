@@ -6,6 +6,11 @@ Rôle : prototypes des fonctions de dictionnary.c
 
 */
 
+// codes d'erreur
+#define ERROR_OPENING_FILE 151
+#define ERROR_PARAM_NUMBER 253
+#define ERROR_PARAM_TYPE 254
+#define ERROR_PARAM_SENSE 255
 
 //-----définitions des structures-----
 typedef char Element;

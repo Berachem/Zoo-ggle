@@ -91,12 +91,12 @@ typedef struct {
 // letters : tableau de lettres à remplir
 // filename : nom du fichier à lire
 void readFrequencies(Letter* letters, const char* filename) {
-  srand(time(NULL));
+
     // Ouvre le fichier en lecture
     FILE* file = fopen(filename, "r");
     if (file == NULL) {
         perror("Error opening file");
-        exit(EXIT_FAILURE);
+        exit(ERROR_OPENING_FILE);
     }
 
     // Lit chaque ligne du fichier et stocke la lettre et la fréquence dans le tableau de lettres
@@ -107,45 +107,34 @@ void readFrequencies(Letter* letters, const char* filename) {
         i++;
     }
 
-   /*  // On mélange le tableau de lettres pour avoir une distribution aléatoire 
-      int j;
-      for (j = 0; j < 200; j++) {
-       
-          int k = rand() % 27;
-          int l = rand() % 27;
-          //printf('on echange %c et %c', letters[k].letter, letters[l].letter);
-          Letter temp = letters[k];
-          letters[k] = letters[l];
-          letters[l] = temp;
-          //printf("on a echange %c et %c", letters[k].letter, letters[l].letter);
-        }  
-       */
-
     // Ferme le fichier
     fclose(file);
 }
+
 
 // Fonction pour générer une lettre aléatoire en fonction de ses fréquences
 // letters : tableau de lettres et de fréquences
 // size : nombre de lettres dans le tableau
 // total : total des fréquences
 char generateRandomLetter(Letter* letters, int size, int total) {
+
+
     // Parcourt le tableau de lettres et soustrait la fréquence de chaque lettre au nombre aléatoire
     // Si le nombre aléatoire est inférieur à 0, on renvoie la lettre
-    int total2 = total;
+    int totalFreq = total;
     int i;
     int randInt;
     
     for (i = 0; i < size; i++) {
-      // Génère un nombre aléatoire entre 0 et le total des fréquences
-       randInt = rand() % total2;
-          // printf("\nlettre : %c freq : %d random : %i pcent de chance : %.1f -> écart de : %i", letters[i].letter, letters[i].frequency, randInt, ((float)  letters[i].frequency/total)*100, randInt - letters[i].frequency); 
+        // Génère un nombre aléatoire entre 0 et le total des fréquences
+        randInt = rand() % totalFreq;
+         //printf("\ntotal : %i lettre : %c freq : %d random : %i pcent de chance : %.1f -> écart de : %i",totalFreq, letters[i].letter, letters[i].frequency, randInt, ((float)  letters[i].frequency/total)*100, randInt - letters[i].frequency); 
         if (randInt < letters[i].frequency) {
             return letters[i].letter;
         }
-        total2 -= letters[i].frequency;
+        totalFreq -= letters[i].frequency;
     }
-    printf("random : %i\n", randInt);
+    //printf("random : %i\n", randInt);
 
     // Si on arrive ici c'est qu'il y a eu un problème
     return ' ';
@@ -171,10 +160,18 @@ void print_grid2D(grid g) {
   }
 }
 
-grid grid_build(char *filename, int nbl, int nbc) {
-  // initialisation du générateur de nombres aléatoires
-  srand(time(NULL));
+void shuffleList(Letter* letters, int size) {
+  int i;
+  for (i = 0; i < size; i++) {
+    int j = rand() % size;
+    Letter temp = letters[i];
+    letters[i] = letters[j];
+    letters[j] = temp;
+  }
+}
 
+grid grid_build(char *filename, int nbl, int nbc) {
+ 
   Letter letters[27];
   // on lit les fréquences des lettres dans le fichier
   readFrequencies(letters, filename);
@@ -183,6 +180,8 @@ grid grid_build(char *filename, int nbl, int nbc) {
   for (int i = 0; i < 27; i++) {
     total += letters[i].frequency;
   }
+
+  shuffleList(letters, 27);
   
   grid g;
   g.nbl = nbl;
@@ -249,39 +248,33 @@ int grid_path_rec(char *word, int i, int j, grid g, int *visited, int *casesLett
   // on marque la case comme visitée
   visited[k] = 1;
 
-  // on récupère la liste des voisins de la case
-  int *neighbors_list = malloc(8 * sizeof(int));
-  int neighbors_list_size = getNeighbors(i, j, g, neighbors_list);
+  // on parcourt les voisins de la case
+  int i_offset[] = {-1, -1, -1, 0, 0, 1, 1, 1};
+  int j_offset[] = {-1,  0,  1, -1, 1, -1, 0, 1};
 
-  // on parcourt la liste des voisins
- int  l = 0;
- for (l; l < neighbors_list_size; l++){  // tant qu'on n'est pas arrivé à la fin de la liste
-   
+  int l;
+  for (l = 0; l < 8; l++) {  // on parcourt les 8 voisins possibles
+    int i_neighbor = i + i_offset[l];
+    int j_neighbor = j + j_offset[l];
+    int neighbor1DCoord = coord2D_to_1D(i_neighbor, j_neighbor, g);
 
-     if (showLogs) printf("VOISIN -> (lettre g.gridList[%d] = %c) \n", neighbors_list[l], g.gridList[neighbors_list[l]]);
+    // on vérifie que la case voisine est bien dans la grille
+    if (i_neighbor >= 0 && i_neighbor < g.nbl && j_neighbor >= 0 && j_neighbor < g.nbc) {
+      if (showLogs) printf("VOISIN -> (lettre g.gridList[%d] = %c) \n", neighbor1DCoord, g.gridList[neighbor1DCoord]);
 
+      // affichage de la grille avec la case en surbrillance
+      if (showLogs) print_grid2DWithHighlightInGreen(g, i_neighbor, j_neighbor);
 
-    
-    int i_neighbor, j_neighbor;
-    coord1D_to_2D(neighbors_list[l], g, &i_neighbor, &j_neighbor);
-
-    // affichage de la grille avec la case en surbrillance
-    if (showLogs) print_grid2DWithHighlightInGreen(g, i_neighbor, j_neighbor);
-    
-    // on appelle la fonction récursive sur tous les voisins sans s'arrêter à la première lettre trouvée
-    if (grid_path_rec(word+1, i_neighbor, j_neighbor, g, visited,casesLettreDuMot, indiceParcoursCasesLettreDuMot, showLogs) == 0) {
+      // on appelle la fonction récursive sur tous les voisins sans s'arrêter à la première lettre trouvée
+      if (grid_path_rec(word+1, i_neighbor, j_neighbor, g, visited, casesLettreDuMot, indiceParcoursCasesLettreDuMot, showLogs) == 0) {
         // si le mot est présent, on ajoute la case à la liste des cases utilisées
         casesLettreDuMot[*indiceParcoursCasesLettreDuMot] = k;
         *indiceParcoursCasesLettreDuMot += 1;
-          //printf("%d ", k);
-          free(neighbors_list);
-          return 0;
+        //printf("%d ", k);
+        return 0;
+      }
     }
-
-
-
   }
-  free(neighbors_list);
   return 1;
 
 }

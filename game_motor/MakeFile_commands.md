@@ -1,5 +1,5 @@
 
-//////!!!!  PLACEZ VOUS DANS LE REPERTOIRE 'sources' PUIS EXECUTEZ CES COMMANDES !!!!\\\\\\
+# !!!! PLACEZ VOUS DANS LE REPERTOIRE 'sources' PUIS EXECUTEZ CES COMMANDES !!!!
 
 
 ## dictionnary_build.c
@@ -19,10 +19,10 @@ gcc -g grid.c grid_build.c -o grid_build  ;
 gcc -g dictionnary.c  dictionnary_lookup.c -o dictionnary_lookup  ; 
 .\dictionnary_lookup ../../data/fr.lex BONJ
 
-##solve.c 
+## solve.c 
 gcc -g dictionnary.c grid.c solve.c -o solve  ; 
 .\solve 3 4 4 A L M L O P M I Y U O E R E T Y
 
-##score_by_lenght
+## score_by_lenght
 gcc score_by_lenght.c -o score_by_lenght  ; 
 .\score_by_lenght OUI VIE

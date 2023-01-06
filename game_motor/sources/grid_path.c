@@ -43,32 +43,31 @@ int main(int argc, char *argv[]) {
   // check if there is enough arguments
   if (argc < 5) {
     printf("Usage: %s word height width grid (check if there is enough arguments)", argv[0]);
-    return 5;
+    return ERROR_PARAM_NUMBER;
   }
   // check if the word is a string
   if (atoi(argv[1]) != 0) {
     printf("Usage: %s word height width grid (check if the word is a string)", argv[0]);
-    return 6;
+    return ERROR_PARAM_TYPE;
   }
   // check if the height and width are integers
   if (atoi(argv[2]) == 0 || atoi(argv[3]) == 0) {
     printf("Usage: %s word height width grid (check if the height and width are integers)", argv[0]);
-    return 6;
+    return ERROR_PARAM_TYPE;
   }
   // check if height * width == grid length
   if (atoi(argv[2]) * atoi(argv[3]) != argc - 4) {
     printf("Usage: %s word height width grid (check if height * width == grid length)", argv[0]);
-    return 7;
+    return ERROR_PARAM_TYPE;
   }
   
     char *word = argv[1];
     int height = atoi(argv[2]);
     int width = atoi(argv[3]);
 
-    
     // on récupère tous les caractères de la grille dans une string
     char* gridList = malloc(height * width * sizeof(char));
-    
+
     int i;
     for (i = 4; i < argc; i++) {
       strcpy(gridList + (i - 4) * sizeof(char), argv[i]);
@@ -78,34 +77,16 @@ int main(int argc, char *argv[]) {
     printf("word: %s\n", word);
     printf("height: %d\n", height);
     printf("width: %d\n", width);
-    //printf("grid: %s\n", gridList);
     
     // on construit la grille g
-    grid g;
-    g.nbl = height;
-    g.nbc = width;
-    g.gridList = gridList;
+    grid g = createGrid(height, width, gridList);
 
     printf("grid: \n");
     print_grid2D(g);
-/* 
-    // test de la fonction grid_path_rec
-
-    int *visited = malloc(g.nbl * g.nbc * sizeof(int));
-    memset(visited, 0, g.nbl * g.nbc * sizeof(int));
-    int res = grid_path_rec(word, 0, 0, g, visited);
-    printf("res = %d \n", res); 
-    */
 
     // on crée une liste des cases parcourues pour former le mot (taille du mot  = nb cases max)
     int *casesIndicesMot = malloc(strlen(word) * sizeof(int));
     memset(casesIndicesMot, -1, strlen(word) * sizeof(int));
-
-/*      printf("casesIndicesMot: \n");
-    for (i = 0; i < strlen(word); i++) {
-      printf("%d ", casesIndicesMot[i]);
-    }
-    printf("\n");  */
 
     int result = grid_path(word,g, casesIndicesMot,1);
     printf("\nRESULT : %d\n", result);

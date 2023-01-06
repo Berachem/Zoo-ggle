@@ -13,6 +13,16 @@ typedef struct {
     char *gridList; // tableau de caractères
 } grid;
 
+#define TAILLE_ALPHABET 27
+#define LARGEUR_PAR_DEFAUT 4
+#define HAUTEUR_PAR_DEFAUT 4
+
+// codes d'erreur
+#define ERROR_OPENING_FILE 151
+#define ERROR_PARAM_NUMBER 253
+#define ERROR_PARAM_TYPE 254
+#define ERROR_PARAM_SENSE 255
+
 // convertit une position (i,j) en indice 1D
 int coord2D_to_1D(int i, int j, grid g);
 
