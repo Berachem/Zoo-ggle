@@ -21,7 +21,7 @@ gcc -g dictionnary.c  dictionnary_lookup.c -o dictionnary_lookup  ;
 
 ## solve.c 
 gcc -g dictionnary.c grid.c solve.c -o solve  ; 
-.\solve 3 4 4 A L M L O P M I Y U O E R E T Y
+.\solve ../../data/listeMot.lex 4 4 4 A L M L O P M I Y U O E R E T Y
 
 ## score_by_lenght
 gcc score_by_lenght.c -o score_by_lenght  ; 

@@ -4,10 +4,6 @@
 #include "../headers/grid.h"
 
 
-
-
-
-
 /*
  main qui lit les arguments et appelle la fonction grid_path : un mot, une hauteur, une largeur, une succession de caractères (grille)
 ### exemple 1 :
@@ -43,22 +39,22 @@ int main(int argc, char *argv[]) {
   // check if there is enough arguments
   if (argc < 5) {
     printf("Usage: %s word height width grid (check if there is enough arguments)", argv[0]);
-    return ERROR_PARAM_NUMBER;
+    exit(ERROR_PARAM_NUMBER);
   }
   // check if the word is a string
   if (atoi(argv[1]) != 0) {
     printf("Usage: %s word height width grid (check if the word is a string)", argv[0]);
-    return ERROR_PARAM_TYPE;
+    exit(ERROR_PARAM_TYPE);
   }
   // check if the height and width are integers
   if (atoi(argv[2]) == 0 || atoi(argv[3]) == 0) {
     printf("Usage: %s word height width grid (check if the height and width are integers)", argv[0]);
-    return ERROR_PARAM_TYPE;
+    exit(ERROR_PARAM_TYPE);
   }
   // check if height * width == grid length
   if (atoi(argv[2]) * atoi(argv[3]) != argc - 4) {
     printf("Usage: %s word height width grid (check if height * width == grid length)", argv[0]);
-    return ERROR_PARAM_TYPE;
+    exit(ERROR_GRID_ARGUMENTS);
   }
   
     char *word = argv[1];
@@ -72,11 +68,6 @@ int main(int argc, char *argv[]) {
     for (i = 4; i < argc; i++) {
       strcpy(gridList + (i - 4) * sizeof(char), argv[i]);
     }
-
-    // affiche toutes les variables
-    printf("word: %s\n", word);
-    printf("height: %d\n", height);
-    printf("width: %d\n", width);
     
     // on construit la grille g
     grid g = createGrid(height, width, gridList);

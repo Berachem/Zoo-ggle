@@ -21,7 +21,10 @@ typedef struct {
 #define ERROR_OPENING_FILE 151
 #define ERROR_PARAM_NUMBER 253
 #define ERROR_PARAM_TYPE 254
-#define ERROR_PARAM_SENSE 255
+#define ERROR_FILE_TYPE 255
+#define ERROR_GRID_ARGUMENTS 256
+#define ERROR_GRID_WORD 257
+#define ERROR_GRID_DIMENSION 258
 
 // convertit une position (i,j) en indice 1D
 int coord2D_to_1D(int i, int j, grid g);

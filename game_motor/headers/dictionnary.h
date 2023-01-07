@@ -10,7 +10,10 @@ Rôle : prototypes des fonctions de dictionnary.c
 #define ERROR_OPENING_FILE 151
 #define ERROR_PARAM_NUMBER 253
 #define ERROR_PARAM_TYPE 254
-#define ERROR_PARAM_SENSE 255
+#define ERROR_FILE_TYPE 255
+#define ERROR_GRID_ARGUMENTS 256
+#define ERROR_GRID_WORD 257
+#define ERROR_GRID_DIMENSION 258
 
 //-----définitions des structures-----
 typedef char Element;
@@ -78,7 +81,6 @@ typedef struct
   int tailleCellule;
 }header;
 
-void convertStaticToTXT(char *filename, StaticTree t);
 
 void convertStaticToLex(char* filename,StaticTree t);
 

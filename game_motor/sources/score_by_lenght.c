@@ -43,11 +43,11 @@ int scoreByWord(char *word) {
 int main(int argc, char *argv[]) {
     if (argc < 2) {
         printf("Usage: %s word1 word2 word3 ...", argv[0]);
-        return ERROR_PARAM_NUMBER;
+        exit(ERROR_PARAM_NUMBER);
     }
     if (atoi(argv[1]) != 0) {
         printf("Usage: %s word1 word2 word3 ... (check if the word is a string)", argv[0]);
-        return ERROR_PARAM_TYPE;
+        exit(ERROR_PARAM_TYPE);
     }
 
     int score = 0;
