@@ -371,7 +371,7 @@ public class DictionaryMaker
 	        	//******** TRIAGE DES MOTS ********
 	        		//on note que chaque ligne du fichier ne contient qu'une information, 
 	        		//il n'est donc pas nécéssaire de faire tout les tests lorsque l'on trouve une des informations
-	        		//De la vienne les continue à chaque if.
+	        		//De la vienne les 'continue' à chaque if.
 	        	
 	        	
 	        	/*
@@ -401,7 +401,7 @@ public class DictionaryMaker
 	        	}
 	        	
 	        	if(line.contains("{{langue|"+langueCible+"}}")) {
-	        		//on ne veut pas récupérer des mots qui ne sont pas en francais
+	        		//on ne veut pas récupérer des mots qui ne sont pas dans la langue ciblée
 	        		estBonneLangue = true;
 	        		continue;
 	        	}
@@ -470,7 +470,7 @@ public class DictionaryMaker
     
     	//java -classpath "Zoo-ggle\java\dico\target\classes" fr.uge.jdict.DictionaryMaker XML LANG SORTIE
     
-    //java -classpath "Zoo-ggle\java\dico\target\classes" fr.uge.jdict.DictionaryMake "C:\Users\Jlwis\Desktop\wiki-fr.xml" fr dico
+    	//java -classpath "Zoo-ggle\java\dico\target\classes" fr.uge.jdict.DictionaryMake "C:\Users\Jlwis\Desktop\wiki-fr.xml" fr dico
     
 	    // ===================A CHANGER EN FONCTION DE L'ENDROIT OU VOUS AVEZ MIS LE FICHIER XML===================
 		// BERA : "C:\\Users\\berac\\Desktop\\wiki-fr.xml" 
@@ -482,10 +482,12 @@ public class DictionaryMaker
 		String fichierXML;
 		
 		if (args.length != 3) {
-			fichierXML = "C:\\Users\\Jlwis\\Desktop\\wiki-fr.xml"; //args[0];
+			System.out.println("Il faut 3 parametres : chemin vers le xml, la langue, le nom du fichier de stockage (sans extension)");
+			return;
+			//fichierXML = "C:\\Users\\Jlwis\\Desktop\\wiki-fr.xml"; //args[0];
 			//fichierLecture = fichierLecture.replace("\\","\\\\");//vive les charactères d'échapement
-			langueCible ="fr"; //args[1];
-			fichierSauvegarde ="dico"; //args[3];
+			//langueCible ="fr"; //args[1];
+			//fichierSauvegarde ="dico"; //args[3];
 		}
 		else{
 			//on récupère les arguments
