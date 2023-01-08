@@ -8,7 +8,7 @@ gcc -g dictionnary.c dictionnary_build.c -o dictionnary_build  ;
 
 ## grid_path.c
 gcc -g grid.c grid_path.c -o grid_path  ; 
-.\grid_path OUI 4 4 A L M L O P M I Y U O E R E T Y  
+.\grid_path OUI 4 4 A L M L O P M I Y U O E R E T QU 
 .\grid_path LPU 4 4 A L M L O P M I Y U O E R E T Y  
 
 ## grid_build.c

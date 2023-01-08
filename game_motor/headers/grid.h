@@ -65,3 +65,11 @@ int grid_path_rec(char *word, int i, int j, grid g, int *visited, int *casesLett
 // renvoie 1 si le mot est présent dans la grille, 0 sinon
 int grid_path(char *word, grid g, int *casesLettreDuMot, int showLogs);
 
+// remplacer les QU
+char *remplaceQU(char *word);
+
+// fonction qui affiche un mot qui contient des * et qui remplace les * par QU
+void printWordWithQU(char *word);
+
+
+

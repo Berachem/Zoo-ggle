@@ -155,7 +155,12 @@ char generateRandomLetter(Letter* letters, int size, int total) {
 void print_grid(grid g) {
   for (int i = 0; i < g.nbl; i++) {
     for (int j = 0; j < g.nbc; j++) {
-      printf("%c ", g.gridList[coord2D_to_1D(i, j,g)]);
+      // if char is * then print it as QU
+      if (g.gridList[coord2D_to_1D(i, j,g)] == '*') {
+        printf("QU ");
+      } else {
+        printf("%c ", g.gridList[coord2D_to_1D(i, j,g)]);
+      }
     }
   }
 }
@@ -165,7 +170,12 @@ void print_grid(grid g) {
 void print_grid2D(grid g) {
   for (int i = 0; i < g.nbl; i++) {
     for (int j = 0; j < g.nbc; j++) {
-      printf("%c ", g.gridList[coord2D_to_1D(i, j, g)]);
+      // if char is * then print it as QU
+      if (g.gridList[coord2D_to_1D(i, j,g)] == '*') {
+        printf("QU ");
+      } else {
+        printf("%c ", g.gridList[coord2D_to_1D(i, j,g)]);
+      }
     }
     printf("\n");
   }
@@ -232,6 +242,42 @@ int is_in_list(int *list, int number) {
   return 0;
 }
 
+// fonction qui remplace les QU par * dans un mot
+// word : mot à modifier
+// return : mot modifié
+char *remplaceQU(char *word) {
+  int sizeWordToMalloc = strlen(word);
+  for (int i = 0; i < strlen(word); i++) {
+    if (word[i] == 'Q' && word[i + 1] == 'U') {
+      sizeWordToMalloc--;
+    }
+  }
+  char *wordToMalloc = malloc(sizeWordToMalloc * sizeof(char));
+  int j = 0;
+  for (int i = 0; i < strlen(word); i++) {
+    if (word[i] == 'Q' && word[i + 1] == 'U') {
+      wordToMalloc[j] = '*';
+      i++;
+    } else {
+      wordToMalloc[j] = word[i];
+    }
+    j++;
+  }
+  return wordToMalloc;
+}
+
+// fonction qui affiche un mot qui contient des * et qui remplace les * par QU
+// word : mot à afficher
+void printWordWithQU(char *word) {
+  for (int i = 0; i < strlen(word); i++) {
+    if (word[i] == '*') {
+      printf("QU");
+    } else {
+      printf("%c", word[i]);
+    }
+  }
+}
+
 
 // fonction récursive qui renvoie 1 si le mot est présent dans la grille, 0 sinon
 // word : mot à chercher
@@ -267,7 +313,7 @@ int grid_path_rec(char *word, int i, int j, grid g, int *visited, int *casesLett
   // on marque la case comme visitée
   visited[k] = 1;
 
-  // on parcourt les voisins de la case
+  // les coordonnées des 8 voisins possibles
   int i_offset[] = {-1, -1, -1, 0, 0, 1, 1, 1};
   int j_offset[] = {-1,  0,  1, -1, 1, -1, 0, 1};
 
@@ -316,17 +362,19 @@ int grid_path(char *word, grid g, int *casesLettreDuMot, int showLogs) {
   for (i = 0; i < g.nbl; i++) {
       for (j = 0; j < g.nbc; j++) {
         
+        // Si la première lettre du mot est trouvée, on appelle la fonction récursive
         if (word[0]==g.gridList[coord2D_to_1D(i,j,g)] ) {  
           if (showLogs) printf("on cherche le mot %s depuis la case (%d, %d) OU en 1D : %d\n", word, i, j, coord2D_to_1D(i,j,g));
-            if (grid_path_rec(word, i, j, g, visited, casesLettreDuMot, &indiceParcoursCasesLettreDuMot, showLogs) == 0) {
 
+            if (grid_path_rec(word, i, j, g, visited, casesLettreDuMot, &indiceParcoursCasesLettreDuMot, showLogs) == 0) { // Si le mot est trouvé, on renvoie 0
+ 
               if (showLogs) printf("on a trouve le mot %s depuis la case (%d, %d) OU en 1D : %d\n", word, i, j, coord2D_to_1D(i,j,g));
 
               free(visited);
               return 0;
             }
           } 
-          else{
+          else{ // sinon on réinitialise le tableau visited à 0
             memset(visited, 0, g.nbl * g.nbc * sizeof(int));
           } 
       }
@@ -335,3 +383,5 @@ int grid_path(char *word, grid g, int *casesLettreDuMot, int showLogs) {
   free(visited);
   return 1;
 }
+
+

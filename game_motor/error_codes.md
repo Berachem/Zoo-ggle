@@ -1,6 +1,7 @@
 ## 0 : aucun soucis
 ## 1 : résultat négatif
 ## ...
+## 151 : erreur d'ouverture du fichier
 ## 253 : erreur nombre de paramètre
 ## 254 : erreur de type des paramètre (Par exemple int, string etc...)
 ## 255 : erreur d'extension de fichier (par exemple .lex ou .txt)

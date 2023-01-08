@@ -97,10 +97,17 @@ void main(int argc, char *argv[]){
     // on récupère tous les caractères de la grille dans une string
     char* gridList = malloc(height * width * sizeof(char));
     
+    
     int i;
     for (i = 4; i < argc; i++) {
-      strcpy(gridList + (i - 4) * sizeof(char), argv[i]);
+       // replace QU by $ in the grid
+        if (argv[i][0] == 'Q' && argv[i][1] == 'U') {
+            gridList[i-4] = '*';
+        } else {
+            gridList[i-4] = argv[i][0];
+        }
     }
+    
     // on construit la grille g pour solve
     grid g;
     g.nbl = height;
