@@ -422,10 +422,15 @@ public class DictionaryMaker
 	        
 
 
-	        //ecriture du fichier des fréquences 
+	        //ecriture du fichier des fréquences (en %)
+	        long totalFreq = 0 ;
 	        for(Map.Entry<String,Integer> entry : dicoFreq.entrySet()) {
-	        	writerFreq.write(entry.getKey()+" "+String.valueOf(entry.getValue())+"\n");
+	        	totalFreq+=entry.getValue();
 	        }
+	        for(Map.Entry<String,Integer> entry : dicoFreq.entrySet()) {
+	        	writerFreq.write(entry.getKey()+" "+String.valueOf(Math.round(((double)entry.getValue()/(double)totalFreq)*100000))+"\n");
+	        }
+	        
 	        //ecriture du semiOffsets et Offset en parrallele
 	        for(Map.Entry<String,TreeMap<String,String>> entry : dicoSemiOffsets.entrySet()) {
 	        	
@@ -482,12 +487,11 @@ public class DictionaryMaker
 		String fichierXML;
 		
 		if (args.length != 3) {
-			System.out.println("Il faut 3 parametres : chemin vers le xml, la langue, le nom du fichier de stockage (sans extension)");
-			return;
-			//fichierXML = "C:\\Users\\Jlwis\\Desktop\\wiki-fr.xml"; //args[0];
-			//fichierLecture = fichierLecture.replace("\\","\\\\");//vive les charactères d'échapement
-			//langueCible ="fr"; //args[1];
-			//fichierSauvegarde ="dico"; //args[3];
+			//System.out.println("Il faut 3 parametres : chemin vers le xml, la langue, le nom du fichier de stockage (sans extension)");
+			//return;
+			fichierXML = "C:\\Users\\Jlwis\\Desktop\\wiki-fr.xml"; //args[0];
+			langueCible ="fr"; //args[1];
+			fichierSauvegarde ="dico"; //args[3];
 		}
 		else{
 			//on récupère les arguments
