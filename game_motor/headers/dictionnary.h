@@ -89,4 +89,4 @@ void freeCST(CSTree t);
 // fonction qui remplace les QU par * dans un mot
 // word : mot à modifier
 // return : mot modifié
-char *remplaceQU(char *word);
+char *remplaceQUdico(char *word);

@@ -29,8 +29,8 @@ void solve_rec(char* filename, int minLenght, grid g, int index, char* currentWo
     currentWord[*letterIndex] = cell.elem;                    // On modifie la lettre à la position letterIndex du mot actuel pour préparer le mot
     effaceMot(currentWord,(*letterIndex)+1,(g.nbc)*(g.nbl));  // a cherche dans la grille, et on efface les lettres suivantes pour ne pas garder
                                                               // les lettres ecrites precedemment dans le cas ou on est descendu plus bas pour d'autres mots
-
-    if (cell.elem == '\0' && strlen(currentWord)>=minLenght){
+    int wordLength = countOccurences(currentWord,'*') + strlen(currentWord);
+    if (cell.elem == '\0' && wordLength>=minLenght){
       printWordWithQU(currentWord);
       printf(" ");                            // Si on arrive a la fin du mot dans le StaticTree et que la longueur est suffisante on renvoie le mot
     }

@@ -275,7 +275,7 @@ void freeCST(CSTree t){
 // fonction qui remplace les QU par * dans un mot
 // word : mot à modifier
 // return : mot modifié
-char *remplaceQU(char *word) {
+char *remplaceQUdico(char *word) {
   int sizeWordToMalloc = strlen(word);
   for (int i = 0; i < strlen(word); i++) {
     if (word[i] == 'Q' && word[i + 1] == 'U') {
