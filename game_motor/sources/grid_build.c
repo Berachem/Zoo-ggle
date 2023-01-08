@@ -36,12 +36,12 @@ int main(int argc, char *argv[]) {
   // check if filename is a string and contains .txt
   if (strstr(argv[1], ".txt") == NULL) {
     printf("Usage: %s filename height width (check if filename is a string and contains .txt)\n", argv[0]);
-    return ERROR_PARAM_TYPE;
+    return ERROR_FILE_TYPE;
   }
   // check if height == width
   if (atoi(argv[2]) != atoi(argv[3])) {
     printf("Usage: %s filename height width (check if height == width)\n", argv[0]);
-    return ERROR_PARAM_SENSE;
+    return ERROR_GRID_DIMENSION;
   }
   // initialisation du générateur de nombres aléatoires
   srand(time(NULL));

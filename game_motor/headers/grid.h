@@ -21,7 +21,10 @@ typedef struct {
 #define ERROR_OPENING_FILE 151
 #define ERROR_PARAM_NUMBER 253
 #define ERROR_PARAM_TYPE 254
-#define ERROR_PARAM_SENSE 255
+#define ERROR_FILE_TYPE 255
+#define ERROR_GRID_ARGUMENTS 256
+#define ERROR_GRID_WORD 257
+#define ERROR_GRID_DIMENSION 258
 
 // convertit une position (i,j) en indice 1D
 int coord2D_to_1D(int i, int j, grid g);
@@ -61,4 +64,15 @@ int grid_path_rec(char *word, int i, int j, grid g, int *visited, int *casesLett
 
 // renvoie 1 si le mot est présent dans la grille, 0 sinon
 int grid_path(char *word, grid g, int *casesLettreDuMot, int showLogs);
+
+// remplacer les QU
+char *remplaceQU(char *word);
+
+// fonction qui affiche un mot qui contient des * et qui remplace les * par QU
+void printWordWithQU(char *word);
+
+// fonction qui compte le nombre d'occurences d'un caractère dans un mot
+int countOccurences(char *word, char c);
+
+
 

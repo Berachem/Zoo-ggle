@@ -3,10 +3,6 @@
 #include <string.h>
 #include "../headers/dictionnary.h"
 
-
-
-
-
   
 /*
 
@@ -20,35 +16,26 @@ préfixe valide d’un mot présent (par exemple, BONJ), 2 sinon. Aucune sortie 
 int main(int argc, char *argv[]){
   if (argc < 3){
     printf("Erreur : nombre d'arguments incorrect\n");
-    return ERROR_PARAM_NUMBER
+    exit(ERROR_PARAM_NUMBER);
   }
   if (strstr(argv[1], ".lex") == NULL) {
     printf("Usage: %s filename height width (check if filename is a string and contains .lex)\n", argv[0]);
-    return ERROR_PARAM_TYPE;
+    exit(ERROR_FILE_TYPE);
   }
   // check if the word is a string
   if (atoi(argv[2]) != 0) {
     printf("Usage: %s word height width grid (check if the word is a string)", argv[0]);
-    return ERROR_PARAM_TYPE;
+    exit(ERROR_PARAM_TYPE);
   }
 
 
   
-  int res = dictionnary_lookup(argv[1],argv[2]);
+  int res = dictionnary_lookup(argv[1],remplaceQUdico(argv[2]));
+ 
   printf("Resultat : %d \n", res);
+ /*
   ArrayCell cell= readCellInFile("../../data/listeMot.lex",2042576);
   printf("Elem : %c Enfant : %d NbFrr : %d",cell.elem,cell.firstChild,cell.nSiblings);
+  */
   return res;
-
-
-  //readCellInFile("../../data/fr.lex",0);
-  //readCellInFile("../../data/fr.lex",4);
-  //readCellInFile("../../data/fr.lex",15);
-  //printf("%d",dictionnary_lookup("../../data/dico.lex","eau"));
-  
-  //printf("%d",dictionnary_lookup("../../data/dico.lex","ciseau"));
-  //printf("%d",dictionnary_lookup("../../data/dico.lex","chiot"));
-
-
-
 }

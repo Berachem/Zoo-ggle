@@ -8,7 +8,7 @@ gcc -g dictionnary.c dictionnary_build.c -o dictionnary_build  ;
 
 ## grid_path.c
 gcc -g grid.c grid_path.c -o grid_path  ; 
-.\grid_path OUI 4 4 A L M L O P M I Y U O E R E T Y  
+.\grid_path OUI 4 4 A L M L O P M I Y U O E R E T QU 
 .\grid_path LPU 4 4 A L M L O P M I Y U O E R E T Y  
 
 ## grid_build.c
@@ -17,11 +17,11 @@ gcc -g grid.c grid_build.c -o grid_build  ;
 
 ## dictionnary_lookup.c
 gcc -g dictionnary.c  dictionnary_lookup.c -o dictionnary_lookup  ; 
-.\dictionnary_lookup ../../data/fr.lex BONJ
+.\dictionnary_lookup ../../data/listeMot.lex BONJ
 
 ## solve.c 
 gcc -g dictionnary.c grid.c solve.c -o solve  ; 
-.\solve 3 4 4 A L M L O P M I Y U O E R E T Y
+.\solve ../../data/listeMot.lex 4 4 4 A L M L O P M I Y U O E R E T Y
 
 ## score_by_lenght
 gcc score_by_lenght.c -o score_by_lenght  ; 
