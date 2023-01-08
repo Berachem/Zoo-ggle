@@ -11,9 +11,10 @@ $grille = $_SESSION["grille"];
 echo $mot;
 echo "<br>";
 print_r($grille);
-// echo '.\game_motor\sources\grid_path.exe '.$grille[0].' 4 4 '.implode(" ", $grille);
-$result = shell_exec('.\game_motor\sources\solve.exe listeMot.lex 2 4 4 '.implode(" ", $grille));
+echo '.\game_motor\sources\solve.exe data/listeMot.lex 2 4 4 ' . implode(" ", $grille);
+$result = shell_exec('.\game_motor\sources\solve.exe data\listeMot.lex 2 4 4 '.implode(" ", $grille));
 $result = explode(" ", $result);
+print_r($result);
 
 if (in_array($mot, $result)) {
     echo "mot trouvé";

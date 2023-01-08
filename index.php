@@ -1,10 +1,5 @@
 <?php  
 session_start();  
-if (!isset($_SESSION["listeMots"])){
-    $listeMots = array();
-    $_SESSION["listeMots"] = $listeMots;
-}
-
 
 ?>
 <!DOCTYPE html>
