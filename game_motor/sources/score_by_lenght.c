@@ -18,13 +18,27 @@ On pourra avoir plusieurs exécutables correspondant à plusieurs choix de polit
 #define ERROR_PARAM_TYPE 254
 #define ERROR_PARAM_SENSE 255
 
+// fonction qui compte le nombre d'occurences d'un caractère dans un mot
+// word : mot dans lequel on compte les occurences
+// c : caractère à chercher
+// return : nombre d'occurences
+int countOccurences(char *word, char c) {
+  int count = 0;
+  for (int i = 0; i < strlen(word); i++) {
+    if (word[i] == c) {
+      count++;
+    }
+  }
+  return count;
+}
+
 int scoreByWord(char *word) {
     /*
     Mot de 3 ou 4 lettres : 1 point. Mot de 5 lettres : 2 points. Mot de 6 lettres : 3 points. Mot de 7 lettres : 5 points.
     */
 
     int score = 0;
-    int length = strlen(word);
+    int length = strlen(word) + countOccurences(word, '*');
     if (length == 3 || length == 4) {
         score = 1;
     } else if (length == 5) {
@@ -38,6 +52,8 @@ int scoreByWord(char *word) {
     }
     return score;
 }
+
+
 
 
 int main(int argc, char *argv[]) {
