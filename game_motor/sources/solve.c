@@ -31,7 +31,8 @@ void solve_rec(char* filename, int minLenght, grid g, int index, char* currentWo
                                                               // les lettres ecrites precedemment dans le cas ou on est descendu plus bas pour d'autres mots
 
     if (cell.elem == '\0' && strlen(currentWord)>=minLenght){
-      printf("%s ",currentWord);                              // Si on arrive a la fin du mot dans le StaticTree et que la longueur est suffisante on renvoie le mot
+      printWordWithQU(currentWord);
+      printf(" ");                            // Si on arrive a la fin du mot dans le StaticTree et que la longueur est suffisante on renvoie le mot
     }
 
     if((grid_path(currentWord, g, casesIndicesMot,0)==0) && (cell.firstChild!=-1)){  //Si le mot actuel est valide, et préfixe d'autres mot (son noeud a des enfants)
