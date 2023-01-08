@@ -17,7 +17,7 @@ gcc -g grid.c grid_build.c -o grid_build  ;
 
 ## dictionnary_lookup.c
 gcc -g dictionnary.c  dictionnary_lookup.c -o dictionnary_lookup  ; 
-.\dictionnary_lookup ../../data/fr.lex BONJ
+.\dictionnary_lookup ../../data/listeMot.lex BONJ
 
 ## solve.c 
 gcc -g dictionnary.c grid.c solve.c -o solve  ; 

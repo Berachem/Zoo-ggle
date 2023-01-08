@@ -71,5 +71,8 @@ char *remplaceQU(char *word);
 // fonction qui affiche un mot qui contient des * et qui remplace les * par QU
 void printWordWithQU(char *word);
 
+// fonction qui compte le nombre d'occurences d'un caractère dans un mot
+int countOccurences(char *word, char c);
+
 
 

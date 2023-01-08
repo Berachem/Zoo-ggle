@@ -271,3 +271,27 @@ void freeCST(CSTree t){
   freeCST(t->nextSibling);
   free(t);
 }
+
+// fonction qui remplace les QU par * dans un mot
+// word : mot à modifier
+// return : mot modifié
+char *remplaceQU(char *word) {
+  int sizeWordToMalloc = strlen(word);
+  for (int i = 0; i < strlen(word); i++) {
+    if (word[i] == 'Q' && word[i + 1] == 'U') {
+      sizeWordToMalloc--;
+    }
+  }
+  char *wordToMalloc = malloc(sizeWordToMalloc * sizeof(char));
+  int j = 0;
+  for (int i = 0; i < strlen(word); i++) {
+    if (word[i] == 'Q' && word[i + 1] == 'U') {
+      wordToMalloc[j] = '*';
+      i++;
+    } else {
+      wordToMalloc[j] = word[i];
+    }
+    j++;
+  }
+  return wordToMalloc;
+}

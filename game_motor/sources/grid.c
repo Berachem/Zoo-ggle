@@ -266,6 +266,20 @@ char *remplaceQU(char *word) {
   return wordToMalloc;
 }
 
+// fonction qui compte le nombre d'occurences d'un caractère dans un mot
+// word : mot dans lequel on compte les occurences
+// c : caractère à chercher
+// return : nombre d'occurences
+int countOccurences(char *word, char c) {
+  int count = 0;
+  for (int i = 0; i < strlen(word); i++) {
+    if (word[i] == c) {
+      count++;
+    }
+  }
+  return count;
+}
+
 // fonction qui affiche un mot qui contient des * et qui remplace les * par QU
 // word : mot à afficher
 void printWordWithQU(char *word) {

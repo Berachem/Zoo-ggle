@@ -85,3 +85,8 @@ typedef struct
 void convertStaticToLex(char* filename,StaticTree t);
 
 void freeCST(CSTree t);
+
+// fonction qui remplace les QU par * dans un mot
+// word : mot à modifier
+// return : mot modifié
+char *remplaceQU(char *word);
