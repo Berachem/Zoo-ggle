@@ -1,6 +1,4 @@
-## 0 : aucun soucis
-## 1 : résultat négatif
-## ...
+## 0 à 2 Résultats possibles pour les fonctions
 ## 151 : erreur d'ouverture du fichier
 ## 253 : erreur nombre de paramètre
 ## 254 : erreur de type des paramètre (Par exemple int, string etc...)
