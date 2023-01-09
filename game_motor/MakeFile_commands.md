@@ -1,5 +1,6 @@
 
 # !!!! PLACEZ VOUS DANS LE REPERTOIRE 'sources' PUIS EXECUTEZ CES COMMANDES !!!!
+# Si vous êtes sur Linux (sous Bash), vous devez utiliser "./" avant chaque commande
 
 
 ## dictionnary_build.c
@@ -26,3 +27,6 @@ gcc -g dictionnary.c grid.c solve.c -o solve  ;
 ## score_by_lenght
 gcc score_by_lenght.c -o score_by_lenght  ; 
 .\score_by_lenght OUI VIE
+
+## score_by_letters_weight
+### Cette implémentation du score n'a pas été finalisée donc elle ne fonctionne pas. Néanmoins, l'idée est (était) de calculer le score en fonction du poids des lettres.
