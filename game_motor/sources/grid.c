@@ -246,13 +246,14 @@ int is_in_list(int *list, int number) {
 // word : mot à modifier
 // return : mot modifié
 char *remplaceQU(char *word) {
-  int sizeWordToMalloc = strlen(word);
+    int sizeWordToMalloc = strlen(word);
   for (int i = 0; i < strlen(word); i++) {
     if (word[i] == 'Q' && word[i + 1] == 'U') {
       sizeWordToMalloc--;
     }
   }
   char *wordToMalloc = malloc(sizeWordToMalloc * sizeof(char));
+  memset(wordToMalloc, '\0', sizeWordToMalloc * sizeof(int));
   int j = 0;
   for (int i = 0; i < strlen(word); i++) {
     if (word[i] == 'Q' && word[i + 1] == 'U') {
