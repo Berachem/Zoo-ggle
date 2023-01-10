@@ -36,7 +36,7 @@ session_start();
     <h1>Zoo-ggle</h1>
     <?php
        // récupère le retour de l'exécution du fichier C game_motor/sources/grid_build ../../data/frequences.txt 4 4
-        $result = shell_exec('.\game_motor\sources\grid_build.exe data/frequences.txt 4 4');
+        $result = shell_exec('.\server\game_motor\sources\grid_build.exe server/data/frequences.txt 4 4');
         // split le résultat en tableau
         $result = explode(" ", $result);
 
