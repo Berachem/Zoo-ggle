@@ -125,11 +125,16 @@ public class DictionaryMaker
 		}
 		copie = copie.replace("Œ", "OE");
 		
+		int longueur = 0;
 		for(int i=0;i<copie.length();i++) {//il reste des mots qui sont composé de lettre que non francaise (ʻOKINA) que nous ne pouvons donc pas écrire.
 			char c = copie.charAt(i);
 			if(c<'A' || c>'Z') {
 				return "";
 			}
+			longueur++;
+		}
+		if(longueur < 3) { //les mots de 3 lettres ou moins ne pouvant pas être jouée d'après les règles
+			return "";		//on ne les stocks pas
 		}
 		
 		
@@ -306,6 +311,7 @@ public class DictionaryMaker
 			
 			
 			// ===== LECTURE ET ECRITURE DES DIFFERENTS FICHIERS =====
+			System.out.println("---recuperation des mots---");
 			long avancement = 0;
 			String line="";
 	        while((line=reader.readLine())!= null){
@@ -322,7 +328,10 @@ public class DictionaryMaker
 	        			jsonMot = "{" + "\"title\" : \"" + mot + "\"," + "\"definitions\":{\"nom\" : " + definitionsNom + "," + "\"verbe\" : " + definitionsVerbe + "}}";
 						writerJson.writeChars(jsonMot+"\n");
 						long afterMot = writerJson.getFilePointer();
-						//System.out.println(beforeMot+" "+afterMot);
+						
+						System.out.println(avancement+" mot recuperes");
+	        			avancement++;
+						
 						
 						//stockage des offsets
 						DictionaryMaker.addSemiOffset(dicoSemiOffsets, mot, beforeMot, afterMot);
@@ -350,8 +359,7 @@ public class DictionaryMaker
 		        		
 		        		*/	
 		        		
-		        		System.out.println(avancement+" mot créés");
-	        			avancement++;
+		        		
 		        		
 	        		}
 	        		// remise à 0 des variable car on quitte une section <page>
@@ -431,8 +439,13 @@ public class DictionaryMaker
 	        	writerFreq.write(entry.getKey()+" "+String.valueOf(Math.round(((double)entry.getValue()/(double)totalFreq)*100000))+"\n");
 	        }
 	        
+	        System.out.println("----ecriture des mots par ordre alphabetique---");
+	        int compteur = 1;
 	        //ecriture du semiOffsets et Offset en parrallele
 	        for(Map.Entry<String,TreeMap<String,String>> entry : dicoSemiOffsets.entrySet()) {
+	        	
+	        	System.out.println(compteur + " mot ecris");
+	        	compteur++;
 	        	
 	        	Long before = writerSemiLex.getFilePointer();
 	        	
@@ -456,6 +469,7 @@ public class DictionaryMaker
 	        writerLex.close();
 	        writerSemiLex.close();
 	        System.out.println("Les fichiers ont bien été créés");
+	        //on a moins de mot ecris que recupéré à cause de la normalisation
 	    }
         
         catch(Exception e){//catch car utilisation des bufferedReader/Writter
@@ -487,11 +501,11 @@ public class DictionaryMaker
 		String fichierXML;
 		
 		if (args.length != 3) {
-			//System.out.println("Il faut 3 parametres : chemin vers le xml, la langue, le nom du fichier de stockage (sans extension)");
-			//return;
-			fichierXML = "C:\\Users\\Jlwis\\Desktop\\wiki-fr.xml"; //args[0];
-			langueCible ="fr"; //args[1];
-			fichierSauvegarde ="dico"; //args[3];
+			System.out.println("Il faut 3 parametres : chemin vers le xml, la langue, le nom du fichier de stockage (sans extension)");
+			return;
+			//fichierXML = "C:\\Users\\Jlwis\\Desktop\\wiki-fr.xml"; //args[0];
+			//langueCible ="fr"; //args[1];
+			//fichierSauvegarde ="dico"; //args[3];
 		}
 		else{
 			//on récupère les arguments
