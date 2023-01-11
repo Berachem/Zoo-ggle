@@ -4,7 +4,7 @@
 session_start();
 
 // récupère le mot entré par l'utilisateur
-$mot = $_GET["mot"];
+$mot = $_POST["mot"];
 // récupère la grille
 $grille = $_SESSION["grille"];
 
