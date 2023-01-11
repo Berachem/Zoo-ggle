@@ -1,6 +1,6 @@
 ## Toujours faire attention à son répertoire courant !
 ## (ici le repertoire courant est le père du repertoire Zoo-ggle, le repertoire du projet)
-
+**Dans le cas de la correction du projet java sans le reste du projet il faudra modifier les chemins**
 
 # Creation des dictionnaires :
     La commande est : java -classpath "Zoo-ggle\server\java\dico\target\classes" fr.uge.jdict.DictionaryMake *chemin vers le dossier xml* *langue* *nom du fichier de stockage (sans extension)*
