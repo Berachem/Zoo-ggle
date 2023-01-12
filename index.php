@@ -98,11 +98,11 @@ include('includes/header.inc.php');
                         }
 
                         td {
-                            font-size: 50px;
+                            font-size: 65px;
                             /* square the cell*/
-                            padding: 15px;
-
-
+                            padding-left: 15px;
+                            padding-right: 15px;
+                            border-radius: 10px;
                             /* police*/
                             font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif
                         }
@@ -141,7 +141,7 @@ include('includes/header.inc.php');
                     </table>
 
                     <br>
-                    <form action="checkWord.php" method="post" class="center">
+                    <form action="others/checkWord.php" method="post" class="center">
                         <input type="text" name="mot" id="mot" placeholder="Entrez un mot" onkeydown="upperCaseF(this)" minlength="1" required>
                         <script>
                             function upperCaseF(a){

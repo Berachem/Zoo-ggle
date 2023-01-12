@@ -11,8 +11,8 @@ $grille = $_SESSION["grille"];
 echo $mot;
 echo "<br>";
 print_r($grille);
-echo '.\server\game_motor\sources\solve.exe server/data/listeMot.lex 2 4 4 ' . implode(" ", $grille);
-$result = shell_exec('.\game_motor\sources\solve.exe server/data\listeMot.lex 2 4 4 '.implode(" ", $grille));
+echo '.\server\game_motor\executables\solve.exe server/data/listeMot.lex 2 4 4 ' . implode(" ", $grille);
+$result = shell_exec('.\game_motor\executables\solve.exe server/data\listeMot.lex 2 4 4 '.implode(" ", $grille));
 $result = explode(" ", $result);
 print_r($result);
 
