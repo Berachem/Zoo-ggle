@@ -1,16 +1,52 @@
 <?php
 include('includes/header.inc.php');
+
+function implode_recursive(string $separator, array $array): string
+{
+    $string = '';
+    foreach ($array as $i => $a) {
+        if (is_array($a)) {
+            $string .= implode_recursive($separator, $a);
+        } else {
+            $string .= $a;
+            if ($i < count($array) - 1) {
+                $string .= $separator;
+            }
+        }
+    }
+
+    return $string;
+}
+
+function create_list($data) {
+    $list = "<ul>";
+    foreach ($data as $key => $value) {
+        $list .= "<li>" . $key;
+        if (is_object($value) || is_array($value)) {
+            $list .= create_list($value);
+        } else {
+            $list .= ": " . $value;
+        }
+        $list .= "</li>";
+    }
+    $list .= "</ul>";
+    return $list;
+}
 ?>
 <br>
 <br>
 <br>
 <br>
+<br>
+
+
+<h1 class="display-1 lh-1 mb-3" style="text-align: center;">Recherchez la définition d'un mot</h1>
     
     <div class="container">
         <div class="row">
             <div class="col-12">
                 <div class="input-group mb-3">
-                    <input type="text" class="form-control" placeholder="Rechercher un mot" aria-label="Rechercher un mot" id ="search-input" aria-describedby="button-addon2" onkeydown="searchWord(document.getElementById('search-input').value)">
+                    <input type="text" class="form-control" placeholder="Tapez votre mot ici..." aria-label="Rechercher un mot" id ="search-input" aria-describedby="button-addon2">
                     <button class="btn btn-outline-secondary" type="button" id="button-addon2" onclick="searchWord(document.getElementById('search-input').value)">
                         Rechercher
                     </button>
@@ -18,48 +54,33 @@ include('includes/header.inc.php');
             </div>
         </div>
     </div>
-    <div class="container">
-        <ul class="list-group" id="list">
-        </ul>
+    <?php
 
-    </div>
+    
 
-
-
-        <script>
-    function searchWord(data) {
-        // data to upper case
-        data = data.toUpperCase();
-
-
-
-        console.log(data);
-        // Charger les données du dictionnaire à partir du fichier JSON
-
-        $.getJSON("server/data/dico_fr.json", function(data) {
-            var words = data.slice(0,200).map(function(entry) { return entry.title });
-
-        // Écouter les entrées de l'utilisateur dans la barre de recherche
-        $("#search-input").on("keyup", function() {
-            var searchValue = $(this).val();
-
-            // Filtrer les mots en fonction du pattern de recherche
-            var filteredWords = words.filter(function(word) {
-            return word.startsWith(searchValue);
-            });
-
-            // Afficher les mots filtrés dans la liste
-            var wordList = $("#list");
-            wordList.empty();
-            filteredWords.forEach(function(word) {
-                console.log(word);
-            var wordItem = $("<li>").addClass("list-group-item").text(word);
-            wordList.append(wordItem);
-            });
-        });
-        });
+    if (isset($_GET['word']) && !empty($_GET['word'])){
+        $word = $_GET['word'];
+        $resultCLI = shell_exec('java -Dfile.encoding=UTF-8 -classpath "server\java\dico\target\classes" fr.uge.jdict.DictionarySearcher "server\java\dico\dico" '.$word); 
+                    // keep only text between first { and last }
+        $resultCLI = substr($resultCLI, strpos($resultCLI, "{"), strrpos($resultCLI, "}") - strpos($resultCLI, "{") + 1);
+        $json = json_decode($resultCLI, true);
+        echo '    <div class="container">
+        <div class="card">
+                <div class="card-body" id="card-result">
+                    <h5 class="card-title">'.$json["title"].'</h5>
+                    <p class="card-text">                  
+                        '.create_list($json["definitions"])
+                        .'
+                    </p>
+                </div>
+        </div>';
     }
 
+?>
+<script>
+    function searchWord(word) {
+        window.location.href = "dictionnary.php?word=" + word;
+    }
 </script>
 
 <?php

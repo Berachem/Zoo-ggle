@@ -85,19 +85,25 @@ include('includes/header.inc.php');
         <style>
                         /* agrandissement des cases de la grille */
                         table, td, th {
-                            border: 1px solid black;
+
                             width: 50px;
                             height: 50px;
                             text-align: center;
+                           
                         }
 
                         table {
-                            border-collapse: collapse;
                             margin: auto;
-                            border-radius: 30px;
+                            border-spacing: 0;
+                            border-collapse: separate;
+                            border-radius: 10px;
+                            
                         }
+                        
 
                         td {
+                            border: 1px solid black;
+                            
                             font-size: 65px;
                             /* square the cell*/
                             padding-left: 15px;
@@ -106,9 +112,10 @@ include('includes/header.inc.php');
                             /* police*/
                             font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif
                         }
-
+                        /* animation ombre derrière la cas */
                         td:hover {
-                            background-color: #f1f1f1;
+                            box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.5);
+                            transition: 0.5s;
                         }
 
                         .center{
