@@ -44,7 +44,6 @@ public class DictionaryMaker
 		return retour;
 	}
 	
-	
 	/**
 	 * Fonction qui nettoie les exemple du fichier xml
 	 * 
@@ -133,12 +132,34 @@ public class DictionaryMaker
 			}
 			longueur++;
 		}
-		if(longueur < 3) { //les mots de 3 lettres ou moins ne pouvant pas être jouée d'après les règles
-			return "";		//on ne les stocks pas
-		}
-		
 		
 		return copie;
+	}
+	
+	/**
+	 * Prend un exemple et actualise le dictionnaire de fréquence avec
+	 * 
+	 * @param exemple : l'exemple compter
+	 * @return le dictionnaire actualisé
+	 */
+	public static HashMap<String,Integer> frequenceForExemple(String exemple,HashMap<String,Integer> dicoFreq) {
+		List<Character> accent  = List.of('À', 'Á', 'Â', 'Ã', 'Ä', 'Å', 'Ç', 'È', 'É', 'Ê', 'Ë', 'Ì', 'Í', 'Î', 'Ï', 'Ò', 'Ó', 'Ô', 'Õ', 'Ö', 'Ù', 'Ú', 'Û', 'Ü', 'Ý');
+		List<Character> sansAccent = List.of('A', 'A', 'A', 'A', 'A', 'A', 'C', 'E', 'E', 'E', 'E', 'I', 'I', 'I', 'I', 'O', 'O', 'O', 'O', 'O', 'U', 'U', 'U', 'U', 'Y');
+		String copie = exemple.toUpperCase();
+		for(int i=0; i<accent.size();i++){
+			copie = copie.replace(accent.get(i),sansAccent.get(i));
+		}
+		copie = copie.replace("Œ", "OE");
+		copie = copie.replace("QU", "*");
+		
+		for(int i=0;i<copie.length();i++) {
+			char lettre = copie.charAt(i);
+			if(dicoFreq.containsKey(String.valueOf(lettre))){
+				dicoFreq.put(String.valueOf(lettre),dicoFreq.get(String.valueOf(lettre))+1);
+			}
+		}
+		
+		return dicoFreq;
 	}
 	
 	/**
@@ -329,9 +350,9 @@ public class DictionaryMaker
 						writerJson.writeChars(jsonMot+"\n");
 						long afterMot = writerJson.getFilePointer();
 						
+						//print pour l'utilisateur
 						System.out.println(avancement+" mot recuperes");
 	        			avancement++;
-						
 						
 						//stockage des offsets
 						DictionaryMaker.addSemiOffset(dicoSemiOffsets, mot, beforeMot, afterMot);
@@ -346,6 +367,9 @@ public class DictionaryMaker
 		        				dicoFreq.merge(String.valueOf(lettre), 1, Integer::sum);
 		        			}
 		        		}
+		        		
+		        		frequenceForExemple(definitionsNom.toString(),dicoFreq);
+		        		frequenceForExemple(definitionsVerbe.toString(),dicoFreq);
 		        		
 		        		//différents prints de debugs
 		        		/*
@@ -501,11 +525,14 @@ public class DictionaryMaker
 		String fichierXML;
 		
 		if (args.length != 3) {
+			/*
 			System.out.println("Il faut 3 parametres : chemin vers le xml, la langue, le nom du fichier de stockage (sans extension)");
 			return;
-			//fichierXML = "C:\\Users\\Jlwis\\Desktop\\wiki-fr.xml"; //args[0];
-			//langueCible ="fr"; //args[1];
-			//fichierSauvegarde ="dico"; //args[3];
+			*/
+			
+			fichierXML = "C:\\Users\\Jlwis\\Desktop\\wiki-fr.xml"; //args[0];
+			langueCible ="fr"; //args[1];
+			fichierSauvegarde ="dico"; //args[3];
 		}
 		else{
 			//on récupère les arguments
