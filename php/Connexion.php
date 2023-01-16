@@ -34,7 +34,7 @@ class Connexion {
             die($msg);
         }
     }
-    public function q($sql,Array $cond = null){
+    public function execQuery($sql,Array $cond = null){
         $stmt = $this->connec->prepare($sql);
         if($cond){
             foreach ($cond as $v) {
@@ -49,6 +49,26 @@ class Connexion {
         $stmt=NULL;
     }
 
+
+    /**
+     * @param $login : le login de l'utilisateur (son pseudo)
+     * @param $psw : le mot de passe de l'utilisateur
+     *
+     * @return bool : true si l'utilisateur est authentifié, false sinon
+     */
+    public function login($login, $psw){
+        $query = "SELECT * FROM B_Joueur WHERE Pseudo LIKE :login AND MotDePasse LIKE :psw";
+        $parameters = [":login" => $login, ":psw" => hash("sha256",$psw) ];
+        $result = $this->execQuery($query,$parameters);
+        return !empty($result);
+    }
+
+    public function register($login,$psw,$mail,$desc,$public){
+        $query = "INSERT INTO B_Joeur (Pseudo,MotDePasse,Mail,Description,ProfilPublic,DateCreationCompte) VALUES (:login,:psw,:mail,:desc,:public,NOW()) ";
+        $parameters = [":login"=>$login,":psw"=>hash("sha256",$psw),":mail"=>$mail,":desc"=>$desc,":public"=>$public];
+        this->execQuery($query,$parameters);
+    }
+
 }
 
 
@@ -60,10 +80,4 @@ include("php/lib/parse.env.php");
 
 
 $db = new Connexion(getenv('DB_HOST'),getenv('DB_NAME'),getenv('DB_USER'),getenv('DB_PASSWORD'));
-
-
-
-
-
-
 ?>
