@@ -11,9 +11,9 @@ class Connexion {
     private $db;
     public function __construct($host, $db, $login, $pass){
         $this->host = $host;
-        $this->login = $login;
-        $this->pass = $pass;
-        $this->db = $db;
+        $this->login = $db;
+        $this->pass = $login;
+        $this->db = $pass;
         $this->connexion();
     }
     private function connexion(){
@@ -41,9 +41,9 @@ class Connexion {
                 $stmt->bindParam($v[0],$v[1], PDO::PARAM_STR);
             }
         }
-        
+
         $stmt->execute();    
-        //$stmt->debugDumpParams();
+        //echo $stmt->debugDumpParams();
         return $stmt->fetchAll();
         $stmt->closeCursor();
         $stmt=NULL;
@@ -58,26 +58,28 @@ class Connexion {
      */
     public function login($login, $psw){
         $query = "SELECT * FROM B_Joueur WHERE Pseudo LIKE :login AND MotDePasse LIKE :psw";
-        $parameters = [":login" => $login, ":psw" => hash("sha256",$psw) ];
+        $parameters = [[":login" , $login], [":psw" , hash("sha256",$psw)] ];
         $result = $this->execQuery($query,$parameters);
         return !empty($result);
     }
 
     public function register($login,$psw,$mail,$desc,$public){
-        $query = "INSERT INTO B_Joeur (Pseudo,MotDePasse,Mail,Description,ProfilPublic,DateCreationCompte) VALUES (:login,:psw,:mail,:desc,:public,NOW()) ";
-        $parameters = [":login"=>$login,":psw"=>hash("sha256",$psw),":mail"=>$mail,":desc"=>$desc,":public"=>$public];
-        this->execQuery($query,$parameters);
+        $query = "INSERT INTO B_Joueur (Pseudo,MotDePasse,Mail,Description,ProfilPublic,DateCreationCompte) VALUES (:login,:psw,:mail,:desc,:public,NOW()) ";
+        $parameters = [[":login",$login],[":psw",hash("sha256",$psw)],[":mail",$mail],[":desc",$desc],
+            [":public",$public]];
+        $this->execQuery($query,$parameters);
     }
 
 }
 
 
-use These\DotEnv;
+use Zoogle\DotEnv;
 
-include("php/lib/parse.env.php");
-(new DotEnv('.env'))->load();
+require_once("php/lib/parse.env.php");
+(new DotEnv('login.env'))->load();
 // mysql:host=localhost;dbname=test;
 
 
 $db = new Connexion(getenv('DB_HOST'),getenv('DB_NAME'),getenv('DB_USER'),getenv('DB_PASSWORD'));
+
 ?>

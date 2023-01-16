@@ -1,11 +1,11 @@
 <?php
 
-namespace These;
+namespace Zoogle;
 
 class DotEnv
 {
     /**
-     * The directory where the .env file can be located.
+     * The directory where the login.env file can be located.
      *
      * @var string
      */
@@ -43,5 +43,6 @@ class DotEnv
                 $_SERVER[$name] = $value;
             }
         }
+        return;
     }
 }
