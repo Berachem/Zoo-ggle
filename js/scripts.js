@@ -54,8 +54,7 @@ function checkWord(word){
     fetch('php/api/word_check.php', {
         method: 'POST',
         body: JSON.stringify({
-            word: word,
-            grid: grid
+            word: word
         })
     })
     .then(response => response.json())
@@ -64,6 +63,7 @@ function checkWord(word){
         if (data.success) {
             // TODO: add the word to the list of words found (in the html)
         }
+            console.log("Mot :"+word+",Success : "+data.success)
     }
     );
     resetField();
