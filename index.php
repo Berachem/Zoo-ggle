@@ -148,32 +148,20 @@ include('includes/header.inc.php');
                     </table>
 
                     <br>
-                    <form action="others/checkWord.php" method="post" class="center">
+                    <center>
                         <input type="text" name="mot" id="mot" placeholder="Entrez un mot" onkeydown="upperCaseF(this)" minlength="1" required>
-                        <script>
-                            function upperCaseF(a){
-                                setTimeout(function(){
-                                    a.value = a.value.toUpperCase();
-                                }, 1);
-                            }
-
-                            function addToFieldByClick(cell) {
-                                var mot = document.getElementById("mot");
-                                mot.value += cell.innerHTML;
-                            }
-                        </script>
-                        <button type="submit" class="btn btn-success">
+                        <button type="submit" class="btn btn-success" onclick="checkWord(document.getElementById('mot').value)">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check" viewBox="0 0 16 16">
                                 <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3-3a.5.5 0 0 1 .708-.708L6.5 9.793l6.646-6.647a.5.5 0 0 1 .708 0z" />
 
                             </svg>
                             Valider
                         </button>
-                        <button type="reset" class="btn btn-danger">
+                        <button type="reset" class="btn btn-danger" onclick="resetField()">
                             Effacer
                         </button>
-
-                    </form>
+                    </center>
+                
         </section>
 
         <!-- Quote/testimonial aside-->

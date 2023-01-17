@@ -32,3 +32,41 @@ window.addEventListener('DOMContentLoaded', event => {
     });
 
 });
+
+function upperCaseF(a){
+    setTimeout(function(){
+        a.value = a.value.toUpperCase();
+    }, 1);
+}
+
+function addToFieldByClick(cell) {
+    var mot = document.getElementById("mot");
+    mot.value += cell.innerHTML;
+}
+
+function resetField(){
+    var mot = document.getElementById("mot");
+    mot.value = "";
+}
+
+function checkWord(word){
+    // fetch the php (php/api/word_check.php) and send the word and the grid in POST
+    fetch('php/api/word_check.php', {
+        method: 'POST',
+        body: JSON.stringify({
+            word: word,
+            grid: grid
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        // if the word is valid, add it to the list and remove it from the grid
+        if (data.success) {
+            // TODO: add the word to the list of words found (in the html)
+        }
+    }
+    );
+    resetField();
+        
+}
+
