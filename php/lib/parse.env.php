@@ -5,7 +5,7 @@ namespace Zoogle;
 class DotEnv
 {
     /**
-     * The directory where the login.env file can be located.
+     * The directory where the .env file can be located.
      *
      * @var string
      */
@@ -20,7 +20,7 @@ class DotEnv
         $this->path = $path;
     }
 
-    public function load() :void
+    public function load() //:void
     {
         if (!is_readable($this->path)) {
             throw new \RuntimeException(sprintf('%s file is not readable', $this->path));
@@ -43,6 +43,6 @@ class DotEnv
                 $_SERVER[$name] = $value;
             }
         }
-        return;
+        return ;
     }
 }
