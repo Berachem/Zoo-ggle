@@ -60,8 +60,14 @@ function create_list($data) {
 
     if (isset($_GET['word']) && !empty($_GET['word'])){
         $word = $_GET['word'];
-        $resultCLI = shell_exec('java -Dfile.encoding=UTF-8 -classpath "server\java\dico\target\classes" fr.uge.jdict.DictionarySearcher "server\java\dico\dico" '.$word); 
-                    // keep only text between first { and last }
+        
+        if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+            $resultCLI = shell_exec('java -Dfile.encoding=UTF-8 -classpath "server\java\dico\target\classes" fr.uge.jdict.DictionarySearcher "server\java\dico\dico" '.$word);
+        } else {
+            $resultCLI = shell_exec('java -Dfile.encoding=UTF-8 -classpath "server/java/dico/target/classes" fr.uge.jdict.DictionarySearcher "server/java/dico/dico" '.$word);
+        }
+        
+        // keep only text between first { and last }
         $resultCLI = substr($resultCLI, strpos($resultCLI, "{"), strrpos($resultCLI, "}") - strpos($resultCLI, "{") + 1);
         $json = json_decode($resultCLI, true);
         echo '    <div class="container">

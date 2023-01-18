@@ -17,10 +17,10 @@ if (!isset($_SESSION["user"])) {
         $_POST["langue"],
         intval($_POST["taille"]),
         intval($_POST["mode"]),
-        $_POST["public"] == "1" ? "TRUE" : "FALSE",
+        $_POST["public"],
         intval($_POST["nbjoueurs"])
     );
-  
+    exit;
     header("Location: index.php?gameCreated=true");
 } else {
     header("Location: index.php?error=true");
