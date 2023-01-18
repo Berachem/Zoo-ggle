@@ -115,7 +115,7 @@
                     </div>
                     <div class="modal-body border-0 p-4">
 
-                        <form id="contactForm" action="php/createGame.php" method="post">
+                        <form id="contactForm" action="createGame.php" method="post">
 
                             <div class="form-floating mb-3">
                                 <input class="form-control" id="name" name="name" type="text" placeholder="Entrez votre Pseudo..."
