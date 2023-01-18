@@ -49,13 +49,12 @@ function resetField(){
     mot.value = "";
 }
 
-function checkWord(word){
+function checkWord(word, grid, time){
     // fetch the php (php/api/word_check.php) and send the word and the grid in POST
     fetch('php/api/word_check.php', {
         method: 'POST',
         body: JSON.stringify({
-            word: word,
-            grid: grid
+            word: word
         })
     })
     .then(response => response.json())
@@ -64,6 +63,7 @@ function checkWord(word){
         if (data.success) {
             // TODO: add the word to the list of words found (in the html)
         }
+            console.log("Mot :"+word+",Success : "+data.success)
     }
     );
     resetField();

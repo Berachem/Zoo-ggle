@@ -13,6 +13,17 @@ B_MessagePrivé = (#ld Joueur, IdMessagePrivé INT, Contenu VARCHAR(200), DateMe
 */
 
 
+// Fonction qui renvoie les données de la partie en cours du joueur $id (en comparant la date début et fin de la partie et la date actuelle) FIXME: à tester 
+function getCurrentGame($userID){
+    global $db;
+    $query = "SELECT * FROM B_Partie WHERE Id_Partie = (SELECT Id_Partie FROM B_Jouer WHERE ld_Joueur = ? AND DatePartie <= NOW() AND DatePartieFin >= NOW())";
+    $params = [[1, $userID, PDO::PARAM_INT]];
+    $game = $db->execQuery($query, $params);
+    return $game[0];
+}
+
+
+
 // Fonction qui renvoie la liste des mots valides pour la partie $idPartie proposés par le joueur $id
 function getValidWordsListByPlayer($userID, $gameID){
     global $db;

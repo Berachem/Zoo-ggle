@@ -4,17 +4,23 @@
 session_start();
 
 // si pas connecté renvoie un json avec success = false et l'erreur
+/*
 if (!isset($_SESSION["user"])) {
     echo json_encode(array("success" => false, "error" => "Utilisateur non connecté"));
     exit();
 }
+*/
+
+// utiliser une fonction pour récupérer la partie
 
 // récupère le mot entré par l'utilisateur et la grille
 $mot = $_POST["mot"];
-$grille = $_POST["grille"];
-
-echo '.\server\game_motor\executables\solve.exe server/data/listeMot.lex 2 4 4 ' . implode(" ", $grille);
-$result = shell_exec('.\game_motor\executables\solve.exe server/data\listeMot.lex 2 4 4 '.implode(" ", $grille));
+// $grille = $_SESSION["grille"];  
+//$mot = "AGE";
+//$grille = "A G E C C C C C C C C C C C C C";
+$grille = explode(" ",$grille);
+//echo '.\server\game_motor\sources\solve.exe server/data/listeMot.lex 2 4 4 ' . implode(" ", $grille);
+$result = shell_exec('..\..\server\game_motor\sources\solve.exe ..\..\server\data\listeMot.lex 2 4 4 '.implode(" ", $grille));
 $result = explode(" ", $result);
 
 // TODO : add to database

@@ -37,10 +37,16 @@
                         <li class="nav-item"><a class="nav-link me-lg-3" href="dictionnary.php">Dictionnaire</a></li>
                         <li class="nav-item"><a class="nav-link me-lg-3" href="#download">Contact</a></li>
                     </ul>
-                    <button class="btn btn-primary rounded-pill px-3 mb-2 mb-lg-0" data-bs-toggle="modal" data-bs-target="#feedbackModal">
+                    <button class="btn btn-primary rounded-pill px-3 mb-2 mb-lg-0" data-bs-toggle="modal"
+                            data-bs-target="#connexion">
                         <span class="d-flex align-items-center">
-                            <i class="bi-person me-2"></i>
-                            <span class="small">Connexion/Inscription</span>
+                            <span class="small">Connexion</span>
+                        </span>
+                    </button>
+                    <button class="btn btn-secondary rounded-pill px-3 mx-1 mb-2 mb-lg-0" data-bs-toggle="modal"
+                            data-bs-target="#inscription">
+                        <span class="d-flex align-items-center">
+                            <span class="small">Inscription</span>
                         </span>
                     </button>
                 </div>

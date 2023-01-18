@@ -11,9 +11,9 @@ class Connexion {
     private $db;
     public function __construct($host, $db, $login, $pass){
         $this->host = $host;
-        $this->login = $db;
-        $this->pass = $login;
-        $this->db = $pass;
+        $this->login = $login;
+        $this->pass = $pass;
+        $this->db = $db;
         $this->connexion();
     }
     private function connexion(){
@@ -60,7 +60,10 @@ class Connexion {
         $query = "SELECT * FROM B_Joueur WHERE Pseudo LIKE :login AND MotDePasse LIKE :psw";
         $parameters = [[":login" , $login], [":psw" , hash("sha256",$psw)] ];
         $result = $this->execQuery($query,$parameters);
-        return !empty($result);
+        if(!empty($result)){
+            return $result[0]["Id_Joueur"];
+        }
+        return null;
     }
 
     public function register($login,$psw,$mail,$desc,$public){
@@ -76,7 +79,7 @@ class Connexion {
 use Zoogle\DotEnv;
 
 require_once("php/lib/parse.env.php");
-(new DotEnv(__DIR__.'.env'))->load();
+(new DotEnv('.env'))->load();
 // mysql:host=localhost;dbname=test;
 
 

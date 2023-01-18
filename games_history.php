@@ -114,8 +114,10 @@ if(!isset($_SESSION['user'])) { // && false pour tester la page sans être conne
         foreach ($allGamesDetails as $gameDetails) {
             $validWordsListByPlayer = getValidWordsListByPlayer($gameDetails->ID_Partie, $_SESSION['id']);
             $validWordsListByPlayerNumber = count($validWordsListByPlayer);
+
             $allWordsList = explode(" ", $gameDetails->Dictionnaire);
             $allWordsListNumber = count($allWordsList);
+            
             $ratioFoundAndAll = (int) ($validWordsListByPlayerNumber / $allWordsListNumber)*100;
 
 
