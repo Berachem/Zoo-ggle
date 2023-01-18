@@ -1,5 +1,5 @@
 CREATE TABLE B_Joueur(
-   Id_Joueur INT AUTO_INCREMENT,
+   IdJoueur INT AUTO_INCREMENT,
    Mail VARCHAR(320),
    MotDePasse VARCHAR(128),
    Pseudo VARCHAR(30),
@@ -7,64 +7,73 @@ CREATE TABLE B_Joueur(
    Logo VARCHAR(64),
    DateCreationCompte DATETIME,
    ProfilPublic TINYINT,
-   PRIMARY KEY(Id_Joueur),
+   DateDerniereConnexion DATETIME,
+   PRIMARY KEY(IdJoueur),
+   UNIQUE(Mail),
    UNIQUE(Pseudo)
 );
 
 CREATE TABLE B_Partie(
-   Id_Partie INT AUTO_INCREMENT,
+   IdPartie INT AUTO_INCREMENT,
    NomPartie VARCHAR(50),
-   NombreMotPossible INT,
+   LangueDico CHAR(3),
    Grille VARCHAR(200),
-   DatePartie DATETIME,
+   DateDebutPartie DATETIME,
+   DateFinPartie VARCHAR(50),
    TailleGrille INT,
-   Id_Chef INT NOT NULL,
+   NombreMotsPossibles INT,
    Mode INT,
-   PRIMARY KEY(Id_Partie),
-   FOREIGN KEY(Id_Chef) REFERENCES B_Joueur(Id_Joueur)
+   EstPublic TINYINT,
+   NombreJoueursMax INT,
+   IdChef INT NOT NULL,
+   PRIMARY KEY(IdPartie),
+   FOREIGN KEY(IdChef) REFERENCES B_Joueur(IdJoueur)
 );
 
 CREATE TABLE B_Message(
    IdMessage INT AUTO_INCREMENT,
    Contenu VARCHAR(200),
    DateMessage DATETIME,
-   Id_Partie INT NOT NULL,
-   Id_Joueur INT NOT NULL,
+   IdPartie INT NOT NULL,
+   IdJoueur INT NOT NULL,
    PRIMARY KEY(IdMessage),
-   FOREIGN KEY(Id_Partie) REFERENCES B_Partie(Id_Partie),
-   FOREIGN KEY(Id_Joueur) REFERENCES B_Joueur(Id_Joueur)
+   FOREIGN KEY(IdPartie) REFERENCES B_Partie(IdPartie),
+   FOREIGN KEY(IdJoueur) REFERENCES B_Joueur(IdJoueur)
+);
+
+CREATE TABLE B_MessagePrive(
+   IdMessagePrive INT AUTO_INCREMENT,
+   ContenuMessagePrive VARCHAR(200),
+   DateMessagePrive DATE,
+   IdJoueur INT NOT NULL,
+   IdJoueur_1 INT NOT NULL,
+   PRIMARY KEY(IdMessagePrive),
+   FOREIGN KEY(IdJoueur) REFERENCES B_Joueur(IdJoueur),
+   FOREIGN KEY(IdJoueur_1) REFERENCES B_Joueur(IdJoueur)
+);
+
+CREATE TABLE B_Mot(
+   Libelle VARCHAR(200),
+   PRIMARY KEY(Libelle)
 );
 
 CREATE TABLE B_Jouer(
-   Id_Joueur INT,
-   Id_Partie INT,
+   IdJoueur INT,
+   IdPartie INT,
    Score INT,
-   TempsMoyenReponse DECIMAL(15,2),
-   PRIMARY KEY(Id_Joueur, Id_Partie),
-   FOREIGN KEY(Id_Joueur) REFERENCES B_Joueur(Id_Joueur),
-   FOREIGN KEY(Id_Partie) REFERENCES B_Partie(Id_Partie)
+   PRIMARY KEY(IdJoueur, IdPartie),
+   FOREIGN KEY(IdJoueur) REFERENCES B_Joueur(IdJoueur),
+   FOREIGN KEY(IdPartie) REFERENCES B_Partie(IdPartie)
 );
 
 CREATE TABLE B_Proposer(
-   Id_Joueur INT,
-   Id_Partie INT,
-   Mot VARCHAR(200),
+   IdJoueur INT,
+   IdPartie INT,
+   Libelle VARCHAR(200),
    DateProposition DATETIME,
    EstValide TINYINT,
-   PRIMARY KEY(Id_Joueur, Id_Partie),
-   FOREIGN KEY(Id_Joueur) REFERENCES B_Joueur(Id_Joueur),
-   FOREIGN KEY(Id_Partie) REFERENCES B_Partie(Id_Partie)
-);
-
-CREATE TABLE B_MessagePrivé(
-   Id_Joueur INT,
-   IdMessagePrivé INT AUTO_INCREMENT,
-   Contenu VARCHAR(200),
-   DateMessagePrivé DATETIME,
-   Id_Joueur_1 INT NOT NULL,
-   PRIMARY KEY(Id_Joueur),
-   UNIQUE(Id_Joueur_1),
-   UNIQUE(IdMessagePrivé),
-   FOREIGN KEY(Id_Joueur) REFERENCES B_Joueur(Id_Joueur),
-   FOREIGN KEY(Id_Joueur_1) REFERENCES B_Joueur(Id_Joueur)
+   PRIMARY KEY(IdJoueur, IdPartie, Libelle),
+   FOREIGN KEY(IdJoueur) REFERENCES B_Joueur(IdJoueur),
+   FOREIGN KEY(IdPartie) REFERENCES B_Partie(IdPartie),
+   FOREIGN KEY(Libelle) REFERENCES B_Mot(Libelle)
 );

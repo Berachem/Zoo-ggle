@@ -83,6 +83,7 @@ Renvoie les détails d'une partie composé de plusieurs informations :
 - DATETIME DatePartie : la date de la partie
 - int ID_ChefPartie : l'ID du chef de partie
 
+
 function getAllDetailsByJoueur($id) {
 
     global $db;
@@ -152,7 +153,8 @@ function createGame($id, $name, $langue, $tailleGrille, $mode, $public, $nbJoueu
         [10, $id, PDO::PARAM_INT]
     ];
 
-
+    $result = $db->execQuery($query, $params);
+    return $result;
 
 }
 
