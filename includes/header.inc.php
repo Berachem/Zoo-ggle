@@ -2,9 +2,9 @@
 require_once 'php/Connexion.php';
 
 if(!isset($_SESSION['user']) || empty($_SESSION['user'])){
-    $connexion = false;
+    $connected = false;
 }else{
-    $connexion=true;
+    $connected = true;
 }
 
 ?>
@@ -47,16 +47,14 @@ if(!isset($_SESSION['user']) || empty($_SESSION['user'])){
                         <li class="nav-item"><a class="nav-link me-lg-3" href="#download">Contact</a></li>
                     </ul>
                     <?php
-                        if($connexion){
+                        if($connected){
                             echo
                             "
-                            <form action='deconnexion.php'>
-                            <button type='submit' class='btn btn-warning rounded-pill px-3 mb-2 mb-lg-0' data-bs-toggle='modal'>
+                            <a href='php/disconnect.php' class='btn btn-warning rounded-pill px-3 mb-2 mb-lg-0'>
                             <span class='d-flex align-items-center'>
                                     <span class='small'>Deconnexion</span>
                                 </span>
-                            </button>
-                            </form>
+                            </a>
                             ";
                         }else{
                             echo 
