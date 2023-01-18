@@ -1,6 +1,6 @@
 <?php
-require 'Connexion.php';
-require 'functions.php';
+require 'php/Connexion.php';
+require 'php/functions.php';
 session_start();
 
 var_dump($_SESSION);
@@ -9,7 +9,7 @@ var_dump($_POST);
 
 // si pas connecté retour à l'accueil avec un message d'erreur
 if (!isset($_SESSION["user"])) {
-    header("Location: ../index.php?notConnected=true");
+    header("Location: index.php?notConnected=true");
 }elseif (isset($_POST["name"]) && isset($_POST["langue"]) && isset($_POST["taille"]) && isset($_POST["mode"])) {
     createGame(
         $_SESSION["user"],
@@ -21,9 +21,9 @@ if (!isset($_SESSION["user"])) {
         intval($_POST["nbjoueurs"])
     );
   
-    header("Location: ../index.php?gameCreated=true");
+    header("Location: index.php?gameCreated=true");
 } else {
-    header("Location: ../index.php?error=true");
+    header("Location: index.php?error=true");
 }
 
 
