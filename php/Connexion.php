@@ -61,16 +61,17 @@ class Connexion {
         $parameters = [[":login" , $login], [":psw" , hash("sha256",$psw)] ];
         $result = $this->execQuery($query,$parameters);
         if(!empty($result)){
-            return $result[0]["Id_Joueur"];
+            return $result[0]->Id_Joueur;
         }
         return null;
     }
 
-    public function register($login,$psw,$mail,$desc,$public){
-        $query = "INSERT INTO B_Joueur (Pseudo,MotDePasse,Mail,Description,ProfilPublic,DateCreationCompte) VALUES (:login,:psw,:mail,:desc,:public,NOW()) ";
-        $parameters = [[":login",$login],[":psw",hash("sha256",$psw)],[":mail",$mail],[":desc",$desc],
-            [":public",$public]];
-        $this->execQuery($query,$parameters);
+    public function register($login,$psw,$mail,$desc,$public)
+    {
+        $query = "INSERT INTO B_Joueur (Pseudo,MotDePasse,Mail,Description,ProfilPublic,DateCreationCompte) VALUES (:login ,:psw,:mail,:desc,:public,NOW())";
+        $parameters = [[":login", $login], [":psw", hash("sha256", $psw)], [":mail", $mail], [":desc", $desc],
+            [":public", $public]];
+        $this->execQuery($query, $parameters);
     }
 
 }

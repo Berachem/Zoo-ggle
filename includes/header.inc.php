@@ -1,4 +1,13 @@
+<?php
+require_once 'php/Connexion.php';
 
+if(!isset($_SESSION['user']) || empty($_SESSION['user'])){
+    $connexion = false;
+}else{
+    $connexion=true;
+}
+
+?>
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -37,18 +46,39 @@
                         <li class="nav-item"><a class="nav-link me-lg-3" href="dictionnary.php">Dictionnaire</a></li>
                         <li class="nav-item"><a class="nav-link me-lg-3" href="#download">Contact</a></li>
                     </ul>
-                    <button class="btn btn-primary rounded-pill px-3 mb-2 mb-lg-0" data-bs-toggle="modal"
-                            data-bs-target="#connexion">
-                        <span class="d-flex align-items-center">
-                            <span class="small">Connexion</span>
-                        </span>
-                    </button>
-                    <button class="btn btn-secondary rounded-pill px-3 mx-1 mb-2 mb-lg-0" data-bs-toggle="modal"
-                            data-bs-target="#inscription">
-                        <span class="d-flex align-items-center">
-                            <span class="small">Inscription</span>
-                        </span>
-                    </button>
+                    <?php
+                        if($connexion){
+                            echo
+                            "
+                            <form action='deconnexion.php'>
+                            <button type='submit' class='btn btn-warning rounded-pill px-3 mb-2 mb-lg-0' data-bs-toggle='modal'>
+                            <span class='d-flex align-items-center'>
+                                    <span class='small'>Deconnexion</span>
+                                </span>
+                            </button>
+                            </form>
+                            ";
+                        }else{
+                            echo 
+                            "
+                             <button class='btn btn-primary rounded-pill px-3 mb-2 mb-lg-0' data-bs-toggle='modal'
+                            data-bs-target='#connexion'>
+                                <span class='d-flex align-items-center'>
+                                    <span class='small'>Connexion</span>
+                                </span>
+                            </button>
+                            <button class='btn btn-secondary rounded-pill px-3 mx-1 mb-2 mb-lg-0' data-bs-toggle='modal'
+                                    data-bs-target='#inscription'>
+                                <span class='d-flex align-items-center'>
+                                    <span class='small'>Inscription</span>
+                                </span>
+                            </button>
+                            ";
+                        }
+                    
+                    
+                    ?>
+                   
                 </div>
             </div>
         </nav>
