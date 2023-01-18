@@ -63,11 +63,11 @@ class Connexion {
 
         if(!empty($result)){
             // Actualisation de la DateDerniereConnexion du joueur
-            $query = "UPDATE B_Joueur SET DateDerniereConnexion = NOW() WHERE Id_Joueur = :id";
-            $parameters = [[":id" , $result[0]->Id_Joueur]];
+            $query = "UPDATE B_Joueur SET DateDerniereConnexion = NOW() WHERE IdJoueur = :id";
+            $parameters = [[":id" , $result[0]->IdJoueur]];
             $this->execQuery($query,$parameters);
 
-            return $result[0]->Id_Joueur;
+            return $result[0]->IdJoueur;
         }
         return null;
     }
