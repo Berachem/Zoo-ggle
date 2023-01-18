@@ -49,7 +49,7 @@ function resetField(){
     mot.value = "";
 }
 
-function checkWord(word){
+function checkWord(word, grid, time){
     // fetch the php (php/api/word_check.php) and send the word and the grid in POST
     fetch('php/api/word_check.php', {
         method: 'POST',

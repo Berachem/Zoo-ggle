@@ -11,10 +11,11 @@ if (!isset($_SESSION["user"])) {
 }
 */
 
+// utiliser une fonction pour récupérer la partie
 
 // récupère le mot entré par l'utilisateur et la grille
 $mot = $_POST["mot"];
-$grille = $_SESSION["grille"];
+// $grille = $_SESSION["grille"];  
 //$mot = "AGE";
 //$grille = "A G E C C C C C C C C C C C C C";
 $grille = explode(" ",$grille);
