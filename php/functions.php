@@ -4,11 +4,14 @@
 /*
 MLD:
 
-B_Joueur = (ld_Joueur INT, Mail VARCHAR(320), MotDePasse VARCHAR(128), Pseudo VARCHAR(30), Description VARCHAR(400), Logo VARCHAR(50), Date Creation Compte DATETIME, ProfilPublic LOGICAL); B_Partie = (Id_Partie INT, Dictionnaire TEXT, Grille VARCHAR(200), DatePartie DATETIME, Taille Grille INT, #ld_Joueur);
-B_Message = (IdMessage INT, Contenu VARCHAR(200), DateMessage DATETIME, #Id_Partie, #Id_Joueur);
-B_Jouer = (#Id_Joueur, #Id_Partie, Score INT, TempsMoyen Reponse DECIMAL(15,2));
-B_Proposer = (#Id_Joueur, #Id_Partie, Mot VARCHAR(200), DateProposition DATETIME, EStValide LOGICAL);
-B_MessagePrivé = (#ld Joueur, IdMessagePrivé INT, Contenu VARCHAR(200), DateMessagePrivé DATETIME, #Id_Joueur_1);
+B_Joueur = (IdJoueur INT, Mail VARCHAR(320), MotDePasse VARCHAR(128), Pseudo VARCHAR(30), Description VARCHAR(400), Logo VARCHAR(64), DateCreationCompte DATETIME, ProfilPublic LOGICAL, DateDerniereConnexion DATETIME);
+B_Partie = (IdPartie INT, NomPartie VARCHAR(50), LangueDico CHAR(3), Grille VARCHAR(200), DateDebutPartie DATETIME, DateFinPartie VARCHAR(50), TailleGrille INT, NombreMotsPossibles INT, Mode INT, EstPublic LOGICAL, NombreJoueursMax INT, #IdJoueur);
+B_Message = (IdMessage INT, Contenu VARCHAR(200), DateMessage DATETIME, #IdPartie, #IdJoueur);
+B_MessagePrive = (IdMessagePrive INT, ContenuMessagePrive VARCHAR(200), DateMessagePrive DATE, #IdJoueur, #IdJoueur_1);
+MOT = (Libelle VARCHAR(200));
+B_Jouer = (#IdJoueur, #IdPartie, Score INT);
+B_Proposer = (#IdJoueur, #IdPartie, #Libelle, DateProposition DATETIME, EstValide LOGICAL);
+
 
 */
 
@@ -16,7 +19,7 @@ B_MessagePrivé = (#ld Joueur, IdMessagePrivé INT, Contenu VARCHAR(200), DateMe
 // Fonction qui renvoie les données de la partie en cours du joueur $id (en comparant la date début et fin de la partie et la date actuelle) FIXME: à tester 
 function getCurrentGame($userID){
     global $db;
-    $query = "SELECT * FROM B_Partie WHERE Id_Partie = (SELECT Id_Partie FROM B_Jouer WHERE ld_Joueur = ? AND DatePartie <= NOW() AND DatePartieFin >= NOW())";
+    $query = "SELECT * FROM B_Partie WHERE IdJoueur = ? AND DateDebutPartie <= NOW() AND DateFinPartie >= NOW()";
     $params = [[1, $userID, PDO::PARAM_INT]];
     $game = $db->execQuery($query, $params);
     return $game[0];
@@ -27,10 +30,10 @@ function getCurrentGame($userID){
 // Fonction qui renvoie la liste des mots valides pour la partie $idPartie proposés par le joueur $id
 function getValidWordsListByPlayer($userID, $gameID){
     global $db;
-    $query = "SELECT Mot FROM B_Proposer WHERE ld_Joueur = ? AND Id_Partie = ? AND EstValide = 1";
+    $query = "SELECT Libelle FROM B_Proposer WHERE IdJoueur = ? AND IdPartie = ? AND EstValide = 1";
     $params = [[1, $userID, PDO::PARAM_INT], [2, $gameID, PDO::PARAM_INT]];
     $words = $db->execQuery($query, $params);
-    return array_map(function($w){return $w->Mot;}, $words);
+    return $words;
 }
 
 
@@ -39,25 +42,22 @@ function getValidWordsListByPlayer($userID, $gameID){
 // en comparant le score du joueur avec le score de tous les autres joueurs de la partie
 function getVerdictForGamePlayer($userID, $gameID){
     global $db;
-    $query = "SELECT Score FROM B_Jouer WHERE Id_Partie = ? AND ld_Joueur = ?";
-    $params = [[1, $gameID, PDO::PARAM_INT], [2, $userID, PDO::PARAM_INT]];
-    $score = $db->execQuery($query, $params);
-    $score = $score[0]->Score;
-
-    $query = "SELECT Score FROM B_Jouer WHERE Id_Partie = ? AND ld_Joueur != ?";
-    $params = [[1, $gameID, PDO::PARAM_INT], [2, $userID, PDO::PARAM_INT]];
-    $scores = $db->execQuery($query, $params);
-
-    $verdict = 1;
-    foreach ($scores as $s) {
-        if ($s->Score > $score) {
-            $verdict = 0;
-            break;
-        } else if ($s->Score == $score) {
-            $verdict = 2;
-        }
+    $query = "SELECT Score FROM B_Jouer WHERE IdJoueur = ? AND IdPartie = ?";
+    $params = [[1, $userID, PDO::PARAM_INT], [2, $gameID, PDO::PARAM_INT]];
+    $score = $db->execQuery($query, $params)[0]['Score'];
+    $query = "SELECT Score FROM B_Jouer WHERE IdPartie = ? AND Score > ?";
+    $params = [[1, $gameID, PDO::PARAM_INT], [2, $score, PDO::PARAM_INT]];
+    $scoreHigher = $db->execQuery($query, $params);
+    $query = "SELECT Score FROM B_Jouer WHERE IdPartie = ? AND Score < ?";
+    $params = [[1, $gameID, PDO::PARAM_INT], [2, $score, PDO::PARAM_INT]];
+    $scoreLower = $db->execQuery($query, $params);
+    if(count($scoreHigher) == 0 && count($scoreLower) == 0){
+        return 2;
+    }else if(count($scoreHigher) == 0){
+        return 1;
+    }else{
+        return 0;
     }
-    return $verdict;
 }
 
 
@@ -66,10 +66,10 @@ Fonction qui renvoie le pseudo d'un joueur à partir de son ID
 */
 function getPseudoById($id) {
     global $db;
-    $query = "SELECT Pseudo FROM B_Joueur WHERE Id_Joueur = ?";
+    $query = "SELECT Pseudo FROM B_Joueur WHERE IdJoueur = ?";
     $params = [[1, $id, PDO::PARAM_INT]];
     $pseudo = $db->execQuery($query, $params);
-    return $pseudo[0]['Pseudo'];
+    return $pseudo[0]->Pseudo;
 }
 
 
@@ -82,7 +82,7 @@ Renvoie les détails d'une partie composé de plusieurs informations :
 - int TailleGrille : la taille de la grille de la partie
 - DATETIME DatePartie : la date de la partie
 - int ID_ChefPartie : l'ID du chef de partie
-*/
+
 function getAllDetailsByJoueur($id) {
 
     global $db;
@@ -91,7 +91,7 @@ function getAllDetailsByJoueur($id) {
     $details = $db->execQuery($query, $params);
     return $details;
 }
-
+*/
 
 // fonction qui renvoie une grille de taille $tailleGrille (sous forme de liste avec toutes les lettres)
 function getRandomGrid($tailleGrille) {
@@ -130,7 +130,7 @@ function getValidWordsForGrid($grid) {
 /*
 Fonction qui crée un booléen si l'opération a réussi ou non
 */
-function createGame($id, $tailleGrille, $nomPartie, $modePartie) {
+function createGame($id, $name, $langue, $tailleGrille, $mode, $public, $nbJoueurs) {
     $grid = implode(" ",getRandomGrid($tailleGrille));
     $words = getValidWordsForGrid($grid);
     $nbWords = count($words);
@@ -138,10 +138,22 @@ function createGame($id, $tailleGrille, $nomPartie, $modePartie) {
 
     global $db;
 
-    $query = "INSERT INTO B_Partie (NomPartie, NombreMotPossible, Grille, DatePartie, TailleGrille, Id_Chef, Mode) VALUES (?, ?, ?, ?, ?, ?, ?)";
-    $params = [[1, $nomPartie, PDO::PARAM_STR], [2, $nbWords, PDO::PARAM_INT], [3, $grid, PDO::PARAM_STR], [4, $date, PDO::PARAM_STR], [5, $tailleGrille, PDO::PARAM_INT], [6, $id, PDO::PARAM_INT], [7, $modePartie, PDO::PARAM_INT]];
-    $result = $db->execQuery($query, $params);
-    return $result; 
+    $query = "INSERT INTO B_Partie (NomPartie, LangueDico, Grille, DateDebutPartie, TailleGrille, NombreMotsPossibles, Mode, EstPublic, NombreJoueursMax, Id_Joueur) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    $params = [
+        [1, $name, PDO::PARAM_STR],
+        [2, $langue, PDO::PARAM_STR],
+        [3, $grid, PDO::PARAM_STR],
+        [4, $date, PDO::PARAM_STR],
+        [5, $tailleGrille, PDO::PARAM_INT],
+        [6, $nbWords, PDO::PARAM_INT],
+        [7, $mode, PDO::PARAM_INT],
+        [8, $public],
+        [9, $nbJoueurs, PDO::PARAM_INT],
+        [10, $id, PDO::PARAM_INT]
+    ];
+
+
+
 }
 
 

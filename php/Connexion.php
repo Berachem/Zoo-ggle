@@ -60,7 +60,13 @@ class Connexion {
         $query = "SELECT * FROM B_Joueur WHERE Pseudo LIKE :login AND MotDePasse LIKE :psw";
         $parameters = [[":login" , $login], [":psw" , hash("sha256",$psw)] ];
         $result = $this->execQuery($query,$parameters);
+
         if(!empty($result)){
+            // Actualisation de la DateDerniereConnexion du joueur
+            $query = "UPDATE B_Joueur SET DateDerniereConnexion = NOW() WHERE Id_Joueur = :id";
+            $parameters = [[":id" , $result[0]->Id_Joueur]];
+            $this->execQuery($query,$parameters);
+
             return $result[0]->Id_Joueur;
         }
         return null;
@@ -74,13 +80,14 @@ class Connexion {
         $this->execQuery($query, $parameters);
     }
 
+
 }
 
 
 use Zoogle\DotEnv;
 
 require_once("php/lib/parse.env.php");
-(new DotEnv('.env'))->load();
+(new DotEnv(__DIR__.'/../.env'))->load();
 // mysql:host=localhost;dbname=test;
 
 

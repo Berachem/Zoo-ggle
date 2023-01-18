@@ -50,6 +50,12 @@ if(!isset($_SESSION['user']) || empty($_SESSION['user'])){
                         if($connected){
                             echo
                             "
+                            <button class='btn btn-primary rounded-pill px-3 mb-2 mb-lg-0' data-bs-toggle='modal'
+                            data-bs-target='#newgame'>
+                                <span class='d-flex align-items-center'>
+                                    <span class='small'>Créer une partie</span>
+                                </span>
+                            </button>
                             <a href='php/disconnect.php' class='btn btn-warning rounded-pill px-3 mb-2 mb-lg-0'>
                             <span class='d-flex align-items-center'>
                                     <span class='small'>Deconnexion</span>
