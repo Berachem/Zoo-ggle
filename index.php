@@ -128,8 +128,14 @@ include('includes/header.inc.php');
                     </style>
 
                     <?php
-                    // récupère le retour de l'exécution du fichier C game_motor/sources/grid_build ../../data/frequences.txt 4 4
+                    // si OS = windows alors on lance le programme en .exe
+                    if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+                        // lance le programme en .exe
                         $result = shell_exec('.\server\game_motor\sources\grid_build.exe server/data/frequences.txt 4 4');
+                    } else {
+                        $result = shell_exec('./server/game_motor/executables_LINUX/grid_build server/data/frequences.txt 4 4');
+                    }
+                        
                         // split le résultat en tableau
                         $result = explode(" ", $result);
 
