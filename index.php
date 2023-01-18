@@ -128,6 +128,8 @@ include('includes/header.inc.php');
                     </style>
 
                     <?php
+                    $result = getRandomGrid();
+                    
                     
 
                     echo "<table>";

@@ -34,7 +34,9 @@ class Connexion {
             die($msg);
         }
     }
-    public function execQuery($sql,Array $cond = null){
+    
+
+    public function execQuery($sql,Array $cond = null, $debug = false){
         $stmt = $this->connec->prepare($sql);
         if($cond){
             foreach ($cond as $v) {
@@ -43,11 +45,12 @@ class Connexion {
         }
 
         $stmt->execute();    
-        //echo $stmt->debugDumpParams();
+        if ($debug) echo $stmt->debugDumpParams();
         return $stmt->fetchAll();
         $stmt->closeCursor();
         $stmt=NULL;
     }
+    
 
 
     /**

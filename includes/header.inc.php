@@ -1,5 +1,6 @@
 <?php
 require_once 'php/Connexion.php';
+require_once 'php/functions.php';
 
 if(!isset($_SESSION['user']) || empty($_SESSION['user'])){
     $connected = false;
