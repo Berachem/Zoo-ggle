@@ -92,4 +92,58 @@ function getAllDetailsByJoueur($id) {
     return $details;
 }
 
+
+// fonction qui renvoie une grille de taille $tailleGrille (sous forme de liste avec toutes les lettres)
+function getRandomGrid($tailleGrille) {
+    // si OS = windows alors on lance le programme en .exe
+    if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+        // lance le programme en .exe
+        $result = shell_exec('.\server\game_motor\sources\grid_build.exe server/data/frequences.txt '.$tailleGrille.' '.$tailleGrille);
+    } else {
+        $result = shell_exec('./server/game_motor/executables_LINUX/grid_build server/data/frequences.txt '.$tailleGrille.' '.$tailleGrille);
+    }
+    // split le résultat en tableau
+    $result = explode(" ", $result);
+    return $result;
+}
+
+// fonction qui la liste des mots valides pour la grille $grid (sous forme de liste)
+function getValidWordsForGrid($grid) {
+    // if $grid is a list, convert it to a string
+    if (is_array($grid)) {
+        $grid = implode(" ", $grid);
+    }
+
+    if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+        // lance le programme en .exe
+        $result = shell_exec('.\server\game_motor\sources\solve.exe server/data/listeMot.lex '.$grid);
+    } else {
+        $result = shell_exec('./server/game_motor/executables_LINUX/solve server/data/listeMot.lex '.$grid);
+    }
+    
+    return explode(" ", $result);
+}
+
+
+
+
+/*
+Fonction qui crée un booléen si l'opération a réussi ou non
+*/
+function createGame($id, $tailleGrille, $nomPartie, $modePartie) {
+    $grid = implode(" ",getRandomGrid($tailleGrille));
+    $words = getValidWordsForGrid($grid);
+    $nbWords = count($words);
+    $date = date("Y-m-d H:i:s");
+
+    global $db;
+
+    $query = "INSERT INTO B_Partie (NomPartie, NombreMotPossible, Grille, DatePartie, TailleGrille, Id_Chef, Mode) VALUES (?, ?, ?, ?, ?, ?, ?)";
+    $params = [[1, $nomPartie, PDO::PARAM_STR], [2, $nbWords, PDO::PARAM_INT], [3, $grid, PDO::PARAM_STR], [4, $date, PDO::PARAM_STR], [5, $tailleGrille, PDO::PARAM_INT], [6, $id, PDO::PARAM_INT], [7, $modePartie, PDO::PARAM_INT]];
+    $result = $db->execQuery($query, $params);
+    return $result; 
+}
+
+
+
 ?>

@@ -128,12 +128,7 @@ include('includes/header.inc.php');
                     </style>
 
                     <?php
-                    // récupère le retour de l'exécution du fichier C game_motor/sources/grid_build ../../data/frequences.txt 4 4
-                        $result = shell_exec('.\server\game_motor\sources\grid_build.exe server/data/frequences.txt 4 4');
-                        // split le résultat en tableau
-                        $result = explode(" ", $result);
-
-                        $_SESSION["grille"] = $result;
+                    
 
                     echo "<table>";
 
