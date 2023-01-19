@@ -287,6 +287,8 @@ public class DictionaryMaker
         	//creation du buffer de lecture du xml
 	        File file=new File(path);
 	        BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), "UTF-8"));
+	        //BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+	        //la ligne de code qu'il faudrait changer pour utiliser un pipe en théorie
 	        
 	        //creation du writer pour le json
 	        RandomAccessFile writerJson = new RandomAccessFile(dicoJSON, "rw");
@@ -524,6 +526,7 @@ public class DictionaryMaker
 		String langueCible;
 		String fichierXML;
 		
+		//changer le nombre d'arguments et le message pour le pipe
 		if (args.length != 3) {
 			/*
 			System.out.println("Il faut 3 parametres : chemin vers le xml, la langue, le nom du fichier de stockage (sans extension)");
