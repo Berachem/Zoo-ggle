@@ -45,6 +45,7 @@ class Connexion {
         }
 
         $stmt->execute();    
+        if ($debug) echo "<br><br><h1>DEBUG</h1><br>";
         if ($debug) echo $stmt->debugDumpParams();
         return $stmt->fetchAll();
         $stmt->closeCursor();

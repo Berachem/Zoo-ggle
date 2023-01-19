@@ -82,6 +82,11 @@ include('includes/header.inc.php');
         <!-- Features section-->
         <section id="jeu">
 
+            <h1 class="text-center"
+                style="font-family: 'Roboto', sans-serif; font-size: 50px; font-weight: 700; color: #000; margin-top: 100px; margin-bottom: 50px;">
+                Entrainez-vous</h1>
+                
+
         <style>
                         /* agrandissement des cases de la grille */
                         table, td, th {
@@ -128,7 +133,7 @@ include('includes/header.inc.php');
                     </style>
 
                     <?php
-                    $result = getRandomGrid($_SESSION['id']);
+                    $result = getRandomGrid(4);
 
                     
 

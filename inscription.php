@@ -14,5 +14,5 @@
 
         $db->register($_POST['login'],$_POST['psw'],$_POST['mail'],$desc,$_POST['public']);
     }
-    header("location: index.php");
+    header("location: index.php?accountCreated=true");
 ?>
