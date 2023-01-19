@@ -1,4 +1,5 @@
 //verification des champs du formulaire d'inscription
+let globalresult = false;
 
 function checkPsw(){
     let psw = document.getElementById("pswInscription");
@@ -59,7 +60,7 @@ function checkAll(){
     let mail = checkMail();
     let boxes = checkCheckBoxes();
     let pseudo = checkPseudo();
-    return psw && mail && boxes && pseudo;
+    return psw && mail && boxes && pseudo && !globalresult;
 }
 
 function checkPseudo(){
@@ -73,9 +74,7 @@ function checkPseudo(){
         return  false;
     }
     callBDDPseudo(pseudo.value);
-
-
-    return error.innerHTML === "";
+    return true;
 }
 
 
@@ -88,10 +87,12 @@ function callBDDPseudo(pseudo){
         success: function(response){
             console.log(response);
             if(response.message != "ok"){
-                let pseudo = document.getElementById("Inscriptionlogin");
                 let error = document.getElementById("login-insc-error");
                 error.innerHTML = "pseudo déjà pris.";
                 error.style.color = 'red';
+                globalresult = true;
+            }else{
+                globalresult = false;
             }
         }
     })
