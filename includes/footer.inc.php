@@ -8,7 +8,7 @@
                     </div>
                     <div class="modal-body border-0 p-4">
 
-                        <form id="contactForm" action="connexion.php" method="post">
+                        <form id="contactForm" action="php/connectUser.php" method="post">
                             <!-- Name input-->
                             <div class="form-floating mb-3">
                                 <input class="form-control" id="login" name="login" type="text" placeholder="Entrez votre Pseudo..."
@@ -57,7 +57,7 @@
                     </div>
                     <div class="modal-body border-0 p-4">
 
-                        <form id="inscriptionForm" action="inscription.php" method="post" onsubmit="return checkAll()">
+                        <form id="inscriptionForm" action="php/registerUser.php" method="post" onsubmit="return checkAll()">
                             <!-- Name input-->
                             <div class="form-floating mb-3">
                                 <input onkeyup="checkPseudo()" class="form-control" id="Inscriptionlogin" name="login" type="text" placeholder="Entrez votre Pseudo..."

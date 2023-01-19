@@ -8,13 +8,14 @@ MLD:
 */
 
 
-// Fonction qui renvoie les données de la partie en cours du joueur $id (en comparant la date début et fin de la partie et la date actuelle) FIXME: à tester 
+// Fonction qui renvoie les données de la partie en cours du joueur $id (en comparant la date début la date actuelle OU si la date début est NULL et que dans B_Jouer son Score est à -1 ) FIXME: à tester 
 function getCurrentGame($userID){
     global $db;
-    $query = "SELECT * FROM B_Partie WHERE IdJoueur = ? AND DateDebutPartie <= NOW() AND DateFinPartie >= NOW()";
+    $query = "SELECT * FROM B_Partie WHERE IdPartie IN (SELECT IdPartie FROM B_Jouer WHERE IdJoueur = ? AND (DateDebut <= NOW() OR (DateDebut IS NULL AND Score = -1)))";
     $params = [[1, $userID, PDO::PARAM_INT]];
     $game = $db->execQuery($query, $params);
-    return $game[0];
+    return $game;
+
 }
 
 
@@ -176,7 +177,7 @@ CREATE TABLE B_Partie(
 
 function getPublicGames($langue, $mode, $nbJoueurs, $name) {
     global $db;
-    $query = "SELECT * FROM B_Partie WHERE EstPublic = 1";
+    $query = "SELECT * FROM B_Partie WHERE EstPublic = 1 AND DateDebutPartie IS NULL";
     $params = [];
     $i = 1;
     if(!empty($langue)){

@@ -110,7 +110,7 @@ class Connexion {
 
 use Zoogle\DotEnv;
 
-require_once("php/lib/parse.env.php");
+
 (new DotEnv(__DIR__.'/../.env'))->load();
 // mysql:host=localhost;dbname=test;
 

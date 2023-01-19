@@ -1,4 +1,5 @@
 <?php
+ require_once("php/lib/parse.env.php");
 require_once 'php/Connexion.php';
 require_once 'php/functions.php';
 
