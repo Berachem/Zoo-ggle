@@ -140,6 +140,18 @@ function createGame($id, $name, $langue, $tailleGrille, $mode, $public, $nbJoueu
 
 }
 
+// Fonction qui renvoie le nombre de joueurs dans le salon d'attente d'une partie $idPartie
+// (on compte le nombre de Score à -1 dans la table B_Score)
+function getNbPlayersInWaitingRoom($idPartie) {
+    global $db;
+    $query = "SELECT COUNT(*) as nombre FROM B_Score WHERE IdPartie = ? AND Score = -1";
+    $params = [
+        [1, $idPartie, PDO::PARAM_INT]
+    ];
+    $result = $db->execQuery($query, $params);
+    return $result[0]->nombre;
+}
+
 /*
 
 CREATE TABLE B_Partie(
@@ -183,23 +195,16 @@ function getPublicGames($langue, $mode, $nbJoueurs, $name) {
         $query .= " AND NomPartie LIKE ?";
         $params[] = [$i++, $name, PDO::PARAM_STR];
     }
-    //$db->displayQuery($query, $params);
     $games = $db->execQuery($query, $params);
+    
+    // filter all games that are already full (getNbPlayersInWaitingRoom($idPartie) >= NombreJoueursMax)
+    $games = array_filter($games, function($game) {
+        return getNbPlayersInWaitingRoom($game->IdPartie) < $game->NombreJoueursMax;
+    });
+
     return $games;
 }
 
-
-// Fonction qui renvoie le nombre de joueurs dans le salon d'attente d'une partie $idPartie
-// (on compte le nombre de Score à -1 dans la table B_Score)
-function getNbPlayersInWaitingRoom($idPartie) {
-    global $db;
-    $query = "SELECT COUNT(*) as nombre FROM B_Score WHERE IdPartie = ? AND Score = -1";
-    $params = [
-        [1, $idPartie, PDO::PARAM_INT]
-    ];
-    $result = $db->execQuery($query, $params);
-    return $result[0]->nombre;
-}
 
 
 function formatDateToSentence($date){
