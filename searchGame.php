@@ -135,7 +135,7 @@ if(!isset($_SESSION['user'])) { // && false pour tester la page sans être conne
                             
                             </div>
                             <div class="ms-2 c-details">
-                                <h6 class="mb-0">Chef : <u> <a href="checkProfilePage?pseudo='.getPseudoById($gameDetails->IdChef).'">'.getPseudoById($gameDetails->IdChef).'</a></u>
+                                <h6 class="mb-0">Chef : <u> <a href="profile.php?pseudo='.getPseudoById($gameDetails->IdChef).'">'.getPseudoById($gameDetails->IdChef).'</a></u>
                                 </h6> 
                             </div>
                         </div>

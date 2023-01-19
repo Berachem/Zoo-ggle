@@ -21,13 +21,23 @@ function getCurrentGame($userID){
 
 
 // Fonction qui renvoie la liste des mots valides pour la partie $idPartie proposés par le joueur $id
-function getValidWordsListByPlayer($userID, $gameID){
+function getValidsWordsListByPlayerInGame($userID, $gameID){
     global $db;
     $query = "SELECT Libelle FROM B_Proposer WHERE IdJoueur = ? AND IdPartie = ? AND EstValide = 1";
     $params = [[1, $userID, PDO::PARAM_INT], [2, $gameID, PDO::PARAM_INT]];
     $words = $db->execQuery($query, $params);
     return $words;
 }
+
+// Fonction qui renvoie la liste des mots pour la partie $idPartie proposés par le joueur $id
+function getAllWordsListByPlayerInGame($userID, $gameID){
+    global $db;
+    $query = "SELECT Libelle FROM B_Proposer WHERE IdJoueur = ? AND IdPartie = ?";
+    $params = [[1, $userID, PDO::PARAM_INT], [2, $gameID, PDO::PARAM_INT]];
+    $words = $db->execQuery($query, $params);
+    return $words;
+}
+
 
 
 
@@ -65,6 +75,95 @@ function getPseudoById($id) {
     return $pseudo[0]->Pseudo;
 }
 
+// fonction qui renvoie le lien vers l'image du joueur à partir de son ID
+function getLogoPathById($id) {
+    global $db;
+    $query = "SELECT Logo FROM B_Joueur WHERE IdJoueur = ?";
+    $params = [[1, $id, PDO::PARAM_INT]];
+    $hash = $db->execQuery($query, $params);
+    if ($hash[0]->Logo == NULL) {
+        return "assets/playersLogos/default.png";
+    } else {
+        return "assets/playersLogos/" . $hash[0]->Logo;
+    }
+}
+
+// Fonction qui renvoie l'ID d'un joueur à partir de son pseudo
+function getIdByPseudo($pseudo) {
+    global $db;
+    $query = "SELECT IdJoueur FROM B_Joueur WHERE Pseudo = ?";
+    $params = [[1, $pseudo, PDO::PARAM_STR]];
+    $id = $db->execQuery($query, $params);
+    return $id[0]->IdJoueur;
+}
+
+
+// renvoie les informations d'un joueur à partir de son ID (Table B_Joueur, somme des scores de toutes les parties jouées par le joueur où score != -1 (as score), nombre de parties jouées par le joueur (as gamesPlayed))
+function getUserStatistics($id) {
+    global $db;
+    $query = "SELECT * FROM B_Joueur WHERE IdJoueur = ?";
+    $params = [[1, $id, PDO::PARAM_INT]];
+    $user = $db->execQuery($query, $params);
+    $query = "SELECT SUM(Score) as score FROM B_Jouer WHERE IdJoueur = ? AND Score != -1";
+    $params = [[1, $id, PDO::PARAM_INT]];
+    $score = $db->execQuery($query, $params);
+    $query = "SELECT COUNT(IdPartie) as gamesPlayed FROM B_Jouer WHERE IdJoueur = ?";
+    $params = [[1, $id, PDO::PARAM_INT]];
+    $gamesPlayed = $db->execQuery($query, $params);
+    $user[0]->score = $score[0]->score;
+    $user[0]->gamesPlayed = $gamesPlayed[0]->gamesPlayed;
+    return $user;
+}
+
+/*
+CREATE TABLE B_Mot(
+   Libelle VARCHAR(200),
+   PRIMARY KEY(Libelle)
+);
+
+CREATE TABLE B_Jouer(
+   IdJoueur INT,
+   IdPartie INT,
+   Score INT,
+   PRIMARY KEY(IdJoueur, IdPartie),
+   FOREIGN KEY(IdJoueur) REFERENCES B_Joueur(IdJoueur),
+   FOREIGN KEY(IdPartie) REFERENCES B_Partie(IdPartie)
+);
+
+CREATE TABLE B_Proposer(
+   IdJoueur INT,
+   IdPartie INT,
+   Libelle VARCHAR(200),
+   DateProposition DATETIME,
+   EstValide TINYINT,
+   PRIMARY KEY(IdJoueur, IdPartie, Libelle),
+   FOREIGN KEY(IdJoueur) REFERENCES B_Joueur(IdJoueur),
+   FOREIGN KEY(IdPartie) REFERENCES B_Partie(IdPartie),
+   FOREIGN KEY(Libelle) REFERENCES B_Mot(Libelle)
+);
+
+*/
+
+function getAllWordsProposedByUser($id) {
+    global $db;
+    $query = "SELECT Libelle FROM B_Proposer WHERE IdJoueur = ?";
+    $params = [[1, $id, PDO::PARAM_INT]];
+    $words = $db->execQuery($query, $params);
+    return $words;
+}
+
+function getAllValidsWordsProposedByUser($id) {
+    global $db;
+    $query = "SELECT Libelle FROM B_Proposer WHERE IdJoueur = ? AND EstValide = 1";
+    $params = [[1, $id, PDO::PARAM_INT]];
+    $words = $db->execQuery($query, $params);
+    return $words;
+}
+
+
+
+
+
 
 /* 
 Renvoie toutes les données de toutes les parties d'un joueur suivi de toutes les données de tous les joueurs de ces parties 
@@ -72,7 +171,7 @@ Renvoie toutes les données de toutes les parties d'un joueur suivi de toutes le
 */
 function getAllGamesPlayedByUser($id) {
     global $db;
-    $query = "SELECT * FROM B_Jouer, B_Partie, WHERE B_Jouer.IdJoueur = ? AND B_Jouer.IdPartie = B_Partie.IdPartie";
+    $query = "SELECT * FROM B_Jouer, B_Partie WHERE B_Jouer.IdPartie = B_Partie.IdPartie AND B_Jouer.IdJoueur = ?";
     $params = [[1, $id, PDO::PARAM_INT]];
     $games = $db->execQuery($query, $params);
     return $games;
