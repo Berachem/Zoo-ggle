@@ -5,6 +5,8 @@
     if(isset($_POST['login']) && !empty($_POST['login']) && isset($_POST['psw']) && !empty($_POST['psw'])){
         if(($user = $db->login($_POST['login'],$_POST['psw'])) !== null){
             $_SESSION['user'] = $user;
+        }else{
+            header("location: index.php?connected=false");
         }
     }
     header("location: index.php?connected=true");

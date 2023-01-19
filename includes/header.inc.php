@@ -41,7 +41,14 @@ if(!isset($_SESSION['user']) || empty($_SESSION['user'])){
     // if isset get accountCreated=true echo badge
 
     // all badges must have icon and text
-
+    if (isset($_GET["connected"]) && $_GET["connected"] == "false"){
+        echo '
+        <br><br><br><br>
+        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+         La connexion a <strong>échouée</strong>.
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>';
+    }
     if (isset($_GET["error"]) && $_GET["error"] == "true") {
         echo '
         <br><br><br><br>
