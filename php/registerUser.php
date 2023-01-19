@@ -1,6 +1,7 @@
 <?php
     session_start();
-    require_once 'php/Connexion.php';
+    require_once("lib/parse.env.php");
+    require_once 'Connexion.php';
 
     if(isset($_POST['login']) && !empty($_POST['login']) && isset($_POST['psw']) &&
         !empty($_POST['psw']) && isset($_POST['mail']) && !empty($_POST['mail']) && isset($_POST['public']) &&
@@ -15,5 +16,5 @@
         $db->register($_POST['login'],$_POST['psw'],$_POST['mail'],$desc,$_POST['public']);
         $_SESSION['user'] = $db->getId($_POST['login']);
     }
-    header("location: index.php?accountCreated=true");
+    header("location: ../index.php?accountCreated=true");
 ?>

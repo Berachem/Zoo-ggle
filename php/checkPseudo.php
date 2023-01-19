@@ -3,7 +3,8 @@ const HTTP_OK = 200;
 const HTTP_BAD_REQUEST = 400;
 const HTTP_METHOD_NOT_ALLOWED = 405;
 
-require_once('php/Connexion.php');
+require_once("lib/parse.env.php");
+require_once('Connexion.php');
 
 if(isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtoupper($_SERVER['HTTP_X_REQUESTED_WITH']) == "XMLHTTPREQUEST"){
 
