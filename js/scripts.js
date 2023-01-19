@@ -74,24 +74,30 @@ function checkWord(word, grid, time){
 }
 
 //verification des champs du formulaire d'inscription
-function checkPsw(event){
+function checkPsw(){
+    console.log("fonction appelée");
     let psw = document.getElementById("pswInscription");
     let regex = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/;
     let error = document.getElementById("psw-insc-error");
 
     if(psw.value.trim() == ""){
-        error.innerHTML("Un mot de passe est requis.")
-        event.preventDefault()
+        console.log("vide");
+        error.innerHTML = "Un mot de passe est requis.";
+        error.style.color = 'red';
+        return false;
     }else if(regex.test(psw.value) == false){
-        error.innerHTML("Le mot de passe doit être : long De 8 charactère ou plus, contenir Majuscule/Minuscules/Chiffres/Charactères Spéciaux")
-        event.preventDefault()
+        console.log("mauvais");
+        error.innerHTML = "Le mot de passe doit être : long De 8 charactère ou plus, contenir Majuscule/Minuscules/Chiffres/Charactères Spéciaux";
+        error.style.color = 'red';
+        return false;
+    }else{
+        error.innerHTML = "";
+        error.style.color = 'red';
+        return true;
     }
 }
 
-function checkAll(event){
-    checkPsw(event);
+function checkAll(){
+    return checkPsw();
 }
-
-let inscriptionForm = document.getElementById("inscriptionForm");
-inscriptionForm.addEventListener("submit",checkAll(e));
 

@@ -57,7 +57,7 @@
                     </div>
                     <div class="modal-body border-0 p-4">
 
-                        <form id="inscriptionForm" action="inscription.php" method="post">
+                        <form id="inscriptionForm" action="inscription.php" method="post" onsubmit="return checkAll()">
                             <!-- Name input-->
                             <div class="form-floating mb-3">
                                 <input class="form-control" id="login" name="login" type="text" placeholder="Entrez votre Pseudo..."
@@ -66,10 +66,10 @@
                                 <div class="invalid-feedback" data-sb-feedback="name:required">Un pseudo est requis</div>
                             </div>
                             <div class="form-floating mb-3">
-                                <input class="form-control" id="pswInscription" name="psw" type="password" placeholder="Entrez votre mot de passe..."
+                                <input onkeyup="checkPsw()" class="form-control" id="pswInscription" name="psw" type="password" placeholder="Entrez votre mot de passe..."
                                        data-sb-validations="required" />
                                 <label for="psw">Mot de Passe</label>
-                                <div class="invalid-feedback" id="psw-insc-error"></div>
+                                <span id="psw-insc-error"></span>
                             </div>
                             <!-- Email address input-->
                             <div class="form-floating mb-3">
