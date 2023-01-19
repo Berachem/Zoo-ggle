@@ -135,7 +135,7 @@ function createGame($id, $name, $langue, $tailleGrille, $mode, $public, $nbJoueu
         [9, $id, PDO::PARAM_INT]
     ];
 
-    $result = $db->execQuery($query, $params); // TODO : vérifier que la requête s'est bien exécutée
+    $result = $db->execQuery($query, $params); 
     return $result;
 
 }
@@ -196,7 +196,7 @@ function getPublicGames($langue, $mode, $nbJoueurs, $name) {
         $params[] = [$i++, $name, PDO::PARAM_STR];
     }
     $games = $db->execQuery($query, $params);
-    
+
     // filter all games that are already full (getNbPlayersInWaitingRoom($idPartie) >= NombreJoueursMax)
     $games = array_filter($games, function($game) {
         return getNbPlayersInWaitingRoom($game->IdPartie) < $game->NombreJoueursMax;
@@ -205,6 +205,17 @@ function getPublicGames($langue, $mode, $nbJoueurs, $name) {
     return $games;
 }
 
+// Créer une fonction qui renvoie des données de la partie en cours du user $id
+// (en regardant les scores, et en regardant la date de début et de fin de la partie)
+function getGameInProgressForUser($id) {
+    global $db;
+    $query = "SELECT * FROM B_Partie WHERE IdPartie = (SELECT IdPartie FROM B_Score WHERE IdJoueur = ? AND Score = -1) AND DateFinPartie IS NULL";
+    $params = [
+        [1, $id, PDO::PARAM_INT]
+    ];
+    $result = $db->execQuery($query, $params);
+    return $result[0];
+}
 
 
 function formatDateToSentence($date){
