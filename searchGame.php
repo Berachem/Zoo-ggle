@@ -60,6 +60,14 @@ include('includes/header.inc.php');
 .text2 {
     color: #a5aec0
 }
+
+.shadow-hover:hover {
+    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
+    transform: translateY(-5px);
+    transition: all 0.3s ease-in-out;
+}
+
+
 </style>
 
 <br>
@@ -118,31 +126,38 @@ if(!isset($_SESSION['user'])) { // && false pour tester la page sans être conne
 
 
             echo '
-            <div class="col-md-4">
+            <div class="col-md-4 shadow-hover">
                 <div class="game-card p-3 mb-2">
                     <div class="d-flex justify-content-between">
                         <div class="d-flex flex-row align-items-center">
-                            <div class="icon"> <i class="bx bxl-mailchimp"></i> </div>
+                            <div class="icon"> 
+                            <img src="assets/playersLogos/default.png" width="50" height="50">
+                            
+                            </div>
                             <div class="ms-2 c-details">
-                                <h6 class="mb-0">Créée par '.getPseudoById($gameDetails->IdChef).' 
-                                dont le nom est '.$gameDetails->NomPartie.' et 
-                                a un nombre de joueurs maximum de '.$gameDetails->NombreJoueursMax.'
+                                <h6 class="mb-0">Chef : <u> <a href="checkProfilePage?pseudo='.getPseudoById($gameDetails->IdChef).'">'.getPseudoById($gameDetails->IdChef).'</a></u>
                                 </h6> 
                             </div>
                         </div>
-                        <div class="badge"> <span>Mode de jeu '.$mode.'</span> </div>
+                        <div class="badge"> <span>'.$mode.'</span> </div>
                     </div>
                     <div class="mt-5">
-                        <h3 class="heading">En cours ? <br>'.
-                        $gameDetails->DateDebutPartie. ' - '.$gameDetails->DateFinPartie
-                        .'</h3>
+                        <h3 class="heading"><i>'.$gameDetails->NomPartie.'</i><br></h3>
                         <div class="mt-5">
-                            <div class="mt-3"> <span class="text1"> Langue :'.
-                            $gameDetails->LangueDico
-                            .' trouvé(s) <span class="text2">
-                            sur une grille de taille'.$gameDetails->TailleGrille.' mots</span></span> </div>
+                            <div class="mt-3"> <span class="text1"><span class="text2">
+                            <i class="bi bi-alarm-fill"></i> '.
+                            $gameDetails->DateDebutPartie
+                            .'<br>
+                            Langue :   <img src="assets/flags/'.$gameDetails->LangueDico.'.png" alt="'.$gameDetails->LangueDico.'" width="20" height="20"> <br>
+                            Grille de '.$gameDetails->TailleGrille.'x'.$gameDetails->TailleGrille.' à '.$gameDetails->NombreJoueursMax.' <i class="bi bi-people-fill""></i></span></span> </div>
                         </div>
                     </div>
+                    <center>
+                    <a class="btn btn-primary" href="joinGame.php?gameId='.$gameDetails->IdPartie.'">
+                    <i class="bi bi-controller"></i>
+                    Rejoindre
+                    </a>
+                    </center>
                 </div>
             </div>';    
         }

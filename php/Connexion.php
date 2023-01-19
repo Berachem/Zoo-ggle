@@ -51,6 +51,16 @@ class Connexion {
         $stmt->closeCursor();
         $stmt=NULL;
     }
+
+    public function displayQuery($sql,Array $cond = null){
+        $textQuery = $sql;
+        if($cond){
+            foreach ($cond as $v) {
+                $textQuery = preg_replace('/\?/', $v[1], $textQuery, 1);
+            }
+        }
+        echo $textQuery;
+    }
     
 
 

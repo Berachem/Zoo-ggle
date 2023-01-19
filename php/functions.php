@@ -164,15 +164,35 @@ CREATE TABLE B_Partie(
 
 function getPublicGames($langue, $mode, $nbJoueurs, $name) {
     global $db;
-    $query = "SELECT * FROM B_Partie WHERE LangueDico = ? AND Mode = ? AND NombreJoueursMax = ? AND NomPartie LIKE ? AND EstPublic = 1";
-    $params = [
-        [1, $langue, PDO::PARAM_STR],
-        [2, $mode, PDO::PARAM_INT],
-        [3, $nbJoueurs, PDO::PARAM_INT],
-        [4, $name, PDO::PARAM_STR]
-    ];
-    $games = $db->execQuery($query, $params, true);
+    $query = "SELECT * FROM B_Partie WHERE EstPublic = 1";
+    $params = [];
+    $i = 1;
+    if(!empty($langue)){
+        $query .= " AND LangueDico LIKE ?";
+        $params[] = [$i++, $langue, PDO::PARAM_STR];
+    }
+    if(!empty($mode)){
+        $query .= " AND Mode = ?";
+        $params[] = [$i++, $mode, PDO::PARAM_INT];
+    }
+    if(!empty($nbJoueurs)){
+        $query .= " AND NombreJoueursMax = ?";
+        $params[] = [$i++, $nbJoueurs, PDO::PARAM_INT];
+    }
+    if(!empty($name)){
+        $query .= " AND NomPartie LIKE ?";
+        $params[] = [$i++, $name, PDO::PARAM_STR];
+    }
+    //$db->displayQuery($query, $params);
+    $games = $db->execQuery($query, $params);
     return $games;
+}
+
+
+function formatDateToSentence($date){
+    $date = new DateTime($date);
+    $date = $date->format('d/m/Y à H:i:s');
+    return 'le '.$date;
 }
 
 

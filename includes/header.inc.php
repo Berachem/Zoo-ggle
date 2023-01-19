@@ -18,6 +18,7 @@ if(!isset($_SESSION['user']) || empty($_SESSION['user'])){
         <meta name="author" content="" />
         <title>Zoo-ggle</title>
         <link rel="icon" type="image/x-icon" href="assets/img/zooggle_white.png" />
+        <script src="https://kit.fontawesome.com/yourcode.js" crossorigin="anonymous"></script>
         <!-- Bootstrap icons-->
         <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" />
         <!-- Google fonts-->
