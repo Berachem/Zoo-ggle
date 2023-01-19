@@ -98,7 +98,10 @@ class Connexion {
         $query = "SELECT IdJoueur FROM B_Joueur WHERE Pseudo = :pseudo";
         $parameters = [[":pseudo",$pseudo]];
         $retour = $this->execQuery($query,$parameters);
-        return $retour[0]->IdJoueur;
+        if(count($retour)!=0){
+            return $retour[0]->IdJoueur;
+        }
+        return null;
     }
 
 

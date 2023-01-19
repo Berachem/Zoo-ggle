@@ -60,10 +60,10 @@
                         <form id="inscriptionForm" action="inscription.php" method="post" onsubmit="return checkAll()">
                             <!-- Name input-->
                             <div class="form-floating mb-3">
-                                <input class="form-control" id="login" name="login" type="text" placeholder="Entrez votre Pseudo..."
-                                       data-sb-validations="required" required/>
+                                <input onkeyup="checkPseudo()" class="form-control" id="Inscriptionlogin" name="login" type="text" placeholder="Entrez votre Pseudo..."
+                                       data-sb-validations="required"/>
                                 <label for="login">Pseudo</label>
-                                <div class="invalid-feedback" data-sb-feedback="name:required">Un pseudo est requis</div>
+                                <span id="login-insc-error"></span>
                             </div>
                             <div class="form-floating mb-3">
                                 <input onkeyup="checkPsw()" class="form-control" id="pswInscription" name="psw" type="password" placeholder="Entrez votre mot de passe..."
@@ -182,6 +182,8 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
         <!-- Core theme JS-->
         <script src="js/scripts.js"></script>
+        <script src="js/checkupsInscription.js"></script>
         <script src="https://cdn.startbootstrap.com/sb-forms-latest.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
     </body>
 </html>
