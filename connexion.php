@@ -7,5 +7,5 @@
             $_SESSION['user'] = $user;
         }
     }
-    header("location: index.php?connected=true");
+    header("location: index.php?connected=false");
 ?>

@@ -155,7 +155,7 @@ if(!isset($_SESSION['user'])) { // && false pour tester la page sans être conne
                     <center>
                     <a class="btn btn-primary" href="joinGame.php?gameId='.$gameDetails->IdPartie.'">
                     <i class="bi bi-controller"></i>
-                    Rejoindre
+                    Rejoindre ('.getNbPlayersInWaitingRoom($gameDetails->IdPartie).'/'.$gameDetails->NombreJoueursMax.')
                     </a>
                     </center>
                 </div>
