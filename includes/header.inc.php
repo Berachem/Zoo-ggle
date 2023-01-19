@@ -30,6 +30,84 @@ if(!isset($_SESSION['user']) || empty($_SESSION['user'])){
         <link href="css/styles.css" rel="stylesheet" />
     </head>
 
+    <?php
+    // if isset get error=true echo badge
+    // if isset get gameCreated=true echo badge
+    // if isset get notConnected=true echo badge
+    // if isset get gameJoined=true echo badge
+    // if isset get connected=true echo badge
+    // if isset get disconnected=true echo badge
+    // if isset get accountCreated=true echo badge
+
+    // all badges must have icon and text
+
+    if (isset($_GET["error"]) && $_GET["error"] == "true") {
+        echo '
+        <br><br><br><br>
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+         Une <strong>erreur</strong> est survenue.
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>';
+    }
+    if (isset($_GET["gameCreated"]) && $_GET["gameCreated"] == "true") {
+        echo '
+        <br><br><br><br>
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+         La partie a été <strong>créée</strong>.
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>';
+    }
+    if (isset($_GET["notConnected"]) && $_GET["notConnected"] == "true") {
+        echo '
+        <br><br><br><br>
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+         Vous devez être <strong>connecté</strong> pour accéder à cette page.
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>';
+    }
+    if (isset($_GET["gameJoined"]) && $_GET["gameJoined"] == "true") {
+        echo '
+        <br><br><br><br>
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+         Vous avez rejoint la partie.
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>';
+    }
+    if (isset($_GET["connected"]) && $_GET["connected"] == "true") {
+        echo '
+        <br><br><br><br>
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+         Vous êtes <strong>connecté</strong>.
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>';
+    }
+    if (isset($_GET["disconnected"]) && $_GET["disconnected"] == "true") {
+        echo '
+        <br><br><br><br>
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+         Vous êtes <strong>déconnecté</strong>.
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>';
+    }
+    if (isset($_GET["accountCreated"]) && $_GET["accountCreated"] == "true") {
+        echo '
+        <br><br><br><br>
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+         Votre compte a été <strong>créé</strong>. Vous pouvez vous connecter ! :)
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>';
+    }
+
+
+
+
+
+ 
+    
+
+
+
+    ?>
 
 
     <body id="page-top">
@@ -44,6 +122,7 @@ if(!isset($_SESSION['user']) || empty($_SESSION['user'])){
                 </button>
                 <div class="collapse navbar-collapse" id="navbarResponsive">
                     <ul class="navbar-nav ms-auto me-4 my-3 my-lg-0">
+                    <li class="nav-item"><a class="nav-link me-lg-3" href="searchGame.php">Rechercher une partie</a></li>
                         <li class="nav-item"><a class="nav-link me-lg-3" href="dictionnary.php">Dictionnaire</a></li>
                         <li class="nav-item"><a class="nav-link me-lg-3" href="#download">Contact</a></li>
                     </ul>

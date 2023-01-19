@@ -5,8 +5,6 @@
 MLD:
 
 
-
-
 */
 
 
@@ -107,8 +105,6 @@ function getValidWordsForGrid($grid) {
     } else {
         $result = shell_exec('./server/game_motor/executables_LINUX/solve server/data/listeMot.lex '.$grid);
     }
-
-    var_dump($result);
     
     return explode(" ", $result);
 }
@@ -139,10 +135,46 @@ function createGame($id, $name, $langue, $tailleGrille, $mode, $public, $nbJoueu
         [9, $id, PDO::PARAM_INT]
     ];
 
-    $result = $db->execQuery($query, $params, true); // TODO : vérifier que la requête s'est bien exécutée
+    $result = $db->execQuery($query, $params); // TODO : vérifier que la requête s'est bien exécutée
     return $result;
 
 }
+
+/*
+
+CREATE TABLE B_Partie(
+   IdPartie INT,
+   NomPartie VARCHAR(50),
+   LangueDico CHAR(3),
+   Grille VARCHAR(200),
+   DateDebutPartie DATETIME,
+   DateFinPartie VARCHAR(50),
+   TailleGrille INT,
+   NombreMotsPossibles INT,
+   Mode INT,
+   EstPublic LOGICAL,
+   NombreJoueursMax INT,
+   IdJoueur INT NOT NULL,
+   PRIMARY KEY(IdPartie),
+   FOREIGN KEY(IdJoueur) REFERENCES B_Joueur(IdJoueur)
+);
+
+*/
+// Fonction qui renvoie la liste des parties publiques (en fonction de la langue, du mode, du nombre de joueurs et du nom)
+
+function getPublicGames($langue, $mode, $nbJoueurs, $name) {
+    global $db;
+    $query = "SELECT * FROM B_Partie WHERE LangueDico = ? AND Mode = ? AND NombreJoueursMax = ? AND NomPartie LIKE ? AND EstPublic = 1";
+    $params = [
+        [1, $langue, PDO::PARAM_STR],
+        [2, $mode, PDO::PARAM_INT],
+        [3, $nbJoueurs, PDO::PARAM_INT],
+        [4, $name, PDO::PARAM_STR]
+    ];
+    $games = $db->execQuery($query, $params, true);
+    return $games;
+}
+
 
 
 
