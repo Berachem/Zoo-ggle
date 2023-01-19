@@ -73,10 +73,9 @@
                             </div>
                             <!-- Email address input-->
                             <div class="form-floating mb-3">
-                                <input class="form-control" id="mail" type="email" name="mail" placeholder="mail@example.com" data-sb-validations="required,email" required/>
+                                <input onkeyup="checkMail()" class="form-control" id="mailInscription" type="email" name="mail" placeholder="mail@exemple.com" data-sb-validations="required,email" />
                                 <label for="mail">Adresse mail</label>
-                                <div class="invalid-feedback" data-sb-feedback="email:required">Un mail est requis</div>
-                                <div class="invalid-feedback" data-sb-feedback="email:email">Mail invalide</div>
+                                <span id="mail-insc-error"></span>
                             </div>
 
                             <div class="form-floating mb-3">

@@ -75,18 +75,15 @@ function checkWord(word, grid, time){
 
 //verification des champs du formulaire d'inscription
 function checkPsw(){
-    console.log("fonction appelée");
     let psw = document.getElementById("pswInscription");
     let regex = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/;
     let error = document.getElementById("psw-insc-error");
 
     if(psw.value.trim() == ""){
-        console.log("vide");
         error.innerHTML = "Un mot de passe est requis.";
         error.style.color = 'red';
         return false;
     }else if(regex.test(psw.value) == false){
-        console.log("mauvais");
         error.innerHTML = "Le mot de passe doit être : long De 8 charactère ou plus, contenir Majuscule/Minuscules/Chiffres/Charactères Spéciaux";
         error.style.color = 'red';
         return false;
@@ -97,7 +94,27 @@ function checkPsw(){
     }
 }
 
+function checkMail(){
+    let regex = /(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9]))\.){3}(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9])|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/;
+    let mail = document.getElementById("mailInscription");
+    let error = document.getElementById("mail-insc-error");
+
+    if(mail.value.trim()==""){
+        error.innerHTML = "Un mail est requis.";
+        error.style.color = 'red';
+        return false;
+    }else if(regex.test(mail.value) == false) {
+        error.innerHTML = "Entrez un mail valide";
+        error.style.color = 'red';
+        return false;
+    }else{
+        error.innerHTML = "";
+        error.style.color = 'red';
+        return true;
+    }
+}
+
 function checkAll(){
-    return checkPsw();
+    return checkPsw() && checkMail();
 }
 
