@@ -57,7 +57,7 @@
                     </div>
                     <div class="modal-body border-0 p-4">
 
-                        <form id="contactForm" action="inscription.php" method="post">
+                        <form id="inscriptionForm" action="inscription.php" method="post">
                             <!-- Name input-->
                             <div class="form-floating mb-3">
                                 <input class="form-control" id="login" name="login" type="text" placeholder="Entrez votre Pseudo..."
@@ -66,10 +66,10 @@
                                 <div class="invalid-feedback" data-sb-feedback="name:required">Un pseudo est requis</div>
                             </div>
                             <div class="form-floating mb-3">
-                                <input class="form-control" id="psw" name="psw" type="password" placeholder="Entrez votre mot de passe..."
-                                       data-sb-validations="required" required/>
+                                <input class="form-control" id="pswInscription" name="psw" type="password" placeholder="Entrez votre mot de passe..."
+                                       data-sb-validations="required" />
                                 <label for="psw">Mot de Passe</label>
-                                <div class="invalid-feedback" data-sb-feedback="name:required">Un mot de passe est requis</div>
+                                <div class="invalid-feedback" id="psw-insc-error"></div>
                             </div>
                             <!-- Email address input-->
                             <div class="form-floating mb-3">
@@ -97,7 +97,7 @@
                             <!-- This is what your users will see when the form-->
                             <!-- has successfully submitted-->
 
-                            <div class="d-grid"><button class="btn btn-primary rounded-pill btn-lg" id="submitButton" type="submit">Inscription</button></div>
+                            <div class="d-grid"><input class="btn btn-primary rounded-pill btn-lg" id="submitInscription" type="submit" value="Inscription"></div>
                         </form>
                     </div>
                 </div>

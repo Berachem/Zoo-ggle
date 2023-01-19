@@ -70,3 +70,25 @@ function checkWord(word, grid, time){
         
 }
 
+//verification des champs du formulaire d'inscription
+function checkPsw(event){
+    let psw = document.getElementById("pswInscription");
+    let regex = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/;
+    let error = document.getElementById("psw-insc-error");
+
+    if(psw.value.trim() == ""){
+        error.innerHTML("Un mot de passe est requis.")
+        event.preventDefault()
+    }else if(regex.test(psw.value) == false){
+        error.innerHTML("Le mot de passe doit être : long De 8 charactère ou plus, contenir Majuscule/Minuscules/Chiffres/Charactères Spéciaux")
+        event.preventDefault()
+    }
+}
+
+function checkAll(event){
+    checkPsw(event);
+}
+
+let inscriptionForm = document.getElementById("inscriptionForm");
+inscriptionForm.addEventListener("submit",checkAll(e));
+
