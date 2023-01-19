@@ -93,7 +93,7 @@ if(!isset($_SESSION['user']) || empty($_SESSION['user'])){
         echo '
         <br><br><br><br>
         <div class="alert alert-success alert-dismissible fade show" role="alert">
-         Votre compte a été <strong>créé</strong>. Vous pouvez vous connecter ! :)
+         Votre compte a été <strong>créé</strong>. (vous êtes automatiquement connecté)
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>';
     }
