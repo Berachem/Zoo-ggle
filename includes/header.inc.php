@@ -125,21 +125,36 @@ if(!isset($_SESSION['user']) || empty($_SESSION['user'])){
                     <ul class="navbar-nav ms-auto me-4 my-3 my-lg-0">
                     <li class="nav-item"><a class="nav-link me-lg-3" href="searchGame.php">Rechercher une partie</a></li>
                         <li class="nav-item"><a class="nav-link me-lg-3" href="dictionnary.php">Dictionnaire</a></li>
-                        <li class="nav-item"><a class="nav-link me-lg-3" href="#download">Contact</a></li>
+                        <li class="nav-item"><a class="nav-link me-lg-3" href="profile.php">Profil</a></li>
                     </ul>
                     <?php
                         if($connected){
+                            //getGameInProgressForUser
+                            if (!getGameInProgressForUser($_SESSION["user"])){ // TODO : enlever le false
+                                echo "                            <button class='btn btn-primary rounded-pill px-3 mb-2 mb-lg-0' data-bs-toggle='modal'
+                                data-bs-target='#newgame'>
+                                    <span class='d-flex align-items-center'>
+                                        <span class='small'>
+                                        <i class='bi bi-arrow-right-circle-fill'></i>
+                                        Créer une partie</span>
+                                    </span>
+                                </button>";
+                            }else{
+                                echo "
+                                <a href='php/waitingRoom.php' class='btn btn-primary rounded-pill px-3 mb-2 mb-lg-0'>
+                                    <span class='d-flex align-items-center'>
+                                        <span class='small'>
+                                        <i class='bi bi-eye-fill'></i>
+                                        Voir partie en cours</span>
+                                    </span>
+                                </a>";
+                            }
                             echo
                             "
-                            <button class='btn btn-primary rounded-pill px-3 mb-2 mb-lg-0' data-bs-toggle='modal'
-                            data-bs-target='#newgame'>
-                                <span class='d-flex align-items-center'>
-                                    <span class='small'>Créer une partie</span>
-                                </span>
-                            </button>
                             <a href='php/disconnect.php' class='btn btn-warning rounded-pill px-3 mb-2 mb-lg-0 mx-1'>
                             <span class='d-flex align-items-center'>
-                                    <span class='small'>Deconnexion</span>
+                                    <span class='small'>
+                                    Deconnexion</span>
                                 </span>
                             </a>
                             ";
@@ -149,13 +164,17 @@ if(!isset($_SESSION['user']) || empty($_SESSION['user'])){
                              <button class='btn btn-primary rounded-pill px-3 mb-2 mb-lg-0' data-bs-toggle='modal'
                             data-bs-target='#connexion'>
                                 <span class='d-flex align-items-center'>
-                                    <span class='small'>Connexion</span>
+                                    <span class='small'>
+                                    <i class='bi bi-person-fill'></i>
+                                    Connexion</span>
                                 </span>
                             </button>
                             <button class='btn btn-secondary rounded-pill px-3 mx-1 mb-2 mb-lg-0' data-bs-toggle='modal'
                                     data-bs-target='#inscription'>
                                 <span class='d-flex align-items-center'>
-                                    <span class='small'>Inscription</span>
+                                    <span class='small'>
+                                    <i class='bi bi-person-plus-fill'></i>
+                                    Inscription</span>
                                 </span>
                             </button>
                             ";

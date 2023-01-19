@@ -69,7 +69,7 @@ function getPseudoById($id) {
 Renvoie toutes les données de toutes les parties d'un joueur suivi de toutes les données de tous les joueurs de ces parties 
 (Table B_Jouer, B_Partie)
 */
-function getAllDetailsByJoueur($id) {
+function getAllGamesPlayedByUser($id) {
     global $db;
     $query = "SELECT * FROM B_Jouer, B_Partie, WHERE B_Jouer.IdJoueur = ? AND B_Jouer.IdPartie = B_Partie.IdPartie";
     $params = [[1, $id, PDO::PARAM_INT]];
@@ -209,11 +209,14 @@ function getPublicGames($langue, $mode, $nbJoueurs, $name) {
 // (en regardant les scores, et en regardant la date de début et de fin de la partie)
 function getGameInProgressForUser($id) {
     global $db;
-    $query = "SELECT * FROM B_Partie WHERE IdPartie = (SELECT IdPartie FROM B_Score WHERE IdJoueur = ? AND Score = -1) AND DateFinPartie IS NULL";
+    $query = "SELECT * FROM B_Partie p WHERE p.IdPartie IN (SELECT j.IdPartie FROM B_Jouer j WHERE IdJoueur = ?) AND p.DateFinPartie IS NULL";
     $params = [
         [1, $id, PDO::PARAM_INT]
     ];
     $result = $db->execQuery($query, $params);
+    if (count($result) == 0) {
+        return null;
+    }
     return $result[0];
 }
 
