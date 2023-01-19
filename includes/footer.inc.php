@@ -79,10 +79,12 @@
                             </div>
 
                             <div class="form-floating mb-3">
-                                <input name="public" id="public" type="radio" data-sb-validations="required" value="1" required>
+                                <input name="public" id="public" type="radio" data-sb-validations="required" value="1">
                                 <label for="public">Publique</label>
-                                <input name="public" id="non-public" type="radio" data-sb-validations="required" style="margin-left: 70px" value="0" required>
+                                <input name="public" id="non-public" type="radio" data-sb-validations="required" style="margin-left: 70px" value="0">
                                 <label for="non-public" style="margin-left: 90px">Privé</label>
+                                <br><br>
+                                <span id="pub-insc-error"></span>
                             </div>
 
 

@@ -89,7 +89,6 @@ function checkPsw(){
         return false;
     }else{
         error.innerHTML = "";
-        error.style.color = 'red';
         return true;
     }
 }
@@ -109,12 +108,30 @@ function checkMail(){
         return false;
     }else{
         error.innerHTML = "";
+        return true;
+    }
+}
+
+function checkCheckBoxes(){
+    let pub = document.getElementById("public");
+    let npub = document.getElementById("non-public");
+    let error = document.getElementById("pub-insc-error");
+
+    if(!pub.checked && !npub.checked){
+        error.innerHTML = "Vous devez choisir une option.";
         error.style.color = 'red';
+        return false;
+    }else{
+        error.innerHTML = "";
         return true;
     }
 }
 
 function checkAll(){
-    return checkPsw() && checkMail();
+    //pour que les 3 messages s'affichent d'un coup et non pas en trois submit
+    let psw = checkPsw();
+    let mail = checkMail();
+    let boxes = checkCheckBoxes();
+    return psw && mail && boxes ;
 }
 
