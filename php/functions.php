@@ -141,10 +141,10 @@ function createGame($id, $name, $langue, $tailleGrille, $mode, $public, $nbJoueu
 }
 
 // Fonction qui renvoie le nombre de joueurs dans le salon d'attente d'une partie $idPartie
-// (on compte le nombre de Score à -1 dans la table B_Score)
+// (on compte le nombre de Score à -1 dans la table B_Jouer)
 function getNbPlayersInWaitingRoom($idPartie) {
     global $db;
-    $query = "SELECT COUNT(*) as nombre FROM B_Score WHERE IdPartie = ? AND Score = -1";
+    $query = "SELECT COUNT(Score) as nombre FROM B_Jouer WHERE IdPartie = ? AND Score = -1";
     $params = [
         [1, $idPartie, PDO::PARAM_INT]
     ];
