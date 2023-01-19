@@ -57,7 +57,7 @@ if(!isset($_SESSION['user']) || empty($_SESSION['user'])){
                                     <span class='small'>Créer une partie</span>
                                 </span>
                             </button>
-                            <a href='php/disconnect.php' class='btn btn-warning rounded-pill px-3 mb-2 mb-lg-0'>
+                            <a href='php/disconnect.php' class='btn btn-warning rounded-pill px-3 mb-2 mb-lg-0 mx-1'>
                             <span class='d-flex align-items-center'>
                                     <span class='small'>Deconnexion</span>
                                 </span>

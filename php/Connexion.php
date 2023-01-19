@@ -83,6 +83,13 @@ class Connexion {
         $this->execQuery($query, $parameters);
     }
 
+    public function getId($pseudo){
+        $query = "SELECT IdJoueur FROM B_Joueur WHERE Pseudo = :pseudo";
+        $parameters = [[":pseudo",$pseudo]];
+        $retour = $this->execQuery($query,$parameters);
+        return $retour[0]->IdJoueur;
+    }
+
 
 }
 
