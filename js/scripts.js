@@ -61,7 +61,10 @@ function checkWord(word, grid, time){
     .then(data => {
         // if the word is valid, add it to the list and remove it from the grid
         if (data.success) {
-            // TODO: add the word to the list of words found (in the html)
+            // TODO: add the word to the list of words found word-found-list
+
+            document.getElementById("word-found-list").innerHTML += "<li>"+word+"</li>";
+
         }
             console.log("Mot :"+word+",Success : "+data.success)
     }

@@ -163,6 +163,11 @@ include('includes/header.inc.php');
                             Effacer
                         </button>
                     </center>
+
+                    <br>
+                    <center>
+                        <ul id="word-found-list" style="list-style-type: none;"></ul>
+                    </center>
                 
         </section>
 
