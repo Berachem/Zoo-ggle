@@ -19,7 +19,7 @@ CREATE TABLE B_Partie(
    LangueDico CHAR(3),
    Grille VARCHAR(200),
    DateDebutPartie DATETIME,
-   DateFinPartie VARCHAR(50),
+   DateFinPartie DATETIME,
    TailleGrille INT,
    NombreMotsPossibles INT,
    Mode INT,
