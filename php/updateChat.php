@@ -20,8 +20,7 @@ if(isset($_POST['message']) && isset($_SESSION['user'])){
         "retour" => "OK"
     ];
     echo json_encode($retour);
-}elseif (isset($_POST['ping']) && $_POST['ping'] == "update required" && isset($_SESSION['user'])){
-    //l'idPartie du joueur
+}elseif (isset($_POST['ping']) && $_POST['ping'] == "update required" && isset($_SESSION['user'])){ //remplacer la variable de session du user par celle de la partie
     $querry = "SELECT Contenu FROM B_Message WHERE IdPartie = :idPartieJoueur";
     $parameters = [
         [":idPartieJoueur", 1]
@@ -41,3 +40,29 @@ if(isset($_POST['message']) && isset($_SESSION['user'])){
     ];
     echo json_encode($retour);
 }
+
+/*pour le chat entren les joueurs
+  Faire une différenciation des requettes pour le style du chat (sinon illisible)
+  Order By afin de pouvoir les dépiller dans l'ordre simplement (comparer le plus vieux puis print etc...)
+
+    $requette = "SELECT ContenuMessagePrive,IdMessagePrive FROM B_MessagePrive WHERE IdJoueur = :idJoueur ORDER BY IdMessagePrive"
+    $parameters = [
+            [":IdJoueur",$_SESSION['user']]
+        ];
+    $messageRecu = $db->execQuery($querry,$parameters);
+
+    $requette = "SELECT ContenuMessagePrive,IdMessagePrive FROM B_MessagePrive WHERE IdJoueur_1 = :idJoueur ORDER BY IdMessagePrive"
+    $parameters = [
+            [":IdJoueur",$_SESSION['user']]
+        ];
+    $messageEnvoye = $db->execQuery($querry,$parameters);
+
+    $retour = [
+            "retour" => "OK",
+            "messageEnvoye" => $messageEnvoye,
+            "messageRecu" => $messageRecu
+        ];
+    echo json_encode($retour);
+
+*/
+
