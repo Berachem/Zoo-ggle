@@ -81,7 +81,7 @@ function checkPseudo(){
 function callBDDPseudo(pseudo){
     $.ajax({
         type: "POST",
-        url: "checkPseudo.php",
+        url: "php/checkPseudo.php",
         data: {login: pseudo},
         datatype: "json",
         success: function(response){
