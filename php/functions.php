@@ -341,7 +341,7 @@ Fonction qui crée un booléen si l'opération a réussi ou non
 */
 function createGame($id, $name, $langue, $tailleGrille, $mode, $public, $nbJoueurs) {
     $grid = implode(" ",getRandomGrid($tailleGrille));
-    $words = getValidWordsForGrid($grid);
+    $words = getValidWordsForGrid($grid, $tailleGrille);
     $nbWords = count($words);
 
     global $db;

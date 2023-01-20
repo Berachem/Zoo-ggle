@@ -2,6 +2,7 @@
 session_start();  
 
 include('includes/header.inc.php');
+require_once 'assets/animalsLists/animals_FRA.php';
 ?>
 
 
@@ -63,7 +64,7 @@ include('includes/header.inc.php');
                             </p>
                             <div class="d-flex flex-column flex-lg-row align-items-center">
                                 <a class="me-lg-3 mb-4 mb-lg-0" href="#!"><img class="app-badge" src="assets/img/google-play-badge.svg" alt="..." /></a>
-                                <a href="#!"><img class="app-badge" src="assets/img/app-store-badge.svg" alt="..." /></a>
+                                (à venir)
                             </div>
                         </div>
                     </div>
@@ -134,6 +135,8 @@ include('includes/header.inc.php');
 
                     <?php
                     $result = getRandomGrid(4);
+                    // replace * by QU
+                    $result = str_replace("*", "QU", $result);
 
                     
 
@@ -175,6 +178,45 @@ include('includes/header.inc.php');
                     </center>
                 
         </section>
+
+        <!-- Animals & Letters -->
+        <section id="animaux">
+            <h1 class="text-center"
+                style="font-family: 'Roboto', sans-serif; font-size: 50px; font-weight: 700; color: #000; margin-top: 100px; margin-bottom: 50px;">
+                Animaux</h1>
+    
+
+                    <?php
+                    
+                    foreach($groupedAnimals as $letter => $animals) {
+                        echo "<h1 class='text-center' style='font-family: 'Roboto', sans-serif; font-size: 50px; font-weight: 700; color: #000; margin-top: 100px; margin-bottom: 50px;'>$letter</h1>";
+                        echo "<div class='container'>";
+                        echo "<div class='row'>";
+                        foreach($animals as $animal) {
+                            echo "<div class='col-lg-3 col-md-6 mb-4'>";
+                            echo "<div class='card h-100'>";
+                            echo "<div class='card-body'>";
+                            echo "<h4 class='card-title'>";
+                            echo "<b>$animal</b>";
+                            echo "</h4>";
+                            echo "</div>";
+                            echo "<div class='card-footer'>";
+                            echo "
+                            <a href='https://www.google.com/search?q=$animal' target='_blank' class='btn btn-primary'>En savoir plus</a>
+                            ";
+                            echo "</div>";
+                            echo "</div>";
+                            echo "</div>";
+                        }
+                        echo "</div>";
+                        echo "</div>";
+                    }
+
+                    ?>
+            
+                </section>
+
+
 
         <!-- Quote/testimonial aside-->
         <aside class="text-center bg-gradient-primary-to-secondary">

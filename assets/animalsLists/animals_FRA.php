@@ -11,7 +11,7 @@ array(
     "Antilope",
     "Singe",
     "Tatou",
-    "âne",
+    "ane",
     "Babouin",
     "Blaireau",
     "Barracuda",
@@ -64,7 +64,7 @@ array(
     "Eland",
     "Eléphant",
     "Elan",
-    "émeu",
+    "emeu",
     "Faucon",
     "Furet",
     "Pinson",
@@ -135,7 +135,7 @@ array(
     "Taupe",
     "Mangouste",
     "Singe",
-    "élan",
+    "elan",
     "Moustique",
     "Souris",
     "Mule",
@@ -194,8 +194,8 @@ array(
     "Araignée",
     "Spatule",
     "Calamar",
-    "Écureuil",
-    "étourneau",
+    "Ecureuil",
+    "etourneau",
     "pastenague",
     "Punaise",
     "Cigogne",
@@ -227,5 +227,30 @@ array(
     "Yak",
     "Zèbre"
 );
+function Unaccent($string)
+{
+    return preg_replace('~&([a-z]{1,2})(acute|cedil|circ|grave|lig|orn|ring|slash|th|tilde|uml);~i', '$1', htmlentities($string, ENT_QUOTES, 'UTF-8'));
+}
+
+// map to uppercase
+$animals = array_map('strtoupper', $animals);
+
+
+$groupedAnimals = array();
+foreach ($animals as $animal) {
+    $firstLetter = substr($animal, 0, 1);
+    // remove accents and to uppercase
+    $firstLetter = Unaccent($firstLetter);
+    $firstLetter = strtoupper($firstLetter);
+
+    
+    if (!isset($groupedAnimals[$firstLetter])) {
+        $groupedAnimals[$firstLetter] = array();
+    }
+    $groupedAnimals[$firstLetter][] = $animal;
+}
+
+ksort($groupedAnimals);
+
 
 ?>
