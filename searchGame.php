@@ -99,8 +99,13 @@ $allGamesDetails = getPublicGames('FRA',0,2,''); // on récupère toutes les par
 <div class="container mt-5 mb-3">
     <div class="row">
         <?php
-
-        $currentGame = getGameInProgressStartedOrNotForUser($_SESSION['user']); // on récupère la partie en cours de l'utilisateur
+        if (isset($_SESSION['user'])){
+            $currentGame = getGameInProgressStartedOrNotForUser($_SESSION['user']); // on récupère la partie en cours de l'utilisateur
+        }
+        else{
+            $currentGame = null;
+        }
+       
 
         if ($currentGame){
             $mode = intval($currentGame->Mode) == 0 ? "Classique" : "spécial";
@@ -187,7 +192,7 @@ $allGamesDetails = getPublicGames('FRA',0,2,''); // on récupère toutes les par
 
 <br>
 <br>
-<h1 class="text-center">Partie en cours <i class="bi bi-clock-history"></i></h1>
+
 
 
 

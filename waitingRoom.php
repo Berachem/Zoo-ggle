@@ -10,19 +10,16 @@ if (!isset($_SESSION["user"])) {
     header("Location: index.php?notConnected=true");
     exit;
 }
-$currentGameStarted = getGameStarted($_SESSION["user"]);
 $currentGameNotStartedYet = getGameNotStartedYet($_SESSION["user"]);
 
 // si l'utilisateur est connecté, mais qu'il n'est pas dans une partie, on le redirige vers la page d'accueil
-if (!$currentGameStarted && !$currentGameNotStartedYet) {
+if ( !$currentGameNotStartedYet) {
     header("Location: index.php?notInGame=true");
     exit;
 }
 
-// si l'utilisateur est connecté et dans une partie mais qui a déjà commencé, on le redirige vers la page de la partie
-if ($currentGameStarted) {
-    header("Location: game.php");
-    exit;
+if (!$currentGameNotStartedYet){
+    header("Location : game.php");
 }
 
 include("includes/header.inc.php");

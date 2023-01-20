@@ -34,10 +34,10 @@ function getPlayers($id) {
 }
 
 // Fonction qui renvoie true si la partie a commencé, false sinon
-function getGameStarted($id) {
+function getGameStarted($idGame) {
     global $db;
     $query = "SELECT DateDebutPartie FROM B_Partie WHERE IdPartie = ? AND DateDebutPartie IS NOT NULL";
-    $params = [[1, $id, PDO::PARAM_INT]];
+    $params = [[1, $idGame, PDO::PARAM_INT]];
     $result = $db->execQuery($query, $params);
     if (count($result) == 0) {
         return null;
@@ -472,7 +472,7 @@ function getPublicGames($langue, $mode, $nbJoueurs, $name) {
 // order by Score DESC
 function getLeaderBoardLastGameOfUser($idJoueur){
     global $db;
-    $query = "SELECT Pseudo, Logo, Score, IdJoueur, IdPartie FROM B_Joueur, B_Jouer, B_Partie WHERE B_Joueur.IdJoueur = B_Jouer.IdJoueur AND B_Jouer.IdPartie = B_Partie.IdPartie AND B_Partie.IdPartie = (SELECT MAX(IdPartie) FROM B_Partie WHERE IdJoueur = ?) ORDER BY Score DESC";
+    $query = "SELECT B_Joueur.Pseudo, B_Joueur.Logo, B_Jouer.Score, B_Joueur.IdJoueur, B_Partie.IdPartie FROM B_Joueur, B_Jouer, B_Partie WHERE B_Joueur.IdJoueur = B_Jouer.IdJoueur AND B_Jouer.IdPartie = B_Partie.IdPartie AND B_Partie.IdPartie = (SELECT MAX(IdPartie) FROM B_Jouer b WHERE b.IdJoueur = ?) ORDER BY Score DESC";
     $params = [[1, $idJoueur, PDO::PARAM_INT]];
     $result = $db->execQuery($query, $params);
     return $result;
@@ -547,7 +547,9 @@ function endAGame($idGame){
 
     $players = getPlayers($idGame);
     foreach($players as $player){
+ 
         $score = getScoreOfPlayerInGame($player->IdJoueur, $idGame);
+        
         $query = "UPDATE B_Jouer SET Score = ? WHERE IdJoueur = ? AND IdPartie = ?";
         $params = [
             [1, $score, PDO::PARAM_INT],
@@ -571,9 +573,9 @@ function getScoreOfPlayerInGame($idJoueur,$idGame){
    
     if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
         // lance le programme en .exe
-        $result = shell_exec('.\server\game_motor\sources\score.exe '.$allValidWords);
+        $result = shell_exec('.\..\server\game_motor\sources\score.exe '.$allValidWords);
     } else {
-        $result = shell_exec('./server/game_motor/executables_LINUX/score '.$allValidWords);
+        $result = shell_exec('./../server/game_motor/executables_LINUX/score '.$allValidWords);
     }
     // split le résultat en tableau
     $result = trim($result);

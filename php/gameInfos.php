@@ -39,16 +39,16 @@ if (isset($_SESSION["user"])) {
         $infos = array(
             "success" => true,
             "players" => $players,
-            "gameEnded" => $gameEnded,
+            "gameEnded" => $gameEnded ? 1 : 0,
             "timePassed" => $timePassed,
             "foundedWords" => $validWords,
-            "idChef" => $game->IdChef,
+            "IdChef" => $game->IdChef
         );
         echo json_encode($infos);
     }else{
         $infos = array(
-            "success" => false,
-            "error" => "no game in progress"
+            "success" => true,
+            "gameEnded" => true
         );
         echo json_encode($infos);
     }

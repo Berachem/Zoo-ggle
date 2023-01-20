@@ -36,15 +36,17 @@ if ($game == null) {
     <!-- Features section-->
     <section id="jeu">
         <center>    
+            <br>
+            <br>
             <div class="spinner-border text-primary" role="status">
                 <span class="sr-only"></span>
             </div>
-        </center>
-        <h1 class="text-center" id="timePassed"
-            style="font-family: 'Roboto', sans-serif; font-size: 50px; font-weight: 700; color: #000; margin-top: 100px; margin-bottom: 50px;">
-        </h1>
+        
+            <h1 class="text-center" id="timePassed"
+                style="font-family: 'Roboto', sans-serif; font-size: 50px; font-weight: 700; color: #000; margin-top: 100px; margin-bottom: 50px;">
+            </h1>
        
-
+        </center>
               
 
         <style>
@@ -127,7 +129,11 @@ if ($game == null) {
                         <button type="reset" class="btn btn-secondary" onclick="resetField()">
                             Effacer
                         </button>
-                        <a href="php/endGame.php" class="btn btn-danger" style="display : none" id="endGameButton">Arrêter la partie !</a>
+                        <br>
+                        <br>
+                        <a href="php/endGame.php" class="btn btn-danger" style="display : none; width: 200px;" 
+                        id="endGameButton">
+                        Arrêter la partie !</a>
                     </center>
 
                     <br>
@@ -137,13 +143,28 @@ if ($game == null) {
                     </center>
                 
                     <script>
+                        
                         // call API php/gameInfos.php 
                         function updateGameLiveInfos(){
                             let xhttp = new XMLHttpRequest();
                             xhttp.onreadystatechange = function() {
                                 if (this.readyState == 4 && this.status == 200) {
-                                    //console.log("REGARDE MOI :" +this.responseText);
+                                    console.log("REGARDE MOI :" +this.responseText);
                                     let gameInfos = JSON.parse(this.responseText);
+
+                                    // s'il y a que deux attributs, c'est que la partie est finie
+                                    if (Object.keys(gameInfos).length == 2 && gameInfos.hasOwnProperty("gameEnded")){
+                                        console.log("partie finie");
+                                        window.location.href = "leaderboard.php";
+                                    
+                                    }
+
+
+
+                                    //console.log(gameInfos);
+
+                                    //console.log("moi : " + gameInfos.IdChef);
+                                    //console.log("chef : " + <?php echo $_SESSION["user"] ?>);
 
                                     // temps écoulé (current time - start time)
                                     document.getElementById("timePassed").innerHTML = gameInfos.timePassed;
@@ -158,18 +179,17 @@ if ($game == null) {
                                     }
 
                                     // liste des joueurs
-                                    let allPlayers = document.getElementById("allPlayers");
+                                    /* let allPlayers = document.getElementById("allPlayers");
                                     allPlayers.innerHTML = "";
                                     for (let i = 0; i < gameInfos.players.length; i++){
                                         let li = document.createElement("li");
                                         li.innerHTML = gameInfos.players[i];
                                         allPlayers.appendChild(li);
-                                    }
+                                    } */
 
-                                    if (gameInfos.gameEnded){
-                                        window.location.href = "leaderboard.php";
-                                    }
-                                    if (gameInfos.idChef == <?php echo $_SESSION['id'] ?>){
+                                    
+                                    if (parseInt(gameInfos.IdChef) == parseInt("<?php echo $_SESSION['user'] ?>")){
+                                        console.log("je suis le chef de la partie")
                                         document.getElementById("endGameButton").style.display = "block";
                                     }
                             
@@ -179,6 +199,7 @@ if ($game == null) {
                             xhttp.open("GET", "php/gameInfos.php", true);
                             xhttp.send();
                         }
+
 
                         // call API every 1 second
                         setInterval(updateGameLiveInfos, 1000);
