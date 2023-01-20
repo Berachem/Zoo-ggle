@@ -87,41 +87,59 @@ if(!isset($_SESSION['user'])) { // && false pour tester la page sans être conne
             </div>
         </div>';
 } 
-
+$allGamesDetails = getPublicGames('FRA',0,2,''); // on récupère toutes les parties publiques et non commencées
 ?>
+
+<br>
+<br>
+<h1 class="text-center">Rechercher une partie (<?php echo count($allGamesDetails); ?>)</h1>
+
+
 
 <div class="container mt-5 mb-3">
     <div class="row">
-       <!--  <div class="col-md-4">
-            <div class="game-card p-3 mb-2">
-                <div class="d-flex justify-content-between">
-                    <div class="d-flex flex-row align-items-center">
-                        <div class="icon"> <i class="bx bxl-mailchimp"></i> </div>
-                        <div class="ms-2 c-details">
-                            <h6 class="mb-0">Mailchimp</h6> <span>1 days ago</span>
-                        </div>
-                    </div>
-                    <div class="badge"> <span>Design</span> </div>
-                </div>
-                <div class="mt-5">
-                    <h3 class="heading">Senior Product<br>Designer-Singapore</h3>
-                    <div class="mt-5">
-                        <div class="progress">
-                            <div class="progress-bar" role="progressbar" style="width: 50%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
-                        </div>
-                        <div class="mt-3"> <span class="text1">32 Applied <span class="text2">of 50 capacity</span></span> </div>
-                    </div>
-                </div>
-            </div>
-        </div> -->
         <?php
-        $allGamesDetails = getPublicGames('FRA',0,2,''); // on récupère toutes les parties publiques et non commencées
+
+        $currentGame = getGameInProgressForUser($_SESSION['user']); // on récupère la partie en cours de l'utilisateur
+
+        if ($currentGame){
+            $mode = intval($currentGame->Mode) == 0 ? "Classique" : "spécial";
+            echo '
+            <h2 class="text-center">Vous avez une partie en cours !</h2>
+            <div class="col-md-4 shadow-hover"  style="border: 1px solid #eee; border-radius: 10px; background-color: #faebeb; margin: 0 auto; ">
+                <div class="game-card p-3 mb-2">
+                    <div class="d-flex justify-content-between">
+                        <div class="d-flex flex-row align-items-center">
+                            <div class="icon"> 
+                            <img src="assets/playersLogos/default.png" width="50" height="50">
+                            </div>
+                            <div class="ms-2 c-details">
+                                <h6 class="mb-0">Chef : <u> <a href="profile.php?pseudo='.getPseudoById($currentGame->IdChef).'">'.getPseudoById($currentGame->IdChef).'</a></u></h6>
+                                En cours <i class="bi bi-circle-fill" style="color: red;"></i>
+                            </div>
+                        </div>
+                        <div class="badge">
+                            <span class="text1">
+                            '.$mode.'
+                            </span>
+                        </div>
+                    </div>
+                    
+                </div>
+                <a class="btn btn-primary" href="waintingRoom.php?gameId='.$currentGame->IdPartie.'">
+                    <i class="bi bi-controller"></i> Rejoindre la partie
+                    </a>
+            </div>
+            <br>
+            
+            ';
 
 
-        
+        }
+     
 
         foreach ($allGamesDetails as $gameDetails) {
-            $mode = intval($gameDetails->Mode) == 0 ? "classique" : "spécial";
+            $mode = intval($gameDetails->Mode) == 0 ? "Classique" : "spécial";
             
 
 
@@ -135,7 +153,7 @@ if(!isset($_SESSION['user'])) { // && false pour tester la page sans être conne
                             
                             </div>
                             <div class="ms-2 c-details">
-                                <h6 class="mb-0">Chef : <u> <a href="checkProfilePage?pseudo='.getPseudoById($gameDetails->IdChef).'">'.getPseudoById($gameDetails->IdChef).'</a></u>
+                                <h6 class="mb-0">Chef : <u> <a href="profile.php?pseudo='.getPseudoById($gameDetails->IdChef).'">'.getPseudoById($gameDetails->IdChef).'</a></u>
                                 </h6> 
                             </div>
                         </div>
@@ -166,6 +184,11 @@ if(!isset($_SESSION['user'])) { // && false pour tester la page sans être conne
         
     </div>
 </div>
+
+<br>
+<br>
+<h1 class="text-center">Partie en cours <i class="bi bi-clock-history"></i></h1>
+
 
 
 <?php

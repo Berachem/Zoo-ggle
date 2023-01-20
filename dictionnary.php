@@ -1,4 +1,5 @@
 <?php
+session_start();
 include('includes/header.inc.php');
 
 function implode_recursive(string $separator, array $array): string

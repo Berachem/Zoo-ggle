@@ -1,4 +1,5 @@
 <?php
+require 'php/lib/parse.env.php';
 require 'php/Connexion.php';
 require 'php/functions.php';
 session_start();
@@ -9,7 +10,7 @@ session_start();
 if (!isset($_SESSION["user"])) {
     header("Location: index.php?notConnected=true");
 }elseif (isset($_POST["name"]) && isset($_POST["langue"]) && isset($_POST["taille"]) && isset($_POST["mode"])) {
-    createGame(
+   $idGame =  createGame(
         $_SESSION["user"],
         $_POST["name"],
         $_POST["langue"],
@@ -18,6 +19,12 @@ if (!isset($_SESSION["user"])) {
         $_POST["public"],
         intval($_POST["nbjoueurs"])
     );
+
+    if (!$idGame) {
+        header("Location: index.php?error=true");
+        exit;
+    }
+
     header("Location: index.php?gameCreated=true");
 } else {
     header("Location: index.php?error=true");

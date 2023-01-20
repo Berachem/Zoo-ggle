@@ -7,27 +7,48 @@ MLD:
 
 */
 
-
-// Fonction qui renvoie les données de la partie en cours du joueur $id (en comparant la date début la date actuelle OU si la date début est NULL et que dans B_Jouer son Score est à -1 ) FIXME: à tester 
-function getCurrentGame($userID){
+// fonction qui renvoie des données de la partie en cours du user $id
+// (en regardant les scores, et en regardant la date de début et de fin de la partie)
+function getGameInProgressForUser($id) {
     global $db;
-    $query = "SELECT * FROM B_Partie WHERE IdPartie IN (SELECT IdPartie FROM B_Jouer WHERE IdJoueur = ? AND (DateDebut <= NOW() OR (DateDebut IS NULL AND Score = -1)))";
-    $params = [[1, $userID, PDO::PARAM_INT]];
-    $game = $db->execQuery($query, $params);
-    return $game;
-
+    $query = "SELECT * FROM B_Partie bp WHERE bp.IdPartie IN (SELECT b.IdPartie FROM B_Jouer b WHERE b.IdJoueur = ? AND b.Score = -1 AND b.IdPartie IN (SELECT IdPartie FROM B_Partie WHERE DateFinPartie IS NULL))";
+    $params = [
+        [1, $id, PDO::PARAM_INT]
+    ];
+    $result = $db->execQuery($query, $params);
+    if (count($result) == 0) {
+        return null;
+    }
+    return $result[0];
 }
 
+// Fonction qui ajoute un joueur dans le salon de la partie $idPartie (en créant une ligne dans la table B_Jouer avec le score à -1))
+function addPlayerToWaitingRoomForGame($userID, $gameID){
+    global $db;
+    $query = "INSERT INTO B_Jouer (IdJoueur, IdPartie, Score) VALUES (?, ?, -1)";
+    $params = [[1, $userID, PDO::PARAM_INT], [2, $gameID, PDO::PARAM_INT]];
+    $db->execQuery($query, $params);
+} 
 
 
 // Fonction qui renvoie la liste des mots valides pour la partie $idPartie proposés par le joueur $id
-function getValidWordsListByPlayer($userID, $gameID){
+function getValidsWordsListByPlayerInGame($userID, $gameID){
     global $db;
     $query = "SELECT Libelle FROM B_Proposer WHERE IdJoueur = ? AND IdPartie = ? AND EstValide = 1";
     $params = [[1, $userID, PDO::PARAM_INT], [2, $gameID, PDO::PARAM_INT]];
     $words = $db->execQuery($query, $params);
     return $words;
 }
+
+// Fonction qui renvoie la liste des mots pour la partie $idPartie proposés par le joueur $id
+function getAllWordsListByPlayerInGame($userID, $gameID){
+    global $db;
+    $query = "SELECT Libelle FROM B_Proposer WHERE IdJoueur = ? AND IdPartie = ?";
+    $params = [[1, $userID, PDO::PARAM_INT], [2, $gameID, PDO::PARAM_INT]];
+    $words = $db->execQuery($query, $params);
+    return $words;
+}
+
 
 
 
@@ -65,6 +86,95 @@ function getPseudoById($id) {
     return $pseudo[0]->Pseudo;
 }
 
+// fonction qui renvoie le lien vers l'image du joueur à partir de son ID
+function getLogoPathById($id) {
+    global $db;
+    $query = "SELECT Logo FROM B_Joueur WHERE IdJoueur = ?";
+    $params = [[1, $id, PDO::PARAM_INT]];
+    $hash = $db->execQuery($query, $params);
+    if ($hash[0]->Logo == NULL) {
+        return "assets/playersLogos/default.png";
+    } else {
+        return "assets/playersLogos/" . $hash[0]->Logo;
+    }
+}
+
+// Fonction qui renvoie l'ID d'un joueur à partir de son pseudo
+function getIdByPseudo($pseudo) {
+    global $db;
+    $query = "SELECT IdJoueur FROM B_Joueur WHERE Pseudo = ?";
+    $params = [[1, $pseudo, PDO::PARAM_STR]];
+    $id = $db->execQuery($query, $params);
+    return $id[0]->IdJoueur;
+}
+
+
+// renvoie les informations d'un joueur à partir de son ID (Table B_Joueur, somme des scores de toutes les parties jouées par le joueur où score != -1 (as score), nombre de parties jouées par le joueur (as gamesPlayed))
+function getUserStatistics($id) {
+    global $db;
+    $query = "SELECT * FROM B_Joueur WHERE IdJoueur = ?";
+    $params = [[1, $id, PDO::PARAM_INT]];
+    $user = $db->execQuery($query, $params);
+    $query = "SELECT SUM(Score) as score FROM B_Jouer WHERE IdJoueur = ? AND Score != -1";
+    $params = [[1, $id, PDO::PARAM_INT]];
+    $score = $db->execQuery($query, $params);
+    $query = "SELECT COUNT(IdPartie) as gamesPlayed FROM B_Jouer WHERE IdJoueur = ?";
+    $params = [[1, $id, PDO::PARAM_INT]];
+    $gamesPlayed = $db->execQuery($query, $params);
+    $user[0]->score = $score[0]->score;
+    $user[0]->gamesPlayed = $gamesPlayed[0]->gamesPlayed;
+    return $user;
+}
+
+/*
+CREATE TABLE B_Mot(
+   Libelle VARCHAR(200),
+   PRIMARY KEY(Libelle)
+);
+
+CREATE TABLE B_Jouer(
+   IdJoueur INT,
+   IdPartie INT,
+   Score INT,
+   PRIMARY KEY(IdJoueur, IdPartie),
+   FOREIGN KEY(IdJoueur) REFERENCES B_Joueur(IdJoueur),
+   FOREIGN KEY(IdPartie) REFERENCES B_Partie(IdPartie)
+);
+
+CREATE TABLE B_Proposer(
+   IdJoueur INT,
+   IdPartie INT,
+   Libelle VARCHAR(200),
+   DateProposition DATETIME,
+   EstValide TINYINT,
+   PRIMARY KEY(IdJoueur, IdPartie, Libelle),
+   FOREIGN KEY(IdJoueur) REFERENCES B_Joueur(IdJoueur),
+   FOREIGN KEY(IdPartie) REFERENCES B_Partie(IdPartie),
+   FOREIGN KEY(Libelle) REFERENCES B_Mot(Libelle)
+);
+
+*/
+
+function getAllWordsProposedByUser($id) {
+    global $db;
+    $query = "SELECT Libelle FROM B_Proposer WHERE IdJoueur = ?";
+    $params = [[1, $id, PDO::PARAM_INT]];
+    $words = $db->execQuery($query, $params);
+    return $words;
+}
+
+function getAllValidsWordsProposedByUser($id) {
+    global $db;
+    $query = "SELECT Libelle FROM B_Proposer WHERE IdJoueur = ? AND EstValide = 1";
+    $params = [[1, $id, PDO::PARAM_INT]];
+    $words = $db->execQuery($query, $params);
+    return $words;
+}
+
+
+
+
+
 
 /* 
 Renvoie toutes les données de toutes les parties d'un joueur suivi de toutes les données de tous les joueurs de ces parties 
@@ -72,7 +182,7 @@ Renvoie toutes les données de toutes les parties d'un joueur suivi de toutes le
 */
 function getAllGamesPlayedByUser($id) {
     global $db;
-    $query = "SELECT * FROM B_Jouer, B_Partie, WHERE B_Jouer.IdJoueur = ? AND B_Jouer.IdPartie = B_Partie.IdPartie";
+    $query = "SELECT * FROM B_Jouer, B_Partie WHERE B_Jouer.IdPartie = B_Partie.IdPartie AND B_Jouer.IdJoueur = ?";
     $params = [[1, $id, PDO::PARAM_INT]];
     $games = $db->execQuery($query, $params);
     return $games;
@@ -135,9 +245,39 @@ function createGame($id, $name, $langue, $tailleGrille, $mode, $public, $nbJoueu
         [8, $nbJoueurs, PDO::PARAM_INT],
         [9, $id, PDO::PARAM_INT]
     ];
+    $result = $db->execQuery($query, $params);
 
-    $result = $db->execQuery($query, $params); 
-    return $result;
+    // récupère l'id de la partie créée
+    $query = "SELECT IdPartie FROM B_Partie WHERE NomPartie = ? AND LangueDico = ? AND Grille = ? AND TailleGrille = ? AND NombreMotsPossibles = ? AND Mode = ? AND EstPublic = ? AND NombreJoueursMax = ? AND IdChef = ?";
+    $params = [
+        [1, $name, PDO::PARAM_STR],
+        [2, $langue, PDO::PARAM_STR],
+        [3, $grid, PDO::PARAM_STR],
+        [4, $tailleGrille, PDO::PARAM_INT],
+        [5, $nbWords, PDO::PARAM_INT],
+        [6, $mode, PDO::PARAM_INT],
+        [7, $public],
+        [8, $nbJoueurs, PDO::PARAM_INT],
+        [9, $id, PDO::PARAM_INT]
+    ];
+    $result = $db->execQuery($query, $params);
+
+    // si la partie a bien été créée, on ajoute le joueur à la table B_Jouer
+    if ($result) {
+        $idPartie = $result[0]->IdPartie;
+        $query = "INSERT INTO B_Jouer (IdJoueur, IdPartie, Score) VALUES (?, ?, ?)";
+        $params = [
+            [1, $id, PDO::PARAM_INT],
+            [2, $idPartie, PDO::PARAM_INT],
+            [3, -1, PDO::PARAM_INT]
+        ];
+        $result = $db->execQuery($query, $params);
+        return true;
+    } else {
+        return false;
+    } 
+
+    
 
 }
 
@@ -206,20 +346,7 @@ function getPublicGames($langue, $mode, $nbJoueurs, $name) {
     return $games;
 }
 
-// Créer une fonction qui renvoie des données de la partie en cours du user $id
-// (en regardant les scores, et en regardant la date de début et de fin de la partie)
-function getGameInProgressForUser($id) {
-    global $db;
-    $query = "SELECT * FROM B_Partie p WHERE p.IdPartie IN (SELECT j.IdPartie FROM B_Jouer j WHERE IdJoueur = ?) AND p.DateFinPartie IS NULL";
-    $params = [
-        [1, $id, PDO::PARAM_INT]
-    ];
-    $result = $db->execQuery($query, $params);
-    if (count($result) == 0) {
-        return null;
-    }
-    return $result[0];
-}
+
 
 
 function formatDateToSentence($date){

@@ -35,6 +35,15 @@ class Connexion {
         }
     }
     
+    public function displayQuery($sql,Array $cond = null){
+        $textQuery = $sql;
+        if($cond){
+            foreach ($cond as $v) {
+                $textQuery = preg_replace('/\?/', $v[1], $textQuery, 1);
+            }
+        }
+        echo $textQuery;
+    }
 
     public function execQuery($sql,Array $cond = null, $debug = false){
         $stmt = $this->connec->prepare($sql);
@@ -46,21 +55,17 @@ class Connexion {
 
         $stmt->execute();    
         if ($debug) echo "<br><br><h1>DEBUG</h1><br>";
+        if ($debug) echo $this->displayQuery($sql,$cond)."<br><br>";
         if ($debug) echo $stmt->debugDumpParams();
         return $stmt->fetchAll();
         $stmt->closeCursor();
         $stmt=NULL;
     }
 
-    public function displayQuery($sql,Array $cond = null){
-        $textQuery = $sql;
-        if($cond){
-            foreach ($cond as $v) {
-                $textQuery = preg_replace('/\?/', $v[1], $textQuery, 1);
-            }
-        }
-        echo $textQuery;
+    public function lastInsertId(){
+        return $this->connec->lastInsertId();
     }
+
     
 
 
