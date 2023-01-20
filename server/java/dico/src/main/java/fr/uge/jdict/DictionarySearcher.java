@@ -407,22 +407,23 @@ public class DictionarySearcher {
 		
 		//java -classpath "Zoo-ggle\java\dico\target\classes" fr.uge.jdict.DictionarySearcher "Zoo-ggle\java\dico\dico" yaml:CONSTITUTION
 	
-		
+		/*
 		if (args.length != 2) {
 			System.out.println("Il faut 2 arguments : le chemin et le mot à rechercher");
 			return;
 		}
 		
+		
 
 		String path = args[0];
 		String mot = args[1];
-		
-		
-		
-		/*
-		String path = "dico";
-		String mot = "yaml:CONSTITUTION";
 		*/
+		
+		
+		
+		String path = "dico";
+		String mot = "yaml:LICORNE";
+		
 		
 
 		System.out.println("ARGUMENTS ! "+path+" : "+mot);
