@@ -49,7 +49,7 @@ function resetField(){
     mot.value = "";
 }
 
-function checkWord(word){
+function checkWord(word, foundedWords){
     $.ajax({
         url: 'php/wordCheck.php',
         type: 'POST',

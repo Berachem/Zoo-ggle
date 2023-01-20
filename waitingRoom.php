@@ -90,7 +90,7 @@ include("includes/header.inc.php");
                                                     "<u>Joueurs:</u> " + playersList + "<br>" + 
                                                     "<u>Partie lancée:</u> " + gameStarted;
                                 if (gameInfos.IdChef == <?php echo $_SESSION["user"] ?>) {
-                                    gameContainer.innerHTML += "<br><br><button class='btn btn-primary' href='php/game.php'>Lancer la partie</button>";
+                                    gameContainer.innerHTML += "<br><br><button class='btn btn-primary' href='php/startGame.php'>Lancer la partie</button>";
                                 }
                                     
 

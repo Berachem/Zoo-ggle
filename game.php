@@ -17,6 +17,11 @@ if (!getGameInProgressStartedOrNotForUser($_SESSION["user"])) {
     exit;
 }
 
+if (getGameNotStartedYet($_SESSION["user"])) {
+    header("Location: ../waitingRoom.php?idGame=" . getGameNotStartedYet($_SESSION["user"])->IdPartie);
+    exit;
+}
+
 $game = getGameInProgressStartedForUser($_SESSION["user"]);
 
 if (!$game){
@@ -29,9 +34,8 @@ if (!$game){
     <!-- Features section-->
     <section id="jeu">
 
-        <h1 class="text-center"
+        <h1 class="text-center" id="timeLeft"
             style="font-family: 'Roboto', sans-serif; font-size: 50px; font-weight: 700; color: #000; margin-top: 100px; margin-bottom: 50px;">
-            <?php echo $game->NomPartie; ?>
         </h1>
 
               
@@ -81,18 +85,21 @@ if (!$game){
                         
                     </style>
 
-
+            <script>
+                let foundedWords = [];
+            </script>
 
                     <?php
                     $result = $game->Grille;
+                    $sizeGrid = $game->TailleGrille;
 
 
                     echo "<table>";
 
-                        for ($i = 0; $i < 4; $i++) {
+                        for ($i = 0; $i < $sizeGrid; $i++) {
                             echo "<tr>";
-                            for ($j = 0; $j < 4; $j++) {
-                                echo "<td onclick='addToFieldByClick(this)'>" . $result[$i * 4 + $j] . "</td>";
+                            for ($j = 0; $j < $sizeGrid; $j++) {
+                                echo "<td onclick='addToFieldByClick(this)'>" . $result[$i * $sizeGrid + $j] . "</td>";
                             }
                             echo "</tr>";
                         }
@@ -102,7 +109,7 @@ if (!$game){
                     <br>
                     <center>
                         <input type="text" name="mot" id="mot" placeholder="Entrez un mot" onkeydown="upperCaseF(this)" minlength="1" required>
-                        <button type="submit" class="btn btn-success" onclick="checkWord(document.getElementById('mot').value)">
+                        <button type="submit" class="btn btn-success" onclick="foundedWords = checkWord(document.getElementById('mot').value, foundedWords)">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check" viewBox="0 0 16 16">
                                 <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3-3a.5.5 0 0 1 .708-.708L6.5 9.793l6.646-6.647a.5.5 0 0 1 .708 0z" />
 
@@ -117,7 +124,31 @@ if (!$game){
                     <br>
                     <center>
                         <ul id="word-found-list" style="list-style-type: none;"></ul>
+                        <button class="btn btn-secondary" onclick="resetWordFoundList()">Effacer la liste</button>
                     </center>
                 
+                    <script>
+                        // call API php/gameInfos.php 
+                        function updateGameLiveInfos(){
+                            let xhttp = new XMLHttpRequest();
+                            xhttp.onreadystatechange = function() {
+                                if (this.readyState == 4 && this.status == 200) {
+                                    let gameInfos = JSON.parse(this.responseText);
+                                    document.getElementById("timeLeft").innerHTML = gameInfos.timeLeft;
+                                    document.getElementById("word-found-list").innerHTML = gameInfos.foundedWords;
+                                    foundedWords = gameInfos.foundedWords;
+                                    if (gameInfos.gameEnded){
+                                        window.location.href = "gameOver.php";
+                                    }
+                                }
+                            };
+                            xhttp.open("GET", "php/gameInfos.php", true);
+                            xhttp.send();
+                        }
+
+                        // call API every 1 second
+                        setInterval(updateGameLiveInfos, 1000);
+                    </script>
+
         </section>
 
