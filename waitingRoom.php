@@ -50,25 +50,32 @@ include("includes/header.inc.php");
                             var response = JSON.parse(xhr.responseText);
                             if (response.success) {
                                 var gameInfos = response.gameInfos;
+                                
                                 var players = response.players;
                                 var pseudoChef = "";
                                 var logoChef = "";
+                                var indChef = -1;
                                 // remove chef from the list of other players 
                                 for (var i = 0; i < players.length; i++) {
                                     if (players[i].IdJoueur == gameInfos.IdChef) {
                                         pseudoChef = players[i].Pseudo;
                                         logoChef = players[i].Logo;
-                                        players.splice(i, 1);
+                                        indChef = i;
                                     }
+                                }
+                                if (indChef != -1) {
+                                    players.splice(indChef, 1);
                                 }
                                 playersList = "";
                                 for (var i = 0; i < players.length; i++) {
-                                    playersList =playersList+ "<a href='profile.php?pseudo='"+players[i].Pseudo+ "'>"+players[i].Pseudo+"<a> ,";
+                                    playersList =playersList+ "<a href='profile.php?pseudo="+players[i].Pseudo+ "'>"+players[i].Pseudo+"</a> ,";
                                 }
                                 
 
+
                                 playersList = playersList.slice(0, -2);
-                                var gameStarted = response.gameStarted == 1 ? true : false;
+                                var gameStarted = response.gameStarted;
+                                // si parti a déjà commencée, on redirige vers la page de la partie
                                 if (gameStarted) {
                                     window.location.href = "game.php";
                                 }
@@ -88,16 +95,20 @@ include("includes/header.inc.php");
                                                     "<u>Nombre de joueurs max:</u> " + gameInfos.NombreJoueursMax + "<br>" + 
                                                     "<u>Chef de la partie :</u> <a href='profile.php?pseudo=" + pseudoChef + "'>"+pseudoChef+"<a><br>" + 
                                                     "<u>Joueurs:</u> " + playersList + "<br>" + 
-                                                    "<u>Partie lancée:</u> " + gameStarted;
+                                                    "<u>Partie lancée:</u> " + gameStarted+ "<br><br>" +
+                                                    "<div class='spinner-border text-primary' role='status'>" +
+                                                    "<span class='visually-hidden'>Loading...</span>" +
+                                                    "</div>";
+
                                 if (gameInfos.IdChef == <?php echo $_SESSION["user"] ?>) {
-                                    gameContainer.innerHTML += "<br><br><button class='btn btn-primary' href='php/startGame.php'>Lancer la partie</button>";
+                                    gameContainer.innerHTML += "<br><br><a class='btn btn-primary' href='php/startGame.php'>Lancer la partie</a>";
                                 }
                                     
 
                             } else {
                                 console.log(response.error);
-                                // remove inner
-                                document.getElementById("gameDetails").innerHTML = "";
+                                gameContainer.innerHTML = "Une erreur est survenue lors de la mise à jour des informations de la partie.";
+                                
                             }
                         }
                     }

@@ -45,6 +45,23 @@ class Connexion {
         echo $textQuery;
     }
 
+    public function execCount($sql,Array $cond = null, $debug = false){
+        $stmt = $this->connec->prepare($sql);
+        if($cond){
+            foreach ($cond as $v) {
+                $stmt->bindParam($v[0],$v[1], PDO::PARAM_STR);
+            }
+        }
+
+        $stmt->execute();    
+        if ($debug) echo "<br><br><h1>DEBUG</h1><br>";
+        if ($debug) echo $this->displayQuery($sql,$cond)."<br><br>";
+        if ($debug) echo $stmt->debugDumpParams();
+        return $stmt->rowCount();
+        $stmt->closeCursor();
+        $stmt=NULL;
+    }
+
     public function execQuery($sql,Array $cond = null, $debug = false){
         $stmt = $this->connec->prepare($sql);
         if($cond){
@@ -58,6 +75,22 @@ class Connexion {
         if ($debug) echo $this->displayQuery($sql,$cond)."<br><br>";
         if ($debug) echo $stmt->debugDumpParams();
         return $stmt->fetchAll();
+        $stmt->closeCursor();
+        $stmt=NULL;
+    }
+
+    public function execOnly($sql,Array $cond = null, $debug = false){
+        $stmt = $this->connec->prepare($sql);
+        if($cond){
+            foreach ($cond as $v) {
+                $stmt->bindParam($v[0],$v[1], PDO::PARAM_STR);
+            }
+        }
+
+        $stmt->execute();    
+        if ($debug) echo "<br><br><h1>DEBUG</h1><br>";
+        if ($debug) echo $this->displayQuery($sql,$cond)."<br><br>";
+        if ($debug) echo $stmt->debugDumpParams();
         $stmt->closeCursor();
         $stmt=NULL;
     }

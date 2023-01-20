@@ -16,11 +16,33 @@ if (isset($_SESSION["user"])) {
     $game = getGameInProgressStartedForUser($_SESSION["user"]);
     if ($game) {
         $players = getPlayers($game->IdPartie);
+        // map
+        $players = array_map(function($player){
+            return $player->Pseudo;
+        }, $players);
+
         $gameEnded = getGameEnded($game->IdPartie);
+        // $timePassed (minutes : secondes)
+        $timePassed = time() - $game->DateDebutPartie;
+        $timePassed = gmdate("i:s", $timePassed);
+        // to String
+        $timePassed = strval($timePassed);
+
+        $validWords = getValidWordsForUser($_SESSION["user"], $game->IdPartie);
+
+        // map
+        $validWords = array_map(function($word){
+            return $word->Libelle;
+        }, $validWords);
+
+
         $infos = array(
             "success" => true,
             "players" => $players,
-            "gameEnded" => $gameEnded
+            "gameEnded" => $gameEnded,
+            "timePassed" => $timePassed,
+            "foundedWords" => $validWords,
+            "idChef" => $game->IdChef,
         );
         echo json_encode($infos);
     }else{

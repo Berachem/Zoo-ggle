@@ -94,7 +94,7 @@ function getGameNotStartedYet($id) {
 
 
 // fonction qui renvoie des données de la partie en cours du user $id
-// (en regardant les scores, et en regardant la date de début et de fin de la partie)
+// Fonction qui renvoie la partie en cours du joueur $id (en regardant si le score est à -1, si la date de début existe et que la date de fin est null)
 function getGameInProgressStartedOrNotForUser($id) {
     global $db;
     $query = "SELECT * FROM B_Partie bp WHERE bp.IdPartie IN (SELECT b.IdPartie FROM B_Jouer b WHERE b.IdJoueur = ? AND b.Score = -1 AND b.IdPartie IN (SELECT IdPartie FROM B_Partie WHERE DateFinPartie IS NULL))";
@@ -111,7 +111,7 @@ function getGameInProgressStartedOrNotForUser($id) {
 // Fonction qui renvoie la partie en cours du joueur $id (en regardant si le score est à -1, si la date de début existe et que la date de fin est null)
 function getGameInProgressStartedForUser($id) {
     global $db;
-    $query = "SELECT * FROM B_Partie bp WHERE bp.IdPartie IN (SELECT b.IdPartie FROM B_Jouer b WHERE b.IdJoueur = ? AND b.Score = -1 AND b.IdPartie IN (SELECT IdPartie FROM B_Partie WHERE DateFinPartie IS NULL))";
+    $query = "SELECT * FROM B_Partie bp WHERE bp.IdPartie IN (SELECT b.IdPartie FROM B_Jouer b WHERE b.IdJoueur = ? AND b.Score > -1 AND b.IdPartie IN (SELECT IdPartie FROM B_Partie WHERE DateFinPartie IS NULL))";
     $params = [
         [1, $id, PDO::PARAM_INT]
     ];
@@ -285,9 +285,6 @@ function getAllValidsWordsProposedByUser($id) {
 
 
 
-
-
-
 /* 
 Renvoie toutes les données de toutes les parties d'un joueur suivi de toutes les données de tous les joueurs de ces parties 
 (Table B_Jouer, B_Partie)
@@ -314,6 +311,18 @@ function getRandomGrid($tailleGrille) {
     $result = trim($result);
     $result = explode(" ", $result);
     return $result;
+}
+
+// Fonction qui renvoie la liste des mots valides pour saisie par l'utilisateur (sous forme de liste) dans la partie $idPartie
+function getValidWordsForUser($idJoueur,$idPartie) {
+    global $db;
+    $query = "SELECT Libelle FROM B_Proposer WHERE IdPartie = ? AND EstValide = 1 AND IdJoueur = ?";
+    $params = [
+        [1, $idPartie, PDO::PARAM_INT],
+        [2, $idJoueur, PDO::PARAM_INT]
+    ];
+    $words = $db->execQuery($query, $params);
+    return $words;
 }
 
 // fonction qui la liste des mots valides pour la grille $grid (sous forme de liste)
@@ -459,23 +468,62 @@ function getPublicGames($langue, $mode, $nbJoueurs, $name) {
     return $games;
 }
 
+// Fonction qui renvoie la liste des Pseudo, Logo, Score, IdJoueur et IdPartie des joueurs de la dernière partie jouée par un utilisateur 
+// order by Score DESC
+function getLeaderBoardLastGameOfUser($idJoueur){
+    global $db;
+    $query = "SELECT Pseudo, Logo, Score, IdJoueur, IdPartie FROM B_Joueur, B_Jouer, B_Partie WHERE B_Joueur.IdJoueur = B_Jouer.IdJoueur AND B_Jouer.IdPartie = B_Partie.IdPartie AND B_Partie.IdPartie = (SELECT MAX(IdPartie) FROM B_Partie WHERE IdJoueur = ?) ORDER BY Score DESC";
+    $params = [[1, $idJoueur, PDO::PARAM_INT]];
+    $result = $db->execQuery($query, $params);
+    return $result;
+}
 
+// Fonction qui insère un mot jouée par un utilisateur durant une partie et par la même occasion le mot dans la table des Mots.
 function addWordPlayedByAPlayer($idJoueur,$idPartie,$libelleMot,$estValide){
     global $db;
-    $query = "INSERT INTO B_Mot VALUES (?)";
-    $params = [[1, $libelleMot, PDO::PARAM_STR]];
-    $db->execQuery($query, $params,true);
 
-    $date = date("Y-m-d H:i:s");
-    $query = "INSERT INTO B_Proposer VALUES(?,?,?,?,?)";
-    $params = [
-        [1, $idJoueur, PDO::PARAM_INT],
-        [2, $idPartie, PDO::PARAM_INT],
-        [3, $libelleMot, PDO::PARAM_STR],
-        [4, $date, PDO::PARAM_STR],
-        [5, $estValide, PDO::PARAM_INT]
-    ];
-    $db->execQuery($query, $params,true);
+    $isWordAlreadyInWordTable = function($libelleMot) {
+        global $db;
+        $query = "SELECT * FROM B_Mot WHERE Libelle = ?";
+        $params = [[1, $libelleMot, PDO::PARAM_STR]];
+        $result = $db->execQuery($query, $params);
+        return count($result) > 0;
+    };
+
+    if (!$isWordAlreadyInWordTable($libelleMot)){
+        $query = "INSERT INTO B_Mot VALUES (?)";
+        $params = [[1, $libelleMot, PDO::PARAM_STR]];
+        $db->execOnly($query, $params);
+    }
+        
+    $isWordAlreadyProposedByPlayerInGame = function($idJoueur, $idPartie, $libelleMot) {
+        global $db;
+        $query = "SELECT * FROM B_Proposer WHERE IdJoueur = ? AND IdPartie = ? AND Libelle = ?";
+        $params = [
+            [1, $idJoueur, PDO::PARAM_INT],
+            [2, $idPartie, PDO::PARAM_INT],
+            [3, $libelleMot, PDO::PARAM_STR]
+        ];
+        $result = $db->execQuery($query, $params);
+        return count($result) > 0;
+    };
+
+    if (!$isWordAlreadyProposedByPlayerInGame($idJoueur, $idPartie, $libelleMot)) {
+        $date = date("Y-m-d H:i:s");
+        $query = "INSERT INTO B_Proposer VALUES(?,?,?,?,?)";
+        $params = [
+            [1, $idJoueur, PDO::PARAM_INT],
+            [2, $idPartie, PDO::PARAM_INT],
+            [3, $libelleMot, PDO::PARAM_STR],
+            [4, $date, PDO::PARAM_STR],
+            [5, $estValide, PDO::PARAM_INT]
+        ];
+        $db->execOnly($query, $params);
+    }
+
+
+
+
 }
 
 
@@ -485,7 +533,54 @@ function formatDateToSentence($date){
     return 'le '.$date;
 }
 
+function endAGame($idGame){
+    global $db;
+    
+    //pour chaque joueur mettre a jour score de fin
+    $date = date("Y-m-d H:i:s");
+    $query = "UPDATE B_Partie SET DateFinPartie = ? WHERE IdPartie = ?";
+    $params = [
+        [1, $date, PDO::PARAM_STR],
+        [2, $idGame, PDO::PARAM_INT]
+    ];  
+    $db->execOnly($query, $params);
 
+    $players = getPlayers($idGame);
+    foreach($players as $player){
+        $score = getScoreOfPlayerInGame($player->IdJoueur, $idGame);
+        $query = "UPDATE B_Jouer SET Score = ? WHERE IdJoueur = ? AND IdPartie = ?";
+        $params = [
+            [1, $score, PDO::PARAM_INT],
+            [2, $player->IdJoueur, PDO::PARAM_INT],
+            [3, $idGame, PDO::PARAM_INT]
+        ];
+        $db->execOnly($query, $params);
+
+    }    
+}
+
+function getScoreOfPlayerInGame($idJoueur,$idGame){
+    global $db;
+    $allValidWords = getValidWordsForUser($idJoueur, $idGame);
+    $allValidWords = array_map(function($word) {
+        return $word->Libelle;
+    }, $allValidWords);
+    $allValidWords = array_unique($allValidWords);
+    $allValidWords = implode(" ", $allValidWords);
+
+   
+    if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+        // lance le programme en .exe
+        $result = shell_exec('.\server\game_motor\sources\score.exe '.$allValidWords);
+    } else {
+        $result = shell_exec('./server/game_motor/executables_LINUX/score '.$allValidWords);
+    }
+    // split le résultat en tableau
+    $result = trim($result);
+    $result = intval($result);
+
+    return $result;   
+}
 
 
 ?>

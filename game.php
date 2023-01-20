@@ -1,31 +1,33 @@
 <?php
 
-require 'lib/parse.env.php';
+require 'php/lib/parse.env.php';
 require 'php/Connexion.php';
 require 'php/functions.php';
 session_start();
 
+include("includes/header.inc.php");
+
 // si le joueur n'est pas connecté, on le redirige vers la page de connexion
 if (!isset($_SESSION["user"])) {
-    header("Location: ../index.php?notConnected=true");
+    header("Location: index.php?notConnected=true");
     exit;
 }
 
 // si le joueur n'est pas dans une partie qui a commencé, on le redirige vers la page d'accueil
-if (!getGameInProgressStartedOrNotForUser($_SESSION["user"])) {
-    header("Location: ../index.php?notInGame=true");
+/* if (!getGameInProgressStartedOrNotForUser($_SESSION["user"])) {
+    header("Location: index.php?notInGame=true");
     exit;
-}
+} */
 
 if (getGameNotStartedYet($_SESSION["user"])) {
-    header("Location: ../waitingRoom.php?idGame=" . getGameNotStartedYet($_SESSION["user"])->IdPartie);
+    header("Location: waitingRoom.php?idGame=" . getGameNotStartedYet($_SESSION["user"])->IdPartie);
     exit;
 }
 
 $game = getGameInProgressStartedForUser($_SESSION["user"]);
 
-if (!$game){
-    header("Location: ../index.php?gameFail=true");
+if ($game == null) {
+    header("Location: index.php?gameFail=true");
     exit;
 }
 
@@ -33,10 +35,15 @@ if (!$game){
 
     <!-- Features section-->
     <section id="jeu">
-
-        <h1 class="text-center" id="timeLeft"
+        <center>    
+            <div class="spinner-border text-primary" role="status">
+                <span class="sr-only"></span>
+            </div>
+        </center>
+        <h1 class="text-center" id="timePassed"
             style="font-family: 'Roboto', sans-serif; font-size: 50px; font-weight: 700; color: #000; margin-top: 100px; margin-bottom: 50px;">
         </h1>
+       
 
               
 
@@ -91,6 +98,7 @@ if (!$game){
 
                     <?php
                     $result = $game->Grille;
+                    $result = explode(" ", $result);
                     $sizeGrid = $game->TailleGrille;
 
 
@@ -116,15 +124,16 @@ if (!$game){
                             </svg>
                             Valider
                         </button>
-                        <button type="reset" class="btn btn-danger" onclick="resetField()">
+                        <button type="reset" class="btn btn-secondary" onclick="resetField()">
                             Effacer
                         </button>
+                        <a href="php/endGame.php" class="btn btn-danger" style="display : none" id="endGameButton">Arrêter la partie !</a>
                     </center>
 
                     <br>
                     <center>
+                        <h3>Mots trouvés</h3>
                         <ul id="word-found-list" style="list-style-type: none;"></ul>
-                        <button class="btn btn-secondary" onclick="resetWordFoundList()">Effacer la liste</button>
                     </center>
                 
                     <script>
@@ -133,15 +142,40 @@ if (!$game){
                             let xhttp = new XMLHttpRequest();
                             xhttp.onreadystatechange = function() {
                                 if (this.readyState == 4 && this.status == 200) {
+                                    //console.log("REGARDE MOI :" +this.responseText);
                                     let gameInfos = JSON.parse(this.responseText);
-                                    document.getElementById("timeLeft").innerHTML = gameInfos.timeLeft;
-                                    document.getElementById("word-found-list").innerHTML = gameInfos.foundedWords;
-                                    foundedWords = gameInfos.foundedWords;
-                                    if (gameInfos.gameEnded){
-                                        window.location.href = "gameOver.php";
+
+                                    // temps écoulé (current time - start time)
+                                    document.getElementById("timePassed").innerHTML = gameInfos.timePassed;
+
+                                    // liste des mots trouvés
+                                    let wordFoundList = document.getElementById("word-found-list");
+                                    wordFoundList.innerHTML = "";
+                                    for (let i = 0; i < gameInfos.foundedWords.length; i++){
+                                        let li = document.createElement("li");
+                                        li.innerHTML = gameInfos.foundedWords[i];
+                                        wordFoundList.appendChild(li);
                                     }
+
+                                    // liste des joueurs
+                                    let allPlayers = document.getElementById("allPlayers");
+                                    allPlayers.innerHTML = "";
+                                    for (let i = 0; i < gameInfos.players.length; i++){
+                                        let li = document.createElement("li");
+                                        li.innerHTML = gameInfos.players[i];
+                                        allPlayers.appendChild(li);
+                                    }
+
+                                    if (gameInfos.gameEnded){
+                                        window.location.href = "leaderboard.php";
+                                    }
+                                    if (gameInfos.idChef == <?php echo $_SESSION['id'] ?>){
+                                        document.getElementById("endGameButton").style.display = "block";
+                                    }
+                            
                                 }
                             };
+                            
                             xhttp.open("GET", "php/gameInfos.php", true);
                             xhttp.send();
                         }
@@ -152,3 +186,7 @@ if (!$game){
 
         </section>
 
+
+<?php
+include("includes/footer.inc.php");
+?>
