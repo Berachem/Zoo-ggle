@@ -7,6 +7,77 @@ MLD:
 
 */
 
+// Fonction qui renvoie les infos d'une partie en fonction de son id
+function getGameInfos($id) {
+    global $db;
+    $query = "SELECT * FROM B_Partie WHERE IdPartie = ?";
+    $params = [[1, $id, PDO::PARAM_INT]];
+    $result = $db->execQuery($query, $params);
+    if (count($result) == 0) {
+        return null;
+    }
+    return $result[0];
+}
+
+// Fonction qui renvoie la liste des joueurs d'une partie en fonction de son id ET ses informations (Pseudo, Logo, IdJoueur)
+function getPlayers($id) {
+    global $db;
+    $query = "SELECT Pseudo,IdJoueur,Logo FROM B_Joueur bj WHERE bj.IdJoueur IN (SELECT IdJoueur FROM B_Jouer WHERE IdPartie = ?)";
+    $params = [[1, $id, PDO::PARAM_INT]];
+    $result = $db->execQuery($query, $params);
+    if (count($result) == 0) {
+        return null;
+    }
+    return $result;
+}
+
+// Fonction qui renvoie true si la partie a commencé, false sinon
+function getGameStarted($id) {
+    global $db;
+    $query = "SELECT DateDebutPartie FROM B_Partie WHERE IdPartie = ?";
+    $params = [[1, $id, PDO::PARAM_INT]];
+    $result = $db->execQuery($query, $params);
+    if (count($result) == 0) {
+        return null;
+    }
+    return $result[0]->DateDebutPartie != null;
+}
+
+// Fonction qui lance la partie $id
+function startGame($id) {
+    global $db;
+    $query = "UPDATE B_Partie SET DateDebutPartie = NOW() WHERE IdPartie = ?";
+    $params = [[1, $id, PDO::PARAM_INT]];
+    $db->execQuery($query, $params);
+
+    // On récupère les joueurs de la partie
+    $players = getPlayers($id);
+    // On leur donne un score de 0
+    foreach ($players as $player) {
+        $query = "UPDATE B_Jouer SET Score = 0 WHERE IdJoueur = ? AND IdPartie = ?";
+        $params = [
+            [1, $player->IdJoueur, PDO::PARAM_INT],
+            [2, $id, PDO::PARAM_INT]
+        ];
+        $db->execQuery($query, $params);
+
+    }
+}
+
+// Fonction qui renvoie l'id de la partie non commencée du joueur $id
+function getGameNotStartedYet($id) {
+    global $db;
+    $query = "SELECT IdPartie FROM B_Jouer WHERE IdJoueur = ? AND IdPartie IN (SELECT IdPartie FROM B_Partie WHERE DateDebutPartie IS NULL)";
+    $params = [[1, $id, PDO::PARAM_INT]];
+    $result = $db->execQuery($query, $params);
+    if (count($result) == 0) {
+        return null;
+    }
+    return $result[0]->IdPartie;
+}
+
+
+
 // fonction qui renvoie des données de la partie en cours du user $id
 // (en regardant les scores, et en regardant la date de début et de fin de la partie)
 function getGameInProgressForUser($id) {

@@ -149,7 +149,7 @@ if(!isset($_SESSION['user']) || empty($_SESSION['user'])){
                                 </button>";
                             }else{
                                 echo "
-                                <a href='php/waitingRoom.php' class='btn btn-primary rounded-pill px-3 mb-2 mb-lg-0'>
+                                <a href='waitingRoom.php' class='btn btn-primary rounded-pill px-3 mb-2 mb-lg-0'>
                                     <span class='d-flex align-items-center'>
                                         <span class='small'>
                                         <i class='bi bi-eye-fill'></i>
