@@ -67,9 +67,11 @@ include("includes/header.inc.php");
                                 }
                                 
 
-
                                 playersList = playersList.slice(0, -2);
-                                var gameStarted = response.gameStarted;
+                                var gameStarted = response.gameStarted == 1 ? true : false;
+                                if (gameStarted) {
+                                    window.location.href = "game.php";
+                                }
 
                                 // Mettre à jour l'affichage de la partie ici
                                 document.getElementById("gameDetails").style.display = "block";
@@ -88,12 +90,14 @@ include("includes/header.inc.php");
                                                     "<u>Joueurs:</u> " + playersList + "<br>" + 
                                                     "<u>Partie lancée:</u> " + gameStarted;
                                 if (gameInfos.IdChef == <?php echo $_SESSION["user"] ?>) {
-                                    gameContainer.innerHTML += "<br><br><button class='btn btn-primary' href='php/startGame.php'>Lancer la partie</button>";
+                                    gameContainer.innerHTML += "<br><br><button class='btn btn-primary' href='php/game.php'>Lancer la partie</button>";
                                 }
                                     
 
                             } else {
                                 console.log(response.error);
+                                // remove inner
+                                document.getElementById("gameDetails").innerHTML = "";
                             }
                         }
                     }

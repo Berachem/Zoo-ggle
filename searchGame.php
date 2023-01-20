@@ -100,7 +100,7 @@ $allGamesDetails = getPublicGames('FRA',0,2,''); // on récupère toutes les par
     <div class="row">
         <?php
 
-        $currentGame = getGameInProgressForUser($_SESSION['user']); // on récupère la partie en cours de l'utilisateur
+        $currentGame = getGameInProgressStartedOrNotForUser($_SESSION['user']); // on récupère la partie en cours de l'utilisateur
 
         if ($currentGame){
             $mode = intval($currentGame->Mode) == 0 ? "Classique" : "spécial";
@@ -126,7 +126,7 @@ $allGamesDetails = getPublicGames('FRA',0,2,''); // on récupère toutes les par
                     </div>
                     
                 </div>
-                <a class="btn btn-primary" href="waintingRoom.php?gameId='.$currentGame->IdPartie.'">
+                <a class="btn btn-primary" href="waitingRoom.php?idGame='.$currentGame->IdPartie.'">
                     <i class="bi bi-controller"></i> Rejoindre la partie
                     </a>
             </div>
@@ -171,7 +171,7 @@ $allGamesDetails = getPublicGames('FRA',0,2,''); // on récupère toutes les par
                         </div>
                     </div>
                     <center>
-                    <a class="btn btn-primary" href="joinGame.php?gameId='.$gameDetails->IdPartie.'">
+                    <a class="btn btn-primary" href="php/joinGame.php?idGame='.$gameDetails->IdPartie.'">
                     <i class="bi bi-controller"></i>
                     Rejoindre ('.getNbPlayersInWaitingRoom($gameDetails->IdPartie).'/'.$gameDetails->NombreJoueursMax.')
                     </a>

@@ -35,6 +35,20 @@ if (isset($_GET['pseudo'])) {
 
 $userStats = getUserStatistics($userID);
 
+// si l'utilisateur n'existe pas, on le redirige vers la page d'accueil
+if (count($userStats) == 0) {
+    echo '
+    <br>
+    <br>
+    <div class="container">
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <strong>Cet utilisateur n\'existe pas.</strong> <a href="index.php" class="alert-link">Retour à l\'accueil</a>
+                
+            </div>
+        </div>';
+    exit;
+}
+
 // all variables
 $profilPublic = $userStats[0]->ProfilPublic;
 
@@ -132,11 +146,16 @@ echo '<div class="container">
                                 <p class="card-text"><u>Score :</u> ' . $score . '</p>
                                 <p class="card-text"><u>Parties jouées :</u> ' . $gamesPlayed . '</p>
                                 <p class="card-text"><u>Mots proposés :</u> ' . $allWordsProposeds . '</p>
-                                <p class="card-text"><u>Mots validés :</u> ' . $allWordsValidated . '</p>
-                                <a href="editProfile.php" class="btn btn-primary">
-                                    <i class="bi bi-pencil-square"></i>
-                                    Modifier mon profil
-                                </a>
+                                <p class="card-text"><u>Mots validés :</u> ' . $allWordsValidated . '</p>';
+
+                                    if ($userID == $_SESSION['user']) {
+                                        echo ' <a href="editProfile.php" class="btn btn-primary">
+                                                    <i class="bi bi-pencil-square"></i>
+                                                    Modifier mon profil
+                                                </a>';
+                                    }
+
+                                echo'
                             </div>
                         </div>
                     </div>

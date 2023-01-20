@@ -132,13 +132,12 @@ if(!isset($_SESSION['user']) || empty($_SESSION['user'])){
                 <div class="collapse navbar-collapse" id="navbarResponsive">
                     <ul class="navbar-nav ms-auto me-4 my-3 my-lg-0">
                     <li class="nav-item"><a class="nav-link me-lg-3" href="searchGame.php">Rechercher une partie</a></li>
-                        <li class="nav-item"><a class="nav-link me-lg-3" href="dictionnary.php">Dictionnaire</a></li>
-                        <li class="nav-item"><a class="nav-link me-lg-3" href="profile.php">Profil</a></li>
+                    <li class="nav-item"><a class="nav-link me-lg-3" href="dictionnary.php">Dictionnaire</a></li>
                     </ul>
                     <?php
                         if($connected){
-                            //getGameInProgressForUser
-                            if (!getGameInProgressForUser($_SESSION["user"])){ // TODO : enlever le false
+                            //getGameInProgressStartedOrNotForUser
+                            if (!getGameInProgressStartedOrNotForUser($_SESSION["user"])){ // TODO : enlever le false
                                 echo "                            <button class='btn btn-primary rounded-pill px-3 mb-2 mb-lg-0' data-bs-toggle='modal'
                                 data-bs-target='#newgame'>
                                     <span class='d-flex align-items-center'>
@@ -157,6 +156,20 @@ if(!isset($_SESSION['user']) || empty($_SESSION['user'])){
                                     </span>
                                 </a>";
                             }
+                            // echo profil button with Logo and Pseudo
+                            $pathLogo = getLogoPathById($_SESSION["user"]);
+                            $pseudo = getPseudoById($_SESSION["user"]);
+                            echo "
+                            <a href='profile.php?pseudo=".$pseudo."' class='btn btn-secondary rounded-pill px-3 mb-2 mb-lg-0 mx-1'>
+                                <span class='d-flex align-items-center'>
+                                    <span class='small'>
+                                    <img src='".$pathLogo."' alt='logo' width='20' height='20' >
+                                    ".$pseudo."</span>
+                                </span>
+                            </a>
+                            ";
+
+
                             echo
                             "
                             <a href='php/disconnect.php' class='btn btn-warning rounded-pill px-3 mb-2 mb-lg-0 mx-1'>

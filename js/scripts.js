@@ -75,3 +75,8 @@ function checkWord(word, grid, time){
 
 
 
+
+function resetWordFoundList(){
+    document.getElementById("word-found-list").innerHTML = "";
+}
+

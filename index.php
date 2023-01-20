@@ -167,6 +167,8 @@ include('includes/header.inc.php');
                     <br>
                     <center>
                         <ul id="word-found-list" style="list-style-type: none;"></ul>
+                        <button class="btn btn-secondary" onclick="resetWordFoundList()">Effacer la liste</button>
+
                     </center>
                 
         </section>

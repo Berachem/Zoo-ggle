@@ -34,7 +34,7 @@ function getPlayers($id) {
 // Fonction qui renvoie true si la partie a commencé, false sinon
 function getGameStarted($id) {
     global $db;
-    $query = "SELECT DateDebutPartie FROM B_Partie WHERE IdPartie = ?";
+    $query = "SELECT DateDebutPartie FROM B_Partie WHERE IdPartie = ? AND DateDebutPartie IS NOT NULL";
     $params = [[1, $id, PDO::PARAM_INT]];
     $result = $db->execQuery($query, $params);
     if (count($result) == 0) {
@@ -80,7 +80,21 @@ function getGameNotStartedYet($id) {
 
 // fonction qui renvoie des données de la partie en cours du user $id
 // (en regardant les scores, et en regardant la date de début et de fin de la partie)
-function getGameInProgressForUser($id) {
+function getGameInProgressStartedOrNotForUser($id) {
+    global $db;
+    $query = "SELECT * FROM B_Partie bp WHERE bp.IdPartie IN (SELECT b.IdPartie FROM B_Jouer b WHERE b.IdJoueur = ? AND b.Score = -1 AND b.IdPartie IN (SELECT IdPartie FROM B_Partie WHERE DateFinPartie IS NULL))";
+    $params = [
+        [1, $id, PDO::PARAM_INT]
+    ];
+    $result = $db->execQuery($query, $params);
+    if (count($result) == 0) {
+        return null;
+    }
+    return $result[0];
+}
+
+// Fonction qui renvoie la partie en cours du joueur $id (en regardant si le score est à -1, si la date de début existe et que la date de fin est null)
+function getGameInProgressStartedForUser($id) {
     global $db;
     $query = "SELECT * FROM B_Partie bp WHERE bp.IdPartie IN (SELECT b.IdPartie FROM B_Jouer b WHERE b.IdJoueur = ? AND b.Score = -1 AND b.IdPartie IN (SELECT IdPartie FROM B_Partie WHERE DateFinPartie IS NULL))";
     $params = [
@@ -168,6 +182,18 @@ function getLogoPathById($id) {
     } else {
         return "assets/playersLogos/" . $hash[0]->Logo;
     }
+}
+
+//si la partie n'existe pas, on le redirige vers la page d'accuei
+function gameById($id) {
+    global $db;
+    $query = "SELECT * FROM B_Partie WHERE IdPartie = ?";
+    $params = [[1, $id, PDO::PARAM_INT]];
+    $game = $db->execQuery($query, $params);
+    if (count($game) == 0) {
+        return null;
+    }
+    return $game[0];
 }
 
 // Fonction qui renvoie l'ID d'un joueur à partir de son pseudo
