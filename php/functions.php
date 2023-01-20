@@ -296,12 +296,13 @@ function getRandomGrid($tailleGrille) {
         $result = shell_exec('./server/game_motor/executables_LINUX/grid_build server/data/frequences.txt '.$tailleGrille.' '.$tailleGrille);
     }
     // split le résultat en tableau
+    $result = trim($result);
     $result = explode(" ", $result);
     return $result;
 }
 
 // fonction qui la liste des mots valides pour la grille $grid (sous forme de liste)
-function getValidWordsForGrid($grid) {
+function getValidWordsForGrid($grid, $gridSize) {
     // if $grid is a list, convert it to a string
     if (is_array($grid)) {
         $grid = implode(" ", $grid);
@@ -309,9 +310,9 @@ function getValidWordsForGrid($grid) {
 
     if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
         // lance le programme en .exe
-        $result = shell_exec('.\server\game_motor\sources\solve.exe server/data/listeMot.lex '.$grid);
+        $result = shell_exec('.\server\game_motor\sources\solve.exe server/data/listeMot.lex 2 '.$gridSize.' '.$gridSize.' '.$grid);
     } else {
-        $result = shell_exec('./server/game_motor/executables_LINUX/solve server/data/listeMot.lex '.$grid);
+        $result = shell_exec('./../server/game_motor/executables_LINUX/solve ./../server/data/listeMot.lex 2 '.$gridSize.' '.$gridSize.' '.$grid);
     }
     
     return explode(" ", $result);
@@ -444,6 +445,23 @@ function getPublicGames($langue, $mode, $nbJoueurs, $name) {
 }
 
 
+function addWordPlayedByAPlayer($idJoueur,$idPartie,$libelleMot,$estValide){
+    global $db;
+    $query = "INSERT INTO B_Mot VALUES (?)";
+    $params = [[1, $libelleMot, PDO::PARAM_STR]];
+    $db->execQuery($query, $params,true);
+
+    $date = date("Y-m-d H:i:s");
+    $query = "INSERT INTO B_Proposer VALUES(?,?,?,?,?)";
+    $params = [
+        [1, $idJoueur, PDO::PARAM_INT],
+        [2, $idPartie, PDO::PARAM_INT],
+        [3, $libelleMot, PDO::PARAM_STR],
+        [4, $date, PDO::PARAM_STR],
+        [5, $estValide, PDO::PARAM_INT]
+    ];
+    $db->execQuery($query, $params,true);
+}
 
 
 function formatDateToSentence($date){

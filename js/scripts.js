@@ -49,9 +49,9 @@ function resetField(){
     mot.value = "";
 }
 
-function checkWord(word, grid, time){
-    // fetch the php (php/api/word_check.php) and send the word and the grid in POST
-    fetch('php/api/word_check.php', {
+function checkWord(word, grid){
+    // fetch the php (php/api/wordCheck.php) and send the word and the grid in POST
+    fetch('php/word_check.php', {
         method: 'POST',
         body: JSON.stringify({
             word: word
@@ -70,13 +70,37 @@ function checkWord(word, grid, time){
     }
     );
     resetField();
-        
+}
+function checkWordDemo(word, grid,foundedWords){
+    $.ajax({
+        url: 'php/word_check_demo.php',
+        type: 'POST',
+        data: {
+            word: word,
+            grid: grid
+        },
+        success: function(data) {
+            console.log("AVANT :"+data);
+            var result = JSON.parse(data);
+            if (result.success && !foundedWords.includes(word)) {
+                $("#word-found-list").append("<li>" + word + "</li>");
+                foundedWords.push(word);
+            }
+            console.log(" ===> Mot :"+word+",Success : "+result.success);
+            console.log("Data : " +data);
+            console.log("Data parsed: " +result);
+            console.log("List "+foundedWords);
+        }
+    });
+    resetField();
+    return foundedWords
 }
 
 
 
 
-function resetWordFoundList(){
+function resetWordFoundList() {
     document.getElementById("word-found-list").innerHTML = "";
+    foundedWords=[];
 }
 
