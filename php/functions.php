@@ -7,6 +7,8 @@ MLD:
 
 */
 
+
+
 // Fonction qui renvoie les infos d'une partie en fonction de son id
 function getGameInfos($id) {
     global $db;
@@ -43,6 +45,18 @@ function getGameStarted($id) {
     return $result[0]->DateDebutPartie != null;
 }
 
+// Fonction qui renvoie true si la partie est terminée, false sinon 
+function getGameEnded($idGame) {
+    global $db;
+    $query = "SELECT DateFinPartie FROM B_Partie WHERE IdPartie = ? AND DateFinPartie IS NOT NULL";
+    $params = [[1, $idGame, PDO::PARAM_INT]];
+    $result = $db->execQuery($query, $params);
+    if (count($result) == 0) {
+        return null;
+    }
+    return $result[0]->DateFinPartie != null;
+}
+
 // Fonction qui lance la partie $id
 function startGame($id) {
     global $db;
@@ -76,6 +90,7 @@ function getGameNotStartedYet($id) {
     return $result[0]->IdPartie;
 }
 
+// fonction qui renvoie la partie en
 
 
 // fonction qui renvoie des données de la partie en cours du user $id
