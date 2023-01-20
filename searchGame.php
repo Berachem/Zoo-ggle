@@ -1,14 +1,3 @@
-<?php
-
-// permet de chercher une partie parmi celle qui sont publiques (serachGame.php) et 
-//qui n'ont pas commencées (sans critères de recherche)
-
-require_once("php/functions.php");
-session_start();
-include('includes/header.inc.php');
-
-?>
-
 <style>
 .game-card {
     border: none;
@@ -69,6 +58,19 @@ include('includes/header.inc.php');
 
 
 </style>
+
+<?php
+
+// permet de chercher une partie parmi celle qui sont publiques (serachGame.php) et 
+//qui n'ont pas commencées (sans critères de recherche)
+
+require_once("php/functions.php");
+session_start();
+include('includes/header.inc.php');
+
+?>
+
+
 
 <br>
 <br>

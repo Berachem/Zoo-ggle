@@ -1,3 +1,34 @@
+<style>
+
+    .table-leader {
+        border-collapse: collapse;
+        width: 50%;
+        border: 1px solid #ddd;
+        font-size: 18px;
+    }
+
+    .table-leader th, .table-leader td {
+        text-align: left;
+        padding: 16px;
+    }
+
+    .table-leader tr {
+        border-bottom: 1px solid #ddd;
+    }
+
+    .table-leader tr.header, .table-leader tr:hover {
+        background-color: #f1f1f1;
+    }
+
+    .avatar {
+        vertical-align: middle;
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+    }
+
+</style>
+
 <?php
 
 require 'php/lib/parse.env.php';
@@ -45,36 +76,7 @@ echo "</table>";
 <a class="btn btn-primary" href="index.php" role="button">Retour à l'accueil</a>
 </center>
 
-<style>
 
-    .table-leader {
-        border-collapse: collapse;
-        width: 50%;
-        border: 1px solid #ddd;
-        font-size: 18px;
-    }
-
-    .table-leader th, .table-leader td {
-        text-align: left;
-        padding: 16px;
-    }
-
-    .table-leader tr {
-        border-bottom: 1px solid #ddd;
-    }
-
-    .table-leader tr.header, .table-leader tr:hover {
-        background-color: #f1f1f1;
-    }
-
-    .avatar {
-        vertical-align: middle;
-        width: 50px;
-        height: 50px;
-        border-radius: 50%;
-    }
-
-</style>
 
 
 <?php

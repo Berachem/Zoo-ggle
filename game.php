@@ -1,3 +1,48 @@
+
+        <style>
+                        /* agrandissement des cases de la grille */
+                        table, td, th {
+
+                            width: 50px;
+                            height: 50px;
+                            text-align: center;
+                           
+                        }
+
+                        table {
+                            margin: auto;
+                            border-spacing: 0;
+                            border-collapse: separate;
+                            border-radius: 10px;
+                            
+                        }
+                        
+
+                        td {
+                            border: 1px solid black;
+                            
+                            font-size: 65px;
+                            /* square the cell*/
+                            padding-left: 15px;
+                            padding-right: 15px;
+                            border-radius: 10px;
+                            /* police*/
+                            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif
+                        }
+                        /* animation ombre derrière la cas */
+                        td:hover {
+                            box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.5);
+                            transition: 0.5s;
+                        }
+
+                        .center{
+                            text-align: center;
+                        }
+                        
+
+                       
+                        
+                    </style>
 <?php
 
 require 'php/lib/parse.env.php';
@@ -48,51 +93,6 @@ if ($game == null) {
        
         </center>
               
-
-        <style>
-                        /* agrandissement des cases de la grille */
-                        table, td, th {
-
-                            width: 50px;
-                            height: 50px;
-                            text-align: center;
-                           
-                        }
-
-                        table {
-                            margin: auto;
-                            border-spacing: 0;
-                            border-collapse: separate;
-                            border-radius: 10px;
-                            
-                        }
-                        
-
-                        td {
-                            border: 1px solid black;
-                            
-                            font-size: 65px;
-                            /* square the cell*/
-                            padding-left: 15px;
-                            padding-right: 15px;
-                            border-radius: 10px;
-                            /* police*/
-                            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif
-                        }
-                        /* animation ombre derrière la cas */
-                        td:hover {
-                            box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.5);
-                            transition: 0.5s;
-                        }
-
-                        .center{
-                            text-align: center;
-                        }
-                        
-
-                       
-                        
-                    </style>
 
             <script>
                 let foundedWords = [];

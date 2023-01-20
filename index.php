@@ -1,94 +1,4 @@
-<?php  
-session_start();  
-
-include('includes/header.inc.php');
-require_once 'assets/animalsLists/animals_FRA.php';
-?>
-
-
-            <!-- arrow scroll down to -->
-    <style>
-        .arrow {
-            position: absolute;
-            top: 90%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 50px;
-            height: 50px;
-            border: 2px solid #fff;
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 20px;
-            color: #fff;
-            cursor: pointer;
-            transition: 0.5s;
-        }
-        .arrow:hover {
-            background: #fff;
-            color: #000;
-        }
-        .arrow::before {
-            content: "";
-            position: absolute;
-            top: -10px;
-            left: -10px;
-            width: 100%;
-            height: 100%;
-            border: 2px solid #fff;
-            border-radius: 50%;
-            z-index: -1;
-            transition: 0.5s;
-        }
-        .arrow:hover::before {
-            background: #fff;
-            color: #000;
-        }
-    </style>
-
-    <a class="arrow" href="#jeu">
-        <i class="bi bi-arrow-down"></i>
-    </a>
-
-        <!-- Mashead header-->
-        <header class="masthead">
-            <div class="container px-5">
-                <div class="row gx-5 align-items-center">
-                    <div class="col-lg-6">
-                        <!-- Mashead text and app badges-->
-                        <div class="mb-5 mb-lg-0 text-center text-lg-start">
-                            <h1 class="display-1 lh-1 mb-3">Jouez au Boggle orienté animaux.</h1>
-                            <p class="lead fw-normal text-muted mb-5">
-                                <span class="fw-bolder">Zoo-ggle</span> est un jeu de mot qui vous permet de jouer avec vos amis et de découvrir des animaux.
-                            </p>
-                            <div class="d-flex flex-column flex-lg-row align-items-center">
-                                <a class="me-lg-3 mb-4 mb-lg-0" href="#!"><img class="app-badge" src="assets/img/google-play-badge.svg" alt="..." /></a>
-                                (à venir)
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="col-lg-6">
-                        <!-- Mashead image-->
-                        <div class="text-center">
-                            <img class="img-fluid rounded-3 mb-4 mb-lg-0" src="assets/img/Pandas-pana.png" alt="..." />
-                        </div>
-            
-                    </div>
-                </div>
-            </div>
-        </header>
-
-        <!-- Features section-->
-        <section id="jeu">
-
-            <h1 class="text-center"
-                style="font-family: 'Roboto', sans-serif; font-size: 50px; font-weight: 700; color: #000; margin-top: 100px; margin-bottom: 50px;">
-                Entrainez-vous</h1>
-                
-
-        <style>
+<style>
                         /* agrandissement des cases de la grille */
                         table, td, th {
 
@@ -132,6 +42,100 @@ require_once 'assets/animalsLists/animals_FRA.php';
                        
                         
                     </style>
+
+                                <!-- arrow scroll down to -->
+    <style>
+        .arrow {
+            position: absolute;
+            top: 90%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 50px;
+            height: 50px;
+            border: 2px solid #fff;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 20px;
+            color: #fff;
+            cursor: pointer;
+            transition: 0.5s;
+        }
+        .arrow:hover {
+            background: #fff;
+            color: #000;
+        }
+        .arrow::before {
+            content: "";
+            position: absolute;
+            top: -10px;
+            left: -10px;
+            width: 100%;
+            height: 100%;
+            border: 2px solid #fff;
+            border-radius: 50%;
+            z-index: -1;
+            transition: 0.5s;
+        }
+        .arrow:hover::before {
+            background: #fff;
+            color: #000;
+        }
+    </style>
+
+<?php  
+session_start();  
+
+include('includes/header.inc.php');
+require_once 'assets/animalsLists/animals_FRA.php';
+?>
+
+
+
+
+    <a class="arrow" href="#jeu">
+        <i class="bi bi-arrow-down"></i>
+    </a>
+
+        <!-- Mashead header-->
+        <header class="masthead">
+            <div class="container px-5">
+                <div class="row gx-5 align-items-center">
+                    <div class="col-lg-6">
+                        <!-- Mashead text and app badges-->
+                        <div class="mb-5 mb-lg-0 text-center text-lg-start">
+                            <h1 class="display-1 lh-1 mb-3">Jouez au Boggle orienté animaux.</h1>
+                            <p class="lead fw-normal text-muted mb-5">
+                                <span class="fw-bolder">Zoo-ggle</span> est un jeu de mot qui vous permet de jouer avec vos amis et de découvrir des animaux.
+                            </p>
+                            <div class="d-flex flex-column flex-lg-row align-items-center">
+                                <a class="me-lg-3 mb-4 mb-lg-0" href="#!"><img class="app-badge" src="assets/img/google-play-badge.svg" alt="..." /></a>
+                                (à venir)
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-lg-6">
+                        <!-- Mashead image-->
+                        <div class="text-center">
+                            <img class="img-fluid rounded-3 mb-4 mb-lg-0" src="assets/img/Pandas-pana.png" alt="..." />
+                        </div>
+            
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Features section-->
+        <section id="jeu">
+
+            <h1 class="text-center"
+                style="font-family: 'Roboto', sans-serif; font-size: 50px; font-weight: 700; color: #000; margin-top: 100px; margin-bottom: 50px;">
+                Entrainez-vous</h1>
+                
+
+
 
                     <?php
                     $result = getRandomGrid(4);

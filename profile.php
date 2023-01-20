@@ -1,3 +1,71 @@
+<style>
+.game-card {
+    border: none;
+    border-radius: 10px
+}
+
+.c-details span {
+    font-weight: 300;
+    font-size: 13px
+}
+
+.icon {
+    width: 50px;
+    height: 50px;
+    background-color: #eee;
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 39px
+}
+
+.badge span {
+    background-color: #fffbec;
+    width: 60px;
+    height: 25px;
+    padding-bottom: 3px;
+    border-radius: 5px;
+    display: flex;
+    color: #fed85d;
+    justify-content: center;
+    align-items: center
+}
+
+.progress {
+    height: 10px;
+    border-radius: 10px
+}
+
+.progress div {
+    background-color: red
+}
+
+.text1 {
+    font-size: 14px;
+    font-weight: 600
+}
+
+.text2 {
+    color: #a5aec0
+}
+
+.pulsive {
+    animation: pulse 1s infinite;
+    animation-direction: alternate
+}
+
+@keyframes pulse {
+    from {
+        transform: scale(1)
+    }
+
+    to {
+        transform: scale(1.8)
+    }
+}
+</style>
+
 <?php
 
 // Profile page (profile.php)
@@ -187,73 +255,7 @@ echo '<div class="container">
     </div>';
 }
 ?>
-<style>
-.game-card {
-    border: none;
-    border-radius: 10px
-}
 
-.c-details span {
-    font-weight: 300;
-    font-size: 13px
-}
-
-.icon {
-    width: 50px;
-    height: 50px;
-    background-color: #eee;
-    border-radius: 15px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 39px
-}
-
-.badge span {
-    background-color: #fffbec;
-    width: 60px;
-    height: 25px;
-    padding-bottom: 3px;
-    border-radius: 5px;
-    display: flex;
-    color: #fed85d;
-    justify-content: center;
-    align-items: center
-}
-
-.progress {
-    height: 10px;
-    border-radius: 10px
-}
-
-.progress div {
-    background-color: red
-}
-
-.text1 {
-    font-size: 14px;
-    font-weight: 600
-}
-
-.text2 {
-    color: #a5aec0
-}
-
-.pulsive {
-    animation: pulse 1s infinite;
-    animation-direction: alternate
-}
-
-@keyframes pulse {
-    from {
-        transform: scale(1)
-    }
-
-    to {
-        transform: scale(1.8)
-    }
-}
-</style>
     <section>
 
         <h1 class="text-center">Historique de parties</h1>
