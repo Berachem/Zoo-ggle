@@ -261,7 +261,7 @@ public class DictionaryMaker
 	/**
 	 * Fonction qui crée les différents fichiers demandés
 	 */
-	public static void makeDictionnaries(String path,String lang,String returnName) {
+	public static void makeDictionnaries(String path,String lang,String returnName, String doDecompress) {
         
         //création  du dictionnaire pour les fréquences
         HashMap<String,Integer> dicoFreq = DictionaryMaker.createDicoFreq();
@@ -288,13 +288,16 @@ public class DictionaryMaker
         	
         	// ============= CREATION DES ENTREE SORTIES =============
         	//creation du buffer de lecture du xml
-	        
-        	BufferedInputStream input = new BufferedInputStream(new BZip2CompressorInputStream(new FileInputStream("C:\\Users\\Jlwis\\Desktop\\frwiktionary-20220601-pages-articles.xml.bz2")));
-			BufferedReader reader = new BufferedReader(new InputStreamReader(input));
-	        
-        	//File file=new File(path);
-	        //BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), "UTF-8"));
-	        //anciennes lignes pour fichier non compréssé
+        	BufferedReader reader;
+	        if(doDecompress.equals("1")) {
+	        	BufferedInputStream input = new BufferedInputStream(new BZip2CompressorInputStream(new FileInputStream("C:\\Users\\Jlwis\\Desktop\\frwiktionary-20220601-pages-articles.xml.bz2")));
+				reader = new BufferedReader(new InputStreamReader(input));
+	        }else if(doDecompress.equals("0")) {
+	        	File file=new File(path);
+		        reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), "UTF-8"));
+	        }else {
+	        	throw new IllegalArgumentException("Le 4eme argument doit soit etre a 1 (faire la decompression) sois a 0 (ne pas la faire)");
+	        }
 	        
         	
 	        //BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
@@ -535,26 +538,30 @@ public class DictionaryMaker
 		String fichierSauvegarde;
 		String langueCible;
 		String fichierXML;
+		String doDecompress;
 		
 		//changer le nombre d'arguments et le message pour le pipe
-		if (args.length != 3) {
+		if (args.length != 4) {
 			/*
-			System.out.println("Il faut 3 parametres : chemin vers le xml, la langue, le nom du fichier de stockage (sans extension)");
+			System.out.println("Il faut 4 parametres : chemin vers le xml, la langue, le nom du fichier de stockage (sans extension), 1 si il faut décompresser 0 sinon");
 			return;
 			*/
 			
 			fichierXML = "C:\\Users\\Jlwis\\Desktop\\frwiktionary-20220601-pages-articles.xml.bz2"; //args[0];
 			langueCible ="fr"; //args[1];
 			fichierSauvegarde ="dico"; //args[3];
+			doDecompress = "1";
+			
 		}
 		else{
 			//on récupère les arguments
 			fichierXML = args[0];
 			langueCible = args[1];
 			fichierSauvegarde = args[2];
+			doDecompress = args[3];
 		}
 		
 		
-    	DictionaryMaker.makeDictionnaries(fichierXML,langueCible,fichierSauvegarde);
+    	DictionaryMaker.makeDictionnaries(fichierXML,langueCible,fichierSauvegarde,doDecompress);
     } 
 }
