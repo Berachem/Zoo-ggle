@@ -1,5 +1,6 @@
 package fr.uge;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -12,6 +13,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+
+import org.apache.commons.compress.compressors.bzip2.BZip2CompressorInputStream;
 
 public class DictionaryMaker 
 {
@@ -285,10 +288,17 @@ public class DictionaryMaker
         	
         	// ============= CREATION DES ENTREE SORTIES =============
         	//creation du buffer de lecture du xml
-	        File file=new File(path);
-	        BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), "UTF-8"));
+	        
+        	BufferedInputStream input = new BufferedInputStream(new BZip2CompressorInputStream(new FileInputStream("C:\\Users\\Jlwis\\Desktop\\frwiktionary-20220601-pages-articles.xml.bz2")));
+			BufferedReader reader = new BufferedReader(new InputStreamReader(input));
+	        
+        	//File file=new File(path);
+	        //BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), "UTF-8"));
+	        //anciennes lignes pour fichier non compréssé
+	        
+        	
 	        //BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-	        //la ligne de code qu'il faudrait changer pour utiliser un pipe en théorie
+	        //la ligne de code qu'il faudrait changer pour utiliser un pipe en théorie (plus maintenant qu'on a des fichiers compressés
 	        
 	        //creation du writer pour le json
 	        RandomAccessFile writerJson = new RandomAccessFile(dicoJSON, "rw");
@@ -533,7 +543,7 @@ public class DictionaryMaker
 			return;
 			*/
 			
-			fichierXML = "C:\\Users\\Jlwis\\Desktop\\wiki-fr.xml"; //args[0];
+			fichierXML = "C:\\Users\\Jlwis\\Desktop\\frwiktionary-20220601-pages-articles.xml.bz2"; //args[0];
 			langueCible ="fr"; //args[1];
 			fichierSauvegarde ="dico"; //args[3];
 		}
