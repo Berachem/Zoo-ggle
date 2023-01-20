@@ -7,17 +7,28 @@ MLD:
 
 */
 
-
-// Fonction qui renvoie les données de la partie en cours du joueur $id (en comparant la date début la date actuelle OU si la date début est NULL et que dans B_Jouer son Score est à -1 ) FIXME: à tester 
-function getCurrentGame($userID){
+// fonction qui renvoie des données de la partie en cours du user $id
+// (en regardant les scores, et en regardant la date de début et de fin de la partie)
+function getGameInProgressForUser($id) {
     global $db;
-    $query = "SELECT * FROM B_Partie WHERE IdPartie IN (SELECT IdPartie FROM B_Jouer WHERE IdJoueur = ? AND (DateDebut <= NOW() OR (DateDebut IS NULL AND Score = -1)))";
-    $params = [[1, $userID, PDO::PARAM_INT]];
-    $game = $db->execQuery($query, $params);
-    return $game;
-
+    $query = "SELECT * FROM B_Partie bp WHERE bp.IdPartie IN (SELECT b.IdPartie FROM B_Jouer b WHERE b.IdJoueur = ? AND b.Score = -1 AND b.IdPartie IN (SELECT IdPartie FROM B_Partie WHERE DateFinPartie IS NULL))";
+    $params = [
+        [1, $id, PDO::PARAM_INT]
+    ];
+    $result = $db->execQuery($query, $params);
+    if (count($result) == 0) {
+        return null;
+    }
+    return $result[0];
 }
 
+// Fonction qui ajoute un joueur dans le salon de la partie $idPartie (en créant une ligne dans la table B_Jouer avec le score à -1))
+function addPlayerToWaitingRoomForGame($userID, $gameID){
+    global $db;
+    $query = "INSERT INTO B_Jouer (IdJoueur, IdPartie, Score) VALUES (?, ?, -1)";
+    $params = [[1, $userID, PDO::PARAM_INT], [2, $gameID, PDO::PARAM_INT]];
+    $db->execQuery($query, $params);
+} 
 
 
 // Fonction qui renvoie la liste des mots valides pour la partie $idPartie proposés par le joueur $id
@@ -234,9 +245,39 @@ function createGame($id, $name, $langue, $tailleGrille, $mode, $public, $nbJoueu
         [8, $nbJoueurs, PDO::PARAM_INT],
         [9, $id, PDO::PARAM_INT]
     ];
+    $result = $db->execQuery($query, $params);
 
-    $result = $db->execQuery($query, $params); 
-    return $result;
+    // récupère l'id de la partie créée
+    $query = "SELECT IdPartie FROM B_Partie WHERE NomPartie = ? AND LangueDico = ? AND Grille = ? AND TailleGrille = ? AND NombreMotsPossibles = ? AND Mode = ? AND EstPublic = ? AND NombreJoueursMax = ? AND IdChef = ?";
+    $params = [
+        [1, $name, PDO::PARAM_STR],
+        [2, $langue, PDO::PARAM_STR],
+        [3, $grid, PDO::PARAM_STR],
+        [4, $tailleGrille, PDO::PARAM_INT],
+        [5, $nbWords, PDO::PARAM_INT],
+        [6, $mode, PDO::PARAM_INT],
+        [7, $public],
+        [8, $nbJoueurs, PDO::PARAM_INT],
+        [9, $id, PDO::PARAM_INT]
+    ];
+    $result = $db->execQuery($query, $params);
+
+    // si la partie a bien été créée, on ajoute le joueur à la table B_Jouer
+    if ($result) {
+        $idPartie = $result[0]->IdPartie;
+        $query = "INSERT INTO B_Jouer (IdJoueur, IdPartie, Score) VALUES (?, ?, ?)";
+        $params = [
+            [1, $id, PDO::PARAM_INT],
+            [2, $idPartie, PDO::PARAM_INT],
+            [3, -1, PDO::PARAM_INT]
+        ];
+        $result = $db->execQuery($query, $params);
+        return true;
+    } else {
+        return false;
+    } 
+
+    
 
 }
 
@@ -305,20 +346,7 @@ function getPublicGames($langue, $mode, $nbJoueurs, $name) {
     return $games;
 }
 
-// Créer une fonction qui renvoie des données de la partie en cours du user $id
-// (en regardant les scores, et en regardant la date de début et de fin de la partie)
-function getGameInProgressForUser($id) {
-    global $db;
-    $query = "SELECT * FROM B_Partie p WHERE p.IdPartie IN (SELECT j.IdPartie FROM B_Jouer j WHERE IdJoueur = ?) AND p.DateFinPartie IS NULL";
-    $params = [
-        [1, $id, PDO::PARAM_INT]
-    ];
-    $result = $db->execQuery($query, $params);
-    if (count($result) == 0) {
-        return null;
-    }
-    return $result[0];
-}
+
 
 
 function formatDateToSentence($date){

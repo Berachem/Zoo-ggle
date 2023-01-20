@@ -9,15 +9,16 @@ include('includes/header.inc.php');
 
 echo '<br>
 <br>';
-
-if (!isset($_SESSION['user'])) {
+ 
+if (!isset($_SESSION['user']) && !isset($_GET['pseudo'])) {
     // badger is not logged in
-    echo '<div class="container">
+    echo '<br>
+    <br><div class="container">
             <div class="row">
                 <div class="col-md-12">
                     <div class="alert alert-danger" role="alert">
-                        <h4 class="alert-heading">Vous n\êtes pas connecté!</h4>
-                        <p>Vous avez besoin d\être connecté pour accéder à cette page.</p>
+                        <h4 class="alert-heading">Vous n\'êtes pas connecté!</h4>
+                        <p>Vous avez besoin d\'être connecté pour accéder à cette page.</p>
                         <hr>
                     </div>
                 </div>
@@ -25,7 +26,7 @@ if (!isset($_SESSION['user'])) {
         </div>';
     exit;
 }
-
+ 
 $userID = $_SESSION['user'];
 if (isset($_GET['pseudo'])) {
     $userID = getIdByPseudo($_GET['pseudo']);
@@ -37,23 +38,7 @@ $userStats = getUserStatistics($userID);
 // all variables
 $profilPublic = $userStats[0]->ProfilPublic;
 
-if ($profilPublic == 0) {
-    if ($userID != $_SESSION['user']) {
-        echo '<div class="container">
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="alert alert-danger" role="alert">
-                        <h4 class="alert-heading">Profil privé!</h4>
-                        <i class="bi bi-lock-fill"></i>
-                        <p>Ce profil est privé.</p>
-                        <hr>
-                    </div>
-                </div>
-            </div>
-        </div>';
-        exit;
-    }
-}
+
 
 
 
@@ -83,9 +68,9 @@ if ($description == null) {
 
 // profil public
 if ($profilPublic == 1) {
-    $profilPublic = "Oui";
+    $profilPublic = "Publique";
 } else {
-    $profilPublic = "Non";
+    $profilPublic = '<i class="bi bi-lock-fill"></i>'." Privé";
 }
 
 // date creation compte
@@ -127,7 +112,8 @@ if (count($allWordsValidated) == 0) {
 // display profile
 
 echo '<br><br><h1 class="text-center">Statistiques</h1>';
-
+if ($profilPublic == "Publique" || $userID == $_SESSION['user']) {
+      
 echo '<div class="container">
         <div class="row">
             <div class="col-md-12">
@@ -139,9 +125,8 @@ echo '<div class="container">
                             </div>
                             <div class="col-md-8">
                                 <h5 class="card-title"><u>Pseudo :</u> ' . $pseudo . '</h5>
-                                <p class="card-text"><u>Adresse mail :</u> ' . $mail . '</p>
                                 <p class="card-text"><u>Description :</u> ' . $description . '</p>
-                                <p class="card-text"><u>Profil public :</u> ' . $profilPublic . '</p>
+                                <p class="card-text"><u>Visibilité du profil :</u> ' . $profilPublic . '</p>
                                 <p class="card-text"><u>Date de création du compte :</u> ' . $dateCreationCompte . '</p>
                                 <p class="card-text"><u>Date de dernière connexion :</u> ' . $dateDerniereConnexion . '</p>
                                 <p class="card-text"><u>Score :</u> ' . $score . '</p>
@@ -159,6 +144,29 @@ echo '<div class="container">
             </div>
         </div>
     </div>';
+} else {
+    echo '<div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <img src="' .$logo. '" class="img-fluid" alt="Responsive image">
+                            </div>
+                            <div class="col-md-8">
+                                <h5 class="card-title"><u>Pseudo :</u> ' . $pseudo . '</h5>
+                                <p class="card-text"><u>Description :</u> ' . $description . '</p>
+                                <p class="card-text"><u>Visibilité du profil :</u> ' . $profilPublic . '</p>
+                                <p class="card-text"><u>Score :</u> ' . $score . '</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>';
+}
 ?>
 <style>
 .game-card {
@@ -247,7 +255,7 @@ echo '<div class="container">
 
                     $pourcentage =$allWordsListByPlayerNumber == 0 ? 0 :(int) ($allValidsWordsListByPlayerNumber / $allWordsListByPlayerNumber) * 100;
 
-                    $mode = intval($gameDetails->Mode) == 0 ? "classique" : "spécial";
+                    $mode = intval($gameDetails->Mode) == 0 ? "Classique" : "spécial";
                     $dateDebut = $gameDetails->DateDebutPartie == null ? "En cours <i class='bi bi-circle-fill pulsive' style='color: red;'></i>" : "jouée le ".$gameDetails->DateDebutPartie;
             
 

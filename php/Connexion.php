@@ -62,6 +62,10 @@ class Connexion {
         $stmt=NULL;
     }
 
+    public function lastInsertId(){
+        return $this->connec->lastInsertId();
+    }
+
     
 
 
