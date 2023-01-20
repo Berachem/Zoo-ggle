@@ -49,31 +49,33 @@ function resetField(){
     mot.value = "";
 }
 
-function checkWord(word, grid){
-    // fetch the php (php/api/wordCheck.php) and send the word and the grid in POST
-    fetch('php/word_check.php', {
-        method: 'POST',
-        body: JSON.stringify({
+function checkWord(word){
+    $.ajax({
+        url: 'php/wordCheck.php',
+        type: 'POST',
+        data: {
             word: word
-        })
-    })
-    .then(response => response.json())
-    .then(data => {
-        // if the word is valid, add it to the list and remove it from the grid
-        if (data.success) {
-            // TODO: add the word to the list of words found word-found-list
-
-            document.getElementById("word-found-list").innerHTML += "<li>"+word+"</li>";
-
+        },
+        success: function(data) {
+            console.log("AVANT :"+data);
+            var result = JSON.parse(data);
+            if (result.success && !foundedWords.includes(word)) {
+                $("#word-found-list").append("<li>" + word + "</li>");
+                foundedWords.push(word);
+            }
+            console.log(" ===> Mot :"+word+",Success : "+result.success);
+            console.log("Data : " +data);
+            console.log("Data parsed: " +result);
+            console.log("List "+foundedWords);
         }
-            console.log("Mot :"+word+",Success : "+data.success)
-    }
-    );
+    });
     resetField();
+    return foundedWords
 }
+
 function checkWordDemo(word, grid,foundedWords){
     $.ajax({
-        url: 'php/word_check_demo.php',
+        url: 'php/wordCheckDemo.php',
         type: 'POST',
         data: {
             word: word,

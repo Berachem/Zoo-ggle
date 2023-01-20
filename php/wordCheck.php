@@ -8,41 +8,41 @@ session_start();
 
 // si pas connecté renvoie un json avec success = false et l'erreur
 
-if (!isset($_SESSION["user"])) {
+if (!isset($_SESSION["user"]) || !isset($_POST["mot"])) {
     echo json_encode(array("success" => false, "error" => "Utilisateur non connecté"));
     exit();
 }
 
 
 $word = $_POST["mot"];
-$isDemo = $_POST["isDemo"];
-// TODO : Lucas
-
 // 1. Créer une fonction qui renvoie des données de la partie en cours du user
 
 $playerId = $_SESSION["user"];
-echo "Id joueur : $playerId";
+//echo "Id joueur : $playerId";
 $currentGame = getGameInProgressForUser($playerId);
-var_dump($currentGame);
+//var_dump($currentGame);
 
 
 // 2. Récupérer la grille de la partie
 $grid = $currentGame->Grille;
 $gameId = $currentGame->IdPartie;
 $gridSize = $currentGame->TailleGrille;
+/*
 echo "<br/> <br/>";
 echo "$gameId ";
 echo "$grid ";
 echo "$gridSize ";
+*/
 
 // 3. Appeller la fonction getValidWordsForGrid avec la grille
 
 $allValidWords = getValidWordsForGrid($grid,$gridSize);
+/*
 echo "LES résultats: ";
 print_r($allValidWords);
+*/
 // 4. Vérifier si le mot est dans le tableau renvoyé par la fonction
 
-// TODO AJOUTER DANS LA BDD
 
 if (in_array($word, $allValidWords)) {
     // json avec success = true et le mot
