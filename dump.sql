@@ -77,3 +77,12 @@ CREATE TABLE B_Proposer(
    FOREIGN KEY(IdPartie) REFERENCES B_Partie(IdPartie),
    FOREIGN KEY(Libelle) REFERENCES B_Mot(Libelle)
 );
+
+CREATE TABLE B_Authentification(
+   IdAuth INT AUTO_INCREMENT,
+   Token VARCHAR(128),
+   DateExpiration DATETIME,
+   IdJoueur INT NOT NULL,
+   PRIMARY KEY(IdAuth),
+   FOREIGN KEY(IdJoueur) REFERENCES B_Joueur(IdJoueur)
+);
