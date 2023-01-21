@@ -14,7 +14,7 @@
         }
 
         $db->register($_POST['login'],$_POST['psw'],$_POST['mail'],$desc,$_POST['public']);
-        $_SESSION['user'] = $db->getId($_POST['login']);
+        //$_SESSION['user'] = $db->getId($_POST['login']);
     }
     header("location: ../index.php?accountCreated=true");
 ?>

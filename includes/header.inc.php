@@ -102,7 +102,17 @@ if(!isset($_SESSION['user']) || empty($_SESSION['user'])){
         echo '
         <br><br><br><br>
         <div class="alert alert-success alert-dismissible fade show" role="alert">
-         Votre compte a été <strong>créé</strong>. (vous êtes automatiquement connecté)
+         Votre compte a été <strong>créé</strong>. (Connectez-vous à présent) 
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>';
+    }
+
+    if (isset($_GET["mailSend"]) && $_GET["mailSend"] == "true") {
+        echo '
+        <br><br><br><br>
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+         Un mail vous a été envoyé à votre adresse mail pour vous Connecter. (Regardez dans vos spams si vous ne le trouvez pas)
+         Merci.
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>';
     }

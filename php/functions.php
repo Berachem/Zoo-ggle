@@ -122,6 +122,20 @@ function getGameInProgressStartedForUser($id) {
     return $result[0];
 }
 
+// Fonction qui renvoie l'email du joueur $id
+function getPlayerMail($id) {
+    global $db;
+    $query = "SELECT Mail FROM B_Joueur WHERE IdJoueur = ?";
+    $params = [
+        [1, $id, PDO::PARAM_INT]
+    ];
+    $result = $db->execQuery($query, $params);
+    if (count($result) == 0) {
+        return null;
+    }
+    return $result[0]->Mail;
+}
+
 // Fonction qui ajoute un joueur dans le salon de la partie $idPartie (en créant une ligne dans la table B_Jouer avec le score à -1))
 function addPlayerToWaitingRoomForGame($userID, $gameID){
     global $db;
