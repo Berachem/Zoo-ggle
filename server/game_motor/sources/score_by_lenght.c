@@ -70,7 +70,7 @@ int main(int argc, char *argv[]) {
     for (int i = 1; i < argc; i++) {
         score += scoreByWord(argv[i]);
     }
-    printf("score : %d\n", score);
+    printf("%d", score);
     return 0;
 }
 

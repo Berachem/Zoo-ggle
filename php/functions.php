@@ -350,7 +350,7 @@ function getValidWordsForGrid($grid, $gridSize) {
         // lance le programme en .exe
         $result = shell_exec('.\server\game_motor\sources\solve.exe server/data/listeMot.lex 2 '.$gridSize.' '.$gridSize.' '.$grid);
     } else {
-        $result = shell_exec('./../server/game_motor/executables_LINUX/solve ./../server/data/listeMot.lex 2 '.$gridSize.' '.$gridSize.' '.$grid);
+        $result = shell_exec('./../server/game_motor/executables_LINUX/solveNousLinux ./../server/data/listeMotNousLinux.lex 2 '.$gridSize.' '.$gridSize.' '.$grid);
     }
     
     return explode(" ", $result);
@@ -589,7 +589,7 @@ function getScoreOfPlayerInGame($idJoueur,$idGame){
         // lance le programme en .exe
         $result = shell_exec('.\..\server\game_motor\sources\score.exe '.$allValidWords);
     } else {
-        $result = shell_exec('./../server/game_motor/executables_LINUX/score '.$allValidWords);
+        $result = shell_exec('./../server/game_motor/executables_LINUX/score_by_length '.$allValidWords);
     }
     // split le résultat en tableau
     $result = trim($result);
