@@ -157,6 +157,7 @@
                             
                             <div class="form-floating mb-3">
                                 <select class="form-select" id="nbjoueurs" name="nbjoueurs" aria-label="Default select example">
+                                    <option value="1">1</option>
                                     <option value="2" selected>2</option>
                                     <option value="3">3</option>
                                 </select>
