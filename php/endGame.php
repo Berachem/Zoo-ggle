@@ -9,6 +9,7 @@
 require_once 'lib/parse.env.php';
 require_once 'Connexion.php';
 require_once 'functions.php';
+require_once '..\assets\animalsLists\animals_FRA.php';
 
 session_start();
 

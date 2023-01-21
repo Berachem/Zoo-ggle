@@ -9,6 +9,7 @@ MLD:
 
 
 
+
 // Fonction qui renvoie les infos d'une partie en fonction de son id
 function getGameInfos($id) {
     global $db;
@@ -582,20 +583,69 @@ function getScoreOfPlayerInGame($idJoueur,$idGame){
         return $word->Libelle;
     }, $allValidWords);
     $allValidWords = array_unique($allValidWords);
-    $allValidWords = implode(" ", $allValidWords);
+    $allValidWordsString = implode(" ", $allValidWords);
 
    
     if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
         // lance le programme en .exe
-        $result = shell_exec('.\..\server\game_motor\sources\score.exe '.$allValidWords);
+        $result = shell_exec('.\..\server\game_motor\sources\score.exe '.$allValidWordsString);
     } else {
-        $result = shell_exec('./../server/game_motor/executables_LINUX/score_by_length '.$allValidWords);
+        $result = shell_exec('./../server/game_motor/executables_LINUX/score_by_length '.$allValidWordsString);
     }
     // split le résultat en tableau
     $result = trim($result);
     $result = intval($result);
 
+    // add 5 points for each animal in $animalsListUppercase (already in uppercase)
+    foreach($allValidWords as $word){
+        if (in_array(strtoupper($word), $GLOBALS['animalsListUppercase'])) {
+            $result += 5;
+        }
+    }
+    
+
     return $result;   
+}
+
+
+// Fonction qui ajoute un token à un utilisateur avec un temps d'expiration de 1 heure
+function addTokenToUser($idJoueur, $token){
+    global $db;
+    $dateExpiration = date("Y-m-d H:i:s", strtotime('+1 hour'));
+    $query = "INSERT INTO B_Authentification (Token, DateExpiration, IdJoueur) VALUES (?,?,?)";
+    $params = [
+        [1, $token, PDO::PARAM_STR],
+        [2, $dateExpiration, PDO::PARAM_STR],
+        [3, $idJoueur, PDO::PARAM_INT]
+    ];
+    $db->execOnly($query, $params);
+
+}
+
+// Fonction qui renvoie si un token est expiré ou non
+function isExpiredToken($token){
+    global $db;
+    $query = "SELECT * FROM B_Authentification WHERE Token = ?";
+    $params = [[1, $token, PDO::PARAM_STR]];
+    $result = $db->execQuery($query, $params);
+    if (count($result) > 0){
+        $dateExpiration = $result[0]->DateExpiration;
+        $dateExpiration = new DateTime($dateExpiration);
+        $dateNow = new DateTime();
+        return $dateExpiration < $dateNow;
+    }
+    return true;
+}
+
+function getLastDateTokenUser($idJoueur){
+    global $db;
+    $query = "SELECT * FROM B_Authentification WHERE IdJoueur = ? ORDER BY DateExpiration DESC";
+    $params = [[1, $idJoueur, PDO::PARAM_INT]];
+    $result = $db->execQuery($query, $params);
+    if (count($result) > 0){
+        return $result[0]->DateExpiration;
+    }
+    return null;
 }
 
 
