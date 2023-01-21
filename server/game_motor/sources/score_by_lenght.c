@@ -39,7 +39,7 @@ int scoreByWord(char *word) {
 
     int score = 0;
     int length = strlen(word) + countOccurences(word, '*');
-    if (length == 3 || length == 4) {
+    if (length == 2 || length == 3 || length == 4) {
         score = 1;
     } else if (length == 5) {
         score = 2;

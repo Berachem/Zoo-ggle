@@ -274,14 +274,12 @@ if ($profilPublic == "Publique" || $userID == $_SESSION['user']) {
                 
 
                 foreach ($allGamesDetails as $gameDetails) {
-                    $allValidsWordsListByPlayer = getValidsWordsListByPlayerInGame($gameDetails->IdPartie, $userID);
+                    $allValidsWordsListByPlayer = getValidsWordsListByPlayerInGame($userID,$gameDetails->IdPartie);
                     $allValidsWordsListByPlayerNumber = count($allValidsWordsListByPlayer);
-
                     $allWordsListByPlayer = getAllWordsListByPlayerInGame($gameDetails->IdPartie, $userID);
                     $allWordsListByPlayerNumber = count($allWordsListByPlayer);
 
-                    $pourcentage =$allWordsListByPlayerNumber == 0 ? 0 :(int) ($allValidsWordsListByPlayerNumber / $allWordsListByPlayerNumber) * 100;
-
+                    $pourcentage =($allValidsWordsListByPlayerNumber/$gameDetails->NombreMotsPossibles) *100;
                     $mode = intval($gameDetails->Mode) == 0 ? "Classique" : "spécial";
                     $dateDebut = $gameDetails->DateDebutPartie == null ? "En cours <i class='bi bi-circle-fill pulsive' style='color: red;'></i>" : "jouée le ".$gameDetails->DateDebutPartie;
             
@@ -314,7 +312,7 @@ if ($profilPublic == "Publique" || $userID == $_SESSION['user']) {
                                     <div class="progress">
                                         <div class="progress-bar" role="progressbar" style="width: '.$pourcentage.'%" aria-valuenow="'.$pourcentage.'" aria-valuemin="0" aria-valuemax="100"></div>
                                     </div>
-                                    <div class="mt-3"> <span class="text1">'.$allValidsWordsListByPlayerNumber.' trouvé(s) <span class="text2">sur '.$allWordsListByPlayerNumber.' mots</span></span> </div>
+                                    <div class="mt-3"> <span class="text1">'.$allValidsWordsListByPlayerNumber.' mot(s) trouvé(s) <span class="text2">sur '.$gameDetails->NombreMotsPossibles.'</span></span> </div>
                                 </div>
                             </div>
                         </div>

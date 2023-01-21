@@ -346,14 +346,12 @@ function getValidWordsForGrid($grid, $gridSize) {
     if (is_array($grid)) {
         $grid = implode(" ", $grid);
     }
-
     if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
         // lance le programme en .exe
         $result = shell_exec('.\server\game_motor\sources\solve.exe server/data/listeMot.lex 2 '.$gridSize.' '.$gridSize.' '.$grid);
     } else {
         $result = shell_exec('./../server/game_motor/executables_LINUX/solveNousLinux ./../server/data/listeMotNousLinux.lex 2 '.$gridSize.' '.$gridSize.' '.$grid);
     }
-    
     return explode(" ", $result);
 }
 
@@ -550,13 +548,17 @@ function formatDateToSentence($date){
 
 function endAGame($idGame){
     global $db;
-    
+    $game = getGameInfos($idGame);
+    $words = getValidWordsForGrid($game->Grille, $game->TailleGrille);
+    $nbWords = count($words);
+
     //pour chaque joueur mettre a jour score de fin
     $date = date("Y-m-d H:i:s");
-    $query = "UPDATE B_Partie SET DateFinPartie = ? WHERE IdPartie = ?";
+    $query = "UPDATE B_Partie SET DateFinPartie = ?, NombreMotsPossibles = ? WHERE IdPartie = ?";
     $params = [
         [1, $date, PDO::PARAM_STR],
-        [2, $idGame, PDO::PARAM_INT]
+        [2, $nbWords, PDO::PARAM_INT],
+        [3, $idGame, PDO::PARAM_INT]
     ];  
     $db->execOnly($query, $params);
 
@@ -564,6 +566,7 @@ function endAGame($idGame){
     foreach($players as $player){
  
         $score = getScoreOfPlayerInGame($player->IdJoueur, $idGame);
+
         
         $query = "UPDATE B_Jouer SET Score = ? WHERE IdJoueur = ? AND IdPartie = ?";
         $params = [
@@ -584,17 +587,23 @@ function getScoreOfPlayerInGame($idJoueur,$idGame){
     }, $allValidWords);
     $allValidWords = array_unique($allValidWords);
     $allValidWordsString = implode(" ", $allValidWords);
+    echo "Joueur : $idJoueur";
+    echo "Les valides word : $allValidWordsString";
 
    
     if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
         // lance le programme en .exe
         $result = shell_exec('.\..\server\game_motor\sources\score.exe '.$allValidWordsString);
     } else {
+        echo "<br> LA commande :".'./../server/game_motor/executables_LINUX/score_by_length '.$allValidWordsString ."<br>";
         $result = shell_exec('./../server/game_motor/executables_LINUX/score_by_length '.$allValidWordsString);
     }
     // split le résultat en tableau
+    echo "Result avant traitement ; $result  <br>";
     $result = trim($result);
+    echo "Result apres trim ; $result  <br>";
     $result = intval($result);
+    echo "Result apres intval ; $result  <br>";
 
     // add 5 points for each animal in $animalsListUppercase (already in uppercase)
     foreach($allValidWords as $word){
@@ -602,6 +611,8 @@ function getScoreOfPlayerInGame($idJoueur,$idGame){
             $result += 5;
         }
     }
+
+    echo "Apres animaux ; $result  <br>";
     
 
     return $result;   
