@@ -22,7 +22,7 @@ if (isset($_SESSION["user"])) {
         }    
         
     }
-    //header("Location: ../leaderboard.php");
+    header("Location: ../leaderboard.php");
 
 }else{
     header("Location: ../index.php?notConnected=true");

@@ -587,8 +587,6 @@ function getScoreOfPlayerInGame($idJoueur,$idGame){
     }, $allValidWords);
     $allValidWords = array_unique($allValidWords);
     $allValidWordsString = implode(" ", $allValidWords);
-    echo "Joueur : $idJoueur";
-    echo "Les valides word : $allValidWordsString";
 
    
     if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
@@ -599,11 +597,8 @@ function getScoreOfPlayerInGame($idJoueur,$idGame){
         $result = shell_exec('./../server/game_motor/executables_LINUX/score_by_length '.$allValidWordsString);
     }
     // split le résultat en tableau
-    echo "Result avant traitement ; $result  <br>";
     $result = trim($result);
-    echo "Result apres trim ; $result  <br>";
     $result = intval($result);
-    echo "Result apres intval ; $result  <br>";
 
     // add 5 points for each animal in $animalsListUppercase (already in uppercase)
     foreach($allValidWords as $word){
@@ -611,8 +606,6 @@ function getScoreOfPlayerInGame($idJoueur,$idGame){
             $result += 5;
         }
     }
-
-    echo "Apres animaux ; $result  <br>";
     
 
     return $result;   
