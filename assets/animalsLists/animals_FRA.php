@@ -235,6 +235,9 @@ function Unaccent($string)
 // map to uppercase
 $animals = array_map('strtoupper', $animals);
 
+// Liste des animaux triés par ordre alphabétique (qui nous servira pour ajouter des bonus de points aux joueurs)
+$animalsListUppercase = $animals;
+
 
 $groupedAnimals = array();
 foreach ($animals as $animal) {

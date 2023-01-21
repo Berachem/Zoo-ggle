@@ -195,18 +195,24 @@ if (count($allWordsValidated) == 0) {
 
 echo '<br><br><h1 class="text-center">Statistiques</h1>';
 if ($profilPublic == "Publique" || $userID == $_SESSION['user']) {
-      
-echo '<div class="container">
+
+    echo '<div class="container">
         <div class="row">
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-body">
                         <div class="row">
                             <div class="col-md-4">
-                                <img src="' .$logo. '" class="img-fluid" alt="Responsive image">
+                                <img src="' . $logo . '" class="img-fluid" alt="Responsive image">
                             </div>
                             <div class="col-md-8">
-                                <h5 class="card-title"><u>Pseudo :</u> ' . $pseudo . '</h5>
+                                <h5 class="card-title"><u>Pseudo :</u> ' . $pseudo;
+
+                                if ($userID == $_SESSION['user']){
+                                        echo '<b class="text-success"> (Vous)</b>';
+                                }
+                                
+                                echo'</h5>
                                 <p class="card-text"><u>Description :</u> ' . $description . '</p>
                                 <p class="card-text"><u>Visibilité du profil :</u> ' . $profilPublic . '</p>
                                 <p class="card-text"><u>Date de création du compte :</u> ' . $dateCreationCompte . '</p>
