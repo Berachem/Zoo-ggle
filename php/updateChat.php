@@ -6,7 +6,7 @@ require_once 'Connexion.php';
 
 if(isset($_POST['message']) && isset($_SESSION['user'])){
 
-    $querry = "INSERT INTO B_Message (IdPartie,IdJoueur,Contenu) VALUES (:idPartie,:idJoueur,:message);";
+    $querry = "INSERT INTO B_Message (IdPartie,IdJoueur,Contenu,DateMessage) VALUES (:idPartie,:idJoueur,:message,NOW());";
     $parameters = [
         [":idPartie",1],//a actualiser
         [":idJoueur",$_SESSION['user']],
@@ -20,7 +20,7 @@ if(isset($_POST['message']) && isset($_SESSION['user'])){
         "retour" => "OK"
     ];
     echo json_encode($retour);
-}elseif (isset($_POST['ping']) && $_POST['ping'] == "update required" && isset($_SESSION['user'])){ //remplacer la variable de session du user par celle de la partie
+}elseif (isset($_POST['ping']) && $_POST['ping'] == "update MP required" && isset($_SESSION['user'])){ //remplacer la variable de session du user par celle de la partie
     $querry = "SELECT Contenu FROM B_Message WHERE IdPartie = :idPartieJoueur";
     $parameters = [
         [":idPartieJoueur", 1]
