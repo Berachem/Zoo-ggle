@@ -5,7 +5,7 @@
 
 function sendTokenByMail($emailTarget, $randomTokenSHA256, $debug = false) {
     $name = getPseudoById($_SESSION['waitingUser']);
-    $link= "https://etudiant.u-pem.fr/~berachem.markria/zoo/php/verifyToken.php?token=$randomTokenSHA256";
+    $link= "https://etudiant.u-pem.fr/~berachem.markria/zoo-bera/php/verifyToken.php?token=$randomTokenSHA256";
 
     $curl = curl_init();
 

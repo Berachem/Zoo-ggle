@@ -21,10 +21,13 @@ if (isset($_GET['token']) ) {
 
     $user = getUserByToken($_GET['token']);
     if ($user) {
-        $_SESSION['user'] = $user;
+        $_SESSION['user'] = $user->IdJoueur;
         header("Location: ../index.php?connected=true");
         exit();
     }
+
+    header("Location: ../index.php?notConnected=true");
+    exit();
     
     
 } else {
