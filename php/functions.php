@@ -1,16 +1,10 @@
 <?php
 // Fichier qui contient toutes les fonctions utilisées dans le site
 
-/*
-MLD:
-
-
-*/
-
-
-
 
 // Fonction qui renvoie les infos d'une partie en fonction de son id
+// paramètres : $id : id de la partie
+// return : un objet contenant les informations de la partie
 function getGameInfos($id) {
     global $db;
     $query = "SELECT * FROM B_Partie WHERE IdPartie = ?";
@@ -23,6 +17,8 @@ function getGameInfos($id) {
 }
 
 // Fonction qui renvoie la liste des joueurs d'une partie en fonction de son id ET ses informations (Pseudo, Logo, IdJoueur)
+// paramètres : $id : id de la partie
+// return : un tableau d'objets contenant les informations des joueurs de la partie
 function getPlayers($id) {
     global $db;
     $query = "SELECT Pseudo,IdJoueur,Logo FROM B_Joueur bj WHERE bj.IdJoueur IN (SELECT IdJoueur FROM B_Jouer WHERE IdPartie = ?)";
@@ -35,6 +31,8 @@ function getPlayers($id) {
 }
 
 // Fonction qui renvoie true si la partie a commencé, false sinon
+// paramètres : $idGame : id de la partie
+// return : true si la partie a commencé, false sinon
 function getGameStarted($idGame) {
     global $db;
     $query = "SELECT DateDebutPartie FROM B_Partie WHERE IdPartie = ? AND DateDebutPartie IS NOT NULL";
@@ -47,6 +45,8 @@ function getGameStarted($idGame) {
 }
 
 // Fonction qui renvoie true si la partie est terminée, false sinon 
+// paramètres : $idGame : id de la partie
+// return : true si la partie est terminée, false sinon
 function getGameEnded($idGame) {
     global $db;
     $query = "SELECT DateFinPartie FROM B_Partie WHERE IdPartie = ? AND DateFinPartie IS NOT NULL";
@@ -59,6 +59,8 @@ function getGameEnded($idGame) {
 }
 
 // Fonction qui lance la partie $id
+// paramètres : $id : id de la partie
+// return : true si la partie a commencé, false sinon
 function startGame($id) {
     global $db;
     $query = "UPDATE B_Partie SET DateDebutPartie = NOW() WHERE IdPartie = ?";
@@ -80,6 +82,8 @@ function startGame($id) {
 }
 
 // Fonction qui renvoie l'id de la partie non commencée du joueur $id
+// paramètres : $id : id du joueur
+// return : l'id de la partie non commencée du joueur $id
 function getGameNotStartedYet($id) {
     global $db;
     $query = "SELECT IdPartie FROM B_Jouer WHERE IdJoueur = ? AND IdPartie IN (SELECT IdPartie FROM B_Partie WHERE DateDebutPartie IS NULL)";
@@ -91,11 +95,10 @@ function getGameNotStartedYet($id) {
     return $result[0]->IdPartie;
 }
 
-// fonction qui renvoie la partie en
 
-
-// fonction qui renvoie des données de la partie en cours du user $id
 // Fonction qui renvoie la partie en cours du joueur $id (en regardant si le score est à -1, si la date de début existe et que la date de fin est null)
+// paramètres : $id : id du joueur
+// return : l'id de la partie en cours du joueur $id
 function getGameInProgressStartedOrNotForUser($id) {
     global $db;
     $query = "SELECT * FROM B_Partie bp WHERE bp.IdPartie IN (SELECT b.IdPartie FROM B_Jouer b WHERE b.IdJoueur = ? AND b.Score = -1 AND b.IdPartie IN (SELECT IdPartie FROM B_Partie WHERE DateFinPartie IS NULL))";
@@ -110,6 +113,8 @@ function getGameInProgressStartedOrNotForUser($id) {
 }
 
 // Fonction qui renvoie la partie en cours du joueur $id (en regardant si le score est à -1, si la date de début existe et que la date de fin est null)
+// paramètres : $id : id du joueur
+// return : l'id de la partie en cours du joueur $id
 function getGameInProgressStartedForUser($id) {
     global $db;
     $query = "SELECT * FROM B_Partie bp WHERE bp.IdPartie IN (SELECT b.IdPartie FROM B_Jouer b WHERE b.IdJoueur = ? AND b.Score > -1 AND b.IdPartie IN (SELECT IdPartie FROM B_Partie WHERE DateFinPartie IS NULL))";
@@ -124,6 +129,8 @@ function getGameInProgressStartedForUser($id) {
 }
 
 // Fonction qui renvoie l'email du joueur $id
+// paramètres : $id : id du joueur
+// return : l'email du joueur $id
 function getPlayerMail($id) {
     global $db;
     $query = "SELECT Mail FROM B_Joueur WHERE IdJoueur = ?";
@@ -138,6 +145,8 @@ function getPlayerMail($id) {
 }
 
 // Fonction qui ajoute un joueur dans le salon de la partie $idPartie (en créant une ligne dans la table B_Jouer avec le score à -1))
+// paramètres : $idJoueur : id du joueur, $idPartie : id de la partie
+// return : rien (exécute une requête)
 function addPlayerToWaitingRoomForGame($userID, $gameID){
     global $db;
     $query = "INSERT INTO B_Jouer (IdJoueur, IdPartie, Score) VALUES (?, ?, -1)";
@@ -147,6 +156,8 @@ function addPlayerToWaitingRoomForGame($userID, $gameID){
 
 
 // Fonction qui renvoie la liste des mots valides pour la partie $idPartie proposés par le joueur $id
+// paramètres : $idJoueur : id du joueur, $idPartie : id de la partie
+// return : la liste des mots valides pour la partie $idPartie proposés par le joueur $id
 function getValidsWordsListByPlayerInGame($userID, $gameID){
     global $db;
     $query = "SELECT Libelle FROM B_Proposer WHERE IdJoueur = ? AND IdPartie = ? AND EstValide = 1";
@@ -156,6 +167,8 @@ function getValidsWordsListByPlayerInGame($userID, $gameID){
 }
 
 // Fonction qui renvoie la liste des mots pour la partie $idPartie proposés par le joueur $id
+// paramètres : $idJoueur : id du joueur, $idPartie : id de la partie
+// return : la liste des mots pour la partie $idPartie proposés par le joueur $id
 function getAllWordsListByPlayerInGame($userID, $gameID){
     global $db;
     $query = "SELECT Libelle FROM B_Proposer WHERE IdJoueur = ? AND IdPartie = ?";
@@ -169,6 +182,8 @@ function getAllWordsListByPlayerInGame($userID, $gameID){
 
 // Fonction qui un int pour savoir si le joueur $id a gagnée la partie $idPartie (0 si perdu, 1 si gagné, 2 si égalité)
 // en comparant le score du joueur avec le score de tous les autres joueurs de la partie
+// paramètres : $idJoueur : id du joueur, $idPartie : id de la partie
+// return : un int pour savoir si le joueur $id a gagnée la partie $idPartie (0 si perdu, 1 si gagné, 2 si égalité)
 function getVerdictForGamePlayer($userID, $gameID){
     global $db;
     $query = "SELECT Score FROM B_Jouer WHERE IdJoueur = ? AND IdPartie = ?";
@@ -192,6 +207,8 @@ function getVerdictForGamePlayer($userID, $gameID){
 
 /*
 Fonction qui renvoie le pseudo d'un joueur à partir de son ID
+paramètres : $id : id du joueur
+return : le pseudo du joueur $id
 */
 function getPseudoById($id) {
     global $db;
@@ -202,6 +219,8 @@ function getPseudoById($id) {
 }
 
 // fonction qui renvoie le lien vers l'image du joueur à partir de son ID
+// paramètres : $id : id du joueur
+// return : le lien vers l'image du joueur $id
 function getLogoPathById($id) {
     global $db;
     $query = "SELECT Logo FROM B_Joueur WHERE IdJoueur = ?";
@@ -214,7 +233,10 @@ function getLogoPathById($id) {
     }
 }
 
-//si la partie n'existe pas, on le redirige vers la page d'accuei
+
+// Fonction qui renvoie les informations d'une partie à partir de son ID 
+// paramètres : $id : id de la partie
+// return : les informations de la partie $id
 function gameById($id) {
     global $db;
     $query = "SELECT * FROM B_Partie WHERE IdPartie = ?";
@@ -227,6 +249,8 @@ function gameById($id) {
 }
 
 // Fonction qui renvoie l'ID d'un joueur à partir de son pseudo
+// paramètres : $pseudo : pseudo du joueur
+// return : l'ID du joueur $pseudo
 function getIdByPseudo($pseudo) {
     global $db;
     $query = "SELECT IdJoueur FROM B_Joueur WHERE Pseudo = ?";
@@ -237,6 +261,8 @@ function getIdByPseudo($pseudo) {
 
 
 // renvoie les informations d'un joueur à partir de son ID (Table B_Joueur, somme des scores de toutes les parties jouées par le joueur où score != -1 (as score), nombre de parties jouées par le joueur (as gamesPlayed))
+// paramètres : $id : id du joueur
+// return : les informations du joueur $id
 function getUserStatistics($id) {
     global $db;
     $query = "SELECT * FROM B_Joueur WHERE IdJoueur = ?";
@@ -253,35 +279,9 @@ function getUserStatistics($id) {
     return $user;
 }
 
-/*
-CREATE TABLE B_Mot(
-   Libelle VARCHAR(200),
-   PRIMARY KEY(Libelle)
-);
-
-CREATE TABLE B_Jouer(
-   IdJoueur INT,
-   IdPartie INT,
-   Score INT,
-   PRIMARY KEY(IdJoueur, IdPartie),
-   FOREIGN KEY(IdJoueur) REFERENCES B_Joueur(IdJoueur),
-   FOREIGN KEY(IdPartie) REFERENCES B_Partie(IdPartie)
-);
-
-CREATE TABLE B_Proposer(
-   IdJoueur INT,
-   IdPartie INT,
-   Libelle VARCHAR(200),
-   DateProposition DATETIME,
-   EstValide TINYINT,
-   PRIMARY KEY(IdJoueur, IdPartie, Libelle),
-   FOREIGN KEY(IdJoueur) REFERENCES B_Joueur(IdJoueur),
-   FOREIGN KEY(IdPartie) REFERENCES B_Partie(IdPartie),
-   FOREIGN KEY(Libelle) REFERENCES B_Mot(Libelle)
-);
-
-*/
-
+// Fonction qui renvoie tous mots proposés par un joueur à partir de son ID
+// paramètres : $id : id du joueur
+// return : tous les mots proposés par le joueur $id
 function getAllWordsProposedByUser($id) {
     global $db;
     $query = "SELECT Libelle FROM B_Proposer WHERE IdJoueur = ?";
@@ -290,6 +290,10 @@ function getAllWordsProposedByUser($id) {
     return $words;
 }
 
+
+// Fonction qui renvoie tous VALIDES mots proposés par un joueur à partir de son ID
+// paramètres : $id : id du joueur
+// return : tous les mots proposés par le joueur $id
 function getAllValidsWordsProposedByUser($id) {
     global $db;
     $query = "SELECT Libelle FROM B_Proposer WHERE IdJoueur = ? AND EstValide = 1";
@@ -300,10 +304,9 @@ function getAllValidsWordsProposedByUser($id) {
 
 
 
-/* 
-Renvoie toutes les données de toutes les parties d'un joueur suivi de toutes les données de tous les joueurs de ces parties 
-(Table B_Jouer, B_Partie)
-*/
+// Fonction qui renvoie toutes les informations de toutes les parties jouées par un joueur à partir de son ID
+// paramètres : $id : id du joueur
+// return : toutes les informations de toutes les parties jouées par le joueur $id
 function getAllGamesPlayedByUser($id) {
     global $db;
     $query = "SELECT * FROM B_Jouer, B_Partie WHERE B_Jouer.IdPartie = B_Partie.IdPartie AND B_Jouer.IdJoueur = ?";
@@ -314,6 +317,8 @@ function getAllGamesPlayedByUser($id) {
 
 
 // fonction qui renvoie une grille de taille $tailleGrille (sous forme de liste avec toutes les lettres)
+// paramètres : $tailleGrille : taille de la grille
+// return : une grille de taille $tailleGrille
 function getRandomGrid($tailleGrille) {
     // si OS = windows alors on lance le programme en .exe
     if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
@@ -329,6 +334,9 @@ function getRandomGrid($tailleGrille) {
 }
 
 // Fonction qui renvoie la liste des mots valides pour saisie par l'utilisateur (sous forme de liste) dans la partie $idPartie
+// paramètres : $idJoueur : id du joueur
+//               $idPartie : id de la partie
+// return : la liste des mots valides pour saisie par l'utilisateur dans la partie $idPartie
 function getValidWordsForUser($idJoueur,$idPartie) {
     global $db;
     $query = "SELECT Libelle FROM B_Proposer WHERE IdPartie = ? AND EstValide = 1 AND IdJoueur = ?";
@@ -341,6 +349,9 @@ function getValidWordsForUser($idJoueur,$idPartie) {
 }
 
 // fonction qui la liste des mots valides pour la grille $grid (sous forme de liste)
+// paramètres : $grid : grille de jeu
+//              $gridSize : taille de la grille
+// return : la liste des mots valides pour la grille $grid
 function getValidWordsForGrid($grid, $gridSize) {
     // if $grid is a list, convert it to a string
     if (is_array($grid)) {
@@ -360,6 +371,10 @@ function getValidWordsForGrid($grid, $gridSize) {
 
 /*
 Fonction qui crée un booléen si l'opération a réussi ou non
+paramètres : $id : id de la partie
+             $idJoueur : id du joueur
+             $word : mot proposé
+return : true si l'opération a réussi, false sinon
 */
 function createGame($id, $name, $langue, $tailleGrille, $mode, $public, $nbJoueurs) {
     $grid = implode(" ",getRandomGrid($tailleGrille));
@@ -418,6 +433,8 @@ function createGame($id, $name, $langue, $tailleGrille, $mode, $public, $nbJoueu
 
 // Fonction qui renvoie le nombre de joueurs dans le salon d'attente d'une partie $idPartie
 // (on compte le nombre de Score à -1 dans la table B_Jouer)
+// paramètres : $idPartie : id de la partie
+// return : le nombre de joueurs dans le salon d'attente de la partie $idPartie
 function getNbPlayersInWaitingRoom($idPartie) {
     global $db;
     $query = "SELECT COUNT(Score) as nombre FROM B_Jouer WHERE IdPartie = ? AND Score = -1";
@@ -428,27 +445,13 @@ function getNbPlayersInWaitingRoom($idPartie) {
     return $result[0]->nombre;
 }
 
-/*
 
-CREATE TABLE B_Partie(
-   IdPartie INT,
-   NomPartie VARCHAR(50),
-   LangueDico CHAR(3),
-   Grille VARCHAR(200),
-   DateDebutPartie DATETIME,
-   DateFinPartie VARCHAR(50),
-   TailleGrille INT,
-   NombreMotsPossibles INT,
-   Mode INT,
-   EstPublic LOGICAL,
-   NombreJoueursMax INT,
-   IdJoueur INT NOT NULL,
-   PRIMARY KEY(IdPartie),
-   FOREIGN KEY(IdJoueur) REFERENCES B_Joueur(IdJoueur)
-);
-
-*/
 // Fonction qui renvoie la liste des parties publiques (en fonction de la langue, du mode, du nombre de joueurs et du nom)
+// paramètres : $langue : langue du dictionnaire
+//              $mode : mode de la partie
+//              $nbJoueurs : nombre de joueurs max de la partie
+//              $name : nom de la partie
+// return : la liste des parties publiques
 
 function getPublicGames($langue, $mode, $nbJoueurs, $name) {
     global $db;
@@ -481,8 +484,11 @@ function getPublicGames($langue, $mode, $nbJoueurs, $name) {
     return $games;
 }
 
+
 // Fonction qui renvoie la liste des Pseudo, Logo, Score, IdJoueur et IdPartie des joueurs de la dernière partie jouée par un utilisateur 
 // order by Score DESC
+// paramètres : $idJoueur : id du joueur
+// return : la liste des Pseudo, Logo, Score, IdJoueur et IdPartie des joueurs de la dernière partie jouée par un utilisateur
 function getLeaderBoardLastGameOfUser($idJoueur){
     global $db;
     $query = "SELECT B_Joueur.Pseudo, B_Joueur.Logo, B_Jouer.Score, B_Joueur.IdJoueur, B_Partie.IdPartie FROM B_Joueur, B_Jouer, B_Partie WHERE B_Joueur.IdJoueur = B_Jouer.IdJoueur AND B_Jouer.IdPartie = B_Partie.IdPartie AND B_Partie.IdPartie = (SELECT MAX(IdPartie) FROM B_Jouer b WHERE b.IdJoueur = ?) ORDER BY Score DESC";
@@ -491,7 +497,13 @@ function getLeaderBoardLastGameOfUser($idJoueur){
     return $result;
 }
 
+
 // Fonction qui insère un mot jouée par un utilisateur durant une partie et par la même occasion le mot dans la table des Mots.
+// paramètres : $idJoueur : id du joueur
+//              $idPartie : id de la partie
+//              $libelleMot : libelle du mot
+//              $estValide : booléen qui indique si le mot est valide ou non
+// return : true si le mot a été inséré dans la table B_Jouer, false sinon
 function addWordPlayedByAPlayer($idJoueur,$idPartie,$libelleMot,$estValide){
     global $db;
 
@@ -540,12 +552,18 @@ function addWordPlayedByAPlayer($idJoueur,$idPartie,$libelleMot,$estValide){
 }
 
 
+// Fonction qui formatte une date au format français
+// paramètres : $date : date à formater
+// return : la date formatée
 function formatDateToSentence($date){
     $date = new DateTime($date);
     $date = $date->format('d/m/Y à H:i:s');
     return 'le '.$date;
 }
 
+// Fonction qui termine une partie et effectue les mises à jour nécessaires (sur les scores, dates de fin)
+// paramètres : $idGame : id de la partie
+// return : true si la partie a été terminée, false sinon
 function endAGame($idGame){
     global $db;
     $game = getGameInfos($idGame);
@@ -579,6 +597,10 @@ function endAGame($idGame){
     }    
 }
 
+// Fonction qui renvoie le score d'un joueur dans une partie
+// paramètres : $idJoueur : id du joueur
+//              $idGame : id de la partie
+// return : le score du joueur dans la partie
 function getScoreOfPlayerInGame($idJoueur,$idGame){
     global $db;
     $allValidWords = getValidWordsForUser($idJoueur, $idGame);
@@ -613,6 +635,9 @@ function getScoreOfPlayerInGame($idJoueur,$idGame){
 
 
 // Fonction qui ajoute un token à un utilisateur avec un temps d'expiration de 1 heure
+// paramètres : $idJoueur : id du joueur
+//              $token : token à ajouter
+// return : rien
 function addTokenToUser($idJoueur, $token){
     global $db;
     $dateExpiration = date("Y-m-d H:i:s", strtotime('+1 hour'));
@@ -627,6 +652,8 @@ function addTokenToUser($idJoueur, $token){
 }
 
 // Fonction qui renvoie si un token est expiré ou non
+// paramètres : $token : token à vérifier
+// return : true si le token est expiré, false sinon
 function isExpiredToken($token){
     global $db;
     $query = "SELECT * FROM B_Authentification WHERE Token = ?";
@@ -641,6 +668,9 @@ function isExpiredToken($token){
     return true;
 }
 
+// Fonction qui renvoie les informations du dernier token d'un utilisateur
+// paramètres : $idJoueur : id du joueur
+// return : les informations du dernier token de l'utilisateur
 function getLastDateTokenUser($idJoueur){
     global $db;
     $query = "SELECT * FROM B_Authentification WHERE IdJoueur = ? ORDER BY DateExpiration DESC";
