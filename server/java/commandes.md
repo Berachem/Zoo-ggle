@@ -3,9 +3,9 @@
 **Dans le cas de la correction du projet java sans le reste du projet il faudra modifier les chemins**
 
 # Creation des dictionnaires :
-    La commande est : java -classpath "Zoo-ggle\server\java\dico\target\classes" fr.uge.jdict.DictionaryMake *chemin vers le dossier xml* *langue* *nom du fichier de stockage (sans extension)*
+    La commande est :cat *fichier* | java -classpath "Zoo-ggle\server\java\dico\target\classes" fr.uge.jdict.DictionaryMaker *langue* *nom du fichier de stockage (sans extension)* *1 si il faut une décompression, 0 sinon*
 
-    exemple : java -classpath "Zoo-ggle\server\java\dico\target\classes" fr.uge.DictionaryMaker "C:\Users\Jlwis\Desktop\wiki-fr.xml" fr dico
+    exemple :cat C:\Users\Jlwis\Desktop\wiki-fr.xml | java -classpath "Zoo-ggle\server\java\dico\target\classes" fr.uge.DictionaryMaker fr dico 0
 
 **a partir d'ici il faut avoir généré un dictionnaire pour que les commandes marchent**
 
