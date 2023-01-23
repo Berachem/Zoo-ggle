@@ -682,5 +682,19 @@ function getLastDateTokenUser($idJoueur){
     return null;
 }
 
+// Fonction qui renvoie les informations d'un joueurs à partir de son token
+// paramètres : $token : token du joueur
+// return : les informations du joueur
+function getUserByToken($token){
+    global $db;
+    $query = "SELECT * FROM B_Joueur WHERE IdJoueur = (SELECT IdJoueur FROM B_Authentification WHERE Token = ?)";
+    $params = [[1, $token, PDO::PARAM_STR]];
+    $result = $db->execQuery($query, $params);
+    if (count($result) > 0){
+        return $result[0];
+    }
+    return null;
+}
+
 
 ?>
