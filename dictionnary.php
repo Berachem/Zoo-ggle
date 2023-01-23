@@ -67,7 +67,14 @@ function create_list($data) {
         } else {
             $resultCLI = shell_exec('java -Dfile.encoding=UTF-8 -classpath "server/java/dico/target/classes" fr.uge.jdict.DictionarySearcher "server/java/dico/dico" '.$word);
         }
-        
+
+        if($resultCLI == null){
+            echo "LA COMMANDE N'A PAS MARCHE";
+        }else{
+            var_dump($resultCLI);
+        }
+
+
         // keep only text between first { and last }
         $resultCLI = substr($resultCLI, strpos($resultCLI, "{"), strrpos($resultCLI, "}") - strpos($resultCLI, "{") + 1);
         $json = json_decode($resultCLI, true);

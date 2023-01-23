@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
 import java.util.List;
-import fr.uge.DictionaryMaker;
 
 public class DictionarySearcher {
 	
@@ -130,7 +129,7 @@ public class DictionarySearcher {
 	public static List<Long> getTheNormalizedWordOffset(String word,String path) {
 		
 		//normalisation
-		String normalizedWord = DictionaryMaker.normalize(word);
+		String normalizedWord = normalize(word);
 		
 		//initialisation des fichiers
 		File semiDico = new File(path+"semi.lex");
@@ -180,6 +179,34 @@ public class DictionarySearcher {
 		
 		return true;
 		
+	}
+	
+	/**
+	 * Prend un mot et le normalise
+	 * 
+	 * @param mot : mot à nettoyer
+	 * @return le mot en majuscule sans ses accents
+	 */
+	public static String normalize(String mot) {
+		
+		List<Character> accent  = List.of('À', 'Á', 'Â', 'Ã', 'Ä', 'Å', 'Ç', 'È', 'É', 'Ê', 'Ë', 'Ì', 'Í', 'Î', 'Ï', 'Ò', 'Ó', 'Ô', 'Õ', 'Ö', 'Ù', 'Ú', 'Û', 'Ü', 'Ý');
+		List<Character> sansAccent = List.of('A', 'A', 'A', 'A', 'A', 'A', 'C', 'E', 'E', 'E', 'E', 'I', 'I', 'I', 'I', 'O', 'O', 'O', 'O', 'O', 'U', 'U', 'U', 'U', 'Y');
+		String copie = mot.toUpperCase();
+		for(int i=0; i<accent.size();i++){
+			copie = copie.replace(accent.get(i),sansAccent.get(i));
+		}
+		copie = copie.replace("Œ", "OE");
+		
+		int longueur = 0;
+		for(int i=0;i<copie.length();i++) {//il reste des mots qui sont composé de lettre que non francaise (ʻOKINA) que nous ne pouvons donc pas écrire.
+			char c = copie.charAt(i);
+			if(c<'A' || c>'Z') {
+				return "";
+			}
+			longueur++;
+		}
+		
+		return copie;
 	}
 	
 	/**
@@ -238,7 +265,7 @@ public class DictionarySearcher {
 			e.printStackTrace();
 		}
 		
-		return "Ceci ne devrait pas apparaitre";
+		return "Ceci ne devrait pas apparaitre (avez vous bien généré les documents grace à DictionaryMaker?)";
 	}
 	
 	
@@ -407,26 +434,17 @@ public class DictionarySearcher {
 		
 		//java -classpath "Zoo-ggle\java\dico\target\classes" fr.uge.jdict.DictionarySearcher "Zoo-ggle\java\dico\dico" yaml:CONSTITUTION
 	
-		/*
+		
 		if (args.length != 2) {
 			System.out.println("Il faut 2 arguments : le chemin et le mot à rechercher");
 			return;
 		}
-		
-		
-
 		String path = args[0];
 		String mot = args[1];
-		*/
 		
-		
-		
-		String path = "dico";
-		String mot = "yaml:LICORNE";
-		
-		
-
-		System.out.println("ARGUMENTS ! "+path+" : "+mot);
+		//String path = "dico";
+		//String mot = "yaml:LICORNE";
+		//System.out.println("ARGUMENTS ! "+path+" : "+mot);
 
     	boolean yaml = false;
     	String retour = "";

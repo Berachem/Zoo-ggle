@@ -261,7 +261,7 @@ public class DictionaryMaker
 	/**
 	 * Fonction qui crée les différents fichiers demandés
 	 */
-	public static void makeDictionnaries(String path,String lang,String returnName, String doDecompress) {
+	public static void makeDictionnaries(String lang,String returnName, String doDecompress) {
         
         //création  du dictionnaire pour les fréquences
         HashMap<String,Integer> dicoFreq = DictionaryMaker.createDicoFreq();
@@ -290,18 +290,21 @@ public class DictionaryMaker
         	//creation du buffer de lecture du xml
         	BufferedReader reader;
 	        if(doDecompress.equals("1")) {
-	        	BufferedInputStream input = new BufferedInputStream(new BZip2CompressorInputStream(new FileInputStream("C:\\Users\\Jlwis\\Desktop\\frwiktionary-20220601-pages-articles.xml.bz2")));
-				reader = new BufferedReader(new InputStreamReader(input));
+	        	
+	        	BufferedInputStream input = new BufferedInputStream(new BZip2CompressorInputStream(System.in));
+	        	//BufferedInputStream input = new BufferedInputStream(new BZip2CompressorInputStream(new FileInputStream("/home/3binf2/joshua.lemoine/Bureau/frwiktionary-20220601-pages-articles.xml.bz2")));
+	        	reader = new BufferedReader(new InputStreamReader(input));
+	        	
+	        	//new BufferedInputStream(new BZip2CompressorInputStream(new FileInputStream("C:\\Users\\Jlwis\\Desktop\\frwiktionary-20220601-pages-articles.xml.bz2")));
 	        }else if(doDecompress.equals("0")) {
-	        	File file=new File(path);
-		        reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), "UTF-8"));
+		        reader = new BufferedReader(new InputStreamReader(System.in));
+		        
+		        //File file=new File("C:\\Users\\Jlwis\\Desktop\\wiki-fr.xml");
+		        //reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), "UTF-8"));
 	        }else {
-	        	throw new IllegalArgumentException("Le 4eme argument doit soit etre a 1 (faire la decompression) sois a 0 (ne pas la faire)");
+	        	throw new IllegalArgumentException("Le 3eme argument doit soit etre a 1 (faire la decompression) sois a 0 (ne pas la faire)");
 	        }
 	        
-        	
-	        //BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-	        //la ligne de code qu'il faudrait changer pour utiliser un pipe en théorie (plus maintenant qu'on a des fichiers compressés
 	        
 	        //creation du writer pour le json
 	        RandomAccessFile writerJson = new RandomAccessFile(dicoJSON, "rw");
@@ -537,31 +540,31 @@ public class DictionaryMaker
     {
 		String fichierSauvegarde;
 		String langueCible;
-		String fichierXML;
+		//String fichierXML;
 		String doDecompress;
 		
 		//changer le nombre d'arguments et le message pour le pipe
-		if (args.length != 4) {
-			/*
-			System.out.println("Il faut 4 parametres : chemin vers le xml, la langue, le nom du fichier de stockage (sans extension), 1 si il faut décompresser 0 sinon");
-			return;
-			*/
+		if (args.length != 3) {
 			
-			fichierXML = "C:\\Users\\Jlwis\\Desktop\\frwiktionary-20220601-pages-articles.xml.bz2"; //args[0];
-			langueCible ="fr"; //args[1];
-			fichierSauvegarde ="dico"; //args[3];
-			doDecompress = "1";
+			
+			System.out.println("Il faut 3 parametres : la langue, le nom du fichier de stockage (sans extension), 1 si il faut décompresser 0 sinon");
+			return;
+			
+			
+			//fichierXML = "C:\\Users\\Jlwis\\Desktop\\frwiktionary-20220601-pages-articles.xml.bz2"; //args[0];
+			//langueCible ="fr"; //args[1];
+			//fichierSauvegarde ="dico"; //args[3];
+			//doDecompress = "0";
 			
 		}
 		else{
 			//on récupère les arguments
-			fichierXML = args[0];
-			langueCible = args[1];
-			fichierSauvegarde = args[2];
-			doDecompress = args[3];
+			langueCible = args[0];
+			fichierSauvegarde = args[1];
+			doDecompress = args[2];
 		}
 		
 		
-    	DictionaryMaker.makeDictionnaries(fichierXML,langueCible,fichierSauvegarde,doDecompress);
+    	DictionaryMaker.makeDictionnaries(langueCible,fichierSauvegarde,doDecompress);
     } 
 }
