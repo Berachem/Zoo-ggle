@@ -176,6 +176,7 @@ require_once 'assets/animalsLists/animals_FRA.php';
 
                     <br>
                     <center>
+                        <p id="incorrect-word" style="font-family: 'Roboto', sans-serif; font-size: 20px; font-weight: 700; color: red; margin-top: 100px; margin-bottom: 50px;"></p>
                         <ul id="word-found-list" style="list-style-type: none;"></ul>
                         <button class="btn btn-secondary" onclick="resetWordFoundList()">Effacer la liste</button>
 

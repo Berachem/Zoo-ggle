@@ -87,6 +87,9 @@ function checkWordDemo(word, grid,foundedWords){
             if (result.success && !foundedWords.includes(word)) {
                 $("#word-found-list").append("<li>" + word + "</li>");
                 foundedWords.push(word);
+            }else{
+                // incorrect-word 
+                $("#incorrect-word").innerHTML = "Le mot "+word+" est incorrect";
             }
             console.log(" ===> Mot :"+word+",Success : "+result.success);
             console.log("Data : " +data);
