@@ -8,7 +8,7 @@ if(isset($_POST['message']) && isset($_SESSION['user'])){
 
     $querry = "INSERT INTO B_Message (IdPartie,IdJoueur,Contenu,DateMessage) VALUES (:idPartie,:idJoueur,:message,NOW());";
     $parameters = [
-        [":idPartie",1],//a actualiser
+        [":idPartie",33],//a actualiser
         [":idJoueur",$_SESSION['user']],
         [":message",$_POST['message']]
     ];
@@ -20,10 +20,10 @@ if(isset($_POST['message']) && isset($_SESSION['user'])){
         "retour" => "OK"
     ];
     echo json_encode($retour);
-}elseif (isset($_POST['ping']) && $_POST['ping'] == "update MP required" && isset($_SESSION['user'])){ //remplacer la variable de session du user par celle de la partie
+}elseif (isset($_POST['ping']) && $_POST['ping'] == "update required" && isset($_SESSION['user'])){ //remplacer la variable de session du user par celle de la partie
     $querry = "SELECT Contenu FROM B_Message WHERE IdPartie = :idPartieJoueur";
     $parameters = [
-        [":idPartieJoueur", 1]
+        [":idPartieJoueur", 33]
     ];
     $sql = $db->execQuery($querry,$parameters);
 
@@ -36,7 +36,9 @@ if(isset($_POST['message']) && isset($_SESSION['user'])){
 
 }else{
     $retour = [
-        "retour" => "NOT OK"
+        "retour" => "NOT OK",
+        "user" => $_SESSION['user'],
+        "ping" => $_POST['ping']
     ];
     echo json_encode($retour);
 }
