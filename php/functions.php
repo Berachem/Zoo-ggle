@@ -322,11 +322,11 @@ function getAllGamesPlayedByUser($id) {
 function getRandomGrid($tailleGrille) {
     // si OS = windows alors on lance le programme en .exe
     if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
-        // lance le programme en .exe
-        $result = shell_exec('.\server\game_motor\sources\grid_build.exe server/data/frequences.txt '.$tailleGrille.' '.$tailleGrille);
+        exec('.\server\game_motor\sources\grid_build.exe server/data/frequences.txt '.$tailleGrille.' '.$tailleGrille, $output);
     } else {
-        $result = shell_exec('./server/game_motor/executables_LINUX/grid_build server/data/frequences.txt '.$tailleGrille.' '.$tailleGrille);
+        exec('./server/game_motor/executables_LINUX/grid_build server/data/frequences.txt '.$tailleGrille.' '.$tailleGrille, $output);
     }
+    $result = implode("\n", $output);
     // split le résultat en tableau
     $result = trim($result);
     $result = explode(" ", $result);
@@ -358,11 +358,11 @@ function getValidWordsForGrid($grid, $gridSize) {
         $grid = implode(" ", $grid);
     }
     if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
-        // lance le programme en .exe
-        $result = shell_exec('.\server\game_motor\sources\solve.exe server/data/listeMot.lex 2 '.$gridSize.' '.$gridSize.' '.$grid);
+        exec('.\server\game_motor\sources\solve.exe server/data/listeMot.lex 2 '.$gridSize.' '.$gridSize.' '.$grid, $output);
     } else {
-        $result = shell_exec('./../server/game_motor/executables_LINUX/solveNousLinux ./../server/data/listeMotNousLinux.lex 2 '.$gridSize.' '.$gridSize.' '.$grid);
+        exec('./../server/game_motor/executables_LINUX/solveNousLinux ./../server/data/listeMotNousLinux.lex 2 '.$gridSize.' '.$gridSize.' '.$grid, $output);
     }
+    $result = implode("\n", $output);
     return explode(" ", $result);
 }
 
@@ -612,12 +612,12 @@ function getScoreOfPlayerInGame($idJoueur,$idGame){
 
    
     if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
-        // lance le programme en .exe
-        $result = shell_exec('.\..\server\game_motor\sources\score.exe '.$allValidWordsString);
+        exec('.\..\server\game_motor\sources\score.exe '.$allValidWordsString, $output);
     } else {
-        echo "<br> LA commande :".'./../server/game_motor/executables_LINUX/score_by_length '.$allValidWordsString ."<br>";
-        $result = shell_exec('./../server/game_motor/executables_LINUX/score_by_length '.$allValidWordsString);
+        exec('./../server/game_motor/executables_LINUX/score_by_length '.$allValidWordsString, $output);
     }
+    $result = implode("\n", $output);
+    
     // split le résultat en tableau
     $result = trim($result);
     $result = intval($result);
