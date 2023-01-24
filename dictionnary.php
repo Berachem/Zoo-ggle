@@ -63,12 +63,13 @@ function create_list($data) {
         $word = $_GET['word'];
         
         if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
-            $resultCLI = shell_exec('java -Dfile.encoding=UTF-8 -classpath "server\java\dico\target\classes" fr.uge.jdict.DictionarySearcher "server\java\dico\dico" '.$word);
+            exec('java -Dfile.encoding=UTF-8 -classpath "server\java\dico\target\classes" fr.uge.jdict.DictionarySearcher "server\java\dico\dico" '.$word, $output);
         } else {
-            $resultCLI = shell_exec('java -Dfile.encoding=UTF-8 -classpath "server/java/dico/target/classes" fr.uge.jdict.DictionarySearcher "server/java/dico/dico" '.$word);
+            exec('java -Dfile.encoding=UTF-8 -classpath "server/java/dico/target/classes" fr.uge.jdict.DictionarySearcher "server/java/dico/dico" '.$word, $output);
         }
+        $resultCLI = implode("\n", $output);
 
-        if($resultCLI == null){
+        if(empty($resultCLI)){
             echo "LA COMMANDE N'A PAS MARCHE";
         }else{
             var_dump($resultCLI);
