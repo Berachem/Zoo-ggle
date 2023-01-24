@@ -12,6 +12,7 @@ function sendMessage(){
                 console.log(response);
             }
         })
+        input.value = "";
     }
 }
 
@@ -36,7 +37,7 @@ function updateChat(){
                 })
         }
     })
-    setInterval(updateChat, 3000);
+    setInterval(updateChat, 5000);
 }
 
 function updateMP(){
