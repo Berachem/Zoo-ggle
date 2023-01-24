@@ -291,9 +291,9 @@ public class DictionaryMaker
         	BufferedReader reader;
 	        if(doDecompress.equals("1")) {
 	        	
-	        	BufferedInputStream input = new BufferedInputStream(new BZip2CompressorInputStream(System.in));
+	        	InputStreamReader input = new InputStreamReader(new BZip2CompressorInputStream(System.in));
 	        	//BufferedInputStream input = new BufferedInputStream(new BZip2CompressorInputStream(new FileInputStream("/home/3binf2/joshua.lemoine/Bureau/frwiktionary-20220601-pages-articles.xml.bz2")));
-	        	reader = new BufferedReader(new InputStreamReader(input));
+	        	reader = new BufferedReader(input);
 	        	
 	        	//new BufferedInputStream(new BZip2CompressorInputStream(new FileInputStream("C:\\Users\\Jlwis\\Desktop\\frwiktionary-20220601-pages-articles.xml.bz2")));
 	        }else if(doDecompress.equals("0")) {

@@ -3,27 +3,27 @@
 **Dans le cas de la correction du projet java sans le reste du projet il faudra modifier les chemins**
 
 # Creation des dictionnaires :
-    La commande est :cat *fichier* | java -classpath "Zoo-ggle\server\java\dico\target\classes" fr.uge.jdict.DictionaryMaker *langue* *nom du fichier de stockage (sans extension)* *1 si il faut une décompression, 0 sinon*
+    La commande est : cat *fichier* | java -cp "Zoo-ggle\server\java\Dictionaries.jar" fr.uge.DictionaryMaker *langue* *chemin du fichier de stockage (sans extension)* *1 si il faut une décompression, 0 sinon*
 
-    exemple :cat C:\Users\Jlwis\Desktop\wiki-fr.xml | java -classpath "Zoo-ggle\server\java\dico\target\classes" fr.uge.DictionaryMaker fr dico 0
+    exemple :cat C:\Users\Jlwis\Desktop\wiki-fr.xml | java -cp "Zoo-ggle\server\java\Dictionaries.jar" fr.uge.DictionaryMaker fr dico 0
 
 **a partir d'ici il faut avoir généré un dictionnaire pour que les commandes marchent**
 
 # Recherche de mot :
-    La commande est : java -classpath "Zoo-ggle\server\java\dico\target\classes" fr.uge.jdict.DictionarySearcher *chemin vers le dossier de recherche* *mot a chercher*
+    La commande est : java -cp "Zoo-ggle\server\java\Dictionaries.jar" fr.uge.jdict.DictionarySearcher *chemin du fichier de stockage (sans extension)* *mot a chercher*
 
-    exemple : java -classpath "Zoo-ggle\server\java\dico\target\classes" fr.uge.jdict.DictionarySearcher "Zoo-ggle\server\java\dico\dico" yaml:CONSTITUTION
+    exemple : java -cp "Zoo-ggle\server\java\Dictionaries.jar" fr.uge.jdict.DictionarySearcher dico yaml:CONSTITUTION
 
     **attention** : le mot à chercher peut être précédé ou non de "yaml:" pour changer la forme de la sortie de la recherche
 
 
 # Extraction des fréquences de mot :
-    La commande est : java -classpath "Zoo-ggle\server\java\dico\target\classes" fr.uge.jdict.ChartableMaker *chemin vers le dossier de recherche*
+    La commande est : java -cp "Zoo-ggle\server\java\Dictionaries.jar" fr.uge.jdict.ChartableMaker *chemin du fichier de stockage (sans extension)*
 
-    exemple : java -classpath "Zoo-ggle\server\java\dico\target\classes" fr.uge.jdict.ChartableMaker "Zoo-ggle\server\java\dico\dico"
+    exemple : java -cp "Zoo-ggle\server\java\Dictionaries.jar" fr.uge.jdict.ChartableMaker dico
 
 
 # Extraction de tout les mots :
-    La commande est : java -classpath "Zoo-ggle\server\java\dico\target\classes" fr.uge.jdict.NormalizedExtractor *chemin vers le dossier de recherche* *(optionnel) parametre,parametre...*
+    La commande est : java -cp "Zoo-ggle\server\java\Dictionaries.jar" fr.uge.jdict.NormalizedExtractor *chemin du fichier de stockage (sans extension)* *(optionnel) parametre,parametre...*
 
-    exemple : java -classpath "Zoo-ggle\server\java\dico\target\classes" fr.uge.jdict.NormalizedExtractor "Zoo-ggle\server\java\dico\dico" adjectif,verbe
+    exemple : java -cp "Zoo-ggle\server\java\Dictionaries.jar" fr.uge.jdict.NormalizedExtractor dico verbe
