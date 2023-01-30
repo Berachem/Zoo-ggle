@@ -6,6 +6,8 @@ session_start();
 
 // recoit des données de la forme : { ["proxies"]=> array(0) { } ["user"]=> string(16) "berachem.markria" } } array(4) { ["name"]=> string(2) "sa" ["langue"]=> string(3) "FRA" ["taille"]=> string(1) "4" ["mode"]=> string(1) "0" }
 
+$response = array();
+
 // si pas connecté retour à l'accueil avec un message d'erreur
 if (!isset($_SESSION["user"])) {
     header("Location: index.php?notConnected=true");
@@ -21,13 +23,24 @@ if (!isset($_SESSION["user"])) {
     );
 
     if (!$idGame) {
-        header("Location: index.php?error=true");
+        $response["success"] = false;
+        $response["errorCode"] = 614; // error while creating game
+        $response["redirect"] = 'index.php?error=true';
+        header('Content-Type: application/json');
+        echo json_encode($response);
         exit;
     }
 
-    header("Location: index.php?gameCreated=true");
+    $response["success"] = true;
+    $response["redirect"] = 'game.php?id='.$idGame;
+    header('Content-Type: application/json');
+    echo json_encode($response);
 } else {
-    header("Location: index.php?error=true");
+    $response["success"] = false;
+    $response["errorCode"] = 615; // missing parameters : name, langue, taille, mode
+    $response["redirect"] = 'index.php?error=true';
+    header('Content-Type: application/json');
+    echo json_encode($response);
 }
 
 
