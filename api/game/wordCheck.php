@@ -1,7 +1,7 @@
 <?php
-require_once("lib/parse.env.php");
-require_once("Connexion.php");
-require_once("functions.php");
+require_once '../lib/parse.env.php';
+require_once '../Connexion.php';
+require_once '../functions.php';
 // recupère le word entré par l'utilisateur en POST et regarde s'il est dans le dictionnaire et si il est dans la grille
 // si oui renvoie un json avec success = true et le word sinon success = false et l'erreur
 session_start();

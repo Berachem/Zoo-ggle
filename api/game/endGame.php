@@ -6,10 +6,10 @@
 // - liste des joueurs
 // - si la partie est terminée ou non
 
-require_once 'lib/parse.env.php';
-require_once 'Connexion.php';
-require_once 'functions.php';
-require_once '../assets/animalsLists/animals_FRA.php';
+require_once '../lib/parse.env.php';
+require_once '../Connexion.php';
+require_once '../functions.php';
+require_once '../animals/animalsData.php';
 
 session_start();
 

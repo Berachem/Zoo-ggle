@@ -6,9 +6,9 @@
 // - liste des joueurs
 // - si la partie est terminée ou non
 
-require_once 'lib/parse.env.php';
-require_once 'Connexion.php';
-require_once 'functions.php';
+require_once '../lib/parse.env.php';
+require_once '../Connexion.php';
+require_once '../functions.php';
 
 session_start();
 
@@ -29,6 +29,7 @@ if (isset($_SESSION["user"])) {
         $timePassed = strval($timePassed);
 
         $validWords = getValidWordsForUser($_SESSION["user"], $game->IdPartie);
+        $score = getScoreOfPlayerInGame($_SESSION["user"], $game->IdPartie);
 
         // map
         $validWords = array_map(function($word){
@@ -42,7 +43,9 @@ if (isset($_SESSION["user"])) {
             "gameEnded" => $gameEnded ? 1 : 0,
             "timePassed" => $timePassed,
             "foundedWords" => $validWords,
-            "IdChef" => $game->IdChef
+            "IdChef" => $game->IdChef,
+            "score" => $score
+
         );
         echo json_encode($infos);
     }else{

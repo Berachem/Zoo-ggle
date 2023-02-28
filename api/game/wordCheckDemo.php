@@ -1,7 +1,7 @@
 <?php
-require_once("lib/parse.env.php");
-require_once("Connexion.php");
-require_once("functions.php");
+require_once '../lib/parse.env.php';
+require_once '../Connexion.php';
+require_once '../functions.php';
 session_start();
 
 // Récupère les paramètres utiles au solve

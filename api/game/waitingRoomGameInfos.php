@@ -3,9 +3,9 @@
 // API qui renvoie les infos d'une partie en fonction de son id en POST
 // Renvoie un JSON avec les infos de la partie (liste des joueurs, partie lancée ou non, les infos de la partie
 
-require_once 'lib/parse.env.php';
-require_once 'Connexion.php';
-require_once 'functions.php';
+require_once '../lib/parse.env.php';
+require_once '../Connexion.php';
+require_once '../functions.php';
 
 session_start();
 

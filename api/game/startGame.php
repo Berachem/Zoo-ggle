@@ -4,9 +4,9 @@
 
 // si c'est le cas, on met la partie à l'état "en cours"
 
-require 'lib/parse.env.php';
-require 'Connexion.php';
-require 'functions.php';
+require_once '../lib/parse.env.php';
+require_once '../Connexion.php';
+require_once '../functions.php';
 session_start();
 
 if (!isset($_SESSION["user"])) {

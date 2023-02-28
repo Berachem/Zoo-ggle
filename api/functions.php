@@ -497,6 +497,19 @@ function getLeaderBoardLastGameOfUser($idJoueur){
     return $result;
 }
 
+// Fonction qui renvoie la liste des Pseudo, Logo, Score, IdJoueur et IdPartie des joueurs de la partie $idPartie
+// order by Score DESC
+// paramètres : $idPartie : id de la partie
+// return : la liste des Pseudo, Logo, Score, IdJoueur
+
+function getLeaderBoardGame($idPartie){
+    global $db;
+    $query = "SELECT B_Joueur.Pseudo, B_Joueur.Logo, B_Jouer.Score, B_Joueur.IdJoueur, B_Partie.IdPartie FROM B_Joueur, B_Jouer, B_Partie WHERE B_Joueur.IdJoueur = B_Jouer.IdJoueur AND B_Jouer.IdPartie = B_Partie.IdPartie AND B_Partie.IdPartie = ? ORDER BY Score DESC";
+    $params = [[1, $idPartie, PDO::PARAM_INT]];
+    $result = $db->execQuery($query, $params);
+    return $result;
+}
+
 
 // Fonction qui insère un mot jouée par un utilisateur durant une partie et par la même occasion le mot dans la table des Mots.
 // paramètres : $idJoueur : id du joueur

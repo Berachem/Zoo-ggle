@@ -1,7 +1,7 @@
 <?php
-    require_once("lib/parse.env.php");
-    require_once 'Connexion.php';
-    require_once 'functions.php';
+require_once '../lib/parse.env.php';
+require_once '../Connexion.php';
+require_once '../functions.php';
 
     $response = array();
     if(isset($_GET['idGame']) && !empty($_GET['idGame'])){
