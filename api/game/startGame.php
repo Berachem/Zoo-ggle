@@ -45,7 +45,7 @@ if ($chef != $_SESSION["user"]) {
     echo json_encode($response);
 }
 
-// si on arrive ici, c'est que tout est bon, on renvoie un JSON avec success = true et le mot
+// si on arrive ici, c'est que tout est bon, on renvoie un JSON avec success = true
 
 startGame($gameNotStarted);
 

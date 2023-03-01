@@ -131,8 +131,6 @@ function getGameInProgressStartedForUser($id) {
 
 
 
-
-
 // Fonction qui renvoie l'email du joueur $id
 // paramètres : $id : id du joueur
 // return : l'email du joueur $id
@@ -157,7 +155,31 @@ function addPlayerToWaitingRoomForGame($userID, $gameID){
     $query = "INSERT INTO B_Jouer (IdJoueur, IdPartie, Score) VALUES (?, ?, -1)";
     $params = [[1, $userID, PDO::PARAM_INT], [2, $gameID, PDO::PARAM_INT]];
     $db->execQuery($query, $params);
-} 
+}
+
+// Fonction qui retire un joueur du salon de la partie $idPartie (en retirant la ligne dans la table B_Jouer))
+// paramètres : $idJoueur : id du joueur, $idPartie : id de la partie
+// return : rien (exécute une requête)
+function removePlayerFromWaitingRoomForGame($userID, $gameID){
+    global $db;
+    $query = "DELETE FROM B_Jouer WHERE IdJoueur = ? AND IdPartie = ?";
+    $params = [[1, $userID, PDO::PARAM_INT], [2, $gameID, PDO::PARAM_INT]];
+    $db->execQuery($query, $params);
+}
+
+// Fonction qui ferme la partie $gameID (en retirant la ligne dans la table B_Partie) après avoir retiré tout les joueurs de la partie)
+// paramètres : $gameID : id de la partie
+// return : rien (exécute une requête)
+function closeWaitingRoomForGame($gameID){
+    $players = getPlayers($gameID);
+    foreach($players as $player){
+        removePlayerFromWaitingRoomForGame($player,$gameID);
+    }
+    global $db;
+    $query = "DELETE FROM B_Partie WHERE IdPartie = ?";
+    $params = [[1, $gameID, PDO::PARAM_INT]];
+    $db->execQuery($query, $params);
+}
 
 
 // Fonction qui renvoie la liste des mots valides pour la partie $idPartie proposés par le joueur $id

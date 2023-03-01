@@ -9,25 +9,30 @@ require_once '../functions.php';
 
 session_start();
 
-if (isset($_POST["idGame"])) {
-    $idGame = intval($_POST["idGame"]);
-    $game = getGameInfos($idGame);
-    $players = getPlayers($idGame);
-    $gameStarted = getGameStarted($idGame);
-    $infos = array(
-        "success" => true,
-        "gameInfos" => $game,
-        "players" => $players,
-        "gameStarted" => $gameStarted
-    );
-    echo json_encode($infos);
-}else{
-    $infos = array(
-        "success" => false,
-        "error" => "idGame not set"
-    );
-    echo json_encode($infos);
+$response = array();
+
+if (!isset($_SESSION["user"])) {
+    $response["success"] = false;
+    $response["errorCode"] = 603; // user not connected
+    $response["redirect"] = "../index.php?notConnected=true";
+}else {
+    $userId = intval($_SESSION["user"]);
+    $gameId = getGameNotStartedYet($userId);
+    if ($gameId != null) {
+        $game = getGameInfos($gameId);
+        $players = getPlayers($gameId);
+        $gameStarted = getGameStarted($gameId);
+        $response["success"]=true;
+        $response["gameInfos"]=$game;
+        $response["players"]=$players;
+        $response["gameStarted"]=$gameStarted;
+    }else{
+        $response["sucess"]=false;
+        $response["errorCode"]=602;
+    }
 }
 
+header('Content-Type: application/json');
+echo json_encode($response);
 
 ?>
