@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8">
+    <title>Titre de la page</title>
+</head>
+<body>
+<script>
+    async function test(){
+        const retour = await fetch("game/createGame.php",
+            {
+                method: 'POST',
+                headers:{
+                    "Accept": "application/json",
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    name: 'Bidiboup',
+                    langue: 'FRA',
+                    taille: '4',
+                    mode: '0',
+                    public: '1',
+                    nbjoueur: '3'
+                })
+            })
+        if(retour.ok){
+            return retour.json();
+        }else{
+            return "echec connexion serveur"
+        }
+    }
+    test().then(test => console.log(test))
+
+</script>
+</body>
+</html>
+
