@@ -5,19 +5,18 @@ require_once '../functions.php';
 session_start();
 
 // recoit des données de la forme : { ["proxies"]=> array(0) { } ["user"]=> string(16) "berachem.markria" } } array(4) { ["name"]=> string(2) "sa" ["langue"]=> string(3) "FRA" ["taille"]=> string(1) "4" ["mode"]=> string(1) "0" }
-$data = json_decode(file_get_contents("php://input"));
 $response = array();
 
 // si pas connecté retour à l'accueil avec un message d'erreur
-if(isset($data->name) && isset($data->langue) && isset($data->taille) && isset($data->mode)){
+if(isset($_POST["name"]) && isset($_POST["langue"]) && isset($_POST["taille"]) && isset($_POST["mode"])){
    $idGame =  createGame(
-        12345,//$_SESSION["user"]
-        $data->name,
-        $data->langue,
-        intval($data->taille),
-        intval($data->mode),
-        $data->public,
-        intval($data->nbjoueurs)
+        $_SESSION["user"],
+        $_POST["name"],
+        $_POST["langue"],
+        intval($_POST["taille"]),
+        intval($_POST["mode"]),
+        $_POST["public"],
+        intval($_POST["nbjoueurs"])
     );
 
     if (!$idGame) {

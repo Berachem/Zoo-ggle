@@ -7,29 +7,27 @@
 <body>
 <script>
     async function test(){
-        const retour = await fetch("game/createGame.php",
-            {
-                method: 'POST',
-                headers:{
-                    "Accept": "application/json",
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    name: 'Bidiboup',
-                    langue: 'FRA',
-                    taille: '4',
-                    mode: '0',
-                    public: '1',
-                    nbjoueur: '3'
-                })
+            const formData = new FormData();
+            formData.append('name', 'Bidiboup');
+            formData.append('langue', 'FRA');
+            formData.append('taille', '4');
+            formData.append('mode', '0');
+            formData.append('public', '1');
+            formData.append('nbjoueur', '3');
+
+            const res = await fetch('game/createGame.php', {
+            method: 'POST',
+            body: formData
             })
-        if(retour.ok){
-            return retour.json();
-        }else{
+            .then(res => res.json());
+            if (res.ok) {
+            console.log(res);
+            } else {
             return "echec connexion serveur"
-        }
+            }
+
     }
-    test().then(test => console.log(test))
+    test();
 
 </script>
 </body>

@@ -128,6 +128,11 @@ function getGameInProgressStartedForUser($id) {
     return $result[0];
 }
 
+
+
+
+
+
 // Fonction qui renvoie l'email du joueur $id
 // paramètres : $id : id du joueur
 // return : l'email du joueur $id
