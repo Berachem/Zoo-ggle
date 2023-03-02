@@ -13,7 +13,8 @@ if (!isset($_SESSION["user"])) {
     $response["redirect"] = '../index.php?notConnected=true';
 }else{
     if (isset($_POST["profileId"])){
-        $statistics = getUserStatistics(id);
+        $profileId=$_POST["profileId"];
+        $statistics = getUserStatistics($profileId);
         if ($statistics != null){
             $response["success"]=true;
             $response["profileInfos"]=$statistics;
