@@ -422,7 +422,7 @@ function createGame($id, $name, $langue, $tailleGrille, $mode, $public, $nbJoueu
         [8, $nbJoueurs, PDO::PARAM_INT],
         [9, $id, PDO::PARAM_INT]
     ];
-    $result = $db->execQuery($query, $params);
+    $result = $db->execQuery($query, $params,false,false);
 
     // récupère l'id de la partie créée
     $query = "SELECT IdPartie FROM B_Partie WHERE NomPartie = ? AND LangueDico = ? AND Grille = ? AND TailleGrille = ? AND NombreMotsPossibles = ? AND Mode = ? AND EstPublic = ? AND NombreJoueursMax = ? AND IdChef = ?";
@@ -448,7 +448,7 @@ function createGame($id, $name, $langue, $tailleGrille, $mode, $public, $nbJoueu
             [2, $idPartie, PDO::PARAM_INT],
             [3, -1, PDO::PARAM_INT]
         ];
-        $result = $db->execQuery($query, $params);
+        $result = $db->execQuery($query, $params,false,false);
         return true;
     } else {
         return false;

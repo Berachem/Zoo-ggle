@@ -8,7 +8,7 @@ session_start();
 $response = array();
 
 // si pas connecté retour à l'accueil avec un message d'erreur
-if(isset($_POST["name"]) && isset($_POST["langue"]) && isset($_POST["taille"]) && isset($_POST["mode"])){
+if(isset($_POST["name"]) && isset($_POST["langue"]) && isset($_POST["taille"]) && isset($_POST["mode"]) && isset($_SESSION["user"])){
    $idGame =  createGame(
         $_SESSION["user"],
         $_POST["name"],
@@ -35,7 +35,6 @@ if(isset($_POST["name"]) && isset($_POST["langue"]) && isset($_POST["taille"]) &
 } else {
     $response["success"] = false;
     $response["errorCode"] = 615; // missing parameters : name, langue, taille, mode
-    $response["bidule"] = implode(" ",$_GET);
     $response["redirect"] = 'index.php?error=true';
     header('Content-Type: application/json');
     echo json_encode($response);

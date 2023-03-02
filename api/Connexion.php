@@ -62,7 +62,7 @@ class Connexion {
         $stmt=NULL;
     }
 
-    public function execQuery($sql,Array $cond = null, $debug = false){
+    public function execQuery($sql,Array $cond = null, $debug = false,$isFetchable=true){
         $stmt = $this->connec->prepare($sql);
         if($cond){
             foreach ($cond as $v) {
@@ -74,7 +74,9 @@ class Connexion {
         if ($debug) echo "<br><br><h1>DEBUG</h1><br>";
         if ($debug) echo $this->displayQuery($sql,$cond)."<br><br>";
         if ($debug) echo $stmt->debugDumpParams();
-        return $stmt->fetchAll();
+        if($isFetchable){
+            return $stmt->fetchAll();
+        }
         $stmt->closeCursor();
         $stmt=NULL;
     }
