@@ -45,7 +45,19 @@
         }
 
     }
-    testConnexion()
+
+    async function testRandomAnimal(){
+        const res = await fetch("animals/randomAnimal.php?language=FRA")
+            .then(res => res.json());
+            if (res.ok) {
+            console.log(res);
+            } else {
+            return "echec connexion serveur"
+            }
+
+    }
+
+    testRandomAnimal()
 
 </script>
 </body>

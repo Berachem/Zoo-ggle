@@ -502,12 +502,16 @@ function Unaccent($string)
 }
 
 // map to uppercase
-$animals = array_map('strtoupper', $animals);
+foreach ($animals as $key => $animal) {
+    $animals[$key] = Unaccent($animal);
+    $animals[$key] = strtoupper($animals[$key]);
+}
 
 // Liste des animaux triés par ordre alphabétique (qui nous servira pour ajouter des bonus de points aux joueurs)
 $animalsListUppercase = $animals;
 
 
+/* 
 $groupedAnimals = array();
 foreach ($animals as $animal) {
     $firstLetter = substr($animal, 0, 1);
@@ -522,7 +526,8 @@ foreach ($animals as $animal) {
     $groupedAnimals[$firstLetter][] = $animal;
 }
 
-ksort($groupedAnimals);
+ksort($groupedAnimals); */
+
 
 
 ?>

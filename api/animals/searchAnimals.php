@@ -18,5 +18,5 @@ $filteredAnimals = array_filter($animals, function($animal) use ($query) {
 
 // Return the result as JSON
 header('Content-Type: application/json');
-echo json_encode(array('animals' => array_values($filteredAnimals)));
+echo json_encode(array('animals' => array_values($filteredAnimals)), JSON_UNESCAPED_UNICODE);
 ?>
