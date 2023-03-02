@@ -29,6 +29,7 @@ if (!isset($_SESSION["user"])) {
     }else{
         $response["sucess"]=false;
         $response["errorCode"]=602;
+        $response["redirect"]="../searchGame.php";
     }
 }
 

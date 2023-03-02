@@ -164,7 +164,7 @@ function removePlayerFromWaitingRoomForGame($userID, $gameID){
     global $db;
     $query = "DELETE FROM B_Jouer WHERE IdJoueur = ? AND IdPartie = ?";
     $params = [[1, $userID, PDO::PARAM_INT], [2, $gameID, PDO::PARAM_INT]];
-    $db->execQuery($query, $params);
+    $db->execQuery($query, $params, false, false);
 }
 
 // Fonction qui ferme la partie $gameID (en retirant la ligne dans la table B_Partie) après avoir retiré tout les joueurs de la partie)
@@ -178,7 +178,7 @@ function closeWaitingRoomForGame($gameID){
     global $db;
     $query = "DELETE FROM B_Partie WHERE IdPartie = ?";
     $params = [[1, $gameID, PDO::PARAM_INT]];
-    $db->execQuery($query, $params);
+    $db->execQuery($query, $params, false, false);
 }
 
 
@@ -295,6 +295,9 @@ function getUserStatistics($id) {
     $query = "SELECT * FROM B_Joueur WHERE IdJoueur = ?";
     $params = [[1, $id, PDO::PARAM_INT]];
     $user = $db->execQuery($query, $params);
+    if (count($user) == 0) {
+        return null;
+    }
     $query = "SELECT SUM(Score) as score FROM B_Jouer WHERE IdJoueur = ? AND Score != -1";
     $params = [[1, $id, PDO::PARAM_INT]];
     $score = $db->execQuery($query, $params);
