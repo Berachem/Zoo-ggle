@@ -285,7 +285,24 @@ function getIdByPseudo($pseudo) {
     $id = $db->execQuery($query, $params);
     return $id[0]->IdJoueur;
 }
-
+function isAdmin($playerId){
+    global $db;
+    $query = "SELECT EstAdmin FROM B_Joueur WHERE IdJoueur = ?";
+    $params = [[1, $playerId, PDO::PARAM_INT]];
+    $result = $db->execQuery($query, $params);
+    if (count($result) == 0) {
+        return null;
+    }
+    return $result[0]->DateDebutPartie == 1;
+}
+function getMatchingUsers($pattern){
+    global $db;
+    $researchPattern = "%$pattern%";
+    $query = "SELECT * FROM B_Joueur WHERE Mail LIKE ? OR Pseudo LIKE = ?";
+    $params = [[1, $researchPattern, PDO::PARAM_STR],[2, $researchPattern, PDO::PARAM_STR]];
+    $users = $db->execQuery($query, $params);
+    return $users;
+}
 
 // renvoie les informations d'un joueur à partir de son ID (Table B_Joueur, somme des scores de toutes les parties jouées par le joueur où score != -1 (as score), nombre de parties jouées par le joueur (as gamesPlayed))
 // paramètres : $id : id du joueur

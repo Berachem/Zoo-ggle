@@ -8,6 +8,7 @@ CREATE TABLE B_Joueur(
    DateCreationCompte DATETIME,
    ProfilPublic TINYINT,
    DateDerniereConnexion DATETIME,
+   EstAutorise TINYINT,
    PRIMARY KEY(IdJoueur),
    UNIQUE(Mail),
    UNIQUE(Pseudo)

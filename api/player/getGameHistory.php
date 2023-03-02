@@ -13,14 +13,22 @@ if (!isset($_SESSION["user"])) {
     $response["redirect"] = '../index.php?notConnected=true';
 }else{
     if (isset($_POST["profileId"])){
-        $statistics = getUserStatistics(id);
-        if ($statistics != null){
-            $response["success"]=true;
-            $response["profileInfos"]=$statistics;
-        }else{
-            $response["sucess"]=false;
-            $response["errorCode"]=616; // No matching player
-            $response["redirect"]="../index.php";
+        $profileId = $_POST["profileId"];
+        $allGamesDetails = getAllGamesPlayedByUser($profileId);
+        $i = 0;
+        foreach ($allGamesDetails as $gameDetails) {
+            $allValidsWordsListByPlayer = getValidsWordsListByPlayerInGame($profileId, $gameDetails->IdPartie);
+            $validWordsNumber = count($allValidsWordsListByPlayer);
+            $allWordsListByPlayer = getAllWordsListByPlayerInGame($gameDetails->IdPartie, $profileId);
+            $wordProposedNumber = count($allWordsListByPlayer);
+            $validWordPercentage = ($validWordsNumber / $gameDetails->NombreMotsPossibles) * 100;
+
+            $allGamesDetails[$i]["validWordsNumber"] = $validWordsNumber;
+            $allGamesDetails[$i]["wordProposedNumber"] = $wordProposedNumber;
+            $allGamesDetails[$i]["validWordPercentage"] = $validWordPercentage;
+            $allGamesDetails[$i]["leaderboard"]=getLeaderBoardGame($gameDetails->IdPartie);
+//            $mode = intval($gameDetails->Mode) == 0 ? "Classique" : "spécial";
+            $i++;
         }
     }else{
         $response["sucess"]=false;
