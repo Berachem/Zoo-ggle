@@ -13,3 +13,4 @@
 613 : missing param
 614 : error while creating game
 615 : missing name, langue, taille, mode when creating game
+616 : no matching player (profile)
