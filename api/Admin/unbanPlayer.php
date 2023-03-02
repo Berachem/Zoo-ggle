@@ -12,13 +12,13 @@ if (!isset($_SESSION["user"])) {
     $response["redirect"] = '../index.php?notConnected=true';
 } else {
     if (isset($_SESSION["isAdmin"])&& $_SESSION["isAdmin"]==true){
-        if (isset($_POST["pattern"])){
-            $users = getMatchingUsers($_POST["pattern"]);
+        if (isset($_POST["playerId"])){
+            unbanPlayer(intval($_POST["pattern"]));
             $response["success"]=true;
-            $response["players"]=$users;
+            $response["redirect"] = "../admin.php";
         }else{
             $response["success"] = false;
-            $response["errorCode"] = 613; // missing pattern to search player
+            $response["errorCode"] = 613; // missing player to ban
             $response["redirect"] = '../index.php';
         }
     }else{

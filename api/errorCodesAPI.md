@@ -14,3 +14,4 @@
 614 : error while creating game
 615 : missing name, langue, taille, mode when creating game
 616 : no matching player (profile)
+617 : User is not allowed (not admin)

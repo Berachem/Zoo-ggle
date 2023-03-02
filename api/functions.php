@@ -285,6 +285,10 @@ function getIdByPseudo($pseudo) {
     $id = $db->execQuery($query, $params);
     return $id[0]->IdJoueur;
 }
+
+// Fonction qui renvoie true si le joueur d'id $playerId est admin, false sinon
+// paramètres : $playerId : id du joueur
+// return : true si le joueur est Admin
 function isAdmin($playerId){
     global $db;
     $query = "SELECT EstAdmin FROM B_Joueur WHERE IdJoueur = ?";
@@ -295,6 +299,25 @@ function isAdmin($playerId){
     }
     return $result[0]->DateDebutPartie == 1;
 }
+
+//Fonction qui met à jour un joueur avant d'empecher de jouer
+// paramètre : $playerId: id du joueur
+function banPlayer($playerId){
+    global $db;
+    $query = "UPDATE B_Joueur SET EstAutorise=1 WHERE IdJoueur=?";
+    $params = [[1, $playerId, PDO::PARAM_INT]];
+    $db->execQuery($query, $params,false,false);
+}
+
+//Fonction qui met à jour un joueur avant d'empecher de jouer
+// paramètre : $playerId: id du joueur
+function unbanPlayer($playerId){
+    global $db;
+    $query = "UPDATE B_Joueur SET EstAutorise=0 WHERE IdJoueur=?";
+    $params = [[1, $playerId, PDO::PARAM_INT]];
+    $db->execQuery($query, $params,false,false);
+}
+
 function getMatchingUsers($pattern){
     global $db;
     $researchPattern = "%$pattern%";
