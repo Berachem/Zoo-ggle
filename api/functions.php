@@ -527,6 +527,30 @@ function getLeaderBoardLastGameOfUser($idJoueur){
     return $result;
 }
 
+// Fonction qui modifie les données d'un profil public (mail, pseudo, description, logo, profilPublic)
+// paramètres : $idJoueur : id du joueur
+//              $mail : mail du joueur
+//              $pseudo : pseudo du joueur
+//              $description : description du joueur
+//              $logo : logo du joueur
+//              $profilPublic : profil public du joueur
+// return : true si la modification a été effectuée, false sinon
+function editPublicProfileDatas($idJoueur, $mail, $pseudo, $description, $logo, $profilPublic){
+    global $db;
+    $query = "UPDATE B_Joueur SET Mail = ?, Pseudo = ?, Description = ?, Logo = ?, ProfilPublic = ? WHERE IdJoueur = ?";
+    $params = [
+        [$mail, PDO::PARAM_STR],
+        [$pseudo, PDO::PARAM_STR],
+        [$description, PDO::PARAM_STR],
+        [$logo, PDO::PARAM_STR],
+        [$profilPublic, PDO::PARAM_INT],
+        [$idJoueur, PDO::PARAM_INT],
+    ];
+    return $db->execQuery($query, $params);
+}
+
+
+
 // Fonction qui renvoie la liste des Pseudo, Logo, Score, IdJoueur et IdPartie des joueurs de la partie $idPartie
 // order by Score DESC
 // paramètres : $idPartie : id de la partie
