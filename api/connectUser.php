@@ -14,14 +14,19 @@
             $_SESSION['token'] = $randomSHA256;
             $_SESSION['waitingUser'] = $user;
 
-            // add token to user
-            addTokenToUser($user, $randomSHA256);
+            if(needAToken($user)){
+                // add token to user
+                addTokenToUser($user, $randomSHA256);
 
-            // send token
-            sendTokenByMail(getPlayerMail($user), $randomSHA256);
-
+                // send token
+                sendTokenByMail(getPlayerMail($user), $randomSHA256);
+                $response["token"] = "need a verification";
+            }else{
+                $response["token"] = "does not need a verification";
+            }
             $response["success"] = true;
             $response["userId"] = $user;
+
         }else{
             $response["success"] = false;
             $response["errorCode"] = 601; // wrong login or password

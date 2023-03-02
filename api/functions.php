@@ -700,6 +700,22 @@ function getScoreOfPlayerInGame($idJoueur,$idGame){
     return $result;   
 }
 
+/**
+ * Fonction qui indique si un utilisateur à besoin d'un token (s'est connecté il y a plus de 3 jours)
+ *
+ * @param $user :l'id de l'utilisateur
+ * @return bool : true si il a besoin d'un token false sinon
+ *
+ */
+function needAToken($user){
+    global $db;
+    $query = "SELECT DateCreationCompte FROM B_Joueur WHERE IdJoueur=:id";
+    $parameters = [[":id",$user]];
+    $dateConnec = new DateTime(($db->execQuery($query,$parameters,true))[0]->DateCreationCompte);
+    $interval = $dateConnec->diff(new DateTime());
+    return $interval->d > 3;
+}
+
 
 // Fonction qui ajoute un token à un utilisateur avec un temps d'expiration de 1 heure
 // paramètres : $idJoueur : id du joueur

@@ -6,7 +6,7 @@
 </head>
 <body>
 <script>
-    async function test(){
+    async function testCreateGame(){
             const formData = new FormData();
             formData.append('name', 'Bidiboup');
             formData.append('langue', 'FRA');
@@ -27,7 +27,25 @@
             }
 
     }
-    test();
+
+    async function testConnexion(){
+        const formData = new FormData();
+        formData.append('login', 'oui');
+        formData.append('psw', 'oui');
+
+        const res = await fetch('connectUser.php', {
+            method: 'POST',
+            body: formData
+        })
+            .then(res => res.json());
+        if (res.ok) {
+            console.log(res);
+        } else {
+            return "echec connexion serveur"
+        }
+
+    }
+    testConnexion()
 
 </script>
 </body>
