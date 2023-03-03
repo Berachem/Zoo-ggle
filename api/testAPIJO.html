@@ -45,7 +45,28 @@
         }
 
     }
-    testConnexion()
+
+    async function testRegister(){
+        const formData = new FormData();
+        formData.append('login', 'non');
+        formData.append('psw', 'non'); //faudrait faire transiter le hash...
+        formData.append('mail', 'Jl.wisky2003@gmail.com');
+        //formData.append('public', '0');
+        formData.append('desc', 'non');
+
+        const res = await fetch('registerUser.php', {
+            method: 'POST',
+            body: formData
+        })
+            .then(res => res.json());
+        if (res.ok) {
+            console.log(res);
+        } else {
+            return "echec connexion serveur"
+        }
+
+    }
+    testRegister()
 
 </script>
 </body>

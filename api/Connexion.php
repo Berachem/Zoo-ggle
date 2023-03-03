@@ -131,7 +131,7 @@ class Connexion {
         $query = "INSERT INTO B_Joueur (Pseudo,MotDePasse,Mail,Description,ProfilPublic,DateCreationCompte) VALUES (:login ,:psw,:mail,:desc,:public,NOW())";
         $parameters = [[":login", $login], [":psw", hash("sha256", $psw)], [":mail", $mail], [":desc", $desc],
             [":public", $public]];
-        $this->execQuery($query, $parameters);
+        $this->execQuery($query, $parameters,false,false);
     }
 
     public function getId($pseudo){
