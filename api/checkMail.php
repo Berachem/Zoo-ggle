@@ -7,15 +7,15 @@ require_once "functions.php";
 
 $responce = array();
 
-if(isset($_POST['login'])){
+if(isset($_POST["mail"])){
 
-    $id = $db->getId($_POST['login']);
-    if($id == null){
+    if(checkMail($_POST["mail"])){
         $responce["retour"]="ok";
     }else{
-        $responce["code"]=618;
         $responce["retour"]="not ok";
+        $responce["code"]=619;
     }
+
 }else{
     $responce["code"]=613;
     $responce["retour"]="not ok";

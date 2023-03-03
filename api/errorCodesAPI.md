@@ -1,9 +1,9 @@
 600 : Missing login or password
 601 : Wrong login or password
-602: No game in progress
-603: User not connected
-604: User already in game or waiting room
-605: Game full
+602 : No game in progress
+603 : User not connected
+604 : User already in game or waiting room
+605 : Game full
 606 : Game does not exist
 607 : Missing game id
 608 : no game in progress for this user
@@ -15,3 +15,5 @@
 615 : missing name, langue, taille, mode when creating game
 616 : no matching player (profile)
 617 : User is not allowed (not admin)
+618 : User already exist
+619 : Mail already taken

@@ -66,7 +66,41 @@
         }
 
     }
-    testRegister()
+
+    async function testPseudo(){
+        const formData = new FormData();
+        formData.append('login', 'non');
+
+        const res = await fetch('checkPseudo.php', {
+            method: 'POST',
+            body: formData
+        })
+            .then(res => res.json());
+        if (res.ok) {
+            console.log(res);
+        } else {
+            return "echec connexion serveur"
+        }
+
+    }
+    testPseudo()
+    async function testMail(){
+        const formData = new FormData();
+        formData.append('mail', 'Jl.wisky2003@gmail.com');
+
+        const res = await fetch('checkMail.php', {
+            method: 'POST',
+            body: formData
+        })
+            .then(res => res.json());
+        if (res.ok) {
+            console.log(res);
+        } else {
+            return "echec connexion serveur"
+        }
+
+    }
+    testMail()
     async function testRandomAnimal(){
         const res = await fetch("animals/randomAnimal.php?language=FRA")
             .then(res => res.json());
@@ -77,8 +111,7 @@
             }
 
     }
-
-    testRandomAnimal()
+    //testRandomAnimal()
 
 </script>
 </body>

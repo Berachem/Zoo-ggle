@@ -147,6 +147,22 @@ function getPlayerMail($id) {
     return $result[0]->Mail;
 }
 
+//Fonction qui check si un email existe
+//paramètres : mail : le mail a check
+//return : true si il est libre, false sinon
+function checkMail($mail) {
+    global $db;
+    $query = "SELECT IdJoueur FROM B_Joueur WHERE Mail = ?";
+    $params = [
+        [1, $mail, PDO::PARAM_STR]
+    ];
+    $result = $db->execQuery($query, $params);
+    if (count($result) == 0) {
+        return true;
+    }
+    return false;
+}
+
 // Fonction qui ajoute un joueur dans le salon de la partie $idPartie (en créant une ligne dans la table B_Jouer avec le score à -1))
 // paramètres : $idJoueur : id du joueur, $idPartie : id de la partie
 // return : rien (exécute une requête)
