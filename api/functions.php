@@ -286,6 +286,46 @@ function getIdByPseudo($pseudo) {
     return $id[0]->IdJoueur;
 }
 
+// Fonction qui renvoie true si le joueur d'id $playerId est admin, false sinon
+// paramètres : $playerId : id du joueur
+// return : true si le joueur est Admin
+function isAdmin($playerId){
+    global $db;
+    $query = "SELECT EstAdmin FROM B_Joueur WHERE IdJoueur = ?";
+    $params = [[1, $playerId, PDO::PARAM_INT]];
+    $result = $db->execQuery($query, $params);
+    if (count($result) == 0) {
+        return null;
+    }
+    return $result[0]->DateDebutPartie == 1;
+}
+
+//Fonction qui met à jour un joueur avant d'empecher de jouer
+// paramètre : $playerId: id du joueur
+function banPlayer($playerId){
+    global $db;
+    $query = "UPDATE B_Joueur SET EstAutorise=1 WHERE IdJoueur=?";
+    $params = [[1, $playerId, PDO::PARAM_INT]];
+    $db->execQuery($query, $params,false,false);
+}
+
+//Fonction qui met à jour un joueur avant d'empecher de jouer
+// paramètre : $playerId: id du joueur
+function unbanPlayer($playerId){
+    global $db;
+    $query = "UPDATE B_Joueur SET EstAutorise=0 WHERE IdJoueur=?";
+    $params = [[1, $playerId, PDO::PARAM_INT]];
+    $db->execQuery($query, $params,false,false);
+}
+
+function getMatchingUsers($pattern){
+    global $db;
+    $researchPattern = "%$pattern%";
+    $query = "SELECT * FROM B_Joueur WHERE Mail LIKE ? OR Pseudo LIKE = ?";
+    $params = [[1, $researchPattern, PDO::PARAM_STR],[2, $researchPattern, PDO::PARAM_STR]];
+    $users = $db->execQuery($query, $params);
+    return $users;
+}
 
 // renvoie les informations d'un joueur à partir de son ID (Table B_Joueur, somme des scores de toutes les parties jouées par le joueur où score != -1 (as score), nombre de parties jouées par le joueur (as gamesPlayed))
 // paramètres : $id : id du joueur
@@ -526,6 +566,30 @@ function getLeaderBoardLastGameOfUser($idJoueur){
     $result = $db->execQuery($query, $params);
     return $result;
 }
+
+// Fonction qui modifie les données d'un profil public (mail, pseudo, description, logo, profilPublic)
+// paramètres : $idJoueur : id du joueur
+//              $mail : mail du joueur
+//              $pseudo : pseudo du joueur
+//              $description : description du joueur
+//              $logo : logo du joueur
+//              $profilPublic : profil public du joueur
+// return : true si la modification a été effectuée, false sinon
+function editPublicProfileDatas($idJoueur, $mail, $pseudo, $description, $logo, $profilPublic){
+    global $db;
+    $query = "UPDATE B_Joueur SET Mail = ?, Pseudo = ?, Description = ?, Logo = ?, ProfilPublic = ? WHERE IdJoueur = ?";
+    $params = [
+        [$mail, PDO::PARAM_STR],
+        [$pseudo, PDO::PARAM_STR],
+        [$description, PDO::PARAM_STR],
+        [$logo, PDO::PARAM_STR],
+        [$profilPublic, PDO::PARAM_INT],
+        [$idJoueur, PDO::PARAM_INT],
+    ];
+    return $db->execQuery($query, $params);
+}
+
+
 
 // Fonction qui renvoie la liste des Pseudo, Logo, Score, IdJoueur et IdPartie des joueurs de la partie $idPartie
 // order by Score DESC

@@ -1,5 +1,4 @@
 <?php
-
 require_once '../lib/parse.env.php';
 require_once '../Connexion.php';
 require_once '../functions.php';
@@ -11,30 +10,29 @@ if (!isset($_SESSION["user"])) {
     $response["success"] = false;
     $response["errorCode"] = 603; // user not connected
     $response["redirect"] = '../index.php?notConnected=true';
-}else{
-    if (isset($_POST["profileId"])){
-        $profileId=$_POST["profileId"];
-        $statistics = getUserStatistics($profileId);
-        if ($statistics != null){
+} else {
+    if (isset($_SESSION["isAdmin"])&& $_SESSION["isAdmin"]==true){
+        if (isset($_POST["playerId"])){
+            banPlayer(intval($_POST["pattern"]));
             $response["success"]=true;
-            $response["profileInfos"]=$statistics;
+            $response["redirect"] = "../admin.php";
         }else{
-            $response["sucess"]=false;
-            $response["errorCode"]=616; // No matching player
-            $response["redirect"]="../index.php";
+            $response["success"] = false;
+            $response["errorCode"] = 613; // missing player to ban
+            $response["redirect"] = '../index.php';
         }
     }else{
-        $response["sucess"]=false;
-        $response["errorCode"]=613; // No player to check given
-        $response["redirect"]="../index.php";
+        $response["success"] = false;
+        $response["errorCode"] = 617; // user is not admin
+        $response["redirect"] = '../index.php?notConnected=true';
     }
 }
-
 
 
 $response = array();
 $response["success"] = true;
 header('Content-Type: application/json');
 echo json_encode($response);
+
 
 ?>
