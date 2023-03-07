@@ -9,8 +9,8 @@ $response = array();
 
 
 // Validation du jeton
-if (isset($_GET['token']) ) {
-    if (isExpiredToken($_GET['token'])) {
+if (isset($_POST['token']) ) {
+    if (isExpiredToken($_POST['token'])) {
         $response["success"] = false;
         $response["errorCode"] = 610; // token expired
         $response["redirect"] = "../index.php?tokenExpired=true";
@@ -18,7 +18,7 @@ if (isset($_GET['token']) ) {
         echo json_encode($response);
         exit();
     }
-    if ( ( isset($_SESSION['token']) && isset($_SESSION['waitingUser']) ) && $_SESSION['token'] == $_GET['token']) {
+    if ( ( isset($_SESSION['token']) && isset($_SESSION['waitingUser']) ) && $_SESSION['token'] == $_POST['token']) {
         $_SESSION['user'] = $_SESSION['waitingUser'];
         unset($_SESSION['waitingUser']);
         unset($_SESSION['token']);
@@ -29,6 +29,7 @@ if (isset($_GET['token']) ) {
         exit();
     }
 
+    /*pas secu
     $user = getUserByToken($_GET['token']);
     if ($user) {
         $_SESSION['user'] = $user->IdJoueur;
@@ -38,6 +39,7 @@ if (isset($_GET['token']) ) {
         echo json_encode($response);
         exit();
     }
+    */
 
     $response["success"] = false;
     $response["errorCode"] = 611; // wrong token

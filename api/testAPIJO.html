@@ -83,7 +83,7 @@
         }
 
     }
-    testPseudo()
+
     async function testMail(){
         const formData = new FormData();
         formData.append('mail', 'Jl.wisky2003@gmail.com');
@@ -100,7 +100,25 @@
         }
 
     }
-    testMail()
+
+    async function testToken(){
+        const formData = new FormData();
+        formData.append('token', '123');
+
+        const res = await fetch('verifyToken.php', {
+            method: 'POST',
+            body: formData
+        })
+            .then(res => res.json());
+        if (res.ok) {
+            console.log(res);
+        } else {
+            return "echec connexion serveur"
+        }
+
+    }
+    testToken();
+
     async function testRandomAnimal(){
         const res = await fetch("animals/randomAnimal.php?language=FRA")
             .then(res => res.json());
