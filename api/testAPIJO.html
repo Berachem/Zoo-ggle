@@ -117,7 +117,24 @@
         }
 
     }
-    testToken();
+
+    async function testRecherche(){
+        const formData = new FormData();
+        formData.append('recherche', 'Partie Bidule');
+
+        const res = await fetch('searchGame.php', {
+            method: 'POST',
+            body: formData
+        })
+            .then(res => res.json());
+        if (res.ok) {
+            console.log(res);
+        } else {
+            return "echec connexion serveur"
+        }
+
+    }
+    testRecherche();
 
     async function testRandomAnimal(){
         const res = await fetch("animals/randomAnimal.php?language=FRA")

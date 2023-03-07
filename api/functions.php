@@ -1,6 +1,43 @@
 <?php
 // Fichier qui contient toutes les fonctions utilisées dans le site
 
+/*
+     * Effectue une recherche avec les éléments de $text dans le paramètre $parameter
+     * Renvoie le resultat de la commande sous forme de PDOStatment
+     *
+     * $text : le texte saisi par l'utilisateur
+     *
+     */
+function recherchePartie(string $text){
+    global $db;
+
+    //le bind de PHP n'aime pas les accents, du coup on vient tous les remplacer,
+    // le LIKE de SQL va rattraper la différence par la suite
+    $search  = array('À', 'Á', 'Â', 'Ã', 'Ä', 'Å', 'Ç', 'È', 'É', 'Ê', 'Ë', 'Ì', 'Í', 'Î', 'Ï', 'Ò', 'Ó', 'Ô', 'Õ', 'Ö', 'Ù', 'Ú', 'Û', 'Ü', 'Ý', 'à', 'á', 'â', 'ã', 'ä', 'å', 'ç', 'è', 'é', 'ê', 'ë', 'ì', 'í', 'î', 'ï', 'ð', 'ò', 'ó', 'ô', 'õ', 'ö', 'ù', 'ú', 'û', 'ü', 'ý', 'ÿ');
+    $replace = array('A', 'A', 'A', 'A', 'A', 'A', 'C', 'E', 'E', 'E', 'E', 'I', 'I', 'I', 'I', 'O', 'O', 'O', 'O', 'O', 'U', 'U', 'U', 'U', 'Y', 'a', 'a', 'a', 'a', 'a', 'a', 'c', 'e', 'e', 'e', 'e', 'i', 'i', 'i', 'i', 'o', 'o', 'o', 'o', 'o', 'o', 'u', 'u', 'u', 'u', 'y', 'y');
+    $text = str_replace($search, $replace, $text);
+    $text = str_replace("'","' ",$text);
+
+    $arrayOfword = explode(" ",$text);
+    $request = "SELECT * FROM B_Partie WHERE NomPartie";
+
+    //on commence par préparer la requette
+    $numberOfParameters = 0;
+    $parameters=array();
+    foreach ($arrayOfword as $mot){
+        if(strlen($mot)>2){              //on enlève toutes les particules (de,la,l'...)
+            $numberOfParameters++;
+            if($numberOfParameters==1){
+                $request.=" LIKE('%:$mot%')";
+            }else {
+                $request .= " OR NomPartie LIKE('%:$mot%')";
+            }
+            array_push($parameters,array(":$mot",$mot));
+        }
+    }
+    return $db->execQuery($request,$parameters);
+}
+
 
 // Fonction qui renvoie les infos d'une partie en fonction de son id
 // paramètres : $id : id de la partie
