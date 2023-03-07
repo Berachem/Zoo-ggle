@@ -100,7 +100,7 @@ function getGameEnded($idGame) {
 // return : true si la partie a commencé, false sinon
 function startGame($id) {
     global $db;
-    $query = "UPDATE B_Partie SET DateDebutPartie = NOW() WHERE IdPartie = ?";
+    $query = "UPDATE B_Partie SET DateDebutPartie = NOW() WHERE IdPartie = ?"; // TODO: DateFinPartie = NOW() + DUREE DE LA PARTIE
     $params = [[1, $id, PDO::PARAM_INT]];
     $db->execQuery($query, $params);
 
@@ -357,7 +357,7 @@ function isAdmin($playerId){
 // paramètre : $playerId: id du joueur
 function banPlayer($playerId){
     global $db;
-    $query = "UPDATE B_Joueur SET EstAutorise=1 WHERE IdJoueur=?";
+    $query = "UPDATE B_Joueur SET EstAutorise=0 WHERE IdJoueur=?";
     $params = [[1, $playerId, PDO::PARAM_INT]];
     $db->execQuery($query, $params,false,false);
 }
@@ -366,7 +366,7 @@ function banPlayer($playerId){
 // paramètre : $playerId: id du joueur
 function unbanPlayer($playerId){
     global $db;
-    $query = "UPDATE B_Joueur SET EstAutorise=0 WHERE IdJoueur=?";
+    $query = "UPDATE B_Joueur SET EstAutorise=1 WHERE IdJoueur=?";
     $params = [[1, $playerId, PDO::PARAM_INT]];
     $db->execQuery($query, $params,false,false);
 }
