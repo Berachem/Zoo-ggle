@@ -28,11 +28,11 @@ function recherchePartie(string $text){
         if(strlen($mot)>2){              //on enlève toutes les particules (de,la,l'...)
             $numberOfParameters++;
             if($numberOfParameters==1){
-                $request.=" LIKE('%:$mot%')";
+                $request.=" LIKE(CONCAT('%', :$mot, '%'))";
             }else {
-                $request .= " OR NomPartie LIKE('%:$mot%')";
+                $request .= " OR NomPartie LIKE(CONCAT('%', :$mot, '%'))";
             }
-            array_push($parameters,array(":$mot",$mot));
+            $parameters[] = [":$mot", $mot];
         }
     }
     return $db->execQuery($request,$parameters);
