@@ -3,6 +3,8 @@ import logo from './logo.svg';
 import ReactDOM from "react-dom/client";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import './App.css';
+import Navbar from './components/navbar/navbar_landing_page';
+import Profile from './pages/profile';
 
 function App() {
     // ici on met les routes de notre application
@@ -31,12 +33,23 @@ function App() {
   ); */
 
   return (
+   /*  <>  
+    <Navbar />
     <div className="App">
       <header className="App-header">
         <h1 style={{color: "white"}}>Bonjour, regarde le fichier App.tsx ^^</h1>
         <p style={{color: "white"}}> Tu peux commencer à coder ici !</p>
+        <h1 className="text-3xl font-bold underline">
+      Hello world!
+    </h1>
       </header>
     </div>
+    </> */
+    <> 
+    <Navbar />
+    <br></br>
+    <Profile />
+    </>
   );
 
 
