@@ -16,6 +16,7 @@ import {
   BuildingLibraryIcon,
 } from "@heroicons/react/24/solid";
 import Footer from "../components/footer/footer";
+import CardWithImage from '../components/card/card';
 
 export function Profile() {
   return (
@@ -31,19 +32,21 @@ export function Profile() {
               <div className="flex flex-wrap justify-center">
                 <div className="flex w-full justify-center px-4 lg:order-2 lg:w-3/12">
                   <div className="relative">
-                    <div className="-mt-20 w-40">
+                    <div className="shadow-xl border-4 border-white p-1">
                       <Avatar
                         src={Mbappe}
                         alt="Profile picture"
                         variant="circular"
                         /* circle profile picture */
-                        className="shadow-xl border-4 border-white rounded-full"
+                        className="w-32 h-32"
                       />
                     </div>
                   </div>
                 </div>
                 <div className="mt-10 flex w-full justify-center px-4 lg:order-3 lg:mt-0 lg:w-4/12 lg:justify-end lg:self-center">
-                  <Button className="bg-blue-400">Conntect</Button>
+                  <Button className="bg-green-700 text-white active:bg-green-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150" type="button">
+                    Modifier
+                  </Button>
                 </div>
                 <div className="w-full px-4 lg:order-1 lg:w-4/12">
                   <div className="flex justify-center py-4 pt-8 lg:pt-4">
@@ -129,7 +132,6 @@ export function Profile() {
                       warm, intimate feel with a solid groove structure. An
                       artist of considerable range.
                     </Typography>
-                    <Button variant="text">Show more</Button>
                   </div>
                 </div>
               </div>
@@ -137,6 +139,7 @@ export function Profile() {
           </div>
         </div>
       </section>
+
       <div className="bg-blue-gray-50/50">
         <Footer />
       </div>

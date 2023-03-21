@@ -47,7 +47,6 @@ function App() {
     </> */
     <> 
     <Navbar />
-    <br></br>
     <Profile />
     </>
   );
