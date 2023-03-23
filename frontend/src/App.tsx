@@ -3,8 +3,14 @@ import logo from './logo.svg';
 import ReactDOM from "react-dom/client";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import './App.css';
-import Navbar from './components/navbar/navbar_landing_page';
+import AppBar from './components/navbar/navbar';
 import Profile from './pages/profile';
+import Footer from './components/footer/footer';
+
+// Test de la librairie react-toastify pour les notifications (à supprimer)
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import Dictionnaire from './pages/dictionnaire';
 
 function App() {
     // ici on met les routes de notre application
@@ -46,8 +52,10 @@ function App() {
     </div>
     </> */
     <> 
-    <Navbar />
-    <Profile />
+    <AppBar />
+
+   <Profile /> 
+   {/*  <Dictionnaire /> */}
     </>
   );
 

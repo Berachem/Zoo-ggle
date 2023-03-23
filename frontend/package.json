@@ -10,13 +10,18 @@
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
     "@types/jest": "^27.5.2",
+    "@types/lodash": "^4.14.191",
     "@types/node": "^16.18.16",
     "@types/react": "^18.0.28",
     "@types/react-dom": "^18.0.11",
     "font-awesome": "^4.7.0",
+    "lodash.debounce": "^4.0.8",
     "react": "^18.2.0",
+    "react-copy-to-clipboard": "^5.1.0",
     "react-dom": "^18.2.0",
     "react-scripts": "5.0.1",
+    "react-spinners": "^0.13.8",
+    "react-toastify": "^9.1.2",
     "react-widgets-layout": "0.0.45",
     "typescript": "^4.9.5",
     "web-vitals": "^2.1.4"
@@ -46,6 +51,7 @@
     ]
   },
   "devDependencies": {
+    "@types/lodash.debounce": "^4.0.7",
     "react-router-dom": "^6.9.0",
     "tailwindcss": "^3.2.7"
   }
