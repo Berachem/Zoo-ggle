@@ -12,6 +12,7 @@ import {
   MenuItem,
   Avatar,
   Card,
+  Switch,
   IconButton,
 } from "@material-tailwind/react";
 import {
@@ -30,6 +31,13 @@ import {
   BookOpenIcon,
   PlayIcon
 } from "@heroicons/react/24/outline";
+
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+
+import routes from "../../routes";
+
+import {faHippo} from "@fortawesome/free-solid-svg-icons";
+
  
 // profile menu component
 const profileMenuItems = [
@@ -192,30 +200,17 @@ function NavListMenu() {
 }
  
 // nav list component
-const navListItems = [
-  {
-    label: "Accueil",
-    icon: HomeIcon,
-  },
-  {
-    label: "Jouer",
-    icon: PlayIcon,
-  },
-  {
-    label: "Dictionnaire",
-    icon: BookOpenIcon,
-  },
-];
+const navListItems = routes;
  
 function NavList() {
   return (
     <ul className="mb-4 mt-2 flex flex-col gap-2 lg:mb-0 lg:mt-0 lg:flex-row lg:items-center">
       {/* <NavListMenu /> */}
-      {navListItems.map(({ label, icon }, key) => (
+      {navListItems.map(({ label, icon, path }, key) => (
         <Typography
           key={label}
           as="a"
-          href="#"
+          href={path}
           variant="small"
           color="blue-gray"
           className="font-normal"
@@ -226,6 +221,21 @@ function NavList() {
           </MenuItem>
         </Typography>
       ))}
+      {/* ajoute un switch pour passer du mode Idéaliste ou réaliste avec des icônes */}
+        
+
+
+      <span className="flex items-center gap-2 text-blue-gray-900 lg:hidden">
+      <FontAwesomeIcon icon={faHippo}  className="h-[18px] w-[18px]" /> Idéaliste{" "}
+      </span>
+      <Switch
+        checked={true}
+        onChange={() => {}}
+        className="flex-shrink-0 h-5 w-9"
+      >
+      </Switch>
+
+
     </ul>
   );
 }
