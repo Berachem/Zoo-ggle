@@ -274,15 +274,7 @@ const Profile = () => {
   };
 
   return (
-    <div
-      className="bg-cover bg-center min-h-screen flex flex-col justify-center items-center"
-      style={{
-        backgroundImage:
-          "url('https://img.freepik.com/vecteurs-libre/fond-jungle-detaille_23-2148949774.jpg?w=2000')",
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-      }}
-    >
+    <div className="bg-cover bg-center min-h-screen flex flex-col justify-center items-center">
       <div
         className="bg-white bg-opacity-80 rounded-xl p-8 "
         style={{ width: "70%", marginTop: "50px" }}

@@ -7,6 +7,7 @@ import AppBar from './components/navbar/navbar';
 import Profile from './pages/profile';
 import Footer from './components/footer/footer';
 import NavBar from './components/navbar/navbar';
+import Background from './components/Zooggle/Background';
 
 // Test de la librairie react-toastify pour les notifications (à supprimer)
 import { ToastContainer, toast } from 'react-toastify';
@@ -24,6 +25,7 @@ function App() {
   return (
     <BrowserRouter>
     <>
+    <Background/>
     <NavBar />
       <Routes> 
         {routes.map((route, index) => (

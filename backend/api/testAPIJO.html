@@ -5,6 +5,8 @@
     <title>Titre de la page</title>
 </head>
 <body>
+    <div id="ressource"></div>
+</body>
 <script>
     async function testCreateGame(){
             const formData = new FormData();
@@ -120,14 +122,15 @@
 
     async function testRecherche(){
         const formData = new FormData();
-        formData.append('recherche', 'Bidiboup');
+        formData.append('recherche', 'Bidiboup Partie');
 
-        const res = await fetch('searchGame.php', {
+        const res = await fetch('http://perso-etudiant.u-pem.fr/~joshua.lemoine/backend/api/searchGame.php', {
             method: 'POST',
             body: formData
         })
             .then(res => res.json());
         if (res.ok) {
+            document.getElementById("ressource").innerHTML=JSON.stringify(res)
             console.log(res);
         } else {
             return "echec connexion serveur"
