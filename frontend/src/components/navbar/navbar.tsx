@@ -44,10 +44,12 @@ const profileMenuItems = [
   {
     label: "Mon Profil",
     icon: UserCircleIcon,
+    path : "/profil"
   },
   {
     label: "Se déconnecter",
     icon: PowerIcon,
+    path : "/déconnexion"
   },
 ];
 
@@ -80,12 +82,14 @@ function ProfileMenu() {
           </Button>
         </MenuHandler>
         <MenuList className="p-1">
-          {profileMenuItems.map(({ label, icon }, key) => {
+          {profileMenuItems.map(({ label, icon, path }, key) => {
             const isLastItem = key === profileMenuItems.length - 1;
             return (
+              <a href={path}>
               <MenuItem
                 key={label}
                 onClick={closeMenu}
+
                 className={`flex items-center gap-2 rounded ${
                   isLastItem
                     ? "hover:bg-red-500/10 focus:bg-red-500/10 active:bg-red-500/10"
@@ -105,6 +109,7 @@ function ProfileMenu() {
                   {label}
                 </Typography>
               </MenuItem>
+              </a>
             );
           })}
         </MenuList>

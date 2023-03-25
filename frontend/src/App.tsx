@@ -30,6 +30,7 @@ function App() {
           <Route key={index} path={route.path} element={route.element}
              />
         ))}
+        <Route path='/profil' element={<Profile />} />
         <Route path="*" element={<Page404 />} />
       </Routes>
       </>
