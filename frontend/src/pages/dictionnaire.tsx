@@ -2,7 +2,8 @@ import { useState, useEffect, useMemo  } from 'react';
 import { Input, Button} from '@material-tailwind/react';
 import PulseLoader from 'react-spinners/PulseLoader';
 import debounce from 'lodash.debounce';
-import { toast } from 'react-toastify';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 
 
@@ -75,8 +76,10 @@ function Dictionnaire() {
   , []);
 
   const handleCopy = () => {
+    toast.success('🎉 Lien copié !');
     const currentUrl = window.location.href;
-    alert(`Copied to clipboard: ${currentUrl}`);
+    navigator.clipboard.writeText(currentUrl);
+    
   };
 
   const currentUrl = window.location.href;

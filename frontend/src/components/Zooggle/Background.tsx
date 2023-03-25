@@ -1,9 +1,13 @@
-import Fond from "../../assets/images/Fond.jpg";
+import RealisteBackGround from "../../assets/images/backgrounds/realiste.jpg";
+import IdealisteBackGround from "../../assets/images/backgrounds/idealiste.png";
 
-export default function Background(){
+export default function Background(
+    {backgroundMode}: {backgroundMode: boolean}
+){
+
     return(<div
         style={{
-        backgroundImage: `url(${Fond})`,
+        backgroundImage:  `url(${backgroundMode ? RealisteBackGround : IdealisteBackGround})`,
         backgroundSize: "cover",
         backgroundPosition: "center",
         position: "fixed",
@@ -12,6 +16,7 @@ export default function Background(){
         minWidth: "100%",
         minHeight: "100%",
         zIndex: "-1"
+
     }}></div>)
 }
 

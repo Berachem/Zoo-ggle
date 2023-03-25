@@ -37,6 +37,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import routes from "../../routes";
 
 import {faHippo} from "@fortawesome/free-solid-svg-icons";
+import { Helmet } from "react-helmet";
 
  
 // profile menu component
@@ -207,7 +208,12 @@ function NavListMenu() {
 // nav list component
 const navListItems = routes;
  
-function NavList() {
+function NavList(
+  props = {
+    changeBackgroundMode  : () => {},
+    backgroundMode : false
+  }
+) {
   return (
     <ul className="mb-4 mt-2 flex flex-col gap-2 lg:mb-0 lg:mt-0 lg:flex-row lg:items-center">
       {/* <NavListMenu /> */}
@@ -234,9 +240,9 @@ function NavList() {
       <FontAwesomeIcon icon={faHippo}  className="h-[18px] w-[18px]" /> Idéaliste{" "}
       </span>
       <Switch
-        checked={true}
-        onChange={() => {}}
+        onChange={() => props.changeBackgroundMode()}
         className="flex-shrink-0 h-5 w-9"
+        style={{backgroundColor: props.backgroundMode ? "#6b7280" : "#f59e0b"}}
       >
       </Switch>
 
@@ -244,8 +250,14 @@ function NavList() {
     </ul>
   );
 }
- 
-export default function AppBar() {
+ // changeBackgroundMode
+export default function AppBar(
+  props = {
+    changeBackgroundMode  : () => {},
+    backgroundMode : false
+  }
+
+) {
   const [isNavOpen, setIsNavOpen] = React.useState(false);
   const toggleIsNavOpen = () => setIsNavOpen((cur) => !cur);
  
@@ -266,7 +278,7 @@ export default function AppBar() {
   return (
     <>
 
-      <Navbar className="mx-auto max-w-screen-xl p-2 lg:rounded-full lg:pl-6">
+      <Navbar className="mx-auto max-w-screen-xl p-2 lg:rounded-full lg:pl-6 sticky" id="navbar" style={{backgroundColor: "white"}}>
         <div className="relative mx-auto flex items-center text-blue-gray-900">
         <img src={Logo} alt="logo" className="h-8 w-8" />
           <Typography
@@ -279,7 +291,7 @@ export default function AppBar() {
           </Typography>
           
           <div className="absolute top-2/4 left-2/4 hidden -translate-x-2/4 -translate-y-2/4 lg:block">
-            <NavList />
+            <NavList changeBackgroundMode={props.changeBackgroundMode} backgroundMode={props.backgroundMode} />
           </div>
           <IconButton
             size="sm"
@@ -293,9 +305,34 @@ export default function AppBar() {
           <ProfileMenu />
         </div>
         <MobileNav open={isNavOpen} className="overflow-scroll">
-          <NavList />
+          <NavList changeBackgroundMode={props.changeBackgroundMode} backgroundMode={props.backgroundMode} />
         </MobileNav>
       </Navbar>
+      <Helmet>
+        <script>
+          {`
+            window.addEventListener("scroll", () => {
+              const navbar = document.getElementById("navbar");
+              if (window.scrollY > 0) {
+                navbar.style.width = "100%";
+              } else {
+                navbar.style.width = "auto";
+              }
+            });
+          `}
+        </script>
+        <style>
+          {`
+          #navbar{
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            transition: width 0.3s ease-in-out;
+          }
+          `}
+        </style>
+      </Helmet>
     </>
   );
 }
