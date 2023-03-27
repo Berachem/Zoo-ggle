@@ -7,6 +7,7 @@ import {
 import  Accueil  from "./pages/accueil";
 import  Jouer  from "./pages/jouer";
 import  Dictionnaire from "./pages/dictionnaire";
+import Game from "./pages/game"
 
 export const routes = [
     {
@@ -27,6 +28,12 @@ export const routes = [
         icon: BookOpenIcon,
         element : <Dictionnaire />,
         },
+      {
+        label: "Game",
+        path: "/game",
+          icon: HomeIcon,
+          element :< Game />,
+      }
   ];
 
 export default routes;
