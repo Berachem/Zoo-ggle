@@ -59,7 +59,10 @@ export default function Jouer() {
                         </Typography>
                     </ZooggleCard>
                     <ZooggleCard width="">
-                        <GameGrid width="40vw" grid="A A A A A A A A A A A A A A A A"/>
+                        <GameGrid width="big" grid="A A A A A A A A A A A A A A A A"/>
+                    </ZooggleCard>
+                    <ZooggleCard width="">
+                        <GameGrid width="small" grid="A A A A A A A A A A A A A A A A"/>
                     </ZooggleCard>
                               
                 </div>
