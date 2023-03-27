@@ -46,6 +46,11 @@
     font-size: var(--small-font);
 }
 
+.selected{
+    color:orange;
+    border:2px solid orange;
+}
+
 @media(max-width:900px ){
     :root{
         --big-between:0.5rem;
