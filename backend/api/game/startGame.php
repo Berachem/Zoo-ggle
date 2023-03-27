@@ -16,6 +16,7 @@ if (!isset($_SESSION["user"])) {
     $response["errorCode"] = 603; // user not connected
     $response["redirect"] = '../index.php?notConnected=true';
     header('Content-Type: application/json');
+header('Access-Control-Allow-Origin: *');
     echo json_encode($response);
 }
 
@@ -29,6 +30,7 @@ if (!$gameNotStarted) {
     $response["errorCode"] = 602; // no game in progress
     $response["redirect"] = '../index.php?noGameInProgress=true';
     header('Content-Type: application/json');
+header('Access-Control-Allow-Origin: *');
     echo json_encode($response);
 }
 
@@ -42,6 +44,7 @@ if ($chef != $_SESSION["user"]) {
     $response["errorCode"] = 609; // not the chef of the game
     $response["redirect"] = '../index.php?notTheChef=true';
     header('Content-Type: application/json');
+header('Access-Control-Allow-Origin: *');
     echo json_encode($response);
 }
 
@@ -52,6 +55,7 @@ startGame($gameNotStarted);
 $response = array();
 $response["success"] = true;
 header('Content-Type: application/json');
+header('Access-Control-Allow-Origin: *');
 echo json_encode($response);
 
 

@@ -27,13 +27,14 @@ if (!isset($_SESSION["user"])) {
         $response["players"]=$players;
         $response["gameStarted"]=$gameStarted;
     }else{
-        $response["sucess"]=false;
+        $response["success"]=false;
         $response["errorCode"]=602;
         $response["redirect"]="../searchGame.php";
     }
 }
 
 header('Content-Type: application/json');
+header('Access-Control-Allow-Origin: *');
 echo json_encode($response);
 
 ?>

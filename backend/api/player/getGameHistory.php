@@ -6,14 +6,14 @@ require_once '../functions.php';
 session_start();
 
 $response = array();
-if (!isset($_SESSION["user"])) {
-    // pas connecté (json)
-    $response["success"] = false;
-    $response["errorCode"] = 603; // user not connected
-    $response["redirect"] = '../index.php?notConnected=true';
-}else{
-    if (isset($_POST["profileId"])){
-        $profileId = $_POST["profileId"];
+
+    if (isset($_GET["profileId"]) || isset($_GET["pseudo"])){
+        if (isset($_GET["profileId"])){
+            $profileId=$_GET["profileId"];
+        }else{
+            $profileId= getIdByPseudo($_GET["pseudo"]);
+        }
+
         $allGamesDetails = getAllGamesPlayedByUser($profileId);
         $i = 0;
         foreach ($allGamesDetails as $gameDetails) {
@@ -30,18 +30,22 @@ if (!isset($_SESSION["user"])) {
 //            $mode = intval($gameDetails->Mode) == 0 ? "Classique" : "spécial";
             $i++;
         }
+        $response["success"]=true;
+        $response["allGamesDetails"]=$allGamesDetails == null ? [] : $allGamesDetails;
+
+
+
     }else{
-        $response["sucess"]=false;
-        $response["errorCode"]=613; // No player to check given
-        $response["redirect"]="../index.php";
+    $response["success"]=false;
+    $response["errorCode"]=613; // No player to check given
+    $response["redirect"]="../index.php";
     }
-}
 
 
 
-$response = array();
-$response["success"] = true;
 header('Content-Type: application/json');
+header('Access-Control-Allow-Origin: *');
 echo json_encode($response);
+
 
 ?>

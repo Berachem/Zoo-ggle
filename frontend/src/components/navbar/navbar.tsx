@@ -45,7 +45,7 @@ const profileMenuItems = [
   {
     label: "Mon Profil",
     icon: UserCircleIcon,
-    path : "/profil"
+    path : "/profile/me"
   },
   {
     label: "Se déconnecter",

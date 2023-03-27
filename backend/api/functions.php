@@ -298,6 +298,7 @@ function getPseudoById($id) {
     return $pseudo[0]->Pseudo;
 }
 
+
 // fonction qui renvoie le lien vers l'image du joueur à partir de son ID
 // paramètres : $id : id du joueur
 // return : le lien vers l'image du joueur $id
@@ -399,6 +400,38 @@ function getUserStatistics($id) {
     $gamesPlayed = $db->execQuery($query, $params);
     $user[0]->score = $score[0]->score;
     $user[0]->gamesPlayed = $gamesPlayed[0]->gamesPlayed;
+
+    // parties gagnées, 
+    $query = "SELECT COUNT(IdPartie) as gamesWon FROM B_Jouer WHERE IdJoueur = ? AND Score >=(SELECT MAX(Score) FROM B_Jouer WHERE IdPartie = B_Jouer.IdPartie)";
+    $params = [[1, $id, PDO::PARAM_INT]];
+    $gamesWon = $db->execQuery($query, $params);
+    $user[0]->gamesWon = $gamesWon[0]->gamesWon;
+    // parties perdues,
+    $query = "SELECT COUNT(IdPartie) as gamesLost FROM B_Jouer WHERE IdJoueur = ? AND Score <(SELECT MAX(Score) FROM B_Jouer WHERE IdPartie = B_Jouer.IdPartie)";
+    $params = [[1, $id, PDO::PARAM_INT]];
+    $gamesLost = $db->execQuery($query, $params);
+    $user[0]->gamesLost = $gamesLost[0]->gamesLost;
+    
+    //parties jouées, 
+    $query = "SELECT COUNT(IdProposer) as wordsProposed FROM B_Proposer WHERE IdJoueur = ?";
+    $params = [[1, $id, PDO::PARAM_INT]];
+    $wordsProposed = $db->execQuery($query, $params);
+    $user[0]->wordsProposed = $wordsProposed[0]->wordsProposed;
+    //mots proposés, 
+    $query = "SELECT COUNT(IdProposer) as wordsProposed FROM B_Proposer WHERE IdJoueur = ?";
+    $params = [[1, $id, PDO::PARAM_INT]];
+    $wordsProposed = $db->execQuery($query, $params);
+    $user[0]->wordsProposed = $wordsProposed[0]->wordsProposed;
+
+    //mots trouvés
+    $query = "SELECT COUNT(IdProposer) as wordsValidated FROM B_Proposer WHERE IdJoueur = ? AND EstValide = 1";
+    $params = [[1, $id, PDO::PARAM_INT]];
+    $wordsValidated = $db->execQuery($query, $params);
+    $user[0]->wordsValidated = $wordsValidated[0]->wordsValidated;
+    
+
+
+
     return $user;
 }
 

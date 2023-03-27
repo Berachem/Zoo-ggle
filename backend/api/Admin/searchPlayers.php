@@ -32,6 +32,7 @@ if (!isset($_SESSION["user"])) {
 $response = array();
 $response["success"] = true;
 header('Content-Type: application/json');
+header('Access-Control-Allow-Origin: *');
 echo json_encode($response);
 
 

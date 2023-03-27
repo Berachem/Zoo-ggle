@@ -11,6 +11,7 @@ session_start();
 
 
     header('Content-Type: application/json');
+header('Access-Control-Allow-Origin: *');
     
     if(isset($_POST["idPartie"])) {
         $playersData = getLeaderBoardGame($_POST["idPartie"]);

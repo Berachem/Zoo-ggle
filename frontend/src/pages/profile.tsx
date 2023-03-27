@@ -3,7 +3,7 @@
 
 import React, { useState } from "react";
 import ReactDOM from "react-dom/client";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useParams } from "react-router-dom";
 import Logo from "../assets/images/zooggle_lion_logo_blue.png";
 import Mbappe from "../assets/images/mbappe.jpg";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -20,6 +20,10 @@ import {
   faBook,
   faRotateBack,
   faBookBookmark,
+  faSadCry,
+  faThumbsDown,
+  faExclamationTriangle,
+  faCrown,
 } from "@fortawesome/free-solid-svg-icons";
 import { Avatar, Typography, Button } from "@material-tailwind/react";
 import {
@@ -29,6 +33,9 @@ import {
 } from "@heroicons/react/24/solid";
 import Footer from "../components/footer/footer";
 import CardWithImage from "../components/card/card";
+import { useEffect } from 'react';
+import { BounceLoader } from "react-spinners";
+import { isUndefined } from "lodash";
 
 interface GameCardProps {
   title: string;
@@ -117,7 +124,7 @@ const GameCard = ({
               </a>
               <div>{score}</div>
             </div>
-          ))}
+          ))}profileData
         </div>
       </div>
     </div>
@@ -125,6 +132,23 @@ const GameCard = ({
 };
 
 const Profile = () => {
+  let { id } = useParams();
+  const PROFILE_DATA_BASE_URL = "https://zoo-ggle.berachem.dev/V2/api/player/getUserInfos.php?profileId="
+  const GAME_DATA_BASE_URL = "https://zoo-ggle.berachem.dev/V2/api/player/getGameHistory.php?profileId="
+  const [profileData, setProfileData] = useState( {
+    pseudo: "",
+    description: "",
+    gamesWon: 0,
+    gamesPlayed: 0,
+    gamesLost: 0,
+    wordsFound: 0,
+    longestWord: "",
+    averageWordsPerGame: 0,
+    isPublic: false,
+    inscriptionDate: "",
+    lastGameDate: "",
+  });
+
   const gamesData = [
     // données factices pour l'historique des parties
     {
@@ -144,94 +168,62 @@ const Profile = () => {
       wordsFound: 10,
       numberOfWords: 250,
     },
-    {
-      id: 2,
-      title: "Partie 2",
-      date: "12/03/2022",
-      score: 40,
-      grid: "B K M E",
-      language: "Anglais",
-      leaderboard: new Map([
-        ["Ronaldinho", 50],
-        ["Mbappe", 40],
-        ["Neymar", 30],
-        ["Messi", 20],
-        ["Zlatan", 10],
-      ]),
-      wordsFound: 100,
-      numberOfWords: 370,
-    },
-    {
-      id: 3,
-      title: "Partie 3",
-      date: "20/03/2021",
-      score: 30,
-      grid: "A B C D E F G H I J K L M N O P",
-      language: "Français",
-      leaderboard: new Map([
-        ["Mbappe", 50],
-        ["Neymar", 40],
-        ["Ronaldo", 30],
-        ["Messi", 20],
-        ["Zlatan", 10],
-      ]),
-      wordsFound: 10,
-      numberOfWords: 250,
-    },
-    {
-      id: 4,
-      title: "Partie 4",
-      date: "20/03/2020",
-      score: 20,
-      grid: "A B C D E F G H I J K L M N O P",
-      language: "Français",
-      leaderboard: new Map([
-        ["Mbappe", 50],
-        ["Neymar", 40],
-        ["Ronaldo", 30],
-        ["Messi", 20],
-        ["Zlatan", 10],
-      ]),
-      wordsFound: 10,
-      numberOfWords: 250,
-    },
-    {
-      id: 5,
-      title: "Partie 5",
-      date: "20/03/2019",
-      score: 10,
-      grid: "A B C D E F G H I J K L M N O P",
-      language: "Français",
-      leaderboard: new Map([
-        ["Mbappe", 50],
-        ["Neymar", 40],
-        ["Ronaldo", 30],
-        ["Messi", 20],
-        ["Zlatan", 10],
-      ]),
-      wordsFound: 10,
-      numberOfWords: 250,
-    },
-    {
-      id: 6,
-      title: "Partie 6",
-      date: "20/03/2018",
-      score: 0,
-      grid: "A B C D E F G H I J K L M N O P",
-      language: "Français",
-      leaderboard: new Map([
-        ["Mbappe", 50],
-        ["Neymar", 40],
-        ["Ronaldo", 30],
-        ["Messi", 20],
-        ["Zlatan", 10],
-      ]),
-      wordsFound: 10,
-      numberOfWords: 250,
-    },
   ];
+  const [ownProfile, setOwnProfile] = useState(false);
+  const [userFound, setUserFound] = useState(true);
+  const [gameData, setGameData] = useState(gamesData);
+  const [isFetching, setIsFetching] = useState(false);
 
-  const userData = {
+
+
+
+
+  useEffect(() => {
+    const fetchData = async () => {
+
+      setIsFetching(true);
+      // /:id use params to get the id of the user
+      
+      let idUser = parseInt(id!); // ajoutez le point d'exclamation pour indiquer que id n'est pas undefined
+      console.log(idUser);
+      if (isNaN(idUser)) { // vérifiez si idUser est NaN
+        idUser = parseInt(localStorage.getItem("id")!); // utilisez le point d'exclamation pour garantir que getItem ne renvoie pas undefined
+        setOwnProfile(true);
+      }
+      console.log(idUser);
+      
+      const response = await fetch(PROFILE_DATA_BASE_URL + idUser);
+      const data = await response.json();
+      console.log(data);
+      if (data.success === false) {
+        setUserFound(false);
+        setIsFetching(false);
+        return;
+      }
+      const userProfileData = {
+        pseudo: data.profileInfos[0].Pseudo,
+        description: data.profileInfos[0].Description,
+        gamesWon: parseInt(data.profileInfos[0].gamesWon),
+        gamesPlayed: parseInt(data.profileInfos[0].gamesPlayed),
+        gamesLost: parseInt(data.profileInfos[0].gamesLost),
+        wordsFound: isNaN(parseInt(data.profileInfos[0].wordsFound)) ? 0 : parseInt(data.profileInfos[0].wordsFound)
+        ,
+        longestWord: "",
+        averageWordsPerGame: 0,
+        isPublic: parseInt(data.profileInfos[0].ProfilPublic) === 1,
+        inscriptionDate: new Date(data.profileInfos[0].DateCreationCompte).toLocaleDateString(),
+        lastGameDate: new Date(data.profileInfos[0].DateDerniereConnexion).toLocaleDateString(),
+        email: data.profileInfos[0].Mail,
+      };
+      setProfileData(userProfileData);
+      
+      setIsFetching(false);
+    };
+    fetchData();
+  }, [id]);
+  
+
+/*   const profileData = {
     // données factices pour le profil
     pseudo: "Mbappe",
     description:
@@ -247,31 +239,69 @@ const Profile = () => {
     inscriptionDate: "20/03/2021",
     lastGameDate: "20/03/2023",
     email: "mbappe@gmail.com",
-  };
+  }; */
 
-  const currentAge = () => {
-    // calcul de l'âge à partir de la date de naissance
-    const today = new Date();
-    // convert french date to english date
-    const convertDate = userData.birthday.split("/").reverse().join("-");
-    const birthDate = new Date(convertDate);
-
-    let age = today.getFullYear() - birthDate.getFullYear();
-    const m = today.getMonth() - birthDate.getMonth();
-    if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
-      age--;
-    }
-    return age;
-  };
 
   const [pseudoSearch, setPseudoSearch] = useState("");
 
   const handleClickSearchProfile = () => {
     // fonction qui permet de rechercher un profil (redirection vers la page de recherche de profil de l'utilisateur)
     // profile/:pseudo
-    //history.push(`/profile/${pseudoSearch}`);
-    console.log("Recherche du profil de " + pseudoSearch);
+    // redirect to /profile/:pseudo
+   alert("Recherche du profil de " + pseudoSearch);
+   
+
+    
   };
+
+  if (isFetching) {
+   // bouncing loader
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <BounceLoader color={"#E6EBF1"} loading={isFetching} size={150} />
+      </div>
+    );
+  }
+
+  if (!userFound) {
+    // tailwind "utilisateur non trouvé" with a button to go back to the home page and icon in the middle of the screen in red
+    // avec un bouton pour revenir à la page d'accueil et une icone au milieu de l'écran en rouge
+    // centré verticalement et horizontalement sur une div bg-white bg-opacity-80 rounded-xl p-8
+    return (
+      <div className="bg-cover bg-center min-h-screen flex flex-col justify-center items-center">
+        <div
+          className="bg-white bg-opacity-80 rounded-xl p-8 "
+          style={{ width: "70%", marginTop: "50px" }}
+        >
+          <div className="flex flex-col md:flex-row items-center mb-8 justify-center">
+            <div className="text-center md:text-left">
+              
+              <div className="font-bold text-3xl mb-2">
+              <FontAwesomeIcon icon={faExclamationTriangle} size="2x"
+               color="orange" />
+              Utilisateur non trouvé</div>
+              <div className="text-xl text-gray-700 mb-2">
+                L'utilisateur que vous recherchez n'existe pas.
+              </div>
+            </div>
+          </div>
+          <div className="flex justify-center">
+            <a href="/">
+            <button
+              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+            >
+              Retour à l'accueil
+            </button>
+            </a>
+          </div>
+        </div>
+      </div>
+    );
+
+  
+         
+
+  }
 
   return (
     <div className="bg-cover bg-center min-h-screen flex flex-col justify-center items-center">
@@ -279,25 +309,34 @@ const Profile = () => {
         className="bg-white bg-opacity-80 rounded-xl p-8 "
         style={{ width: "70%", marginTop: "50px" }}
       >
+        {/* badge with "Vous" if ownProfile */}
+        {ownProfile &&<span className="bg-green-800 text-white font-bold py-1 px-2 rounded-full">
+        <FontAwesomeIcon icon={faCrown} size="1x" color="orange" /> Vous</span>}
         <div className="flex flex-col md:flex-row items-center mb-8 justify-center">
+          
           <img
             className="w-32 h-32 rounded-full mr-0 md:mr-8 mb-4 md:mb-0"
-            src={Mbappe}
+            src={"https://ui-avatars.com/api/?background=random&name="+profileData.pseudo}
             alt="Avatar"
           />
           <div className="text-center md:text-left">
-            <div className="font-bold text-3xl mb-2">{userData.pseudo}</div>
+            
+            <div className="font-bold text-3xl mb-2">{profileData.pseudo}
+            
+
+            </div>
             <div className="text-xl text-gray-700 mb-2">
-              {userData.description}
+              {profileData.description}
             </div>
           </div>
         </div>
+
 
         <div className="font-bold mb-4 text-2xl">Informations</div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
           <div className="bg-white rounded-md p-4">
             <div className="text-center font-bold text-2xl mb-2">
-              {userData.gamesWon}
+              {profileData.gamesWon}
               <FontAwesomeIcon
                 icon={faTrophy}
                 style={{ marginLeft: "5px", color: "gold" }}
@@ -307,7 +346,7 @@ const Profile = () => {
           </div>
           <div className="bg-white rounded-md p-4">
             <div className="text-center font-bold text-2xl mb-2">
-              {userData.gamesLost}
+              {profileData.gamesPlayed}
               <FontAwesomeIcon
                 icon={faGamepad}
                 style={{ marginLeft: "5px", color: "red" }}
@@ -317,7 +356,7 @@ const Profile = () => {
           </div>
           <div className="bg-white rounded-md p-4">
             <div className="text-center font-bold text-2xl mb-2">
-              {userData.wordsFound}
+              {profileData.wordsFound}
               <FontAwesomeIcon
                 icon={faBook}
                 style={{ marginLeft: "5px", color: "blue" }}
@@ -328,17 +367,19 @@ const Profile = () => {
           {/* age, date d'inscription, date de dernière partie, nombre de parties jouées */}
           <div className="bg-white rounded-md p-4">
             <div className="text-center font-bold text-2xl mb-2">
-              {currentAge()}
+              {profileData.gamesLost}
               <FontAwesomeIcon
-                icon={faBirthdayCake}
+                icon={faThumbsDown}
                 style={{ marginLeft: "5px", color: "purple" }}
               />
             </div>
-            <div className="text-center text-gray-700">Age</div>
+            <div className="text-center text-gray-700">
+              Parties perdues
+            </div>
           </div>
           <div className="bg-white rounded-md p-4">
             <div className="text-center font-bold text-2xl mb-2">
-              {userData.inscriptionDate}
+              {profileData.inscriptionDate}
               <FontAwesomeIcon
                 icon={faCalendar}
                 style={{ marginLeft: "5px", color: "green" }}
@@ -348,7 +389,7 @@ const Profile = () => {
           </div>
           <div className="bg-white rounded-md p-4">
             <div className="text-center font-bold text-2xl mb-2">
-              {userData.lastGameDate}
+              {profileData.lastGameDate}
               <FontAwesomeIcon
                 icon={faRotateBack}
                 style={{ marginLeft: "5px", color: "orange" }}
