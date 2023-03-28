@@ -1,6 +1,7 @@
 import React from "react";
 import Logo from "../../assets/images/zooggle_lion_logo_blue.png";
 import Mbappe from "../../assets/images/mbappe.jpg";
+import googlePlayIcon from "../../assets/images/icons/google_play_icon.png";
 import {
   Navbar,
   MobileNav,
@@ -29,68 +30,70 @@ import {
   UserGroupIcon,
   BookmarkIcon,
   BookOpenIcon,
-  PlayIcon
+  PlayIcon,
 } from "@heroicons/react/24/outline";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import routes from "../../routes";
 
-import {faHippo} from "@fortawesome/free-solid-svg-icons";
+import { faHippo } from "@fortawesome/free-solid-svg-icons";
 import { Helmet } from "react-helmet";
+import {
+  faAndroid,
+  faGooglePay,
+  faGooglePlay,
+} from "@fortawesome/free-brands-svg-icons";
 
- 
 // profile menu component
 const profileMenuItems = [
   {
     label: "Mon Profil",
     icon: UserCircleIcon,
-    path : "/profile/me"
+    path: "/profile/me",
   },
   {
     label: "Se déconnecter",
     icon: PowerIcon,
-    path : "/déconnexion"
+    path: "/déconnexion",
   },
 ];
 
- 
 function ProfileMenu() {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
   const closeMenu = () => setIsMenuOpen(false);
- 
+
   return (
-      <Menu open={isMenuOpen} handler={setIsMenuOpen} placement="bottom-end">
-        <MenuHandler>
-          <Button
-            variant="text"
-            color="blue-gray"
-            className="flex items-center gap-1 rounded-full py-0.5 pr-2 pl-0.5 lg:ml-auto"
-          >
-            <Avatar
-              variant="circular"
-              size="sm"
-              alt="candice wu"
-              className="border border-blue-500 p-0.5"
-              src={Mbappe}
-            />
-            <ChevronDownIcon
-              strokeWidth={2.5}
-              className={`h-3 w-3 transition-transform ${
-                isMenuOpen ? "rotate-180" : ""
-              }`}
-            />
-          </Button>
-        </MenuHandler>
-        <MenuList className="p-1">
-          {profileMenuItems.map(({ label, icon, path }, key) => {
-            const isLastItem = key === profileMenuItems.length - 1;
-            return (
-              <a href={path}>
+    <Menu open={isMenuOpen} handler={setIsMenuOpen} placement="bottom-end">
+      <MenuHandler>
+        <Button
+          variant="text"
+          color="blue-gray"
+          className="flex items-center gap-1 rounded-full py-0.5 pr-2 pl-0.5 lg:ml-auto"
+        >
+          <Avatar
+            variant="circular"
+            size="sm"
+            alt="candice wu"
+            className="border border-blue-500 p-0.5"
+            src={Mbappe}
+          />
+          <ChevronDownIcon
+            strokeWidth={2.5}
+            className={`h-3 w-3 transition-transform ${
+              isMenuOpen ? "rotate-180" : ""
+            }`}
+          />
+        </Button>
+      </MenuHandler>
+      <MenuList className="p-1">
+        {profileMenuItems.map(({ label, icon, path }, key) => {
+          const isLastItem = key === profileMenuItems.length - 1;
+          return (
+            <a href={path}>
               <MenuItem
                 key={label}
                 onClick={closeMenu}
-
                 className={`flex items-center gap-2 rounded ${
                   isLastItem
                     ? "hover:bg-red-500/10 focus:bg-red-500/10 active:bg-red-500/10"
@@ -110,15 +113,14 @@ function ProfileMenu() {
                   {label}
                 </Typography>
               </MenuItem>
-              </a>
-            );
-          })}
-        </MenuList>
-      </Menu>
- 
+            </a>
+          );
+        })}
+      </MenuList>
+    </Menu>
   );
 }
- 
+
 // nav list menu
 const navListMenuItems = [
   {
@@ -137,15 +139,15 @@ const navListMenuItems = [
       "A complete set of UI Elements for building faster websites in less time.",
   },
 ];
- 
+
 function NavListMenu() {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
- 
+
   const triggers = {
     onMouseEnter: () => setIsMenuOpen(true),
     onMouseLeave: () => setIsMenuOpen(false),
   };
- 
+
   const renderItems = navListMenuItems.map(({ title, description }) => (
     <a href="#" key={title}>
       <MenuItem>
@@ -158,7 +160,7 @@ function NavListMenu() {
       </MenuItem>
     </a>
   ));
- 
+
   return (
     <React.Fragment>
       <Menu open={isMenuOpen} handler={setIsMenuOpen}>
@@ -204,14 +206,14 @@ function NavListMenu() {
     </React.Fragment>
   );
 }
- 
+
 // nav list component
 const navListItems = routes;
- 
+
 function NavList(
   props = {
-    changeBackgroundMode  : () => {},
-    backgroundMode : false
+    changeBackgroundMode: () => {},
+    backgroundMode: false,
   }
 ) {
   return (
@@ -233,35 +235,33 @@ function NavList(
         </Typography>
       ))}
       {/* ajoute un switch pour passer du mode Idéaliste ou réaliste avec des icônes */}
-        
-
 
       <span className="flex items-center gap-2 text-blue-gray-900 lg:hidden">
-      <FontAwesomeIcon icon={faHippo}  className="h-[18px] w-[18px]" /> Idéaliste{" "}
+        <FontAwesomeIcon icon={faHippo} className="h-[18px] w-[18px]" />{" "}
+        Idéaliste{" "}
       </span>
       <Switch
         onChange={() => props.changeBackgroundMode()}
         className="flex-shrink-0 h-5 w-9"
-        style={{backgroundColor: props.backgroundMode ? "#6b7280" : "#f59e0b"}}
-      >
-      </Switch>
-
-
+        style={{
+          backgroundColor: props.backgroundMode ? "#6b7280" : "#f59e0b",
+        }}
+      ></Switch>
     </ul>
   );
 }
- // changeBackgroundMode
+// changeBackgroundMode
 export default function AppBar(
   props = {
-    changeBackgroundMode  : () => {},
-    backgroundMode : false
+    changeBackgroundMode: () => {},
+    backgroundMode: false,
   }
-
 ) {
   const [isNavOpen, setIsNavOpen] = React.useState(false);
   const toggleIsNavOpen = () => setIsNavOpen((cur) => !cur);
- 
-/*   React.useEffect(() => {
+  const isLandingPage = window.location.pathname === "/accueil";
+
+  /*   React.useEffect(() => {
     window.addEventListener(
       "resize",
       () => window.innerWidth >= 960 && setIsNavOpen(false)
@@ -274,65 +274,72 @@ export default function AppBar(
       () => window.innerWidth >= 960 && setIsNavOpen(false)
     );
   }, []);
- 
-  return (
-    <>
 
-      <Navbar className="mx-auto max-w-screen-xl p-2 lg:rounded-full lg:pl-6 sticky" id="navbar" style={{backgroundColor: "white"}}>
-        <div className="relative mx-auto flex items-center text-blue-gray-900">
+  if (isLandingPage) {
+    return (
+      <div className="flex justify-end">
+        <ul className="flex">
+          <li className="mx-7">
+            <br />
+            <br />
+            <Switch
+              onChange={() => props.changeBackgroundMode()}
+              className="flex-shrink-0 h-5 w-9"
+              style={{
+                backgroundColor: props.backgroundMode ? "#6b7280" : "#f59e0b",
+              }}
+            ></Switch>
+          </li>
+          <li className="mx-7">
+            <a href="#">
+              <br />
+              <img src={googlePlayIcon} alt="google play" width={40} height={40} style={{ marginTop: 10 }} />
+            </a>
+          </li>
+        </ul>
+      </div>
+    );
+  }
+  return (
+    <Navbar
+      className="mx-auto max-w-screen-xl p-2 lg:rounded-full lg:pl-6 sticky"
+      id="navbar"
+      style={{ backgroundColor: "white" }}
+    >
+      <div className="relative mx-auto flex items-center text-blue-gray-900">
         <img src={Logo} alt="logo" className="h-8 w-8" />
-          <Typography
-            as="a"
-            href="#"
-            variant="h6"
-            className="ml-2 font-bold hidden lg:block"
-          >
-            Zoo-ggle
-          </Typography>
-          
-          <div className="absolute top-2/4 left-2/4 hidden -translate-x-2/4 -translate-y-2/4 lg:block">
-            <NavList changeBackgroundMode={props.changeBackgroundMode} backgroundMode={props.backgroundMode} />
-          </div>
-          <IconButton
-            size="sm"
-            color="blue-gray"
-            variant="text"
-            onClick={toggleIsNavOpen}
-            className="ml-auto mr-2 lg:hidden"
-          >
-            <Bars2Icon className="h-6 w-6" />
-          </IconButton>
-          <ProfileMenu />
+        <Typography
+          as="a"
+          href="#"
+          variant="h6"
+          className="ml-2 font-bold hidden lg:block"
+        >
+          Zoo-ggle
+        </Typography>
+
+        <div className="absolute top-2/4 left-2/4 hidden -translate-x-2/4 -translate-y-2/4 lg:block">
+          <NavList
+            changeBackgroundMode={props.changeBackgroundMode}
+            backgroundMode={props.backgroundMode}
+          />
         </div>
-        <MobileNav open={isNavOpen} className="overflow-scroll">
-          <NavList changeBackgroundMode={props.changeBackgroundMode} backgroundMode={props.backgroundMode} />
-        </MobileNav>
-      </Navbar>
-      <Helmet>
-        <script>
-          {`
-            window.addEventListener("scroll", () => {
-              const navbar = document.getElementById("navbar");
-              if (window.scrollY > 0) {
-                navbar.style.width = "100%";
-              } else {
-                navbar.style.width = "auto";
-              }
-            });
-          `}
-        </script>
-        <style>
-          {`
-          #navbar{
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 100;
-            transition: width 0.3s ease-in-out;
-          }
-          `}
-        </style>
-      </Helmet>
-    </>
+        <IconButton
+          size="sm"
+          color="blue-gray"
+          variant="text"
+          onClick={toggleIsNavOpen}
+          className="ml-auto mr-2 lg:hidden"
+        >
+          <Bars2Icon className="h-6 w-6" />
+        </IconButton>
+        <ProfileMenu />
+      </div>
+      <MobileNav open={isNavOpen} className="overflow-scroll">
+        <NavList
+          changeBackgroundMode={props.changeBackgroundMode}
+          backgroundMode={props.backgroundMode}
+        />
+      </MobileNav>
+    </Navbar>
   );
 }
