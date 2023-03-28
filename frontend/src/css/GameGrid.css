@@ -64,8 +64,9 @@
         --big-width: 85vw;
         --big-between:0.5rem;
         --big-font:2rem;
-        --small-width:85vw;
-        --small-font:2rem;
-        --small-between:0.5rem
+        
+        --small-width:30vw;
+        --small-font:1rem;
+        --small-between:0.1rem
     }
 }
