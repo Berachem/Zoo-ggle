@@ -8,6 +8,7 @@ import  Accueil  from "./pages/accueil";
 import  Jouer  from "./pages/jouer";
 import  Dictionnaire from "./pages/dictionnaire";
 import Game from "./pages/game"
+import RecherchePartie from "./pages/recherchePartie";
 
 export const routes = [
     {
@@ -33,6 +34,12 @@ export const routes = [
         path: "/game",
           icon: HomeIcon,
           element :< Game />,
+      },
+      {
+        label: "Recherche",
+        path: "/RecherchePartie",
+          icon: HomeIcon,
+          element :< RecherchePartie />,
       }
   ];
 

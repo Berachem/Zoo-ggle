@@ -57,14 +57,7 @@ export default function Jouer() {
                                 Vous pouvez passer d'une lettre à la suivante située directement à gauche, à droite, en haut, en bas, ou sur l'une des quatre cases diagonales.<br/><br/>
                                 Regardez l'exemple de grille juste en dessous:
                         </Typography>
-                    </ZooggleCard>
-                    <ZooggleCard width="">
-                        <GameGrid width="big" grid="A A A A A A A A A A A A A A A A"/>
-                    </ZooggleCard>
-                    <ZooggleCard width="">
-                        <GameGrid width="small" grid="A A A A A A A A A A A A A A A A"/>
-                    </ZooggleCard>
-                              
+                    </ZooggleCard>       
                 </div>
             </div>
 

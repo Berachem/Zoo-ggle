@@ -1,0 +1,25 @@
+
+.card{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    background-color: #333333;
+    border:3px solid white;
+    width:70vw;
+    padding:1rem;
+    margin:auto;
+    margin-bottom: 10px;
+    justify-content: space-evenly;
+}
+@media(max-width:900px){
+    .card{
+        justify-content: center;
+    }
+}
+@media(max-width:500px ){
+    .card{
+        width: 90vw;
+        
+    }
+    
+}
