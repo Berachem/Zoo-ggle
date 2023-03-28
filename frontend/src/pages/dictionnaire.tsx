@@ -4,6 +4,9 @@ import PulseLoader from 'react-spinners/PulseLoader';
 import debounce from 'lodash.debounce';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faInstagram } from '@fortawesome/free-brands-svg-icons';
+import { faBook, faExclamationCircle, faSearch } from '@fortawesome/free-solid-svg-icons';
 
 
 
@@ -51,8 +54,7 @@ function Dictionnaire() {
         // same but it's an array
         setDefinition([]);
     } else {
-     //add to current url
-     window.history.pushState({}, '', `?q=${searchTerm}`);
+     
         const newDefinitions = data[0].meanings.map((meaning : any) => {
             return {
               partOfSpeech: meaning.partOfSpeech,
@@ -76,27 +78,37 @@ function Dictionnaire() {
   , []);
 
   const handleCopy = () => {
-    toast.success('🎉 Lien copié !');
+    toast.success(' Lien copié !');
     const currentUrl = window.location.href;
     navigator.clipboard.writeText(currentUrl);
     
   };
 
-  const currentUrl = window.location.href;
   const isDefinitionAvailable = definitions.length > 0;
 
 
   return (
 
     <div className="flex flex-col items-center justify-center min-h-screen py-2">
+        < ToastContainer />
+
+
       <div className="flex flex-col items-center justify-center w-full max-w-2xl px-4 py-6 space-y-4 bg-white rounded-lg shadow-xl">
+      <h1 className="text-4xl font-bold mb-2" style={{color: '#3E9A8E'}}>
+          <FontAwesomeIcon icon={faBook} className="mr-4" color='#3E9A8E' style={{marginRight: '0.5rem'}} />
+          Dictionnaire
+          </h1>
         <Input
           type="text"
             color="light-green"
-            placeholder="Rechercher un mot"
+            label="Rechercher un mot"
             value={searchTerm}
             className="w-96"
             onChange={handleInputChange}
+            icon= {<FontAwesomeIcon icon={faSearch} className="mr-2" color='green' style={{marginRight: '0.5rem'}} />}
+            inputMode='text'
+            aria-autocomplete='list'
+            aria-haspopup='true'
             />
        {/*  <Button
             color="light-green"
@@ -107,6 +119,17 @@ function Dictionnaire() {
         <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded" onClick={handleSearch}>  Rechercher </button>
 
         </div>
+
+        {!isDefinitionAvailable && searchTerm !== '' && !isLoading && 
+         (
+            <div className="mt-4 bg-white rounded-lg shadow-xl w-full max-w-2xl px-4 py-6 space-y-4 justify-items-center">
+                <h1 className="text-2xl font-bold mb-2">
+                  <FontAwesomeIcon icon={faExclamationCircle} className="mr-2" color='orange' style={{marginRight: '0.5rem'}} />
+                  Aucune définition trouvée</h1>
+            </div>
+        )}
+
+
         {isLoading && (
             <div className="mt-4">
                 <PulseLoader color="#00BFA6" />
@@ -121,8 +144,9 @@ function Dictionnaire() {
                             {searchTerm}</h1>
                         </span>
                         {definitions.map((definition: any, index: number) => (
-                            <div key={index} className="mt-4" style= {{backgroundColor: 'lightgreen'}}>
-                                <h1 className="text-xl font-bold mb-2">{definition.partOfSpeech === "noun" ? "nom" : definition.partOfSpeech === "verb" ? "verbe" : definition.partOfSpeech === "adjective" ? "adjectif" : definition.partOfSpeech === "adverb" ? "adverbe" : definition.partOfSpeech === "preposition" ? "préposition" : definition.partOfSpeech === "conjunction" ? "conjonction" :definition.partOfSpeech }</h1>
+                            <div key={index} className="mt-4 shadow-xl rounded-lg p-4" style= {{backgroundColor: 'lightgreen'}}>
+                                <h1 className="text-xl font-bold mb-2 text-center">
+                                  {definition.partOfSpeech === "noun" ? "nom" : definition.partOfSpeech === "verb" ? "verbe" : definition.partOfSpeech === "adjective" ? "adjectif" : definition.partOfSpeech === "adverb" ? "adverbe" : definition.partOfSpeech === "preposition" ? "préposition" : definition.partOfSpeech === "conjunction" ? "conjonction" :definition.partOfSpeech }</h1>
                                 
                                 {definition.definitions.map((definition: any, index: number) => (
                                     <div key={index}>

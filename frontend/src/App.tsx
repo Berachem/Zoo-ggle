@@ -36,6 +36,9 @@ function App() {
           <Route key={index} path={route.path} element={route.element}
              />
         ))}
+
+
+  
         <Route path='/profile/'>
           <Route path=":id" element={<Profile />} />
           <Route path="me" element={<Profile />} />
