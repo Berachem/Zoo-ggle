@@ -15,21 +15,25 @@ $response = array();
         }
 
         $allGamesDetails = getAllGamesPlayedByUser($profileId);
+        
         $i = 0;
         foreach ($allGamesDetails as $gameDetails) {
-            $allValidsWordsListByPlayer = getValidsWordsListByPlayerInGame($profileId, $gameDetails->IdPartie);
+            $allValidsWordsListByPlayer = getValidsWordsListByPlayerInGame($profileId, $gameDetails->IdPartie) == null ? [] : getValidsWordsListByPlayerInGame($profileId, $gameDetails->IdPartie);
             $validWordsNumber = count($allValidsWordsListByPlayer);
-            $allWordsListByPlayer = getAllWordsListByPlayerInGame($gameDetails->IdPartie, $profileId);
+            
+            $allWordsListByPlayer = getAllWordsListByPlayerInGame($gameDetails->IdPartie, $profileId) == null ? [] : getAllWordsListByPlayerInGame($gameDetails->IdPartie, $profileId);
             $wordProposedNumber = count($allWordsListByPlayer);
+            
             $validWordPercentage = ($validWordsNumber / $gameDetails->NombreMotsPossibles) * 100;
-
-            $allGamesDetails[$i]["validWordsNumber"] = $validWordsNumber;
-            $allGamesDetails[$i]["wordProposedNumber"] = $wordProposedNumber;
-            $allGamesDetails[$i]["validWordPercentage"] = $validWordPercentage;
-            $allGamesDetails[$i]["leaderboard"]=getLeaderBoardGame($gameDetails->IdPartie);
+           
+            $allGamesDetails[$i]->validWordsNumber = $validWordsNumber;
+            $allGamesDetails[$i]->wordProposedNumber = $wordProposedNumber;
+            $allGamesDetails[$i]->validWordPercentage = $validWordPercentage;
+            $allGamesDetails[$i]->leaderboard=getLeaderBoardGame($gameDetails->IdPartie);
 //            $mode = intval($gameDetails->Mode) == 0 ? "Classique" : "spécial";
             $i++;
         }
+
         $response["success"]=true;
         $response["allGamesDetails"]=$allGamesDetails == null ? [] : $allGamesDetails;
 

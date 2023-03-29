@@ -24,6 +24,8 @@ import {
   faThumbsDown,
   faExclamationTriangle,
   faCrown,
+  faUserLock,
+  faUnlock,
 } from "@fortawesome/free-solid-svg-icons";
 import { Avatar, Typography, Button } from "@material-tailwind/react";
 import {
@@ -148,6 +150,11 @@ const Profile = () => {
     inscriptionDate: "",
     lastGameDate: "",
   });
+  /*
+  
+  {"success":true,"allGamesDetails":[{"IdJoueur":"2","IdPartie":"34","Score":"200","NomPartie":"Partie Solo de Lucas","LangueDico":"FRA","Grille":"A P N N A R A A I N A A S C A I","DateDebutPartie":"2023-01-21 20:01:34","DateFinPartie":"2023-01-21 20:03:48","TailleGrille":"4","NombreMotsPossibles":"344","Mode":"0","EstPublic":"1","NombreJoueursMax":"1","IdChef":"22","validWordsNumber":0,"wordProposedNumber":0,"validWordPercentage":0,"leaderboard":[{"Pseudo":"beraaaa","Logo":null,"Score":"200","IdJoueur":"2","IdPartie":"34"},{"Pseudo":"Lucas_","Logo":null,"Score":"12","IdJoueur":"22","IdPartie":"34"}]}]}
+
+  */
 
   const gamesData = [
     // données factices pour l'historique des parties
@@ -312,6 +319,12 @@ const Profile = () => {
         {/* badge with "Vous" if ownProfile */}
         {ownProfile &&<span className="bg-green-800 text-white font-bold py-1 px-2 rounded-full">
         <FontAwesomeIcon icon={faCrown} size="1x" color="orange" /> Vous</span>}
+
+        {profileData.isPublic && <span className="bg-blue-800 text-white font-bold py-1 px-2 rounded-full ml-2">
+        <FontAwesomeIcon icon={faUnlock} size="1x" /> Public</span>}
+        {!profileData.isPublic && <span className="bg-red-800 text-white font-bold py-1 px-2 rounded-full ml-2">
+        <FontAwesomeIcon icon={faUserLock} size="1x"  /> Privé</span>}
+
         <div className="flex flex-col md:flex-row items-center mb-8 justify-center">
           
           <img
