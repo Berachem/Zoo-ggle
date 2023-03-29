@@ -1,9 +1,12 @@
 
-import { Button, Typography } from "@material-tailwind/react";
+import { Input, Button, Typography } from "@material-tailwind/react";
 import Logo from "../assets/images/Title.svg";
 import ZooggleCard from "../components/Zooggle/ZooggleCard"
 import GameGrid from "../components/Zooggle/GameGrid";
 import Chat from "../components/game/chat";
+import GameColumn from "../components/game/gameColumn";
+import GameSection from "../components/game/gameSection";
+import LeftAndCenter from "../components/game/leftAndCenter";
 export default function Game() {
 
     return (
@@ -14,57 +17,77 @@ export default function Game() {
                     style={{
                         display: "flex",
                         flexDirection: "column",
+                        alignItems: "center",
                         minHeight: "100vh",
-                        margin: "auto",
-
+                        overflow: "hidden",
                     }}>
-                    <div
-                        style={{
-                            display: "flex",
-                            flexDirection: "row",
-                            width: "100vw",
-                            margin: "auto",
+                    <GameSection>
+                        <LeftAndCenter>
+                            <GameColumn type="side">
+                                <ZooggleCard width="100%" minHeight="45%">
+                                    <Typography variant="h4"> 1st example window </Typography>
+                                </ZooggleCard>
+                                <Typography variant="h4"> Score : 800 </Typography>
+                                <ZooggleCard width="100%" minHeight="45%">
+                                    <Typography variant="h4"> 2nd example window </Typography>
+                                </ZooggleCard>
+                            </GameColumn>
 
-                        }}>
-                        <ZooggleCard width="20vw">
+                            <GameColumn type="main">
+                                <ZooggleCard width="100%">
+                                    <div style={{
+                                        width: "100%",
+                                        height: "100%",
+                                        display: "flex",
+                                        flexDirection: "column",
+                                        justifyContent: "center",
+                                        alignItems: "center"
+                                    }}>
+                                        <Typography variant="h4"> Partie de Berachem </Typography>
+                                        <GameGrid width="big" grid="A A A A A A A A A A A A A A A A" />
+                                        <Typography variant="h4"> 3:20 </Typography>
+                                    </div>
+                                </ZooggleCard>
 
-                        </ZooggleCard>
+                                <ZooggleCard width="100%">
+                                    <div style={{
+                                        width: "100%",
+                                        display: "flex",
+                                        flexDirection: "row",
+                                        flexWrap: "nowrap",
+                                        justifyContent: "center"
+                                    }}>
 
-                        <div
-                            style={{
-                                display: "flex",
-                                flexDirection: "column",
-                                minHeight: "60vh",
-                                margin: "auto",
+                                        <div className="relative  flex w-full max-w-[24rem]">
+                                            <Input
+                                                type="text"
+                                                label="Message"
+                                                color="green"
+                                            />
+                                            <Button
+                                                size="sm"
+                                                color={"green"}
+                                                className="!absolute right-1 top-1 rounded"
+                                            >
+                                                Envoyer
+                                            </Button>
+                                        </div>
+                                    </div>
+                                </ZooggleCard>
+                            </GameColumn>
+                        </LeftAndCenter>
 
-                            }}>
 
-                            <ZooggleCard width="55vw">
-                                <div style={{
-                                    width: "100%",
-                                    height: "100%",
-                                    display: "flex",
-                                    flexDirection: "column",
-                                    justifyContent:"center",
-                                    alignItems:"center"
-                                }}>
-                                    <Typography variant="h4"> Partie de Berachem </Typography>
-                                    <GameGrid width="big" grid="A A A A A A A A A A A A A A A A" />
-                                    <Typography variant="h4"> 3:20 </Typography>
-                                </div>
+                        <GameColumn type="side">
+                            <ZooggleCard width="100%" padding="0rem" minHeight="70%">
+                                <Chat>
+                                </Chat>
                             </ZooggleCard>
+                        </GameColumn>
 
-                            <ZooggleCard width="55vw">
-                            </ZooggleCard>
-                        </div>
 
-                        <ZooggleCard width="20vw">
-                            <Chat>
 
-                            </Chat>
-                        </ZooggleCard>
-
-                    </div>
+                    </GameSection>
                 </div>
             </div>
 

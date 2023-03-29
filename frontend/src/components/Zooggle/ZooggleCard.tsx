@@ -8,7 +8,7 @@ export default function ZooggleCard(props: any) {
                 height:"min-content",
                 width:`${props.width}`,
                 border:"2px solid white",
-                padding:"1rem",
+                padding:`${props.padding || '1rem'}`,
                 color:"white",
                 backdropFilter:"blur(5px)",
                

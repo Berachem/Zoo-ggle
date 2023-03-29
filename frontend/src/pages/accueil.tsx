@@ -1,7 +1,7 @@
 
 import { Button, Typography } from "@material-tailwind/react";
 import Logo from "../assets/images/Title.svg";
-import ZooggleCard from "../components/Zooggle/ZooggleCard"
+import ZooggleCard from "../components/Zooggle/ZooggleCard";
 import GameGrid from "../components/Zooggle/GameGrid";
 //import Forest from "../assets/video/Forest.mp4"
 

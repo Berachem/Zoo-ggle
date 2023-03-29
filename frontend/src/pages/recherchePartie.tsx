@@ -1,7 +1,7 @@
-import ZooggleCard from "../components/Zooggle/ZooggleCard"
-import GameGrid from "../components/Zooggle/GameGrid"
-import GameCard from "../components/Zooggle/GameCard"
-import GameCardInfo from "../components/Zooggle/GameCardInfo"
+import ZooggleCard from "../components/Zooggle/ZooggleCard";
+import GameGrid from "../components/Zooggle/GameGrid";
+import GameCard from "../components/Zooggle/GameCard";
+import GameCardInfo from "../components/Zooggle/GameCardInfo";
 
 export default function RecherchePartie() {
     return (

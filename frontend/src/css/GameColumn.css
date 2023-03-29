@@ -1,0 +1,31 @@
+.gameColumn{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: white;
+    gap:40px;
+    /* border: 2px green solid; */
+}
+
+.gameColumn.main{
+    width: 45vw;
+    height: 100%;
+}
+
+.gameColumn.side{
+    width: 20vw;
+    height: 70%;
+}
+
+@media(max-width:900px){
+
+    .gameColumn.main{
+        width: 80%;
+        height: fit-content;
+    }
+    
+    .gameColumn.side{
+        width: 80%;
+        height: fit-content;
+    }
+}

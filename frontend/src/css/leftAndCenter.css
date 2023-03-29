@@ -1,0 +1,19 @@
+.leftAndCenter{
+    display: flex;
+    flex-direction: row;
+    width: fit-content;
+    /* margin: auto; */
+    /* justify-content: space-evenly; */
+    height: 100%;
+    gap:3vw;
+    /* border: 1px solid yellow; */
+}
+
+@media(max-width:900px){
+    .leftAndCenter{
+        flex-direction: column-reverse;
+        align-items: center;
+        height: fit-content;
+        width: 80vw;
+    }
+}

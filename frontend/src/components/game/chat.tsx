@@ -30,6 +30,7 @@ export default function chat(props: any) {
             justifyContent: "space-between",
         }}>
             <div style={{
+                margin:"1rem"
         }}>
                     {chatData.map(function (chat) {
                         return (
@@ -43,7 +44,6 @@ export default function chat(props: any) {
                 display: "flex",
                 flexDirection: "row",
                 flexWrap: "nowrap",
-                height: "65px",
                 background: "#ffffff",
             }}>
 
@@ -51,18 +51,14 @@ export default function chat(props: any) {
                     <Input
                         type="text"
                         label="Message"
-                        className="pr-20"
                         color="green"
-                        containerProps={{
-                            className: "min-w-0 ",
-                        }}
                     />
                     <Button
                         size="sm"
                         color={"green"}
                         className="!absolute right-1 top-1 rounded"
                     >
-                        Invite
+                        Envoyer
                     </Button>
                 </div>
             </div>
