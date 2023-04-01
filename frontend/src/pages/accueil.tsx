@@ -48,16 +48,19 @@ export default function Jouer() {
                     padding:"2vh",
                     justifyContent:"space-evenly"
                 }}>
-                    <ZooggleCard width="90vw">
+                    <ZooggleCard width="40vw">
                         <Typography variant="h4">
                             Les règles du Boggle : 
                         </Typography>
                         <Typography>
                                 Dans une limite de temps de 3 minutes, vous devez trouver un maximum de mots en formant des chaînes de  lettres contiguës. Plus le mot est long, plus les points qu'il vous rapporte sont importants.<br/><br/>
                                 Vous pouvez passer d'une lettre à la suivante située directement à gauche, à droite, en haut, en bas, ou sur l'une des quatre cases diagonales.<br/><br/>
-                                Regardez l'exemple de grille juste en dessous:
+                                Regardez l'exemple de grille à coté:
                         </Typography>
-                    </ZooggleCard>       
+                    </ZooggleCard>  
+                    <ZooggleCard width="">
+                        <GameGrid width="big" grid="? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ?"/>     
+                    </ZooggleCard>
                 </div>
             </div>
 

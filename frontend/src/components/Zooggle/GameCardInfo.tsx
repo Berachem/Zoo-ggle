@@ -1,6 +1,5 @@
 import "../../css/GameCardInfo.css"
-import { Typography } from "@material-tailwind/react";
-
+import GameButton from "./GameButton"
 
 export default function GameCardInfo(props : any){
     return(
@@ -9,9 +8,9 @@ export default function GameCardInfo(props : any){
             <p>
                 <b>langue :</b> {props.lang} <br/>
                 <b>createur :</b> {props.maker} <br/>
-                <b>joueurs :</b> {props.players}
+                <b>joueurs :</b> {props.players} <br/>
             </p>
-            <a href="lien vers la partie" className="button">Rejoindre</a>
+            <GameButton>Rejoindre</GameButton>
         </div>
     )
 }

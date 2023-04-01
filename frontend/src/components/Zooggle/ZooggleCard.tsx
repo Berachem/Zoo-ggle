@@ -11,7 +11,7 @@ export default function ZooggleCard(props: any) {
                 padding:`${props.padding || '1rem'}`,
                 color:"white",
                 backdropFilter:"blur(5px)",
-               
+                marginBottom:"1rem",
             }}>
                 {props.children}
             </div>
