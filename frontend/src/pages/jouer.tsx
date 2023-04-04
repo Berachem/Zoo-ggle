@@ -16,7 +16,7 @@ export default function Jouer() {
             alignItems:"center",
             }}>
             
-            <ZooggleCard width="30vw">
+            <ZooggleCard width="50vw">
                 <Button size="lg" color="orange">Creer une partie</Button>
             </ZooggleCard>
 
