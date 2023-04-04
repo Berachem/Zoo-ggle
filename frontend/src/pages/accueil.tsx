@@ -3,6 +3,7 @@ import { Button, Typography } from "@material-tailwind/react";
 import Logo from "../assets/images/Title.svg";
 import ZooggleCard from "../components/Zooggle/ZooggleCard";
 import GameGrid from "../components/Zooggle/GameGrid";
+import  Title from "../components/Zooggle/Title";
 //import Forest from "../assets/video/Forest.mp4"
 
 export default function Jouer() {
@@ -48,10 +49,8 @@ export default function Jouer() {
                     padding:"2vh",
                     justifyContent:"space-evenly"
                 }}>
-                    <ZooggleCard width="40vw">
-                        <Typography variant="h4">
-                            Les règles du Boggle : 
-                        </Typography>
+                    <ZooggleCard width="50vw">
+                        <Title variant="h4">Les règles du Boggle</Title>
                         <Typography>
                                 Dans une limite de temps de 3 minutes, vous devez trouver un maximum de mots en formant des chaînes de  lettres contiguës. Plus le mot est long, plus les points qu'il vous rapporte sont importants.<br/><br/>
                                 Vous pouvez passer d'une lettre à la suivante située directement à gauche, à droite, en haut, en bas, ou sur l'une des quatre cases diagonales.<br/><br/>

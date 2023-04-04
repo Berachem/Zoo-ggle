@@ -10,7 +10,7 @@ export default function ZooggleCard(props: any) {
                 border:"2px solid white",
                 padding:`${props.padding || '1rem'}`,
                 color:"white",
-                backdropFilter:"blur(5px)",
+                backdropFilter:"blur(20px)",
                 marginBottom:"1rem",
             }}>
                 {props.children}
