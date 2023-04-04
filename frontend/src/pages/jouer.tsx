@@ -10,6 +10,39 @@ function popForm(id : string){
 }
 
 export default function Jouer() {
+    const recentsGameData = [
+        {
+          title: "Test",
+          lang: "francais",
+          maker: "Beraaaa",
+          players: "oui - non - Beraaa - Lucas123 - JoOOOOO",
+        },
+        {
+          title: "Ceci est un vrai titre oui",
+          lang: "francais",
+          maker: "Beraaaa",
+          players: "oui - non - Beraaa - Lucas123 - JoOOOOO",
+        },
+        {
+          title: "Ceci est un vrai titre oui",
+          lang: "francais",
+          maker: "Beraaaa",
+          players: "oui - non - Beraaa - Lucas123 - JoOOOOO",
+        },
+        {
+          title: "Ceci est un vrai titre oui",
+          lang: "francais",
+          maker: "Beraaaa",
+          players: "oui - non - Beraaa - Lucas123 - JoOOOOO",
+        },
+        {
+          title: "Ceci est un vrai titre oui",
+          lang: "francais",
+          maker: "Beraaaa",
+          players: "oui - non - Beraaa - Lucas123 - JoOOOOO",
+        }
+      ];
+
     return (
         <>
             <GameForm id="GameForm"/>
@@ -44,23 +77,18 @@ export default function Jouer() {
                     </ZooggleCard>
 
                     <ZooggleCard width="">
-                        <Title variant="h4">Partie Récentes</Title>
-                        <GameCard>
-                            <GameCardInfo title="Ceci est un vrai titre oui" lang="francais" maker="Beraaaa" players="oui - non - Beraaa - Lucas123 - JoOOOOO"/>
-                        </GameCard>
-                        <GameCard>
-                            <GameCardInfo title="Ceci est un vrai titre oui" lang="francais" maker="Beraaaa" players="oui - non - Beraaa - Lucas123 - JoOOOOO"/>
-                        </GameCard>
-                        <GameCard>
-                            <GameCardInfo title="Ceci est un vrai titre oui" lang="francais" maker="Beraaaa" players="oui - non - Beraaa - Lucas123 - JoOOOOO"/>
-                        </GameCard>
-                        <GameCard>
-                            <GameCardInfo title="Ceci est un vrai titre oui" lang="francais" maker="Beraaaa" players="oui - non - Beraaa - Lucas123 - JoOOOOO"/>
-                        </GameCard>
-                        <GameCard>
-                            <GameCardInfo title="Ceci est un vrai titre oui" lang="francais" maker="Beraaaa" players="oui - non - Beraaa - Lucas123 - JoOOOOO"/>
-                        </GameCard>
-                    </ZooggleCard>
+                        <Title variant="h4">Parties Récentes</Title>
+                        {recentsGameData.map((game, index) => (
+                            <GameCard key={index}>
+                            <GameCardInfo
+                                title={game.title}
+                                lang={game.lang}
+                                maker={game.maker}
+                                players={game.players}
+                            />
+                            </GameCard>
+                        ))}
+                        </ZooggleCard>
                 </div>
             </div>
             
