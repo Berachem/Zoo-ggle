@@ -16,7 +16,11 @@ export default function GameForm(props : any){
             <input type="text" placeholder="le nom ici" className="inputText" required/>
 
             <span className="formInfo">Nombre de Joueurs</span>
-            <input type="text" placeholder="le nombre ici" className="inputText" required/>
+            <select name="" id="" className="inputText">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+            </select>
 
             <span className="formInfo">Dictionnaire</span>
             <select name="" id="" className="inputText">
