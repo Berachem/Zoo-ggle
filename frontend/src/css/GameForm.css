@@ -43,6 +43,13 @@
     color: black;
     width: 20vw;
 }
+
+.inputText:focus{
+    outline: none;
+    border: 2px solid #ffffff;
+    box-shadow: 0 0 10px #ffffff;
+}
+
 @media(max-width:900px ){
     .gameForm{
         height: 70vh;
