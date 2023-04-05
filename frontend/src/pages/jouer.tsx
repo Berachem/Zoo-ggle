@@ -80,15 +80,15 @@ export default function Jouer() {
                         <Title variant="h4">Parties Récentes</Title>
                         {recentsGameData.map((game, index) => (
                             <GameCard key={index}>
-                            <GameCardInfo
-                                title={game.title}
-                                lang={game.lang}
-                                maker={game.maker}
-                                players={game.players}
-                            />
+                                <GameCardInfo
+                                    title={game.title}
+                                    lang={game.lang}
+                                    maker={game.maker}
+                                    players={game.players}
+                                />
                             </GameCard>
                         ))}
-                        </ZooggleCard>
+                    </ZooggleCard>
                 </div>
             </div>
             

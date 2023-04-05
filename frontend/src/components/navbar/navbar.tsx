@@ -37,7 +37,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import routes from "../../routes";
 
-import { faHippo } from "@fortawesome/free-solid-svg-icons";
+import { faHippo, faMoon, faSun } from "@fortawesome/free-solid-svg-icons";
 import { Helmet } from "react-helmet";
 import {
   faAndroid,
@@ -237,8 +237,17 @@ function NavList(
       {/* ajoute un switch pour passer du mode Idéaliste ou réaliste avec des icônes */}
 
       <span className="flex items-center gap-2 text-blue-gray-900 lg:hidden">
-        <FontAwesomeIcon icon={faHippo} className="h-[18px] w-[18px]" />{" "}
-        Idéaliste{" "}
+        {props.backgroundMode ? <>
+         <FontAwesomeIcon icon={faSun} />
+         <Typography variant="small" color="blue-gray" className="font-normal">
+          Mode Idéaliste
+        </Typography>
+        </> : <> 
+        <FontAwesomeIcon icon={faMoon} />
+        <Typography variant="small" color="blue-gray" className="font-normal">
+          Mode Réaliste
+        </Typography>
+        </>}
       </span>
       <Switch
         onChange={() => props.changeBackgroundMode()}

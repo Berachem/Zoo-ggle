@@ -38,100 +38,12 @@ import CardWithImage from "../components/card/card";
 import { useEffect } from 'react';
 import { BounceLoader } from "react-spinners";
 import { isUndefined } from "lodash";
+import Title from "../components/Zooggle/Title";
+import GameGrid from "../components/Zooggle/GameGrid";
+import GameCard from "../components/Zooggle/GameCard";
+import GameCardInfo from "../components/Zooggle/GameCardInfo";
 
-interface GameCardProps {
-  title: string;
-  date: string;
-  score: number;
-  grid: string;
-  language: string;
-  leaderboard: Map<string, number>;
-  wordsFound: number;
-  numberOfWords: number;
-}
 
-const GameCard = ({
-  title,
-  date,
-  score,
-  grid,
-  language,
-  leaderboard,
-  wordsFound,
-  numberOfWords,
-}: GameCardProps) => {
-  const progress = (wordsFound / numberOfWords) * 100;
-
-  const columnNumber = Math.sqrt(grid.split(" ").length );
-
-  // logique pour afficher les données de la partie
-  return (
-    <div className="bg-white rounded-md p-4 mb-4 flex">
-      {/* Afficher le titre et la grille de Boggle */}
-      <div className="w-2/5 pr-4">
-        <div className="font-bold mb-2">{title}</div>
-        <div className="text-gray-700 text-sm hidden md:grid">{date}</div>
-        <div className="grid grid-cols-4 gap-2 mt-2 mb-4 hidden md:grid">
-          {grid.split(" ").map((letter, index) => (
-            <div key={index} className="bg-gray-200 text-center p-2 rounded-md">
-              {letter}
-            </div>
-          ))}
-        </div>
-      </div>
-      {/* Afficher le reste des informations à droite */}
-      <div className="w-3/5">
-        <div className="flex justify-between items-center mb-4">
-          <p className="text-gray-700 text-sm">
-            Langue:{" "}
-            {language === "Anglais" ? (
-              <img
-                src="https://cdn-icons-png.flaticon.com/512/197/197560.png"
-                alt="drapeau anglais"
-                style={{ width: "32px" }}
-              />
-            ) : (
-              <img
-                src="https://cdn-icons-png.flaticon.com/512/197/197560.png"
-                alt="drapeau français"
-                style={{ width: "32px" }}
-              />
-            )}
-          </p>
-
-          <div className="w-1/3">
-            <div className="text-green-800 text-sm mb-2">
-        
-              Mots <FontAwesomeIcon icon={faBookBookmark}  style={{ width: "32px", color : "green" }}/>
-               {wordsFound}/{numberOfWords}
-            </div>
-            <div className="relative h-2 rounded-full bg-gray-300">
-              <div
-                className="absolute top-0 left-0 h-2 rounded-full bg-green-800"
-                style={{ width: `${progress}%` }}
-              />
-            </div>
-          </div>
-        </div>
-
-        <div className="text-gray-700 text-sm mb-2 flex justify-between">
-          {" "}
-          Classement{" "}
-        </div>
-        <div className="border rounded-md p-2">
-          {Array.from(leaderboard.entries()).map(([username, score], index) => (
-            <div key={username} className="flex justify-between">
-              <a href="/profile/{username}" className="flex items-center">
-              <div className="text-green-800">{username}</div>
-              </a>
-              <div>{score}</div>
-            </div>
-          ))}profileData
-        </div>
-      </div>
-    </div>
-  );
-};
 
 const Profile = () => {
   let { id } = useParams();
@@ -163,7 +75,7 @@ const Profile = () => {
       title: "Partie 1",
       date: "20/03/2023",
       score: 50,
-      grid: "A B C D E F G H I J K L M N O P",
+      grid: "A Z R E T Y U I O P M P R A L D",
       language: "Français",
       leaderboard: new Map([
         ["Mbappe", 50],
@@ -313,8 +225,8 @@ const Profile = () => {
   return (
     <div className="bg-cover bg-center min-h-screen flex flex-col justify-center items-center">
       <div
-        className="bg-white bg-opacity-80 rounded-xl p-8 "
-        style={{ width: "70%", marginTop: "50px" }}
+        className="bg-opacity-80 rounded-xl p-8  border-2 border-gray-200"
+        style={{ width: "70%", marginTop: "50px", backdropFilter:"blur(20px)",color : "white" }}
       >
         {/* badge with "Vous" if ownProfile */}
         {ownProfile &&<span className="bg-green-800 text-white font-bold py-1 px-2 rounded-full">
@@ -344,9 +256,11 @@ const Profile = () => {
           </div>
         </div>
 
+        <Title variant="h4" style={{ color:"white"}}>Informations</Title>
 
-        <div className="font-bold mb-4 text-2xl">Informations</div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+
+        
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4" style={{color : "black"}}>
           <div className="bg-white rounded-md p-4">
             <div className="text-center font-bold text-2xl mb-2">
               {profileData.gamesWon}
@@ -416,9 +330,10 @@ const Profile = () => {
         </div>
 
         <br />
-        <div className="font-bold mb-4 text-2xl">Historique des parties</div>
-        <div className="grid flex flex-wrap">
-          {gamesData.map(
+        
+        <Title variant="h4" style={{ color:"white"}}>Historique des parties</Title>
+ 
+        {gamesData.map(
             (game: {
               id: number;
               title: string;
@@ -429,41 +344,35 @@ const Profile = () => {
               leaderboard: Map<string, number>;
               wordsFound: number;
               numberOfWords: number;
-            }) => (
-              <GameCard
-                key={game.id}
-                title={game.title}
-                date={game.date}
-                score={game.score}
-                grid={game.grid}
-                wordsFound={game.wordsFound}
-                language={game.language}
-                leaderboard={game.leaderboard}
-                numberOfWords={game.numberOfWords}
-              />
-            )
+            }) =>
+            <GameCard
+            key={game.id}
+            title={game.title}
+            date={game.date}
+            score={game.score}
+            grid={game.grid}
+            wordsFound={game.wordsFound}
+            language={game.language}
+            leaderboard={game.leaderboard}
+            numberOfWords={game.numberOfWords}
+          >
+            <GameGrid grid={game.grid}  width={Math.sqrt(game.grid.split(" ").length)} />
+            <GameCardInfo title={game.title} lang={game.language} maker={"Anonyme"} players={game.leaderboard.keys()}  />
+          </GameCard>
+
           )}
-        </div>
-      </div>
-      {/* barre de recherche pour chercher un autre profil */}
-      <br />
-      <div className="flex flex-row justify-center items-center">
-        <input
-          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-          type="text"
-          placeholder="Rechercher un autre profil"
-          onChange={(e) => setPseudoSearch(e.target.value)}
-        />
-        <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded" type="button" onClick={handleClickSearchProfile}>
-          Rechercher
-        </button>
-      </div>
+
+   
+
               
 
 
       <br />
     </div>
+    </div>
+  
   );
-};
+
+}
 
 export default Profile;

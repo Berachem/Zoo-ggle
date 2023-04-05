@@ -89,18 +89,19 @@ function Dictionnaire() {
 
   return (
 
-    <div className="flex flex-col items-center justify-center min-h-screen py-2">
+    <div className="flex flex-col items-center justify-center min-h-screen py-2" >
         < ToastContainer />
 
 
-      <div className="flex flex-col items-center justify-center w-full max-w-2xl px-4 py-6 space-y-4 bg-white rounded-lg shadow-xl">
-      <h1 className="text-4xl font-bold mb-2" style={{color: '#3E9A8E'}}>
-          <FontAwesomeIcon icon={faBook} className="mr-4" color='#3E9A8E' style={{marginRight: '0.5rem'}} />
+      <div className="flex flex-col items-center justify-center w-full max-w-2xl px-4 py-6 space-y-4 rounded-lg shadow-xl border-2 border-white
+      " style={{ width: "70%", marginTop: "50px", backdropFilter:"blur(20px)",color : "white" }}>
+      <h1 className="text-4xl font-bold mb-2" style={{color: 'white'}}>
+          <FontAwesomeIcon icon={faBook} className="mr-4" color='white' style={{marginRight: '0.5rem'}} />
           Dictionnaire
           </h1>
         <Input
           type="text"
-            color="light-green"
+          color="orange"
             label="Rechercher un mot"
             value={searchTerm}
             className="w-96"
@@ -116,7 +117,7 @@ function Dictionnaire() {
             onClick={handleSearch}
             className="w-96"
         /> */}
-        <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded" onClick={handleSearch}>  Rechercher </button>
+        <button className="bg-white  hover:bg-orange-500 text-black font-bold py-2 px-4 rounded" onClick={handleSearch}>  Rechercher </button>
 
         </div>
 
