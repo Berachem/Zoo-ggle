@@ -13,9 +13,36 @@ if (isset($_GET["profileId"]) || isset($_GET["pseudo"])){
         $profileId= getIdByPseudo($_GET["pseudo"]);
     }
     $statistics = getUserStatistics($profileId);
+
+    
+    // =========================================
+    /* get All games played by the player */
+    // =========================================
+    $allGamesDetails = getAllGamesPlayedByUser($profileId);
+        
+    $i = 0;
+    foreach ($allGamesDetails as $gameDetails) {
+        $allValidsWordsListByPlayer = getValidsWordsListByPlayerInGame($profileId, $gameDetails->IdPartie) == null ? [] : getValidsWordsListByPlayerInGame($profileId, $gameDetails->IdPartie);
+        $validWordsNumber = count($allValidsWordsListByPlayer);
+        
+        $allWordsListByPlayer = getAllWordsListByPlayerInGame($gameDetails->IdPartie, $profileId) == null ? [] : getAllWordsListByPlayerInGame($gameDetails->IdPartie, $profileId);
+        $wordProposedNumber = count($allWordsListByPlayer);
+        
+        $validWordPercentage = ($validWordsNumber / $gameDetails->NombreMotsPossibles) * 100;
+       
+        $allGamesDetails[$i]->validWordsNumber = $validWordsNumber;
+        $allGamesDetails[$i]->wordProposedNumber = $wordProposedNumber;
+        $allGamesDetails[$i]->validWordPercentage = $validWordPercentage;
+        $allGamesDetails[$i]->leaderboard=getLeaderBoardGame($gameDetails->IdPartie);
+//            $mode = intval($gameDetails->Mode) == 0 ? "Classique" : "spécial";
+        $i++;
+    }
+    // =========================================
+
     if ($statistics != null){
         $response["success"]=true;
-        $response["profileInfos"]=$statistics;
+        $response["profileInfos"]=$statistics; // get player statistics
+        $response["allGamesDetails"]=$allGamesDetails == null ? [] : $allGamesDetails; // get all games played by the player
     }else{
         $response["success"]=false;
         $response["errorCode"]=616; // No matching player

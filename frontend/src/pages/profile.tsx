@@ -26,8 +26,9 @@ import {
   faCrown,
   faUserLock,
   faUnlock,
+  faSadTear,
 } from "@fortawesome/free-solid-svg-icons";
-import { Avatar, Typography, Button } from "@material-tailwind/react";
+import { Avatar, Typography, Button, Alert } from "@material-tailwind/react";
 import {
   MapPinIcon,
   BriefcaseIcon,
@@ -48,7 +49,6 @@ import GameCardInfo from "../components/Zooggle/GameCardInfo";
 const Profile = () => {
   let { id } = useParams();
   const PROFILE_DATA_BASE_URL = "https://zoo-ggle.berachem.dev/V2/api/player/getUserInfos.php?profileId="
-  const GAME_DATA_BASE_URL = "https://zoo-ggle.berachem.dev/V2/api/player/getGameHistory.php?profileId="
   const [profileData, setProfileData] = useState( {
     pseudo: "",
     description: "",
@@ -61,39 +61,14 @@ const Profile = () => {
     isPublic: false,
     inscriptionDate: "",
     lastGameDate: "",
+    games: [],
   });
-  /*
-  
-  {"success":true,"allGamesDetails":[{"IdJoueur":"2","IdPartie":"34","Score":"200","NomPartie":"Partie Solo de Lucas","LangueDico":"FRA","Grille":"A P N N A R A A I N A A S C A I","DateDebutPartie":"2023-01-21 20:01:34","DateFinPartie":"2023-01-21 20:03:48","TailleGrille":"4","NombreMotsPossibles":"344","Mode":"0","EstPublic":"1","NombreJoueursMax":"1","IdChef":"22","validWordsNumber":0,"wordProposedNumber":0,"validWordPercentage":0,"leaderboard":[{"Pseudo":"beraaaa","Logo":null,"Score":"200","IdJoueur":"2","IdPartie":"34"},{"Pseudo":"Lucas_","Logo":null,"Score":"12","IdJoueur":"22","IdPartie":"34"}]}]}
 
-  */
-
-  const gamesData = [
-    // données factices pour l'historique des parties
-    {
-      id: 1,
-      title: "Partie 1",
-      date: "20/03/2023",
-      score: 50,
-      grid: "A Z R E T Y U I O P M P R A L D",
-      language: "Français",
-      leaderboard: new Map([
-        ["Mbappe", 50],
-        ["Neymar", 40],
-        ["Ronaldo", 30],
-        ["Messi", 20],
-        ["Zlatan", 10],
-      ]),
-      wordsFound: 10,
-      numberOfWords: 250,
-    },
-  ];
+  // ============= All the states================
   const [ownProfile, setOwnProfile] = useState(false);
   const [userFound, setUserFound] = useState(true);
-  const [gameData, setGameData] = useState(gamesData);
   const [isFetching, setIsFetching] = useState(false);
-
-
+  const [pseudoSearch, setPseudoSearch] = useState("");
 
 
 
@@ -133,6 +108,33 @@ const Profile = () => {
         inscriptionDate: new Date(data.profileInfos[0].DateCreationCompte).toLocaleDateString(),
         lastGameDate: new Date(data.profileInfos[0].DateDerniereConnexion).toLocaleDateString(),
         email: data.profileInfos[0].Mail,
+        games: data.allGamesDetails.map((game: any) => {
+          return {
+            id: game.IdPartie,
+            name: game.NomPartie,
+            score : game.Score,
+            lang : game.LangueDico,
+            grid : game.Grille,
+            startDate : new Date(game.DateDebutPartie).toLocaleDateString(),
+            endDate : new Date(game.DateFinPartie).toLocaleDateString(),
+            size : game.TailleGrille,
+            mode : game.Mode,
+            isPublic : game.EstPublic,
+            maxPlayers : game.NombreJoueursMax,
+            leaderboard : game.leaderboard.map((player: any) => {
+              return {
+                pseudo: player.Pseudo,
+                score: player.Score,
+                id : player.IdJoueur
+              }
+            }),
+            numberWordsFound: game.validWordsNumber,
+            numberWordsProposed: game.wordProposedNumber,
+            // round
+            percentageWordsFound: Math.round(game.validWordPercentage),
+
+          }
+        })
       };
       setProfileData(userProfileData);
       
@@ -142,26 +144,6 @@ const Profile = () => {
   }, [id]);
   
 
-/*   const profileData = {
-    // données factices pour le profil
-    pseudo: "Mbappe",
-    description:
-      "Salut, je suis Mbappe, je suis un joueur de Boggle au PSG ! Je suis le meilleur joueur de Boggle de tous les temps !",
-    gamesWon: 10,
-    gamesPlayed: 20,
-    gamesLost: 10,
-    wordsFound: 100,
-    longestWord: "Bouillabaisse",
-    averageWordsPerGame: 5,
-    isPublic: true,
-    birthday: "20/03/1998",
-    inscriptionDate: "20/03/2021",
-    lastGameDate: "20/03/2023",
-    email: "mbappe@gmail.com",
-  }; */
-
-
-  const [pseudoSearch, setPseudoSearch] = useState("");
 
   const handleClickSearchProfile = () => {
     // fonction qui permet de rechercher un profil (redirection vers la page de recherche de profil de l'utilisateur)
@@ -332,32 +314,53 @@ const Profile = () => {
         <br />
         
         <Title variant="h4" style={{ color:"white"}}>Historique des parties</Title>
- 
-        {gamesData.map(
+      {profileData.games.length == 0 && 
+      <>
+      <div className="text-center text-gray-700 bg-white rounded-md p-4">
+              Aucune partie jouée
+              <FontAwesomeIcon icon={faSadTear} style={{ marginLeft: "5px" }}/>
+      </div>
+      </>}
+        
+        {profileData.games.map(
             (game: {
-              id: number;
-              title: string;
-              date: string;
-              score: number;
-              grid: string;
-              language: string;
-              leaderboard: Map<string, number>;
-              wordsFound: number;
-              numberOfWords: number;
+              id: any;
+              name: any;
+              language: any;
+              score: any; 
+              leaderboard: any;
+              grid: any;
+              startDate : any;
+              endDate : any;
+              size : any;
+              mode : any;
+              isPublic : any;
+              maxPlayers : any;
+              numberWordsFound : any;
+              numberWordsProposed : any;
+              percentageWordsFound : any;
             }) =>
-            <GameCard
-            key={game.id}
-            title={game.title}
-            date={game.date}
-            score={game.score}
-            grid={game.grid}
-            wordsFound={game.wordsFound}
-            language={game.language}
-            leaderboard={game.leaderboard}
-            numberOfWords={game.numberOfWords}
-          >
+          <GameCard key={game.id} id={game.id} score={game.score} startDate={game.startDate} endDate={game.endDate} size={game.size} isPublic={game.isPublic} maxPlayers={game.maxPlayers} numberWordsFound={game.numberWordsFound} numberWordsProposed={game.numberWordsProposed} percentageWordsFound={game.percentageWordsFound}>
+
             <GameGrid grid={game.grid}  width="small"/>
-            <GameCardInfo title={game.title} lang={game.language} maker={"Anonyme"} players={game.leaderboard.keys()}  />
+            <GameCardInfo
+            title={game.name}
+            lang={game.language}
+            score={game.score}
+            leaderboard={game.leaderboard}
+            startDate={game.startDate}
+           // endDate={game.endDate}
+           // size={game.size}
+           // mode={game.mode}
+            isPublic={game.isPublic}
+          //  maxPlayers={game.maxPlayers}
+            numberWordsFound={game.numberWordsFound}
+            numberWordsProposed={game.numberWordsProposed}
+            percentageWordsFound={game.percentageWordsFound}
+
+
+            />
+
           </GameCard>
 
           )}
