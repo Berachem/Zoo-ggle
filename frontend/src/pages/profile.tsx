@@ -356,7 +356,7 @@ const Profile = () => {
             leaderboard={game.leaderboard}
             numberOfWords={game.numberOfWords}
           >
-            <GameGrid grid={game.grid}  width={Math.sqrt(game.grid.split(" ").length)} />
+            <GameGrid grid={game.grid}  width="small"/>
             <GameCardInfo title={game.title} lang={game.language} maker={"Anonyme"} players={game.leaderboard.keys()}  />
           </GameCard>
 
