@@ -4,6 +4,7 @@ import GameCardInfo from "../components/Zooggle/GameCardInfo";
 import Title from "../components/Zooggle/Title";
 import { Input, Button} from "@material-tailwind/react";
 import GameForm from "../components/Zooggle/GameForm";
+import Pingouin from "../assets/images/PenguinFamilly.png"
 
 function popForm(id : string){
     document.getElementById(id)?.classList.toggle("displayForm")
@@ -74,20 +75,27 @@ export default function Jouer() {
                                 Envoyer
                             </Button>
                         </div>
+                        <img src={Pingouin} style={{width:"calc(80vh - 2.5rem)",objectFit:"contain",margin:"auto"}}/>
                     </ZooggleCard>
 
                     <ZooggleCard width="">
                         <Title variant="h4">Parties Récentes</Title>
-                        {recentsGameData.map((game, index) => (
-                            <GameCard key={index}>
-                                <GameCardInfo
-                                    title={game.title}
-                                    lang={game.lang}
-                                    maker={game.maker}
-                                    players={game.players}
-                                />
-                            </GameCard>
-                        ))}
+                        <div style={{display:"flex",
+                                     flexDirection:"column",
+                                     height:"80vh",
+                                     overflowY:"scroll"
+                        }}>
+                            {recentsGameData.map((game, index) => (
+                                <GameCard key={index}>
+                                    <GameCardInfo
+                                        title={game.title}
+                                        lang={game.lang}
+                                        maker={game.maker}
+                                        players={game.players}
+                                    />
+                                </GameCard>
+                            ))}
+                        </div>
                     </ZooggleCard>
                 </div>
             </div>
