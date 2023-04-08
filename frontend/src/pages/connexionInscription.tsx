@@ -5,10 +5,12 @@ import "../css/ConnexionInscription.css"
 
 export default function ConnexionInscription() {
     return(
-        <div  className="connecContainer">
-            <Inscription/>
-            <Connexion/>
-            <Hider/>
+        <div style={{height:"88vh",overflowY:"hidden"}}>
+            <div  className="connecContainer">
+                <Inscription/>
+                <Connexion/>
+                <Hider/>
+            </div>
         </div>
     )
 }

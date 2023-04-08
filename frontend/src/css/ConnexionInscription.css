@@ -1,5 +1,5 @@
 body{
-    overflow-y: hidden;
+    
 }
 
 .connecContainer{
@@ -35,7 +35,7 @@ body{
     align-items: center;
 }
 input[type=radio]{
-    margin-left:5px
+    margin-left:5px;
 }
 
 .connecLabel{
