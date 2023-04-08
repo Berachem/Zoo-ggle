@@ -1,4 +1,4 @@
-.body{
+body{
     overflow-y: hidden;
 }
 
@@ -58,7 +58,6 @@
 
 .hider{
     position: fixed;
-    right: 20vw;
     margin:auto;
     border-radius: 0.25rem;
     display: flex;
@@ -72,10 +71,6 @@
     color: white;
     box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
     z-index: 1;
-}
-
-.otherSide{
-    right: 50vw;
 }
 
 .hiderMessage{
@@ -113,3 +108,28 @@
     font-style: italic;
 }
 
+.goLeft{
+    animation: goLeft 0.5s linear forwards;
+}
+
+.goRight{
+    animation: goRight 0.5s linear forwards;
+}
+
+@keyframes goLeft {
+    0%{
+        right: 20vw;
+    }
+    100%{
+        right: 50vw;
+    }
+}
+
+@keyframes goRight {
+    0%{
+        right: 50vw;
+    }
+    100%{
+        right:20vw;
+    }
+}
