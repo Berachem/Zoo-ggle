@@ -27,6 +27,8 @@ import {
   faUserLock,
   faUnlock,
   faSadTear,
+  faCloud,
+  faLink,
 } from "@fortawesome/free-solid-svg-icons";
 import { Avatar, Typography, Button, Alert } from "@material-tailwind/react";
 import {
@@ -43,8 +45,40 @@ import Title from "../components/Zooggle/Title";
 import GameGrid from "../components/Zooggle/GameGrid";
 import GameCard from "../components/Zooggle/GameCard";
 import GameCardInfo from "../components/Zooggle/GameCardInfo";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
+const getDifferenceTimeSentence = (startDate: string) => {
+  // french to english (day/month/year -> year/month/day)
+  const dateArray = startDate.split("/");
+  const newDate = dateArray[2] + "/" + dateArray[1] + "/" + dateArray[0];
+  
+  // get difference between current date and start date
+  const date = new Date(newDate);
+  const currentDate = new Date();
+  const difference = currentDate.getTime() - date.getTime();
+  const differenceInDays = Math.floor(difference / (1000 * 3600 * 24));
+  const differenceInHours = Math.floor(
+    (difference % (1000 * 3600 * 24)) / (1000 * 3600)
+  );
+  const differenceInMinutes = Math.floor(
+    (difference % (1000 * 3600)) / (1000 * 60)
+  );
+  const differenceInSeconds = Math.floor((difference % (1000 * 60)) / 1000);
 
+  // return sentence
+  if (differenceInDays > 0) {
+    return "il y a " + differenceInDays + " jours";
+  } else if (differenceInHours > 0) {
+    return "il y a " + differenceInHours + " heures";
+  } else if (differenceInMinutes > 0) {
+    return "il y a " + differenceInMinutes + " minutes";
+  } else if (differenceInSeconds > 0) {
+    return "il y a " + differenceInSeconds + " secondes";
+  } else {
+    return "il y a quelques secondes";
+  }
+};
 
 const Profile = () => {
   let { id } = useParams();
@@ -60,7 +94,7 @@ const Profile = () => {
     averageWordsPerGame: 0,
     isPublic: false,
     inscriptionDate: "",
-    lastGameDate: "",
+    lastConnectionDate: "",
     games: [],
   });
 
@@ -106,7 +140,7 @@ const Profile = () => {
         averageWordsPerGame: 0,
         isPublic: parseInt(data.profileInfos[0].ProfilPublic) === 1,
         inscriptionDate: new Date(data.profileInfos[0].DateCreationCompte).toLocaleDateString(),
-        lastGameDate: new Date(data.profileInfos[0].DateDerniereConnexion).toLocaleDateString(),
+        lastConnectionDate: new Date(data.profileInfos[0].DateDerniereConnexion).toLocaleDateString(),
         email: data.profileInfos[0].Mail,
         games: data.allGamesDetails.map((game: any) => {
           return {
@@ -181,7 +215,7 @@ const Profile = () => {
               <FontAwesomeIcon icon={faExclamationTriangle} size="2x"
                color="orange" />
               Utilisateur non trouvé</div>
-              <div className="text-xl text-gray-700 mb-2">
+              <div className="text-xl text-white mb-2">
                 L'utilisateur que vous recherchez n'existe pas.
               </div>
             </div>
@@ -210,14 +244,25 @@ const Profile = () => {
         className="bg-opacity-80 rounded-xl p-8  border-2 border-gray-200 w-11/12"
         style={{marginTop: "50px", backdropFilter:"blur(20px)",color : "white" }}
       >
-        {/* badge with "Vous" if ownProfile */}
-        {ownProfile &&<span className="bg-green-800 text-white font-bold py-1 px-2 rounded-full">
-        <FontAwesomeIcon icon={faCrown} size="1x" color="orange" /> Vous</span>}
+        <div className="flex flex-col sm:flex-row items-center mb-8">
+          {ownProfile &&<span className="bg-green-800 text-white font-bold py-1 px-2 rounded-full">
+          <FontAwesomeIcon icon={faCrown} size="1x" color="orange" /> Vous</span>}
 
-        {profileData.isPublic && <span className="bg-blue-800 text-white font-bold py-1 px-2 rounded-full ml-2">
-        <FontAwesomeIcon icon={faUnlock} size="1x" /> Public</span>}
-        {!profileData.isPublic && <span className="bg-red-800 text-white font-bold py-1 px-2 rounded-full ml-2">
-        <FontAwesomeIcon icon={faUserLock} size="1x"  /> Privé</span>}
+          {profileData.isPublic && <span className="bg-blue-800 text-white font-bold py-1 px-2 rounded-full ml-2">
+          <FontAwesomeIcon icon={faUnlock} size="1x" /> Public</span>}
+          {!profileData.isPublic && <span className="bg-red-800 text-white font-bold py-1 px-2 rounded-full ml-2">
+          <FontAwesomeIcon icon={faUserLock} size="1x"  /> Privé</span>}
+          <span className="bg-purple-800 text-white font-bold py-1 px-2 rounded-full ml-2">
+            <FontAwesomeIcon
+                  size="1x"
+                  icon={faCloud}
+                  style={{ marginRight: "5px"}}
+                /> 
+                connecté {" "}
+                {getDifferenceTimeSentence(profileData.lastConnectionDate)}
+            </span>
+        </div>
+          
 
         <div className="flex flex-col md:flex-row items-center mb-8 justify-center">
           
@@ -232,9 +277,37 @@ const Profile = () => {
             
 
             </div>
-            <div className="text-xl text-gray-700 mb-2">
+            <div className="text-xl text-white mb-2">
               {profileData.description}
             </div>
+            {/* button to copy url link */}
+            <div >
+              <button
+                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full"
+                onClick={() => {
+                  navigator.clipboard.writeText(window.location.href);
+                  /* toast notify */
+                  toast.info("🎉 Lien copié !", {
+                    position: "top-right",
+                    autoClose: 2000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    progress: undefined,
+                    
+                  });
+                  
+                }}
+              >
+                <FontAwesomeIcon
+                  icon={faLink}
+                  style={{ marginRight: "5px" }}
+                />
+                copier
+
+              </button>
+              <ToastContainer />
+              </ div>
           </div>
         </div>
 
@@ -242,72 +315,62 @@ const Profile = () => {
 
 
         
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4" style={{color : "black"}}>
-          <div className="bg-white rounded-md p-4">
-            <div className="text-center font-bold text-2xl mb-2">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4 justify-center"
+         style={{color : "black"}}>
+          <div className="rounded-md p-4 border-2 border-gray-200">
+            <div className="text-center font-bold text-2xl mb-2 text-white">
               {profileData.gamesWon}
               <FontAwesomeIcon
                 icon={faTrophy}
                 style={{ marginLeft: "5px", color: "gold" }}
               />
             </div>
-            <div className="text-center text-gray-700">Parties gagnées</div>
+            <div className="text-center text-white">Parties gagnées</div>
           </div>
-          <div className="bg-white rounded-md p-4">
-            <div className="text-center font-bold text-2xl mb-2">
+          <div className="rounded-md p-4 border-2 border-gray-200">
+            <div className="text-center font-bold text-2xl mb-2 text-white">
               {profileData.gamesPlayed}
               <FontAwesomeIcon
                 icon={faGamepad}
                 style={{ marginLeft: "5px", color: "red" }}
               />
             </div>
-            <div className="text-center text-gray-700">Parties jouées</div>
+            <div className="text-center text-white">Parties jouées</div>
           </div>
-          <div className="bg-white rounded-md p-4">
-            <div className="text-center font-bold text-2xl mb-2">
+          <div className="rounded-md p-4 border-2 border-gray-200">
+            <div className="text-center font-bold text-2xl mb-2 text-white">
               {profileData.games.map((game : any) => game.numberWordsFound).reduce((a : any, b : any) => a + b, 0)}
               <FontAwesomeIcon
                 icon={faBook}
                 style={{ marginLeft: "5px", color: "blue" }}
               />
             </div>
-            <div className="text-center text-gray-700">Mots trouvés</div>
+            <div className="text-center text-white">Mots trouvés</div>
           </div>
           {/* age, date d'inscription, date de dernière partie, nombre de parties jouées */}
-          <div className="bg-white rounded-md p-4">
-            <div className="text-center font-bold text-2xl mb-2">
+          <div className="rounded-md p-4 border-2 border-gray-200">
+            <div className="text-center font-bold text-2xl mb-2 text-white">
               {profileData.gamesLost}
               <FontAwesomeIcon
                 icon={faThumbsDown}
                 style={{ marginLeft: "5px", color: "purple" }}
               />
             </div>
-            <div className="text-center text-gray-700">
+            <div className="text-center text-white">
               Parties perdues
             </div>
           </div>
-          <div className="bg-white rounded-md p-4">
-            <div className="text-center font-bold text-2xl mb-2">
+          <div className="rounded-md p-4 border-2 border-gray-200">
+            <div className="text-center font-bold text-2xl mb-2 text-white">
               {profileData.inscriptionDate}
               <FontAwesomeIcon
                 icon={faCalendar}
                 style={{ marginLeft: "5px", color: "green" }}
               />
             </div>
-            <div className="text-center text-gray-700">Date d'inscription</div>
+            <div className="text-center text-white">Date d'inscription</div>
           </div>
-          <div className="bg-white rounded-md p-4">
-            <div className="text-center font-bold text-2xl mb-2">
-              {profileData.lastGameDate}
-              <FontAwesomeIcon
-                icon={faRotateBack}
-                style={{ marginLeft: "5px", color: "orange" }}
-              />
-            </div>
-            <div className="text-center text-gray-700">
-              Date de dernière partie
-            </div>
-          </div>
+
           {/* profil public ou non  */}
         </div>
 
@@ -316,7 +379,7 @@ const Profile = () => {
         <Title variant="h4" style={{ color:"white"}}>Historique des parties</Title>
       {profileData.games.length == 0 && 
       <>
-      <div className="text-center text-gray-700 bg-white rounded-md p-4">
+      <div className="text-center text-white bg-white rounded-md p-4">
               Aucune partie jouée
               <FontAwesomeIcon icon={faSadTear} style={{ marginLeft: "5px" }}/>
       </div>
