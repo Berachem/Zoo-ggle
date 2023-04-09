@@ -47,6 +47,7 @@ import GameCard from "../components/Zooggle/GameCard";
 import GameCardInfo from "../components/Zooggle/GameCardInfo";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import BubbleAssistant from "../components/Zooggle/assistantBubble";
 
 const getDifferenceTimeSentence = (startDate: string) => {
   // french to english (day/month/year -> year/month/day)
@@ -239,6 +240,8 @@ const Profile = () => {
   }
 
   return (
+    <>
+    
     <div className="bg-cover bg-center min-h-screen flex flex-col justify-center items-center">
       <div
         className="bg-opacity-80 rounded-xl p-8  border-2 border-gray-200 w-11/12"
@@ -437,7 +440,7 @@ const Profile = () => {
       <br />
     </div>
     </div>
-  
+  </>
   );
 
 }

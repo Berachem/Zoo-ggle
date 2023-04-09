@@ -236,7 +236,7 @@ function NavList(
       ))}
       {/* ajoute un switch pour passer du mode Idéaliste ou réaliste avec des icônes */}
 
-      <span className="flex items-center gap-2 text-blue-gray-900 lg:hidden">
+{/*       <span className="flex items-center gap-2 text-blue-gray-900 lg:hidden">
         {props.backgroundMode ? <>
          <FontAwesomeIcon icon={faSun} />
          <Typography variant="small" color="blue-gray" className="font-normal">
@@ -248,10 +248,12 @@ function NavList(
           Mode Réaliste
         </Typography>
         </>}
-      </span>
+      </span> */}
       <Switch
+      /* about="Mode Réaliste ou Idéaliste"
+        label={props.backgroundMode ? "Mode Réaliste" : "Mode Idéaliste"} */
         onChange={() => props.changeBackgroundMode()}
-        className="flex-shrink-0 h-5 w-9"
+        className="flex-shrink-0 h-5 w-9" 
         style={{
           backgroundColor: props.backgroundMode ? "#6b7280" : "#f59e0b",
         }}
