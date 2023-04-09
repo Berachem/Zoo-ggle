@@ -22,11 +22,16 @@ function App() {
   // ici on met les routes de notre application
   // par exemple, nous, dans notre application, nous avons une route pour la page d'accueil, waiting room, game room, etc.
   // donc on va mettre les routes de notre application ici
-  const [BackgroundMode, setBackgroundMode] = React.useState(false);
-
+  const [BackgroundMode, setBackgroundMode] = React.useState(
+    localStorage.getItem("BackgroundMode") === "true"
+  );
+  
   const changeBackgroundMode = () => {
-    setBackgroundMode(!BackgroundMode);
+    const newValue = !BackgroundMode;
+    setBackgroundMode(newValue);
+    localStorage.setItem("BackgroundMode", newValue.toString());
   };
+  
   return (
     <BrowserRouter>
       <>
