@@ -1,27 +1,24 @@
-body{
-    
-}
-
 .connecContainer{
     display:flex;
     flex-direction:row;
     width:60vw;
-    height:75vh;
+    height:80vh;
     margin:auto;
-    margin-top:12.5vh;
+    margin-top:7.5vh;
     background-color:#ffffff;
-    border-radius:0.25rem;
+    border-radius:0.1rem;
 }
 
 .connecForm{
     display: flex;
     flex-direction: column;
     width: 30vw;
-    height: 75vh;
+    height: 80vh;
     padding: 0.5vw;
     padding-left: 4vw;
     padding-right: 4vw;
     color: #333333;
+    justify-content: center;
 }
 
 .radioContainer{
@@ -30,7 +27,7 @@ body{
     padding: 0.5vw;
     justify-content: space-evenly;
     border-radius: 0.1rem;
-    border: 2px solid rgb(175, 175, 175);
+    border: 1.5px solid rgb(175, 175, 175);
     height: 6vh;
     align-items: center;
 }
@@ -40,20 +37,27 @@ input[type=radio]{
 
 .connecLabel{
     margin-top: 2vh;
+    margin-left:0.5vw;
+    font-style: italic;
 }
 
 .connecLabel:after{
     content:"*";
     color: red;
     display: inline-block;
+    margin-left: 3px;
 }
 
 .connecInput{
     background-color: none;
     border-radius: 0.1rem;
-    border:1.5px solid black;
+    border:1px solid black;
     height: 5vh;
     padding: 3px;
+}
+
+.connecInput.desc{
+    height: 15vh;
 }
 
 .connecSubmit{
@@ -74,11 +78,11 @@ input[type=radio]{
 .hider{
     position: fixed;
     margin:auto;
-    border-radius: 0.25rem;
+    border-radius: 0.1rem;
     display: flex;
     flex-direction: column;
     width: 30vw;
-    height: 75vh;
+    height: 80vh;
     padding-left: 1vw;
     padding-right: 1vw;
     padding-top: 2vh;
@@ -89,16 +93,18 @@ input[type=radio]{
 }
 
 .hiderMessage{
-    font-size: 1rem;
+    font-size: 1.2rem;
     text-align: center;
     margin-top: 8vh;
     margin-bottom:8vh;
+    font-weight: lighter;
 }
 
 .hiderTitle{
     font-weight: bold;
-    font-size: 1.5rem;
+    font-size: 2rem;
     text-align: center;
+    margin-top: 5vh;
 }
 
 .hiderSubmit{
@@ -118,7 +124,7 @@ input[type=radio]{
 }
 
 .hiderInfo{
-    font-size: 0.7rem;
+    font-size: 0.8rem;
     text-align: center;
     font-style: italic;
 }

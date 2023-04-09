@@ -2,13 +2,13 @@ import "../../css/ConnexionInscription.css"
 
 const textes=[
     {
-        titre:"S'inscrire",
+        titre:"Inscription",
         message:"Bienvenue sur Zoo-ggle! <br/>Le Boggle orienté animaux",
         info:"Sinon cliquez en dessous pour vous connecter",
         button:"Connexion"
     },
     {
-        titre:"Se connecter",
+        titre:"Connexion",
         message:"Bonjour! <br/>Prêt à faire quelques parties?",
         info:"Sinon cliquez en dessous pour vous inscrire",
         button:"Inscription"
@@ -44,7 +44,7 @@ export default function Hider(){
 
     return(
         <div className="hider goRight" id="hider">
-            <span className="hiderTitle" id="title">S'inscrire</span>
+            <span className="hiderTitle" id="title">Inscription</span>
             <span className="hiderMessage" id="message">Bienvenue sur Zoo-ggle ! <br/>Le Boggle orienté animaux</span>
             <span className="hiderInfo" id="info">Sinon cliquez en dessous pour vous connecter</span>
             <button className="hiderSubmit" id="button" onClick={(event: React.MouseEvent<HTMLElement>) => {switchSide("hider")}}>Connexion</button>

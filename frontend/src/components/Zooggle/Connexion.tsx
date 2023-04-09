@@ -16,7 +16,7 @@ function switchForm(){
 export default function Connexion(){
 
     return(
-        <form id="connexion" action="" method="POST" className="connecForm telHidden" style={{marginTop:"15vh"}}>
+        <form id="connexion" action="" method="POST" className="connecForm telHidden">
             <span className="titleTel">Connexion</span>
             <span className="connecLabel">Pseudo</span>
             <input type="text" placeholder="votre pseudo" className="connecInput"/>
