@@ -268,7 +268,7 @@ export default function AppBar(
 ) {
   const [isNavOpen, setIsNavOpen] = React.useState(false);
   const toggleIsNavOpen = () => setIsNavOpen((cur) => !cur);
-  const isLandingPage = window.location.pathname === "/accueil";
+  const isLandingPage = window.location.pathname === "/";
 
   /*   React.useEffect(() => {
     window.addEventListener(

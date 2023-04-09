@@ -2,9 +2,11 @@
 .cardInfo{
     display: flex;
     flex-direction: column;
-    border-left: 1px white solid;
-    padding:1rem;
+    padding: 1rem;
     width:max-content;
+}
+.cardInfo > div{
+    margin-bottom: 0.7rem;
 }
 
 .title{
@@ -19,5 +21,6 @@
 @media(max-width:900px ){
     .cardInfo{
         margin: 0.5rem;
+        width: 100%;
     }
 }

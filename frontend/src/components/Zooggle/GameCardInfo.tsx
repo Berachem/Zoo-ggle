@@ -9,29 +9,93 @@ import {
   faCrown,
   faExpand,
   faGamepad,
-  faGlobe,
   faLanguage,
   faList,
+  faMedal,
   faPencilAlt,
   faPercentage,
-  faPlay,
-  faTable,
-  faTimes,
   faTrophy,
   faUsers,
 } from "@fortawesome/free-solid-svg-icons";
+
+const getDifferenceTimeSentence = (startDate: string) => {
+  // french to english (day/month/year -> year/month/day)
+  const dateArray = startDate.split("/");
+  const newDate = dateArray[2] + "/" + dateArray[1] + "/" + dateArray[0];
+  
+  // get difference between current date and start date
+  const date = new Date(newDate);
+  const currentDate = new Date();
+  const difference = currentDate.getTime() - date.getTime();
+  const differenceInDays = Math.floor(difference / (1000 * 3600 * 24));
+  const differenceInHours = Math.floor(
+    (difference % (1000 * 3600 * 24)) / (1000 * 3600)
+  );
+  const differenceInMinutes = Math.floor(
+    (difference % (1000 * 3600)) / (1000 * 60)
+  );
+  const differenceInSeconds = Math.floor((difference % (1000 * 60)) / 1000);
+
+  // return sentence
+  if (differenceInDays > 0) {
+    return "il y a " + differenceInDays + " jours";
+  } else if (differenceInHours > 0) {
+    return "il y a " + differenceInHours + " heures";
+  } else if (differenceInMinutes > 0) {
+    return "il y a " + differenceInMinutes + " minutes";
+  } else if (differenceInSeconds > 0) {
+    return "il y a " + differenceInSeconds + " secondes";
+  } else {
+    return "il y a quelques secondes";
+  }
+};
 
 export default function GameCardInfo(props: any) {
   return (
     <div className="cardInfo">
       <span className="title">{props.title}</span>
+      <div className="flex items-center">
+        {props.isPublic !== undefined && (
+          <>
+            {props.isPublic ? (
+              <span className="flex rounded-full bg-green-500 px-2 py-1 text-xs font-bold">
+                Partie publique
+              </span>
+            ) : (
+              <span className="flex rounded-full bg-red-500 px-2 py-1 text-xs font-bold">
+                Partie privée
+              </span>
+            )}
+          </>
+        )}
+
+        {props.startDate && (
+          <>
+            <span
+              className="flex rounded-full px-2 py-1 text-xs font-bold"
+              style={{ backgroundColor: "#B426BB" }}
+            >
+              <FontAwesomeIcon
+                icon={faClock}
+                className="icon"
+                style={{ paddingRight: "5px", paddingTop: "2px" }}
+              />
+              {getDifferenceTimeSentence(props.startDate)}
+            </span>
+          </>
+        )}
+      </div>
       <p className="infos">
         {props.score !== undefined && (
           <>
             <FontAwesomeIcon
               icon={faTrophy}
               className="icon"
-              style={{ color: "#f39c12", paddingRight: "5px" }}
+              style={{
+                color: "#f39c12",
+                paddingRight: "5px",
+                paddingTop: "2px",
+              }}
             />
             <b style={{ color: "#f39c12" }}>Score :</b> {props.score} <br />
           </>
@@ -41,27 +105,26 @@ export default function GameCardInfo(props: any) {
             <FontAwesomeIcon
               icon={faLanguage}
               className="icon"
-              style={{ color: "#3498db", paddingRight: "5px" }}
+              style={{
+                color: "#3498db",
+                paddingRight: "5px",
+                paddingTop: "2px",
+              }}
             />
             <b style={{ color: "#3498db" }}>Langue :</b> {props.lang} <br />
           </>
         )}
-        {props.startDate && (
-          <>
-            <FontAwesomeIcon
-              icon={faClock}
-              className="icon"
-              style={{ color: "#8e44ad", paddingRight: "5px" }}
-            />
-            <b style={{ color: "#8e44ad" }}>Début :</b> {props.startDate} <br />
-          </>
-        )}
+
         {props.endDate && (
           <>
             <FontAwesomeIcon
               icon={faClose}
               className="icon"
-              style={{ color: "#e74c3c", paddingRight: "5px" }}
+              style={{
+                color: "#e74c3c",
+                paddingRight: "5px",
+                paddingTop: "2px",
+              }}
             />
             <b style={{ color: "#e74c3c" }}>Fin :</b> {props.endDate} <br />
           </>
@@ -71,7 +134,11 @@ export default function GameCardInfo(props: any) {
             <FontAwesomeIcon
               icon={faExpand}
               className="icon"
-              style={{ color: "#27ae60", paddingRight: "5px" }}
+              style={{
+                color: "#27ae60",
+                paddingRight: "5px",
+                paddingTop: "2px",
+              }}
             />
             <b style={{ color: "#27ae60" }}>Taille :</b> {props.size} <br />
           </>
@@ -81,28 +148,26 @@ export default function GameCardInfo(props: any) {
             <FontAwesomeIcon
               icon={faGamepad}
               className="icon"
-              style={{ color: "#f1c40f", paddingRight: "5px" }}
+              style={{
+                color: "#f1c40f",
+                paddingRight: "5px",
+                paddingTop: "2px",
+              }}
             />
             <b style={{ color: "#f1c40f" }}>Mode :</b> {props.mode} <br />
           </>
         )}
-        {props.isPublic !== undefined && (
-          <>
-            <FontAwesomeIcon
-              icon={faGlobe}
-              className="icon"
-              style={{ color: "#2c3e50", paddingRight: "5px" }}
-            />
-            <b style={{ color: "#2c3e50" }}>Public :</b>{" "}
-            {props.isPublic ? "Oui" : "Non"} <br />
-          </>
-        )}
+
         {props.maxPlayers !== undefined && (
           <>
             <FontAwesomeIcon
               icon={faUsers}
               className="icon"
-              style={{ color: "#c0392b", paddingRight: "5px" }}
+              style={{
+                color: "#c0392b",
+                paddingRight: "5px",
+                paddingTop: "2px",
+              }}
             />
             <b style={{ color: "#c0392b" }}>Joueurs max :</b> {props.maxPlayers}{" "}
             <br />
@@ -113,34 +178,26 @@ export default function GameCardInfo(props: any) {
             <FontAwesomeIcon
               icon={faCrown}
               className="icon"
-              style={{ color: "#d35400", paddingRight: "5px" }}
+              style={{
+                color: "#d35400",
+                paddingRight: "5px",
+                paddingTop: "2px",
+              }}
             />
             <b style={{ color: "#d35400" }}>Créateur :</b> {props.maker} <br />
           </>
         )}
-        {props.leaderboard && props.leaderboard.length > 0 && (
-          <>
-            <FontAwesomeIcon
-              icon={faList}
-              className="icon"
-              style={{ color: "#9b59b6", paddingRight: "5px" }}
-            />
-            <b style={{ color: "#9b59b6" }}>Classement :</b>
-            <ul>
-              {props.leaderboard.map((player: any) => (
-                <li key={player.id}>
-                  {player.pseudo} : {player.score}
-                </li>
-              ))}
-            </ul>
-          </>
-        )}
+
         {props.players && (
           <>
             <FontAwesomeIcon
               icon={faUsers}
               className="icon"
-              style={{ color: "#2980b9", paddingRight: "5px" }}
+              style={{
+                color: "#2980b9",
+                paddingRight: "5px",
+                paddingTop: "2px",
+              }}
             />
             <b style={{ color: "#2980b9" }}>Joueurs :</b>
             <i>{props.players}</i>
@@ -151,7 +208,11 @@ export default function GameCardInfo(props: any) {
             <FontAwesomeIcon
               icon={faCheck}
               className="icon"
-              style={{ color: "#2ecc71", paddingRight: "5px" }}
+              style={{
+                color: "#2ecc71",
+                paddingRight: "5px",
+                paddingTop: "2px",
+              }}
             />
             <b style={{ color: "#2ecc71" }}>Mots trouvés :</b>{" "}
             {props.numberWordsFound} <br />
@@ -162,7 +223,11 @@ export default function GameCardInfo(props: any) {
             <FontAwesomeIcon
               icon={faPencilAlt}
               className="icon"
-              style={{ color: "#e67e22", paddingRight: "5px" }}
+              style={{
+                color: "#e67e22",
+                paddingRight: "5px",
+                paddingTop: "2px",
+              }}
             />
             <b style={{ color: "#e67e22" }}>Mots proposés :</b>{" "}
             {props.numberWordsProposed} <br />
@@ -173,10 +238,85 @@ export default function GameCardInfo(props: any) {
             <FontAwesomeIcon
               icon={faPercentage}
               className="icon"
-              style={{ color: "#e74c3c", paddingRight: "5px" }}
+              style={{
+                color: "#e74c3c",
+                paddingRight: "5px",
+                paddingTop: "2px",
+              }}
             />
             <b style={{ color: "#e74c3c" }}>Pourcentage :</b>{" "}
             {props.percentageWordsFound}% <br />
+          </>
+        )}
+
+        {props.leaderboard && props.leaderboard.length > 0 && (
+          <>
+            <FontAwesomeIcon
+              icon={faList}
+              className="icon"
+              style={{
+                color: "#9b59b6",
+                paddingRight: "5px",
+                paddingTop: "2px",
+              }}
+            />
+            <b style={{ color: "#9b59b6" }}>Classement :</b>
+            <div className="flex items-center justify-between">
+              {props.leaderboard.map((player: any) => (
+                <a href={"/profile/" + player.id}>
+                  <span
+                    className="flex rounded-full px-2 py-1 text-xs font-bold"
+                    style={{
+                      backgroundColor: [
+                        "#f1c40f",
+                        "#e67e22",
+                        "#e74c3c",
+                        "#c0392b",
+                        "#9b59b6",
+                        "#3498db",
+                        "#27ae60",
+                        "#2ecc71",
+                      ][props.leaderboard.indexOf(player)],
+                    }}
+                  >
+                    {props.leaderboard.indexOf(player) + 1 === 1 ? (
+                      <FontAwesomeIcon
+                        icon={faCrown}
+                        className="icon"
+                        style={{
+                          color: "#d35400",
+                          paddingRight: "5px",
+                          paddingTop: "2px",
+                        }}
+                      />
+                    ) : props.leaderboard.indexOf(player) + 1 === 2 ? (
+                      <FontAwesomeIcon
+                        icon={faMedal}
+                        className="icon"
+                        style={{
+                          color: "#bdc3c7",
+                          paddingRight: "5px",
+                          paddingTop: "2px",
+                        }}
+                      />
+                    ) : props.leaderboard.indexOf(player) + 1 === 3 ? (
+                      <FontAwesomeIcon
+                        icon={faMedal}
+                        className="icon"
+                        style={{
+                          color: "#bdc3c7",
+                          paddingRight: "5px",
+                          paddingTop: "2px",
+                        }}
+                      />
+                    ) : (
+                      props.leaderboard.indexOf(player) + 1
+                    )}
+                    {" " + player.pseudo} : {player.score} points
+                  </span>
+                </a>
+              ))}
+            </div>
           </>
         )}
       </p>
@@ -190,17 +330,17 @@ export default function GameCardInfo(props: any) {
           <br />
         </>
       )}
-        {props.endDate != null && props.endDate && (
-            <>
-                <Alert color="orange" className="rounded">
-                    
-                     La partie est déjà terminée !
-                </Alert>
-                <br />
-            </>
-        )}
+
+      {props.endDate != null && props.endDate && (
+        <>
+          <Alert color="orange" className="rounded">
+            La partie est déjà terminée !
+          </Alert>
+          <br />
+        </>
+      )}
       {/*   <Button size="sm" color="orange" className="rounded">Rejoindre</Button> */}
-      {props.endDate == null && (
+      {props.endDate == null && (props.canJoin == null || props.canJoin) && (
         <Button size="sm" color="orange" className="rounded">
           Rejoindre
         </Button>

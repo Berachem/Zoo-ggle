@@ -14,6 +14,16 @@
     flex-wrap: wrap;
 }
 
+.grid > div{
+    border-radius: 10px;
+}
+/*hover animation with shadow  */
+.grid > div:hover{
+    box-shadow: 0 0 0 0.2rem rgb(255, 255, 255);
+    transition: box-shadow 0.2s;
+    
+}
+
 .grid.big{
     width: var(--big-width);
     
@@ -56,6 +66,9 @@
         --big-between:0.5rem;
         --small-between:0.2rem;
         --small-font:1.5rem;
+    }
+    .grid > div{
+        border-radius: 5px;
     }
 }    
 

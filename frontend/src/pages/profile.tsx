@@ -207,8 +207,8 @@ const Profile = () => {
   return (
     <div className="bg-cover bg-center min-h-screen flex flex-col justify-center items-center">
       <div
-        className="bg-opacity-80 rounded-xl p-8  border-2 border-gray-200"
-        style={{ width: "70%", marginTop: "50px", backdropFilter:"blur(20px)",color : "white" }}
+        className="bg-opacity-80 rounded-xl p-8  border-2 border-gray-200 w-11/12"
+        style={{marginTop: "50px", backdropFilter:"blur(20px)",color : "white" }}
       >
         {/* badge with "Vous" if ownProfile */}
         {ownProfile &&<span className="bg-green-800 text-white font-bold py-1 px-2 rounded-full">
@@ -265,7 +265,7 @@ const Profile = () => {
           </div>
           <div className="bg-white rounded-md p-4">
             <div className="text-center font-bold text-2xl mb-2">
-              {profileData.wordsFound}
+              {profileData.games.map((game : any) => game.numberWordsFound).reduce((a : any, b : any) => a + b, 0)}
               <FontAwesomeIcon
                 icon={faBook}
                 style={{ marginLeft: "5px", color: "blue" }}
@@ -357,6 +357,7 @@ const Profile = () => {
             numberWordsFound={game.numberWordsFound}
             numberWordsProposed={game.numberWordsProposed}
             percentageWordsFound={game.percentageWordsFound}
+            canJoin={false}
 
 
             />

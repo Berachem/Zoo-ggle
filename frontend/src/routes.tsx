@@ -13,7 +13,7 @@ import ConnexionInscription from "./pages/connexionInscription";
 export const routes = [
     {
       label: "Accueil",
-      path: "/accueil",
+      path: "/",
         icon: HomeIcon,
         element :< Accueil />,
     },

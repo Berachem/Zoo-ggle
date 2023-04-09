@@ -6,7 +6,7 @@ import GameGrid from "../components/Zooggle/GameGrid";
 import  Title from "../components/Zooggle/Title";
 //import Forest from "../assets/video/Forest.mp4"
 
-export default function Jouer() {
+export default function Accueil() {
     
     
     
