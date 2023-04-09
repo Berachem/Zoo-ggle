@@ -11,6 +11,9 @@ function popForm(id : string){
 }
 
 export default function Jouer() {
+    const SEARCH_GAME_API = "https://zoo-ggle.berachem.dev/V2/api/searchGame.php?q="; // TODO : Joshua, finir
+
+
     const recentsGameData = [
         {
           title: "Test",

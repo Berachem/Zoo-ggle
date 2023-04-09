@@ -7,9 +7,9 @@ require_once 'functions.php';
 
 $response = array();
 
-if(isset($_POST["recherche"])){
+if(isset($_GET["q"])){
     $response["success"]=true;
-    $response["result"]=recherchePartie($_POST["recherche"]);
+    $response["result"]=recherchePartie($_GET["q"]);
 }else{
     $response["success"]=false;
     $response["errorCode"]=613; //missing param
