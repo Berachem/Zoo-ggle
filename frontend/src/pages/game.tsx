@@ -62,7 +62,7 @@ export default function Game() {
                                             <Input
                                                 type="text"
                                                 label="Message"
-                                                color="green"
+                                                color="light-green"
                                             />
                                             <Button
                                                 size="sm"

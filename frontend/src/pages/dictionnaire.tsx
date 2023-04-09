@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo  } from 'react';
-import { Input, Button} from '@material-tailwind/react';
+import Input from '../components/Zooggle/Input';
 import PulseLoader from 'react-spinners/PulseLoader';
 import debounce from 'lodash.debounce';
 import { ToastContainer, toast } from 'react-toastify';
@@ -68,14 +68,7 @@ function Dictionnaire() {
     };
     
 
-  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchTerm(event.target.value); 
 
-  };
-
-  const debouncedInputChange = useMemo(
-    () => debounce(handleInputChange, 300)
-  , []);
 
   const handleCopy = () => {
     toast.success(' Lien copié !');
@@ -94,30 +87,17 @@ function Dictionnaire() {
 
 
       <div className="flex flex-col items-center justify-center w-full max-w-2xl px-4 py-6 space-y-4 rounded-lg shadow-xl border-2 border-white
-      " style={{ width: "70%", marginTop: "50px", backdropFilter:"blur(20px)",color : "white" }}>
+      " style={{ width: "70%", marginTop: "50px", backdropFilter:"blur(40px)",color : "white", backgroundColor : "#00000013"}}>
       <h1 className="text-4xl font-bold mb-2" style={{color: 'white'}}>
           <FontAwesomeIcon icon={faBook} className="mr-4" color='white' style={{marginRight: '0.5rem'}} />
           Dictionnaire
           </h1>
-        <Input
-          type="text"
-          color="orange"
-            label="Rechercher un mot"
-            value={searchTerm}
-            className="w-96"
-            onChange={handleInputChange}
-            icon= {<FontAwesomeIcon icon={faSearch} className="mr-2" color='green' style={{marginRight: '0.5rem'}} />}
-            inputMode='text'
-            aria-autocomplete='list'
-            aria-haspopup='true'
-            />
-       {/*  <Button
-            color="light-green"
-            
-            onClick={handleSearch}
-            className="w-96"
-        /> */}
-        <button className="bg-white  hover:bg-orange-500 text-black font-bold py-2 px-4 rounded" onClick={handleSearch}>  Rechercher </button>
+        <Input label={'Tapez un mot'} type={'text'}   placeholder={'try...'} onChange={(e) => setSearchTerm(e.target.value)} />
+        {/* <button className="bg-white text-black font-bold py-2 px-4 rounded hover:bg-green-400 hover:text-white"
+        onClick={handleSearch}>  Rechercher </button> */}
+        <p className="text-center text-sm text-white">
+          Les définitions sont fournies par <a href="https://dictionaryapi.dev/" target="_blank" rel="noreferrer" className="text-blue-500 hover:text-blue-600">dictionaryapi.dev</a>
+        </p>
 
         </div>
 
