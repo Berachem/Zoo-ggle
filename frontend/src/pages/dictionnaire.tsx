@@ -6,7 +6,8 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faInstagram } from '@fortawesome/free-brands-svg-icons';
-import { faBook, faExclamationCircle, faSearch } from '@fortawesome/free-solid-svg-icons';
+import { faBook, faExclamationCircle, faLink, faSearch } from '@fortawesome/free-solid-svg-icons';
+import { Select } from '@material-tailwind/react';
 
 
 
@@ -26,23 +27,8 @@ function Dictionnaire() {
       }
     }, 200);
     return () => clearTimeout(timeoutId);
-
-     // if we have a query in the url, we want to search for it
-    const params = new URLSearchParams(window.location.search);
-    const query = params.get('q');
-    if (query) {
-        searchDefinition();
-    }
   }, [searchTerm]);
 
-  const handleSearch = () => {
-
-    if (searchTerm !== '') {
-      searchDefinition();
-    }
-   
-
-  };
 
   const searchDefinition = async () => {
     setIsLoading(true);
@@ -116,22 +102,29 @@ function Dictionnaire() {
                 <PulseLoader color="#00BFA6" />
             </div>
         )}
-        {isDefinitionAvailable && (
+        {isDefinitionAvailable && searchTerm !== ''  && (
             <div className="mt-4">
                 <div className="flex flex-col items-center">
                     <div className="text-center">
                         <span onClick={handleCopy} className="cursor-pointer">
-                        <h1 className="text-2xl font-bold mb-2" style= {{color: 'green'}}>
-                            {searchTerm}</h1>
+                        <h1 className="text-2xl font-bold mb-2 bg-green-800 p-2 text-white rounded-full">
+                            {searchTerm}
+                            <FontAwesomeIcon icon={faLink} className="ml-2" color='white' style={{marginRight: '0.5rem'}} />
+                            </h1>
                         </span>
+
+
+                        
                         {definitions.map((definition: any, index: number) => (
                             <div key={index} className="mt-4 shadow-xl rounded-lg p-4" style= {{backgroundColor: 'lightgreen'}}>
-                                <h1 className="text-xl font-bold mb-2 text-center">
+                                <h1 className="text-xl font-bold mb-2 text-justify">
                                   {definition.partOfSpeech === "noun" ? "nom" : definition.partOfSpeech === "verb" ? "verbe" : definition.partOfSpeech === "adjective" ? "adjectif" : definition.partOfSpeech === "adverb" ? "adverbe" : definition.partOfSpeech === "preposition" ? "préposition" : definition.partOfSpeech === "conjunction" ? "conjonction" :definition.partOfSpeech }</h1>
                                 
                                 {definition.definitions.map((definition: any, index: number) => (
                                     <div key={index}>
-                                        <p className="mb-2">{definition}</p>
+                                        <p className="mb-2 text-justify">
+                                          {index + 1}. {" "}{definition}
+                                        </p>
                                         
                                     </div>
                                 ))}
