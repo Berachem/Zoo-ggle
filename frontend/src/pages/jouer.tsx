@@ -62,9 +62,9 @@ export default function Jouer() {
       ];
 
 
-    const [cards,setcards] = useState(null) //pour le changer le paramètre de la liste de carte
-    const recherche = useRef(null)          //pour récupérer le contenu de l'input tailwind
-    async function generateCard(){          //appelle l'API et change le contenu de la liste de carte
+    const [cards,setcards] = useState<string | null>(null)    //pour le changer le paramètre de la liste de carte
+    const recherche = useRef<HTMLInputElement>(null)          //pour récupérer le contenu de l'input tailwind
+    async function generateCard(){                            //appelle l'API et change le contenu de la liste de carte
         if(recherche.current !== null){
             const search = recherche.current.value
             let result = await getGames(search)
