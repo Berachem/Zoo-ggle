@@ -4,13 +4,9 @@ import GameCardInfo from "../components/Zooggle/GameCardInfo";
 import Title from "../components/Zooggle/Title";
 import { Input, Button, Typography} from "@material-tailwind/react";
 import GameForm from "../components/Zooggle/GameForm";
-import Pingouin from "../assets/images/PenguinFamilly.png"
-import {useRef} from "react";
+import {useRef, useState} from "react";
+import CardList from "../components/Zooggle/CardList";
 
-
-function popForm(id : string){
-    document.getElementById(id)?.classList.toggle("displayForm")
-}
 
 async function getGames(search : string){
     const formData = new FormData();
@@ -21,7 +17,7 @@ async function getGames(search : string){
     }).then(res => res.json());
 
     if (res.success) {
-        return res.result;
+        return JSON.stringify(res.result);
     } else {
         return "problème de connexion"
     }
@@ -65,30 +61,17 @@ export default function Jouer() {
         }
       ];
 
-    const recherche = useRef(null)
-    async function generateCard(){
+
+    const [cards,setcards] = useState(null) //pour le changer le paramètre de la liste de carte
+    const recherche = useRef(null)          //pour récupérer le contenu de l'input tailwind
+    async function generateCard(){          //appelle l'API et change le contenu de la liste de carte
         if(recherche.current !== null){
             const search = recherche.current.value
             let result = await getGames(search)
-
-            let container = document.getElementById("result")
-            if (container !==null){
-                if(result === "problème de connexion"){
-                    container.innerHTML='<Typography variant="h5">Problème de connexion</Typography>'
-                }else{
-                    container.innerHTML= result.map((game : Record<string,any>, index : number) => (
-                        <GameCard key={index}>
-                            <GameCardInfo
-                                title={game.NomPartie}
-                                lang={game.LangueDico}
-                                //maker={game.maker}
-                            />
-                        </GameCard>))
-                }
-                
+            setcards(result)
             }
-        }
-    } 
+    }
+    
     
 
     return (
@@ -104,7 +87,7 @@ export default function Jouer() {
                 }}>
                 
                 <ZooggleCard width="50vw">
-                    <Button size="lg" color="orange" onClick={(event: React.MouseEvent<HTMLElement>) => {popForm("GameForm")}}>Creer une partie</Button>
+                    <Button size="lg" color="orange" onClick={(event: React.MouseEvent<HTMLElement>) => {generateCard()}}>Creer une partie</Button>
                 </ZooggleCard>
 
                 <div style={{
@@ -127,9 +110,7 @@ export default function Jouer() {
                                     Envoyer
                                 </Button>
                             </div>
-                            <div id="result">
-                                <img src={Pingouin} style={{width:"calc(80vh - 2.5rem)",objectFit:"contain",margin:"auto"}}/>
-                            </div>
+                            <CardList object={cards}/>
                         </div>
                     </ZooggleCard>
 
