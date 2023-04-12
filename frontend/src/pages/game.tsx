@@ -4,6 +4,7 @@ import Logo from "../assets/images/Title.svg";
 import ZooggleCard from "../components/Zooggle/ZooggleCard"
 import GameGrid from "../components/Zooggle/GameGrid";
 import Chat from "../components/game/chat";
+import Words from "../components/game/words";
 import GameColumn from "../components/game/gameColumn";
 import GameSection from "../components/game/gameSection";
 import LeftAndCenter from "../components/game/leftAndCenter";
@@ -25,7 +26,8 @@ export default function Game() {
                         <LeftAndCenter>
                             <GameColumn type="side">
                                 <ZooggleCard width="100%" minHeight="45%">
-                                    <Typography variant="h4"> 1st example window </Typography>
+                                    <Words>
+                                    </Words>
                                 </ZooggleCard>
                                 <Typography variant="h4"> Score : 800 </Typography>
                                 <ZooggleCard width="100%" minHeight="45%">
