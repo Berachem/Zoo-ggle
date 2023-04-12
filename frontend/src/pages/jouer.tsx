@@ -23,6 +23,21 @@ async function getGames(search : string){
     }
 }
 
+async function getRecentGames(){
+    const formData = new FormData();
+
+    const res = await fetch('https://zoo-ggle.berachem.dev/V2/api/getRecentGame.php', {
+        method: 'POST',
+        body: formData
+    }).then(res => res.json());
+
+    if (res.success) {
+        return JSON.stringify(res.result);
+    } else {
+        return "problème de connexion"
+    }
+}
+
 
 
 
@@ -61,7 +76,8 @@ export default function Jouer() {
         }
       ];
 
-
+    const recentGames = getRecentGames()
+    
     const [cards,setcards] = useState<string | null>(null)    //pour le changer le paramètre de la liste de carte
     const recherche = useRef<HTMLInputElement>(null)          //pour récupérer le contenu de l'input tailwind
     async function generateCard(){                            //appelle l'API et change le contenu de la liste de carte
@@ -120,17 +136,8 @@ export default function Jouer() {
                                      flexDirection:"column",
                                      height:"80vh",
                                      overflowY:"scroll"
-                        }}>
-                            {recentsGameData.map((game, index) => (
-                                <GameCard key={index}>
-                                    <GameCardInfo
-                                        title={game.title}
-                                        lang={game.lang}
-                                        maker={game.maker}
-                                        players={game.players}
-                                    />
-                                </GameCard>
-                            ))}
+                                    }}>
+                            <CardList object={recentGames}/>  
                         </div>
                     </ZooggleCard>
                 </div>

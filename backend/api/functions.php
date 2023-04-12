@@ -35,7 +35,16 @@ function recherchePartie(string $text){
             $parameters[] = [":$mot", $mot];
         }
     }
+    $request.=" AND DateFinPartie IS NULL";
     return $db->execQuery($request,$parameters);
+}
+
+/*
+* Fonction qui vient récupérer toutes les games lancées qui ne sont pas finies
+*/
+function getRecentGame(){
+    $request = "SELECT * FROM B_Partie WHERE DateFinPartie IS NULL LIMIT 20";
+    return $db->execQuery($request);
 }
 
 
