@@ -288,7 +288,7 @@ export default function AppBar(
 
   if (isLandingPage) {
     return (
-      <div className="flex justify-end">
+      <div className="flex justify-end" style={{ position: "fixed", top: 0, right: 0 }}>
         <ul className="flex">
           <li className="mx-7">
             <br />
@@ -311,6 +311,7 @@ export default function AppBar(
       </div>
     );
   }
+  
   return (
     <Navbar
       className="mx-auto max-w-screen-xl p-2 lg:rounded-full lg:pl-6 sticky"

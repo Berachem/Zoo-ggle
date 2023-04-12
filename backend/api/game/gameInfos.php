@@ -9,8 +9,8 @@ require_once '../lib/parse.env.php';
 require_once '../Connexion.php';
 require_once '../functions.php';
 
-if (isset($_POST["idPartie"])) {
-    $game = getGameInfos($_POST["idPartie"]);
+if (isset($_GET["idPartie"])) {
+    $game = getGameInfos($_GET["idPartie"]);
     if ($game) {
         $players = getPlayers($game->IdPartie);
         // map

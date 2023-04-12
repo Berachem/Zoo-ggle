@@ -35,7 +35,9 @@ function App() {
   return (
     <BrowserRouter>
       <>
-        <Background backgroundMode={BackgroundMode} />
+        <Background backgroundMode={BackgroundMode} isLandingPage={
+          window.location.pathname === "/" ? true : false
+        } />
         <NavBar
           changeBackgroundMode={changeBackgroundMode}
           backgroundMode={BackgroundMode}
