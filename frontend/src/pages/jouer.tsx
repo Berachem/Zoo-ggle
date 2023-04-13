@@ -4,7 +4,7 @@ import GameCardInfo from "../components/Zooggle/GameCardInfo";
 import Title from "../components/Zooggle/Title";
 import { Input, Button, Typography} from "@material-tailwind/react";
 import GameForm from "../components/Zooggle/GameForm";
-import {useRef, useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import CardList from "../components/Zooggle/CardList";
 
 
@@ -12,21 +12,6 @@ async function getGames(search : string){
     const formData = new FormData();
 
     const res = await fetch('https://zoo-ggle.berachem.dev/V2/api/searchGame.php?q='+search, {
-        method: 'POST',
-        body: formData
-    }).then(res => res.json());
-
-    if (res.success) {
-        return JSON.stringify(res.result);
-    } else {
-        return "problème de connexion"
-    }
-}
-
-async function getRecentGames(){
-    const formData = new FormData();
-
-    const res = await fetch('https://zoo-ggle.berachem.dev/V2/api/getRecentGame.php', {
         method: 'POST',
         body: formData
     }).then(res => res.json());
@@ -75,8 +60,6 @@ export default function Jouer() {
           players: "oui - non - Beraaa - Lucas123 - JoOOOOO",
         }
       ];
-
-    const recentGames = getRecentGames()
     
     const [cards,setcards] = useState<string | null>(null)    //pour le changer le paramètre de la liste de carte
     const recherche = useRef<HTMLInputElement>(null)          //pour récupérer le contenu de l'input tailwind
@@ -87,6 +70,19 @@ export default function Jouer() {
             setcards(result)
             }
     }
+
+    const [recentGame,setRecentGame] = useState<string | null>(null) 
+    useEffect( () => {                                               //useEffect permet d'attendre une fonction asynchrone avant de changer un etat
+        const getRecentGame = async () =>{
+            const res = await fetch('http://localhost/backend/api/getRecentGame.php').then(res => res.json())
+            if (res.success) {
+                setRecentGame(JSON.stringify(res.result))
+            } else {
+                setRecentGame("problème de connexion")
+            }
+        };
+        getRecentGame();
+    })
     
     
 
@@ -137,7 +133,7 @@ export default function Jouer() {
                                      height:"80vh",
                                      overflowY:"scroll"
                                     }}>
-                            <CardList object={recentGames}/>  
+                            <CardList object={recentGame}/>
                         </div>
                     </ZooggleCard>
                 </div>

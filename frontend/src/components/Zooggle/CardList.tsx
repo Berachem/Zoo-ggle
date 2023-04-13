@@ -8,9 +8,9 @@ export default function CardList(props : any){
 
     function popForm(object : string | null){
         console.log(object)
-        if(object === null){
+        if(object == null){
             return <img src={Pingouin}/>
-        }else if(object === "problème de connexion"){
+        }else if(object == "problème de connexion"){
             return <span>Problème de connexion</span>
         }else{
             let card = JSON.parse(object)
