@@ -17,6 +17,11 @@
     height: 70%;
 }
 
+.gameColumn.chat{
+    width: 20vw;
+    height: 70%;
+}
+
 @media(max-width:900px){
 
     .gameColumn.main{
@@ -27,5 +32,13 @@
     .gameColumn.side{
         width: 80%;
         height: fit-content;
+    }
+
+    .gameColumn.chat{
+        position:fixed;
+        left:auto;
+        top:auto;
+        width: 45vw;
+        height: 70%;
     }
 }

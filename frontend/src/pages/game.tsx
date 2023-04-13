@@ -8,7 +8,38 @@ import Words from "../components/game/words";
 import GameColumn from "../components/game/gameColumn";
 import GameSection from "../components/game/gameSection";
 import LeftAndCenter from "../components/game/leftAndCenter";
+import { faMessage } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import React, { useEffect, useState } from 'react';
 export default function Game() {
+
+    const [showChat, setShowChat] = useState(false);
+    const [showChatButton, setShowChatButton] = useState(true);
+
+    const toggleChat = () => {
+        setShowChat(!showChat);
+    };
+
+
+
+
+
+    React.useEffect(() => {
+        function handleResize() {
+            if (window.innerWidth > 900) {
+                setShowChatButton(false);
+                setShowChat(true);
+            } else {
+                setShowChatButton(true);
+                setShowChat(false);
+            }
+            console.log('resized to: ', window.innerWidth, 'x', window.innerHeight)
+
+        }
+
+        window.addEventListener('resize', handleResize)
+        window.addEventListener('load', handleResize);
+    })
 
     return (
         <>
@@ -51,7 +82,7 @@ export default function Game() {
                                     </div>
                                 </ZooggleCard>
 
-                                <ZooggleCard width="100%">
+                                <ZooggleCard width="80%">
                                     <div style={{
                                         width: "100%",
                                         display: "flex",
@@ -79,17 +110,28 @@ export default function Game() {
                             </GameColumn>
                         </LeftAndCenter>
 
-
-                        <GameColumn type="side">
-                            <ZooggleCard width="100%" padding="0rem" minHeight="70%">
-                                <Chat>
-                                </Chat>
-                            </ZooggleCard>
-                        </GameColumn>
+                        {showChat && (
+                            <GameColumn type="chat">
+                                <ZooggleCard width="100%" padding="0rem" minHeight="70%">
+                                    <Chat>
+                                    </Chat>
+                                </ZooggleCard>
+                            </GameColumn>
+                        )}
 
 
 
                     </GameSection>
+
+                    {showChatButton && (<div className="fixed bottom-5 left-5 z-50">
+                        <button
+                            className="flex items-center justify-center bg-red-700 text-white rounded-full w-16 h-16"
+                            onClick={toggleChat}
+                        >
+                            <FontAwesomeIcon icon={faMessage} size='2x' className='text-white' />
+                        </button>
+                    </div>)}
+
                 </div>
             </div>
 
