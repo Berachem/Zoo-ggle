@@ -8,7 +8,7 @@ export default function words(props: any) {
     ];
 
     const validWords = [
-        "Chats", "Chat", "Ciseaux", "Bateau", "Voitures", "Porte", "Vélo", "Extreme", "Vaisseau", "Chocolat", "Orange", "Bleu", "Jungle", "Jeu", "Clavier", "Montre", "Chaise", "Rails", "Train", "Batiments",
+        "Chats", "Chat", "Ciseaux", "Bateau", "Voitures", "Porte", "Vélo", "ExtremeExtreme", "Vaisseau", "Chocolat", "Orange", "Bleu", "Jungle", "Jeu", "Clavier", "Montre", "Chaise", "Rails", "Train", "Batiments",
         "Chateau", "Koala", "Perroquet", "Loup", "Lion"
     ];
 
@@ -21,7 +21,7 @@ export default function words(props: any) {
             width: "100%",
             height: "100%",
             overflowY: "scroll",
-        }}>
+        }} className="customScroll">
             {/* <Typography variant="h4"> Mots Proposés</Typography>
             <div style={{
                 display: "grid",
