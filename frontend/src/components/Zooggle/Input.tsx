@@ -4,6 +4,7 @@ interface InputProps {
   label: string;
   type: string;
   placeholder: string;
+  disabled?: boolean;
   options?: string[];
   required?: boolean;
   onChange?: ( event: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLSelectElement> ) => void;
@@ -11,7 +12,7 @@ interface InputProps {
   onFocus?: () => void;
 }
 
-const Input: React.FC<InputProps> = ({ label, type, placeholder, options, required = false, onChange, onBlur, onFocus }) => {
+const Input: React.FC<InputProps> = ({ label, type, placeholder,disabled,  options, required = false, onChange, onBlur, onFocus }) => {
   const inputId = `input-${label.toLowerCase().replace(/\s+/g, '-')}`;
 
   if (type === 'select' && options) {
@@ -69,6 +70,7 @@ const Input: React.FC<InputProps> = ({ label, type, placeholder, options, requir
         onChange={onChange}
         onBlur={onBlur}
         onFocus={onFocus}
+        disabled={disabled}
       />
     </div>
   );

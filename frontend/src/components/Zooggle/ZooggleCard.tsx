@@ -9,10 +9,12 @@ export default function ZooggleCard(props: any) {
                 width:`${props.width}`,
                 border:"2px solid white",
                 padding:`${props.padding || '1rem'}`,
-                color:"white",
-                backdropFilter:"blur(20px)",
+                color: `${props.color || 'white'}`,
+                backdropFilter: `${props.backdropFilter || 'blur(20px)'}`,
                 marginBottom:"1rem",
-            }}>
+            }} 
+             
+            >
                 {props.children}
             </div>
             )

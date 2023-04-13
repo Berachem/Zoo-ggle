@@ -12,9 +12,10 @@ $animals = $language === 'FRA' ? $animalsFRA : $animalsENG;
 $query = isset($_GET['q']) ? $_GET['q'] : '';
 
 // Filter the array based on the search query
-$filteredAnimals = array_filter($animals, function($animal) use ($query) {
-    return stripos($animal, $query) !== false;
-});
+$filteredAnimals = $_GET['q']  ? array_filter($animals, function($animal) use ($query) {
+    return stripos($animal, $query) !== false ;
+}) : $animals;
+
 
 // Return the result as JSON
 header('Content-Type: application/json');
