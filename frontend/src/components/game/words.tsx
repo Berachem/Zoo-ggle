@@ -22,6 +22,8 @@ export default function words(props: any) {
             height: "100%",
             overflowY: "scroll",
         }} className="customScroll">
+
+            
             {/* <Typography variant="h4"> Mots Proposés</Typography>
             <div style={{
                 display: "grid",

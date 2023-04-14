@@ -1,3 +1,8 @@
+*{
+    /* border: 1px blue solid; */
+
+}
+
 .gameColumn{
     display: flex;
     flex-direction: column;
@@ -20,6 +25,7 @@
 .gameColumn.chat{
     width: 20vw;
     height: 70%;
+    /* border:2px red solid */
 }
 
 @media(max-width:900px){
@@ -37,8 +43,8 @@
     .gameColumn.chat{
         position:fixed;
         left:auto;
-        top:auto;
-        width: 45vw;
-        height: 70%;
+        top:15vh;
+        width: 60%;
+        height: 70vh;
     }
 }

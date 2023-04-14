@@ -1,5 +1,4 @@
 import { Input, Button, Textarea } from "@material-tailwind/react";
-import { Direction } from "react-toastify/dist/utils";
 export default function chat(props: any) {
 
     const chatData = [
