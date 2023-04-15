@@ -1,4 +1,10 @@
-import { Alert, Button, IconButton, Typography } from "@material-tailwind/react";
+import {
+  Alert,
+  Button,
+  Card,
+  IconButton,
+  Typography,
+} from "@material-tailwind/react";
 import Logo from "../assets/images/Title.svg";
 import ZooggleCard from "../components/Zooggle/ZooggleCard";
 import GameGrid from "../components/Zooggle/GameGrid";
@@ -8,8 +14,13 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBook } from "@fortawesome/free-solid-svg-icons";
 import Input from "../components/Zooggle/Input";
 import { useEffect } from "react";
-import React from 'react'
+import React from "react";
 import AnimalList from "../components/Zooggle/animalsList";
+import Footer from "../components/footer/footer";
+import { faYoutube } from "@fortawesome/free-brands-svg-icons";
+import tortue from "../assets/images/randomAnimals/tortue.jpg";
+import cameleon from "../assets/images/randomAnimals/cameleon.jpg";
+import pinguin from "../assets/images/randomAnimals/pinguin.jpg";
 
 //import Forest from "../assets/video/Forest.mp4"
 
@@ -24,11 +35,6 @@ export default function Accueil() {
     }
     return letters;
   };
-
-
-  
-  
-
 
   return (
     /*
@@ -93,29 +99,44 @@ export default function Accueil() {
               le mot est long, plus les points qu'il vous rapporte sont
               importants.{" "}
             </p>
-
-           
           </div>
           <div className="flex flex-col items-center justify-center">
-          <Alert color="green" className="rounded-lg text-center" >
-            Voici un exemple de grille de jeu :
-            
-          </Alert>
-            <ZooggleCard width="" backdropFilter="blur(0px)" color="black">
-              <GameGrid width="big" grid={randomGridForDemo().join(" ")} />
+            <Alert color="green" className="rounded-lg text-center">
+              Voici un exemple de grille de jeu :
+            </Alert>
+            <ZooggleCard
+              width=""
+              backdropFilter="blur(0px)"
+              color="black"
+              key={randomGridForDemo().join(" ")}
+            >
+              <GameGrid
+                width="big"
+                grid={randomGridForDemo().join(" ")}
+                key={randomGridForDemo().join(" ")}
+              />
             </ZooggleCard>
 
             <div className="flex flex-row items-center justify-center">
-              <Input label="Mot" type="text" placeholder="Mot" disabled={true} />
-              <Button variant="filled" color="green" className="lg:mt-5" disabled={true}>
+              <Input
+                label="Mot"
+                type="text"
+                placeholder="Mot"
+                disabled={true}
+              />
+              <Button
+                variant="filled"
+                color="green"
+                className="lg:mt-5 md:mt-5"
+                disabled={true}
+              >
                 Valider
               </Button>
             </div>
-            
           </div>
         </div>
         <div className=" mx-auto rounded-lg p-4 max-w-screen-xl mb-4">
-          <div className="font-light text-gray-500 sm:text-lg dark:text-gray-400 items-center justify-center mb-8">
+          <div className="font-light text-gray-500 sm:text-lg dark:text-gray-400 items-center justify-center mb-12">
             <h2 className="mb-4 text-4xl tracking-tight font-extrabold text-gray-900 dark:text-white">
               Comment jouer ?
             </h2>
@@ -142,31 +163,74 @@ export default function Accueil() {
                 Règles
               </Button>
             </a>
+
+            {/* https://www.youtube.com/watch?v=fQ9CRLVvl6o */}
+
+            {/* https://www.youtube.com/watch?v=fQ9CRLVvl6o */}
+            <a
+              href="https://www.youtube.com/watch?v=fQ9CRLVvl6o"
+              target="_blank"
+            >
+              <Button
+                variant="filled"
+                className="m-2 text-white"
+                style={{ backgroundColor: "#B80F0F" }}
+              >
+                <FontAwesomeIcon icon={faYoutube} className="mr-2" />
+                Vidéo
+              </Button>
+            </a>
           </div>
-          {/* Pourquoi Zoo-ggle ? */}
+
+          <div className="font-light text-gray-500 sm:text-lg dark:text-gray-400 items-center justify-center mb-12">
+            <h2 className="mb-4 text-4xl tracking-tight font-extrabold text-gray-900 dark:text-white">
+              Un peu d'histoire
+            </h2>
+            <p className="mb-4">
+              Le Boggle a été <b>inventé en 1972 par Allan Turoff</b>, un
+              publicitaire à la recherche d'un jeu simple et amusant. Depuis, il
+              a vendu des millions d'exemplaires dans le monde entier et a
+              inspiré des tournois compétitifs. Le jeu est également connu pour
+              faire découvrir des mots que l'on ignorait exister, mais attention
+              à ne pas se tromper de mots sous peine de perdre des points, voire
+              des amis !
+            </p>
+          </div>
+
           <div className="font-light text-gray-500 sm:text-lg dark:text-gray-400 items-center justify-center">
             <h2 className="mb-4 text-4xl tracking-tight font-extrabold text-gray-900 dark:text-white">
               Pourquoi Zoo-ggle ?
             </h2>
             <p>
-              Zoo-ggle est un jeu qui vous permet de découvrir des animaux et de
-              les classer selon leur mode de vie.{" "}
+              Zoo-ggle est un jeu qui vous permet de découvrir des animaux.{" "}
             </p>
             <p className="mb-4">
               En effet, les mots que vous trouverez dans la grille de jeu
-              correspondent à des espèces d'animaux.{" "}
-            </p>
-            <p>
-              Vous pouvez consulter la liste des espèces d'animaux juste en dessous.
+              correspondent à des animaux vous ferons gagner{" "}
+              <u className="text-green-700">plus de points</u> que les autre !{" "}
             </p>
 
-  
-            
-           </div>
-           <AnimalList/>
+            {/* <Caroussel images={images} /> */}
 
+            <div className="mx-auto max-w-screen-md py-12">
+              <Card className="mb-12 overflow-hidden">
+                <img
+                  alt="nature"
+                  className="h-[32rem] w-full object-cover object-center"
+                  src={
+                    [tortue, cameleon, pinguin][ Math.floor(Math.random() * 3) ]
+                  }
+                />
+              </Card>
+            </div>
+
+            <p>Vous pouvez consulter la liste des animaux juste en dessous.</p>
+          </div>
+          <AnimalList />
         </div>
       </section>
+
+      <Footer />
 
       {/* <Team /> */}
     </>

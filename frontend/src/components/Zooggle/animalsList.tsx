@@ -1,3 +1,5 @@
+import { faArrowRight, faLink } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useEffect, useState } from "react";
 import { BounceLoader } from 'react-spinners';
 
@@ -24,7 +26,7 @@ interface Animal {
 
         setAnimalListNames(dataAnimals.animals.map((animal: any) => animal));
   
-          for (let i = 0; i < animalListNames.length; i++) {
+         /*  for (let i = 0; i < animalListNames.length; i++) {
             setLoadingAnimals((prevLoadingAnimals) => [...prevLoadingAnimals, animalListNames[i]]); // add animal to loadingAnimals
             fetch(`${PIXABAY_API_URL}${animalListNames[i]}&image_type=photo&pretty=true`)
               .then((response) => response.json())
@@ -37,32 +39,34 @@ interface Animal {
                 setAnimalList(animalList);
 
               });
-          }
+          } */
         });
     }, []);
   
     return (
       <div className="flex flex-wrap -mx-1 lg:-mx-4">
-    {animalList.map((animal: any) => (
+    {animalListNames.map((animal: any) => (
             <div className="my-1 px-1 w-full md:w-1/2 lg:my-4 lg:px-4 lg:w-1/3">
+              <a href={`https://www.google.com/search?q=${animal}`} target="_blank">
               <article className="overflow-hidden rounded-lg shadow-lg">
-                {loadingAnimals.includes(animal.name) && ( // conditional rendering of loader
+               {/*  {loadingAnimals.includes(animal.name) && ( // conditional rendering of loader
                   <div className="h-64 flex justify-center items-center">
                     <BounceLoader color="#4F46E5" loading={true} size={50} />
                   </div>
-                )}
-                <a href={`https://www.google.com/search?q=${animal.name}`} target="_blank">
-                  <img alt="Placeholder" className="block h-auto w-full"
-                   src={animal.linkImage} />
-                </a>
+                )} */}
+                
+                 {/*  <img alt="Placeholder" className="block h-auto w-full"
+                   src={animal.linkImage} /> */}
+                
                 <header className="flex items-center justify-between leading-tight p-2 md:p-4">
                   <h1 className="text-lg">
-                    <a className="no-underline hover:underline text-black" href="#">
-                      {animal.name}
-                    </a>
+                      {animal}
+                      {" "}
+                      <FontAwesomeIcon icon={faLink} className="text-gray-500 hover:text-green-700" />
                   </h1>
                 </header>
               </article>
+              </a>
             </div>
           ))}
         

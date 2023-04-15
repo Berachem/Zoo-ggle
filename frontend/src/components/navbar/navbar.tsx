@@ -286,9 +286,11 @@ export default function AppBar(
     );
   }, []);
 
+
   if (isLandingPage) {
+
     return (
-      <div className="flex justify-end" style={{ position: "fixed", top: 0, right: 0 }}>
+      <div className="flex justify-end" style={{ position: "fixed", top: 0, right: 0, zIndex: 1000 }} id="navbar">
         <ul className="flex">
           <li className="mx-7">
             <br />
