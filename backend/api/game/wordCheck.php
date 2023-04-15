@@ -51,7 +51,9 @@ print_r($allValidWords);
 
 if (in_array($word, $allValidWords)) {
     // json avec success = true et le word
+    // TODO : si le mot est le nom d'un animal, ajouter X points au joueur
     addWordPlayedByAPlayer($playerId,$gameId,$word,1);
+
     echo json_encode(array("success" => true, "mot" => $word));
     
 } else {
