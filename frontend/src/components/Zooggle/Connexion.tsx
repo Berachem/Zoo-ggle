@@ -19,9 +19,9 @@ export default function Connexion(){
         <form id="connexion" action="" method="POST" className="connecForm telHidden">
             <span className="titleTel">Connexion</span>
             <span className="connecLabel">Pseudo</span>
-            <input type="text" placeholder="votre pseudo" className="connecInput"/>
+            <input type="text" placeholder="votre pseudo" className="connecInput" required/>
             <span className="connecLabel">Mot de passe</span>
-            <input type="text" placeholder="votre mot de passe" className="connecInput"/>
+            <input type="text" placeholder="votre mot de passe" className="connecInput" required/>
             <input type="submit" className="connecSubmit" value="se connecter"/>
             <span className="telSwitch" onClick={(event: React.MouseEvent<HTMLElement>) => {switchForm()}}>Appuyez ici pour s'inscrire</span>
         </form>

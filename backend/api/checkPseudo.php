@@ -7,9 +7,9 @@ require_once "functions.php";
 
 $responce = array();
 
-if(isset($_POST['login'])){
+if(isset($_GET['login'])){
 
-    $id = $db->getId($_POST['login']);
+    $id = $db->getId($_GET['login']);
     if($id == null){
         $responce["retour"]="ok";
     }else{
@@ -21,4 +21,5 @@ if(isset($_POST['login'])){
     $responce["retour"]="not ok";
 }
 header("Content-Type: application/json");
+header('Access-Control-Allow-Origin: *');
 echo json_encode($responce);

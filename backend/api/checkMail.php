@@ -7,9 +7,9 @@ require_once "functions.php";
 
 $responce = array();
 
-if(isset($_POST["mail"])){
+if(isset($_GET["mail"])){
 
-    if(checkMail($_POST["mail"])){
+    if(checkMail($_GET["mail"])){
         $responce["retour"]="ok";
     }else{
         $responce["retour"]="not ok";
@@ -21,4 +21,5 @@ if(isset($_POST["mail"])){
     $responce["retour"]="not ok";
 }
 header("Content-Type: application/json");
+header('Access-Control-Allow-Origin: *');
 echo json_encode($responce);

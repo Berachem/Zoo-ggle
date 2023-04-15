@@ -129,6 +129,11 @@ input[type=radio]{
     font-style: italic;
 }
 
+.errors{
+    margin: auto;
+    width: 25vw;
+}
+
 .goLeft{
     animation: goLeft 0.5s linear forwards;
 }
@@ -161,10 +166,15 @@ input[type=radio]{
 .telSwitch{
     display: none;
 }
+.telErrors{
+    display: none;
+}
 
 @media(max-width:900px ){
     .connecContainer{
         width: 100vw;
+        height: 90vh;
+        padding-top: 5vh;
     }
     .telHidden{
         display: none;
@@ -187,6 +197,12 @@ input[type=radio]{
         text-align: center;
         color: #dd4b39;
         text-decoration: underline;
+    }
+    .telErrors{
+        display: block;
+    }
+    .errors{
+        display: none;
     }
 
 }

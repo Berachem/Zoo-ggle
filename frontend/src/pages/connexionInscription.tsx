@@ -5,7 +5,7 @@ import "../css/ConnexionInscription.css"
 
 export default function ConnexionInscription() {
     return(
-        <div style={{height:"88vh",overflowY:"hidden"}}>
+        <div style={{overflowY:"hidden"}}>
             <div  className="connecContainer">
                 <Inscription/>
                 <Connexion/>
