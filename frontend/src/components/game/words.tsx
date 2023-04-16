@@ -1,6 +1,8 @@
 import { Typography } from "@material-tailwind/react";
 import { Direction } from "react-toastify/dist/utils";
 export default function words(props: any) {
+    var inGame = props.inGame || false
+    var inHistory = props.inHistory || false
 
     const proposedWords = [
         "Chats", "Chat", "Ciseaux", "Bateau", "Voitures", "Porte", "Vélo", "Extreme", "Vaisseau", "Chocolat", "Orange", "Bleu", "Jungle", "Jeu", "Clavier", "Montre", "Chaise", "Rails", "Train", "Batiments",
@@ -8,7 +10,7 @@ export default function words(props: any) {
     ];
 
     const validWords = [
-        "Chats", "Chat", "Ciseaux", "Bateau", "Voitures", "Porte", "Vélo", "ExtremeExtreme", "Vaisseau", "Chocolat", "Orange", "Bleu", "Jungle", "Jeu", "Clavier", "Montre", "Chaise", "Rails", "Train", "Batiments",
+        "Chats", "Chat", "Ciseaux", "Bateau", "Voitures", "Porte", "VéloVéloVéloVélo", "ExtremeExtreme", "VaisseauVaisseau", "Chocolat", "Orange", "Bleu", "Jungle", "Jeu", "Clavier", "Montre", "Chaise", "Rails", "Train", "Batiments",
         "Chateau", "Koala", "Perroquet", "Loup", "Lion"
     ];
 
@@ -23,56 +25,59 @@ export default function words(props: any) {
             overflowY: "scroll",
         }} className="customScroll">
 
-            
-            {/* <Typography variant="h4"> Mots Proposés</Typography>
-            <div style={{
-                display: "grid",
-                width: "100%",
-                gridTemplateColumns: "repeat(3,1fr)",
+            {inGame && (<>
+                <Typography variant="h4"> Mots Proposés</Typography>
+                <div style={{
+                    display: "grid",
+                    width: "100%",
+                    gridTemplateColumns: "repeat(3,1fr)",
 
-            }}>
-                {proposedWords.map(function (word) {
-                    return (
-                        <p>
-                            {word}
-                        </p>)
-                })}
-            </div> */}
+                }}>
+                    {proposedWords.map(function (word) {
+                        return (
+                            <p>
+                                {word}
+                            </p>)
+                    })}
+                </div>
+            </>)}
 
 
 
 
-            <Typography variant="h4"> Mots Trouvés (X/Y)</Typography>
-            <div style={{
-                width: "100%",
-                display: "grid",
-                gridTemplateColumns: "repeat(3,1fr)",
+            {inHistory && (<><Typography variant="h4"> Mots Trouvés (X/Y)</Typography>
+                <div style={{
+                    width: "100%",
+                    display: "grid",
+                    gridTemplateColumns: "repeat(3,1fr)",
 
-            }}>
-                {validWords.map(function (word) {
-                    return (
-                        <p>
-                            {word}
-                        </p>)
-                })}
+                }}>
+                    {validWords.map(function (word) {
+                        return (
+                            <p>
+                                {word}
+                            </p>)
+                    })}
 
-            </div>
+                </div>
 
-            <Typography variant="h4"> Mots non trouvés</Typography>
-            <div style={{
-                width: "100%",
-                display: "grid",
-                gridTemplateColumns: "repeat(3,1fr)",
+                <Typography variant="h4"> Mots non trouvés</Typography>
+                <div style={{
+                    width: "100%",
+                    display: "grid",
+                    gridTemplateColumns: "repeat(3,1fr)",
 
-            }}>
+                }}>
 
-                {falseWords.map(function (word) {
-                    return (
-                        <p>
-                            {word}
-                        </p>)
-                })}
-            </div>
+                    {falseWords.map(function (word) {
+                        return (
+                            <p>
+                                {word}
+                            </p>)
+                    })}
+                </div></>)}
+
+
 
 
 
