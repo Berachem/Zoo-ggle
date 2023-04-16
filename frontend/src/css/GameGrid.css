@@ -22,7 +22,11 @@
 .grid > div:hover{
     box-shadow: 0 0 0 0.2rem rgb(255, 255, 255);
     transition: box-shadow 0.2s;
-    
+}
+
+.grid > div.selected:hover{
+    box-shadow: 0 0 0 0.2rem orange;
+    transition: box-shadow 0.2s;
 }
 
 .grid.big{
@@ -64,6 +68,7 @@
 
 @media(max-width:900px ){
     :root{
+        --big-width: min(60vw,var(--big-height));
         --big-between:0.5rem;
         --small-between:0.2rem;
         --small-font:1.5rem;
@@ -75,10 +80,6 @@
 
 @media(max-width:500px ){
     :root{
-        --big-width: 85vw;
-        --big-between:0.5rem;
-        --big-font:2rem;
-        
         --small-width:30vw;
         --small-font:1rem;
         --small-between:0.1rem
@@ -88,5 +89,13 @@
 @media(max-height:700px ){
     :root{
         --big-height: 45vh;
+        --big-between:0.5rem;
+        --big-font:3rem;
+    }
+}
+
+@media(max-width:1200px ){
+    :root{
+        --big-between:0.5rem;
     }
 }

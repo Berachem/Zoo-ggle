@@ -16,9 +16,62 @@ export default function chat(props: any) {
             message: "Quoicoubebou"
         },
         {
-            pseudo: "Joshua",
-            message: ":("
+            pseudo: "Lucas",
+            message: "Bla bla bla bla ! Bla bla ..."
         },
+        {
+            pseudo: "Nidal",
+            message: "Blablablalablablablablalablablablablalablablablablalablablablablablablabla.... AHAHAHHAHAAHAH blablablablabla"
+        },
+        {
+            pseudo: "Lucas",
+            message: "Bla bla bla bla ! Bla bla ..."
+        },
+        {
+            pseudo: "Nidal",
+            message: "Blablablablablabla.... AHAHAHHAHAAHAH blablablablabla"
+        },
+        {
+            pseudo: "Lucas",
+            message: "Bla bla bla bla ! Bla bla ..."
+        },
+        {
+            pseudo: "Nidal",
+            message: "Blablablablablabla.... AHAHAHHAHAAHAH blablablablabla"
+        },
+        {
+            pseudo: "Nidal",
+            message: "Blablablablablabla.... AHAHAHHAHAAHAH blablablablabla"
+        },
+        {
+            pseudo: "Lucas",
+            message: "Bla bla bla bla ! Bla bla ..."
+        },
+        {
+            pseudo: "Nidal",
+            message: "Blablablablablabla.... AHAHAHHAHAAHAH blablablablabla"
+        },
+        {
+            pseudo: "Lucas",
+            message: "Bla bla bla bla ! Bla bla ..."
+        },
+        {
+            pseudo: "Nidal",
+            message: "Blablablablablabla.... AHAHAHHAHAAHAH blablablablabla"
+        },
+        {
+            pseudo: "Lucas",
+            message: "Bla bla bla bla ! Bla bla ..."
+        },
+        {
+            pseudo: "Nidal",
+            message: "Blablablablablabla.... AHAHAHHAHAAHAH blablablablabla"
+        },
+        {
+            pseudo: "Lucas",
+            message: "Bla bla bla bla ! Bla bla ..."
+        },
+
     ];
 
     return (
@@ -30,11 +83,13 @@ export default function chat(props: any) {
             justifyContent: "space-between",
         }}>
             <div style={{
-                margin: "1rem"
-            }}>
+                flexGrow:"1",
+                margin: "1rem",
+                overflowY:"scroll"
+            }} className="customScroll">
                 {chatData.map(function (chat) {
                     return (
-                        <p>
+                        <p style={{wordBreak:"break-word"}}>
                             {chat.pseudo} : {chat.message}
                         </p>)
                 })}
