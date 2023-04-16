@@ -1,5 +1,6 @@
 :root{
-    --big-width: 30vw;
+    --big-height : 55vh;
+    --big-width: min(30vw,var(--big-height));
     --big-between:1rem;
     --big-font:3rem;
 
@@ -81,5 +82,11 @@
         --small-width:30vw;
         --small-font:1rem;
         --small-between:0.1rem
+    }
+}
+
+@media(max-height:700px ){
+    :root{
+        --big-height: 45vh;
     }
 }

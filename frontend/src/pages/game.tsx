@@ -112,7 +112,7 @@ export default function Game() {
                                     (
                                         <>
                                             <Typography variant="h4"> Aide :</Typography>
-                                            <Typography > Il semblerait qu'il y ai le mot "intergouvernementalisations" dans cette grille</Typography>
+                                            <Typography > Il semblerait qu'il y ai le mot "bouteille" dans cette grille</Typography>
                                         </>
 
                                     )}
