@@ -13,7 +13,7 @@ import Team from "../components/sections/teamSection";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBook } from "@fortawesome/free-solid-svg-icons";
 import Input from "../components/Zooggle/Input";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import React from "react";
 import AnimalList from "../components/Zooggle/animalsList";
 import Footer from "../components/footer/footer";
@@ -21,6 +21,8 @@ import { faYoutube } from "@fortawesome/free-brands-svg-icons";
 import tortue from "../assets/images/randomAnimals/tortue.jpg";
 import cameleon from "../assets/images/randomAnimals/cameleon.jpg";
 import pinguin from "../assets/images/randomAnimals/pinguin.jpg";
+import IndicatorScroll from "../components/scroll/IndicatorScroll";
+import MouseScrollIndicator from "../components/scroll/MouseScrollIndicator";
 
 //import Forest from "../assets/video/Forest.mp4"
 
@@ -35,6 +37,7 @@ export default function Accueil() {
     }
     return letters;
   };
+
 
   return (
     /*
@@ -59,11 +62,14 @@ export default function Accueil() {
           margin: "auto",
         }}
       >
+        <IndicatorScroll />
+        {/* <MouseScrollIndicator id="discover" /> */}
+
         <main className="flex flex-col items-center justify-center w-full flex-1  text-center text-gray-50">
           <img src={Logo} />
-          <a href="#regles">
+          <a href="/jouer">
             <Button variant="filled" color="white" className="m-2">
-              Règles
+              Jouer
             </Button>
           </a>
         </main>
@@ -83,7 +89,7 @@ export default function Accueil() {
 
       {/* landing page décrivant Zoo-ggle (dérivé du jeu de grille Boggle) */}
 
-      <section className="bg-white dark:bg-gray-900">
+      <section className="bg-white dark:bg-gray-900" id="discover">
         <div className="gap-16 items-center py-8 px-4 mx-auto max-w-screen-xl lg:grid lg:grid-cols-2 lg:py-16 lg:px-6">
           <div className="font-light text-gray-500 sm:text-lg dark:text-gray-400">
             <h2 className="mb-4 text-4xl tracking-tight font-extrabold text-gray-900 dark:text-white">
@@ -218,7 +224,7 @@ export default function Accueil() {
                   alt="nature"
                   className="h-[32rem] w-full object-cover object-center"
                   src={
-                    [tortue, cameleon, pinguin][ Math.floor(Math.random() * 3) ]
+                    [tortue, cameleon, pinguin][Math.floor(Math.random() * 3)]
                   }
                 />
               </Card>
