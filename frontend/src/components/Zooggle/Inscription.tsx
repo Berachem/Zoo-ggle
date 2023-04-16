@@ -1,4 +1,7 @@
+
 import "../../css/ConnexionInscription.css"
+import { ToastContainer,toast } from "react-toastify"
+import { useLocation } from "react-router-dom"
 
 function switchForm(){
     let connexion = document.getElementById("connexion")
@@ -91,7 +94,28 @@ async function checkAll(event : React.SyntheticEvent){
     let psw = checkPsw();
     let mail = await checkMail();
     let pseudo = checkPseudo();
-    return psw && mail && pseudo && !globalresult;
+    if( psw && mail && pseudo && !globalresult){
+        let mail = document.getElementById("mailInscription") as HTMLInputElement;
+        let psw = document.getElementById("pswInscription") as HTMLInputElement;
+        let pseudo = document.getElementById("Inscriptionlogin") as HTMLInputElement;
+        let description = document.getElementById("descInscription") as HTMLInputElement;
+        
+        let pub = document.getElementById("public") as HTMLInputElement
+        let pvalue=0
+        if(pub.checked){
+            pvalue=1
+        }
+
+        let formData = new FormData()
+        formData.append('mail',mail.value)
+        formData.append('psw',psw.value)
+        formData.append('login',pseudo.value)
+        formData.append('desc',description.value)
+        formData.append('public',pvalue.toString())
+
+        const res = await fetch('http://localhost/backend/api/registerUSer.php',{method:'POST', body:formData}).then(res=>res.json())
+        window.location.assign(res.redirect)
+    }
 }
 
 function checkPseudo(){
@@ -135,7 +159,24 @@ async function callBDDPseudo(login : string){
 
 export default function Inscription(){
 
+    const location = useLocation()
+    const params = new URLSearchParams(location.search);
+    if(params.has("registered") && params.get("registered")=="false"){
+        toast.error("Echec de l'inscription !", {
+            position: "top-right",
+            autoClose: 8000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+          });
+    }
+
     return(
+        <>
+        <ToastContainer/>
+
         <form action="" method="POST" className="connecForm" id="inscription" onSubmit={checkAll}>
             <span className="titleTel">Inscription</span>
             <div className="telErrors">
@@ -165,12 +206,13 @@ export default function Inscription(){
             
 
             <span className="connecLabel">Votre Description</span>
-            <textarea id="" cols={30} rows={10} className="connecInput desc"></textarea>
+            <textarea id="descInscription" cols={30} rows={10} className="connecInput desc"></textarea>
             
             <input type="submit" className="connecSubmit" value="s'inscrire"/>
 
             <span className="telSwitch" onClick={(event: React.MouseEvent<HTMLElement>) => {switchForm()}}>Appuyez ici pour se connecter</span>
         </form>
+        </>
     )
 
 }

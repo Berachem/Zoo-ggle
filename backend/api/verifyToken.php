@@ -13,9 +13,9 @@ if (isset($_POST['token']) ) {
     if (isExpiredToken($_POST['token'])) {
         $response["success"] = false;
         $response["errorCode"] = 610; // token expired
-        $response["redirect"] = "../index.php?tokenExpired=true";
+        //$response["redirect"] = "../index.php?tokenExpired=true";
         header('Content-Type: application/json');
-header('Access-Control-Allow-Origin: *');
+        header('Access-Control-Allow-Origin: *');
         echo json_encode($response);
         exit();
     }
@@ -23,10 +23,11 @@ header('Access-Control-Allow-Origin: *');
         $_SESSION['user'] = $_SESSION['waitingUser'];
         unset($_SESSION['waitingUser']);
         unset($_SESSION['token']);
+        $response['user'] = $_SESSION['user'];
         $response["success"] = true;
-        $response["redirect"] = "../index.php?connected=true";
+        //$response["redirect"] = "../index.php?connected=true";
         header('Content-Type: application/json');
-header('Access-Control-Allow-Origin: *');
+        header('Access-Control-Allow-Origin: *');
         echo json_encode($response);
         exit();
     }
@@ -38,7 +39,7 @@ header('Access-Control-Allow-Origin: *');
         $response["success"] = true;
         $response["redirect"] = "../index.php?connected=true";
         header('Content-Type: application/json');
-header('Access-Control-Allow-Origin: *');
+        header('Access-Control-Allow-Origin: *');
         echo json_encode($response);
         exit();
     }
@@ -47,8 +48,10 @@ header('Access-Control-Allow-Origin: *');
     $response["success"] = false;
     $response["errorCode"] = 611; // wrong token
     $response["redirect"] = "../index.php?wrongToken=true";
+    $response["actualToken"] = $_SESSION['token'];
+    $response['providedToken'] = $_POST['token'];
     header('Content-Type: application/json');
-header('Access-Control-Allow-Origin: *');
+    header('Access-Control-Allow-Origin: *');
     echo json_encode($response);
     exit();
     
@@ -58,7 +61,7 @@ header('Access-Control-Allow-Origin: *');
     $response["errorCode"] = 612; // missing token
     $response["redirect"] = "../index.php?missingToken=true";
     header('Content-Type: application/json');
-header('Access-Control-Allow-Origin: *');
+    header('Access-Control-Allow-Origin: *');
     echo json_encode($response);
     exit();
 }

@@ -30,15 +30,15 @@
         }else{
             $response["success"] = false;
             $response["errorCode"] = 601; // wrong login or password
-            $response["redirect"] = "../index.php?wrongLoginOrPsw=true";
+            $response["redirect"] = "/acceuil?wrongLoginOrPsw=true";
         }
     }else{
         $response["success"] = false;
         $response["errorCode"] = 600; // missing login or password
-        $response["redirect"] = "../index.php?missingLoginOrPsw=true";
+        $response["redirect"] = "/acceuil?missingLoginOrPsw=true";
     }
 
     header('Content-Type: application/json');
-header('Access-Control-Allow-Origin: *');
+    header('Access-Control-Allow-Origin: *');
     echo json_encode($response);
 ?>

@@ -22,16 +22,17 @@
 
         // generate token
         $randomSHA256 = hash('sha256', random_bytes(32));
+        $_SESSION['token']=$randomSHA256;
         // add token to user
         addTokenToUser($user, $randomSHA256);
         // send token
         sendTokenByMail(getPlayerMail($user), $randomSHA256);
 
         $response["success"] = true;
-        $response["redirect"] = "../index.php?registered=true";
+        $response["redirect"] = "../?registered=true";
     }else{
         $response["success"] = false;
-        $response["redirect"] = "../index.php?registered=false";
+        $response["redirect"] = "/connexionInscription?registered=false";
         $response["error"] = 613; //missing parameter
     }
     header('Content-Type: application/json');

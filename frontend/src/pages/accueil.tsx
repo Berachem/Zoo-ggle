@@ -23,8 +23,18 @@ import cameleon from "../assets/images/randomAnimals/cameleon.jpg";
 import pinguin from "../assets/images/randomAnimals/pinguin.jpg";
 import IndicatorScroll from "../components/scroll/IndicatorScroll";
 import MouseScrollIndicator from "../components/scroll/MouseScrollIndicator";
+import { ToastContainer,toast } from "react-toastify"
+import { useLocation } from "react-router-dom"
 
 //import Forest from "../assets/video/Forest.mp4"
+
+async function checkToken(token :string){
+  let formData = new FormData()
+  formData.append("token",token)
+  const res = await fetch("http://localhost/backend/api/verifyToken.php",{method:"POST",body:formData}).then(res=>res.json())
+
+
+}
 
 export default function Accueil() {
   const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -38,6 +48,25 @@ export default function Accueil() {
     return letters;
   };
 
+  const location = useLocation()
+    const params = new URLSearchParams(location.search);
+    if(params.has("registered") && params.get("registered")=="true"){
+        toast.success("Regardez vos mail pour vous connecter !", {
+            position: "top-right",
+            autoClose: 8000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+          });
+    }
+    if(params.has("token")){
+      let token = params.get("token")
+      if(token!=null){
+        checkToken(token)
+      }
+    }
 
   return (
     /*
@@ -54,6 +83,7 @@ export default function Accueil() {
          <source src={Forest} type="video/mp4"/>
         </video>*/
     <>
+      <ToastContainer/>
       <div
         style={{
           display: "flex",

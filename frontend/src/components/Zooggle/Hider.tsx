@@ -60,13 +60,13 @@ export default function Hider(props : any){
 
     }
 
-    let index = 0
+    let index = 1
     if(props.partie){
         index=2
     }
 
     return(
-        <div className="hider goRight" id="hider">
+        <div className="hider goLeft" id="hider">
             <span className="hiderTitle" id="title">{textes[index].titre}</span>
             <span className="hiderMessage" id="message">{textes[index].message}</span>
             <span className="hiderInfo" id="info">{textes[index].info}</span>
