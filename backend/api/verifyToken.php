@@ -1,12 +1,10 @@
 <?php
 session_start();
-
+var_dump($_SESSION);
 require_once("lib/parse.env.php");
 require_once 'Connexion.php';
 require_once 'functions.php';
-
 $response = array();
-
 
 // Validation du jeton
 if (isset($_POST['token']) ) {
@@ -22,7 +20,7 @@ if (isset($_POST['token']) ) {
     if ( ( isset($_SESSION['token']) && isset($_SESSION['waitingUser']) ) && $_SESSION['token'] == $_POST['token']) {
         $_SESSION['user'] = $_SESSION['waitingUser'];
         unset($_SESSION['waitingUser']);
-        unset($_SESSION['token']);
+        //unset($_SESSION['token']);
         $response['user'] = $_SESSION['user'];
         $response["success"] = true;
         //$response["redirect"] = "../index.php?connected=true";

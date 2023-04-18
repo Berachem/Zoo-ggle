@@ -4,8 +4,8 @@
     require_once 'Connexion.php';
     require_once 'functions.php';
     require_once 'sendAuthenToken.php';
+    
     $response = array();
-
     if(isset($_POST['login']) && !empty($_POST['login']) && isset($_POST['psw']) &&
         !empty($_POST['psw']) && isset($_POST['mail']) && !empty($_POST['mail']) && isset($_POST['public']) &&
         isset($_POST['desc'])){
@@ -22,7 +22,7 @@
 
         // generate token
         $randomSHA256 = hash('sha256', random_bytes(32));
-        $_SESSION['token']=$randomSHA256;
+        $_SESSION['token']=strval($randomSHA256);
         // add token to user
         addTokenToUser($user, $randomSHA256);
         // send token
@@ -35,6 +35,7 @@
         $response["redirect"] = "/connexionInscription?registered=false";
         $response["error"] = 613; //missing parameter
     }
+    var_dump($_SESSION);
     header('Content-Type: application/json');
     header('Access-Control-Allow-Origin: *');
     echo json_encode($response);

@@ -31,7 +31,7 @@ import { useLocation } from "react-router-dom"
 async function checkToken(token :string){
   let formData = new FormData()
   formData.append("token",token)
-  const res = await fetch("http://localhost/backend/api/verifyToken.php",{method:"POST",body:formData}).then(res=>res.json())
+  const res = await fetch("http://localhost/backend/api/verifyToken.php",{method:"POST",body:formData,credentials: 'include'}).then(res=>res.json())
 
 
 }
