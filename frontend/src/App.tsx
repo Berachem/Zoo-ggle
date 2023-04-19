@@ -17,6 +17,7 @@ import routes from "./routes";
 import Page404 from "./pages/erreur404";
 import { Navbar } from "@material-tailwind/react";
 import BubbleAssistant from "./components/Zooggle/assistantBubble";
+import MinimalistNavbar from "./components/navbar/minimalistNavbar";
 
 function App() {
   // ici on met les routes de notre application
@@ -38,10 +39,15 @@ function App() {
         <Background backgroundMode={BackgroundMode} isLandingPage={
           window.location.pathname === "/" ? true : false
         } />
-        <NavBar
+
+        {window.location.pathname !== "/game" && ( <NavBar
           changeBackgroundMode={changeBackgroundMode}
           backgroundMode={BackgroundMode}
-        />
+        />)}
+
+        {window.location.pathname === "/game" && (<MinimalistNavbar />)}
+
+       
         <Routes>
           {routes.map((route, index) => (
             <Route key={index} path={route.path} element={route.element} />

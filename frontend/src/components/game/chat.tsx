@@ -90,7 +90,7 @@ export default function chat(props: any) {
                 {chatData.map(function (chat) {
                     return (
                         <p style={{wordBreak:"break-word"}}>
-                            {chat.pseudo} : {chat.message}
+                            <b>{chat.pseudo}</b> : {chat.message}
                         </p>)
                 })}
             </div>
