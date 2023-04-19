@@ -329,7 +329,7 @@ export default function AppBar(
           as="a"
           href="#"
           variant="h6"
-          className="ml-2 font-bold hidden lg:block"
+          className="ml-2 font-bold lg:block"
         >
           Zoo-ggle
         </Typography>
