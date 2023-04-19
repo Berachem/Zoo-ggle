@@ -123,18 +123,21 @@ const Profile = () => {
       setIsFetching(true);
       // /:id use params to get the id of the user
       
-      let idUser = parseInt(id!); // ajoutez le point d'exclamation pour indiquer que id n'est pas undefined
-      console.log(idUser);
-      /*
-      if (isNaN(idUser)) { // vérifiez si idUser est NaN
-        idUser = parseInt(localStorage.getItem("id")!); // utilisez le point d'exclamation pour garantir que getItem ne renvoie pas undefined
+     if (id === undefined) {
+        const idUser = await getId();
+
+        if (idUser === -1) {
+          setUserFound(false);
+          setIsFetching(false);
+          return;
+        }
         setOwnProfile(true);
-      }*/
-      idUser = await getId();
+        id = idUser;
+      }
       
-      console.log(idUser);
       
-      const response = await fetch(PROFILE_DATA_BASE_URL + idUser);
+      
+      const response = await fetch(PROFILE_DATA_BASE_URL + id);
       const data = await response.json();
       console.log(data);
       if (data.success === false) {
