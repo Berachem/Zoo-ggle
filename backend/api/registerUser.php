@@ -35,9 +35,9 @@
         $response["redirect"] = "/connexionInscription?registered=false";
         $response["error"] = 613; //missing parameter
     }
-    var_dump($_SESSION);
     header('Content-Type: application/json');
-    header('Access-Control-Allow-Origin: *');
+    header('Access-Control-Allow-Origin: http://localhost:3000');
+    header('Access-Control-Allow-Credentials: true');
     echo json_encode($response);
 
 ?>

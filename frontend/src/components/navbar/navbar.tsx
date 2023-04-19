@@ -50,12 +50,15 @@ const profileMenuItems = [
   {
     label: "Mon Profil",
     icon: UserCircleIcon,
-    path: "/profile/me",
+    onClickAction: ()=> {window.location.assign("/profile/me")}
   },
   {
     label: "Se déconnecter",
     icon: PowerIcon,
-    path: "/déconnexion",
+    onClickAction:async ()=> {
+      const res = await fetch("http://localhost/backend/api/disconect.php",{credentials:'include'}).then(res => res.json())
+      window.location.assign(res.redirect)
+    }
   },
 ];
 
@@ -87,10 +90,10 @@ function ProfileMenu() {
         </Button>
       </MenuHandler>
       <MenuList className="p-1">
-        {profileMenuItems.map(({ label, icon, path }, key) => {
+        {profileMenuItems.map(({ label, icon, onClickAction }, key) => {
           const isLastItem = key === profileMenuItems.length - 1;
           return (
-            <a href={path}>
+            <span onClick={onClickAction}>
               <MenuItem
                 key={label}
                 onClick={closeMenu}
@@ -113,7 +116,7 @@ function ProfileMenu() {
                   {label}
                 </Typography>
               </MenuItem>
-            </a>
+            </span>
           );
         })}
       </MenuList>

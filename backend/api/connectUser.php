@@ -10,8 +10,7 @@
         $user = $db->login($_POST['login'],$_POST['psw']);
         if($user != null){
 
-            $_SESSION['token'] = $randomSHA256;
-            $_SESSION['waitingUser'] = $user;
+           
 
             if(needAToken($user)){
                 // generate token
@@ -20,9 +19,12 @@
                 addTokenToUser($user, $randomSHA256);
                 // send token
                 sendTokenByMail(getPlayerMail($user), $randomSHA256);
-                $response["token"] = "need a verification";
+                $response["redirect"] = "../?registered=true";
+                $_SESSION['token'] = $randomSHA256;
+                $_SESSION['waitingUser'] = $user;
             }else{
-                $response["token"] = "does not need a verification";
+                $_SESSION['user']=$user;
+                $response["redirect"] = "../?connected=true";
             }
             $response["success"] = true;
             $response["userId"] = $user;
@@ -30,15 +32,16 @@
         }else{
             $response["success"] = false;
             $response["errorCode"] = 601; // wrong login or password
-            $response["redirect"] = "/acceuil?wrongLoginOrPsw=true";
+            $response["redirect"] = "/connexionInscription?connected=false";
         }
     }else{
         $response["success"] = false;
         $response["errorCode"] = 600; // missing login or password
-        $response["redirect"] = "/acceuil?missingLoginOrPsw=true";
+        //$response["redirect"] = "/acceuil?missingLoginOrPsw=true";
     }
 
     header('Content-Type: application/json');
-    header('Access-Control-Allow-Origin: *');
+    header('Access-Control-Allow-Origin: http://localhost:3000');
+    header('Access-Control-Allow-Credentials: true');
     echo json_encode($response);
 ?>

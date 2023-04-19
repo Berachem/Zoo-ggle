@@ -114,7 +114,7 @@ async function checkAll(event : React.SyntheticEvent){
         formData.append('public',pvalue.toString())
 
         const res = await fetch('http://localhost/backend/api/registerUser.php',{method:'POST', body:formData,credentials: 'include'}).then(res=>res.json())
-        //window.location.assign(res.redirect)
+        window.location.assign(res.redirect)
     }
 }
 

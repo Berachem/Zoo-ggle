@@ -61,6 +61,28 @@ export default function Accueil() {
             progress: undefined,
           });
     }
+    if(params.has("connected") && params.get("connected")=="true"){
+      toast.success("Vous êtes connecté !", {
+        position: "top-right",
+        autoClose: 8000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    }
+    if(params.has("disconnected") && params.get("disconnected")=="true"){
+      toast.info("Vous êtes connecté !", {
+        position: "top-right",
+        autoClose: 8000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    }
     if(params.has("token")){
       let token = params.get("token")
       if(token!=null){

@@ -81,6 +81,16 @@ const getDifferenceTimeSentence = (startDate: string) => {
   }
 };
 
+async function getId() {
+  const res = await fetch("https://localhost/backend/api/isConnected.php",{credentials:'include'}).then(res => res.json())
+
+  if(res.success){
+    return res.user
+  }else{
+    return -1
+  }
+}
+
 const Profile = () => {
   let { id } = useParams();
   const PROFILE_DATA_BASE_URL = "https://zoo-ggle.berachem.dev/V2/api/player/getUserInfos.php?profileId="
@@ -115,10 +125,13 @@ const Profile = () => {
       
       let idUser = parseInt(id!); // ajoutez le point d'exclamation pour indiquer que id n'est pas undefined
       console.log(idUser);
+      /*
       if (isNaN(idUser)) { // vérifiez si idUser est NaN
         idUser = parseInt(localStorage.getItem("id")!); // utilisez le point d'exclamation pour garantir que getItem ne renvoie pas undefined
         setOwnProfile(true);
-      }
+      }*/
+      idUser = await getId();
+      
       console.log(idUser);
       
       const response = await fetch(PROFILE_DATA_BASE_URL + idUser);

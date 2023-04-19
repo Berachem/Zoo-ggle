@@ -1,6 +1,5 @@
 <?php
 session_start();
-var_dump($_SESSION);
 require_once("lib/parse.env.php");
 require_once 'Connexion.php';
 require_once 'functions.php';
@@ -25,7 +24,7 @@ if (isset($_POST['token']) ) {
         $response["success"] = true;
         //$response["redirect"] = "../index.php?connected=true";
         header('Content-Type: application/json');
-        header('Access-Control-Allow-Origin: *');
+        header('Access-Control-Allow-Origin: http://localhost:3000');
         echo json_encode($response);
         exit();
     }
@@ -45,9 +44,7 @@ if (isset($_POST['token']) ) {
 
     $response["success"] = false;
     $response["errorCode"] = 611; // wrong token
-    $response["redirect"] = "../index.php?wrongToken=true";
-    $response["actualToken"] = $_SESSION['token'];
-    $response['providedToken'] = $_POST['token'];
+    //$response["redirect"] = "../index.php?wrongToken=true";
     header('Content-Type: application/json');
     header('Access-Control-Allow-Origin: *');
     echo json_encode($response);
@@ -57,7 +54,7 @@ if (isset($_POST['token']) ) {
 } else {
     $response["success"] = false;
     $response["errorCode"] = 612; // missing token
-    $response["redirect"] = "../index.php?missingToken=true";
+    //$response["redirect"] = "../index.php?missingToken=true";
     header('Content-Type: application/json');
     header('Access-Control-Allow-Origin: *');
     echo json_encode($response);

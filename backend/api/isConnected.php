@@ -5,7 +5,8 @@
 // $_SESSION["user"]
 
 header('Content-Type: application/json');
-header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Origin: http://localhost:3000');
+header('Access-Control-Allow-Credentials: true');
 
 session_start();
 
@@ -18,6 +19,7 @@ if (!isset($_SESSION["user"])) {
     $response["redirect"] = '../index.php?notConnected=true';
 } else {
     $response["success"] = true;
+    $response["user"]=$_SESSION['user'];
 }
 
 echo json_encode($response);
