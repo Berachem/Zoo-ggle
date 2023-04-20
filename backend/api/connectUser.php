@@ -33,6 +33,8 @@
             $response["success"] = false;
             $response["errorCode"] = 601; // wrong login or password
             $response["redirect"] = "/connexionInscription?connected=false";
+            $response['login'] = $_POST['login'];
+            $response['mdp'] = $_POST['psw'];
         }
     }else{
         $response["success"] = false;

@@ -1,6 +1,7 @@
 import "../../css/ConnexionInscription.css"
 import { ToastContainer,toast } from "react-toastify"
 import { useLocation } from "react-router-dom"
+import {SHA256} from "crypto-js";
 
 function switchForm(){
     let connexion = document.getElementById("connexion")
@@ -19,15 +20,15 @@ async function checkAll(event : React.SyntheticEvent){
     event.preventDefault()
 
     let login = document.getElementById("login") as HTMLInputElement
-    let psw = document.getElementById('psw') as HTMLInputElement
+    let psw = document.getElementById("psw") as HTMLInputElement
 
     if(login!=null && psw!=null){
         let formData = new FormData()
         formData.append('login',login.value)
-        formData.append('psw',psw.value)
+        formData.append('psw',SHA256(psw.value).toString())
 
         const res = await fetch('http://localhost/backend/api/connectUser.php',{method:'POST', body:formData,credentials: 'include'}).then(res=>res.json())
-        window.location.assign(res.redirect)
+        //window.location.assign(res.redirect)
     }
 
 }

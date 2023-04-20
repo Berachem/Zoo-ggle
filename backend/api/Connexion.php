@@ -129,9 +129,9 @@ class Connexion {
     public function register($login,$psw,$mail,$desc,$public)
     {
         $query = "INSERT INTO B_Joueur (Pseudo,MotDePasse,Mail,Description,ProfilPublic,DateCreationCompte) VALUES (:login ,:psw,:mail,:desc,:public,NOW())";
-        $parameters = [[":login", $login], [":psw", hash("sha256", $psw)], [":mail", $mail], [":desc", $desc],
+        $parameters = [[":login", $login], [":psw",$psw], [":mail", $mail], [":desc", $desc],
             [":public", $public]];
-        $this->execQuery($query, $parameters,false,false);
+        $this->execQuery($query, $parameters);
     }
 
     public function getId($pseudo){
