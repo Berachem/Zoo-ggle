@@ -73,7 +73,7 @@ export default function Accueil() {
       });
     }
     if(params.has("disconnected") && params.get("disconnected")=="true"){
-      toast.info("Vous êtes connecté !", {
+      toast.info("Vous êtes déconnecté !", {
         position: "top-right",
         autoClose: 8000,
         hideProgressBar: false,

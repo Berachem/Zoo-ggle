@@ -56,7 +56,7 @@ const profileMenuItems = [
     label: "Se déconnecter",
     icon: PowerIcon,
     onClickAction:async ()=> {
-      const res = await fetch("http://localhost/backend/api/disconect.php",{credentials:'include'}).then(res => res.json())
+      const res = await fetch("http://localhost/backend/api/disconnect.php",{credentials:'include'}).then(res => res.json())
       window.location.assign(res.redirect)
     }
   },
