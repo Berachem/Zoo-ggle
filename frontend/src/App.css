@@ -3,7 +3,7 @@
 }
 
 .customScroll{
-  scrollbar-color: #35633fBB white;
+  scrollbar-color: white #35633fBB;
   scrollbar-width: thin;
 }
 
@@ -18,22 +18,22 @@
 }
 
 .customScroll::-webkit-scrollbar-track {
-  background-color: white;
+  background-color: #35633fBB;
   border-radius: 24px;
 }
 
 .customScroll::-webkit-scrollbar-track-piece {
-  background-color: white;
-  /* border-radius: 24px; */
-}
-
-.customScroll::-webkit-scrollbar-thumb {
   background-color: #35633fBB;
   /* border-radius: 24px; */
 }
 
+.customScroll::-webkit-scrollbar-thumb {
+  background-color: white;
+  /* border-radius: 24px; */
+}
+
 .customScroll::-webkit-scrollbar-thumb:hover {
-  background-color: #00000065;
+  background-color: #FFFFFF65;
 }
 
 .App {
