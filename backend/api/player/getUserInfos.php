@@ -6,7 +6,8 @@ require_once '../functions.php';
 session_start();
 
 $response = array();
-if (isset($_GET["profileId"]) || isset($_GET["pseudo"])){
+if (isset($_GET["profileId"]) || isset($_GET["pseudo"]) || isset($_SESSION["user"])){
+if (isset($_SESSION["user"])) $profileId= $_SESSION["user"];
     if (isset($_GET["profileId"])){
         $profileId=$_GET["profileId"];
     }else{
