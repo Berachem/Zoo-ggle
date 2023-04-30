@@ -111,9 +111,9 @@ class Connexion {
      * @return bool : true si l'utilisateur est authentifié, false sinon
      */
     public function login($login, $psw){
-        $query = "SELECT * FROM B_Joueur WHERE Pseudo LIKE :login AND MotDePasse LIKE :psw";
+        $query = "SELECT * FROM B_Joueur WHERE Pseudo = :login AND MotDePasse = :psw";
         $parameters = [[":login" , $login], [":psw" , hash("sha256",$psw)] ];
-        $result = $this->execQuery($query,$parameters,false,false);
+        $result = $this->execQuery($query,$parameters,false,true);
 
         if(!empty($result)){
             // Actualisation de la DateDerniereConnexion du joueur
