@@ -74,7 +74,7 @@ export default function Jouer() {
     const [recentGame,setRecentGame] = useState<string | null>(null) 
     useEffect( () => {                                               //useEffect permet d'attendre une fonction asynchrone avant de changer un etat
         const getRecentGame = async () =>{
-            const res = await fetch('http://localhost/backend/api/getRecentGame.php').then(res => res.json())
+            const res = await fetch('https://zoo-ggle.berachem.dev/V2//api/getRecentGame.php').then(res => res.json())
             if (res.success) {
                 setRecentGame(JSON.stringify(res.result))
             } else {

@@ -82,7 +82,7 @@ const getDifferenceTimeSentence = (startDate: string) => {
 };
 
 async function getId() {
-  const res = await fetch("https://localhost/backend/api/isConnected.php",{credentials:'include'}).then(res => res.json())
+  const res = await fetch("https://zoo-ggle.berachem.dev/V2/api/isConnected.php",{credentials:'include'}).then(res => res.json())
 
   if(res.success){
     return res.user
