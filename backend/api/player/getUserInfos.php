@@ -7,12 +7,12 @@ session_start();
 
 $response = array();
 if (isset($_GET["profileId"]) || isset($_GET["pseudo"]) || isset($_SESSION["user"])){
-if (isset($_SESSION["user"])) $profileId= $_SESSION["user"];
+if (isset($_SESSION["user"])) {$profileId= $_SESSION["user"];}else{
     if (isset($_GET["profileId"])){
         $profileId=$_GET["profileId"];
     }else{
         $profileId= getIdByPseudo($_GET["pseudo"]);
-    }
+    }}
     $statistics = getUserStatistics($profileId);
 
     
