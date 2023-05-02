@@ -12,7 +12,7 @@ if (isset($_POST['token']) ) {
         $response["errorCode"] = 610; // token expired
         //$response["redirect"] = "../index.php?tokenExpired=true";
         header('Content-Type: application/json');
-        header('Access-Control-Allow-Origin: *');
+        header('Access-Control-Allow-Origin: http://localhost:3000');
         echo json_encode($response);
         exit();
     }
@@ -46,7 +46,7 @@ if (isset($_POST['token']) ) {
     $response["errorCode"] = 611; // wrong token
     //$response["redirect"] = "../index.php?wrongToken=true";
     header('Content-Type: application/json');
-    header('Access-Control-Allow-Origin: *');
+    header('Access-Control-Allow-Origin: http://localhost:3000');
     echo json_encode($response);
     exit();
     
@@ -56,7 +56,7 @@ if (isset($_POST['token']) ) {
     $response["errorCode"] = 612; // missing token
     //$response["redirect"] = "../index.php?missingToken=true";
     header('Content-Type: application/json');
-    header('Access-Control-Allow-Origin: *');
+    header('Access-Control-Allow-Origin: http://localhost:3000');
     echo json_encode($response);
     exit();
 }
