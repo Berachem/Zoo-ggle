@@ -11,7 +11,7 @@ import CardList from "../components/Zooggle/CardList";
 async function getGames(search : string){
     const formData = new FormData();
 
-    const res = await fetch('https://zoo-ggle.berachem.dev/V2/api/searchGame.php?q='+search, {
+    const res = await fetch('http://localhost/backendapi/searchGame.php?q='+search, {
         method: 'POST',
         body: formData
     }).then(res => res.json());
@@ -27,7 +27,7 @@ async function getGames(search : string){
 
 
 export default function Jouer() {
-    const SEARCH_GAME_API = "https://zoo-ggle.berachem.dev/V2/api/searchGame.php?q="; // TODO : Joshua, finir
+    const SEARCH_GAME_API = "http://localhost/backendapi/searchGame.php?q="; // TODO : Joshua, finir
     const recentsGameData = [
         {
           title: "Test",
@@ -74,7 +74,7 @@ export default function Jouer() {
     const [recentGame,setRecentGame] = useState<string | null>(null) 
     useEffect( () => {                                               //useEffect permet d'attendre une fonction asynchrone avant de changer un etat
         const getRecentGame = async () =>{
-            const res = await fetch('https://zoo-ggle.berachem.dev/V2//api/getRecentGame.php').then(res => res.json())
+            const res = await fetch('http://localhost/backend/api/getRecentGame.php').then(res => res.json())
             if (res.success) {
                 setRecentGame(JSON.stringify(res.result))
             } else {

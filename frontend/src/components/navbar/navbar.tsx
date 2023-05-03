@@ -65,7 +65,7 @@ const profileMenuItems = [
     onClickAction: async () => {
       // remove session storage
       localStorage.removeItem("connected");
-      const res = await fetch("https://zoo-ggle.berachem.dev/V2//api/disconnect.php", {
+      const res = await fetch("http://localhost/backend/api/disconnect.php", {
         credentials: "include",
       }).then((res) => res.json());
       window.location.assign(res.redirect);

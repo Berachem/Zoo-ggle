@@ -67,7 +67,7 @@ async function checkMail(){
             telerror.style.color = 'red';
             return false;
         }else{
-            const res = await fetch('https://zoo-ggle.berachem.dev/V2//api/checkMail.php?mail='+mail.value).then(res => res.json())
+            const res = await fetch('http://localhost/backend/api/checkMail.php?mail='+mail.value).then(res => res.json())
 
             if(res.retour==="not ok"){
                 error.innerHTML = "• mail déjà pris."
@@ -113,7 +113,7 @@ async function checkAll(event : React.SyntheticEvent){
         formData.append('desc',description.value)
         formData.append('public',pvalue.toString())
 
-        const res = await fetch('https://zoo-ggle.berachem.dev/V2//api/registerUser.php',{method:'POST', body:formData,credentials: 'include'}).then(res=>res.json())
+        const res = await fetch('http://localhost/backend/api/registerUser.php',{method:'POST', body:formData,credentials: 'include'}).then(res=>res.json())
         window.location.assign(res.redirect)
     }
 }
@@ -140,7 +140,7 @@ function checkPseudo(){
 
 
 async function callBDDPseudo(login : string){
-    const res = await fetch('https://zoo-ggle.berachem.dev/V2//api/checkPseudo.php?login='+login).then(res => res.json())
+    const res = await fetch('http://localhost/backend/api/checkPseudo.php?login='+login).then(res => res.json())
 
     if(res.retour!="ok"){
         let error = document.getElementById("loginError")

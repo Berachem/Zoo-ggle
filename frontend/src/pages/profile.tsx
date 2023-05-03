@@ -49,6 +49,10 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import BubbleAssistant from "../components/Zooggle/assistantBubble";
 
+console.log(localStorage.getItem("connected"))
+console.log(localStorage.getItem("tokenUsedToConnect"))
+console.log(getId())
+
 const getDifferenceTimeSentence = (startDate: string) => {
   // french to english (day/month/year -> year/month/day)
   const dateArray = startDate.split("/");
@@ -82,7 +86,7 @@ const getDifferenceTimeSentence = (startDate: string) => {
 };
 
 async function getId() {
-  const res = await fetch("https://zoo-ggle.berachem.dev/V2/api/isConnected.php",{credentials:'include'}).then(res => res.json())
+  const res = await fetch("http://localhost/backend/api/isConnected.php",{credentials:'include'}).then(res => res.json())
 
   if(res.success){
     return res.user
@@ -93,7 +97,7 @@ async function getId() {
 
 const Profile = () => {
   let { id } = useParams();
-  const PROFILE_DATA_BASE_URL = "https://zoo-ggle.berachem.dev/V2/api/player/getUserInfos.php?profileId="
+  const PROFILE_DATA_BASE_URL = "http://localhost/backendapi/player/getUserInfos.php?profileId="
   const [profileData, setProfileData] = useState( {
     pseudo: "",
     description: "",

@@ -27,7 +27,7 @@ async function checkAll(event : React.SyntheticEvent){
         formData.append('login',login.value)
         formData.append('psw',psw.value)
 
-        const res = await fetch('https://zoo-ggle.berachem.dev/V2//api/connectUser.php',{method:'POST', body:formData,credentials: 'include'}).then(res=>res.json())
+        const res = await fetch('http://localhost/backend/api/connectUser.php',{method:'POST', body:formData,credentials: 'include'}).then(res=>res.json())
         window.location.assign(res.redirect)
 
     

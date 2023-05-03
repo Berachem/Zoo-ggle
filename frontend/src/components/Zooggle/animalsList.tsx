@@ -12,7 +12,7 @@ import {
 } from "@material-tailwind/react";
 
 const ANIMALS_LIST_API_URL =
-  "https://zoo-ggle.berachem.dev/V2/api/animals/searchAnimals.php";
+  "http://localhost/backendapi/animals/searchAnimals.php";
 const PIXABAY_API_URL =
   "https://pixabay.com/api/?key=28191618-66afcd90e16f1c5987dbd6cd4&q=";
 
