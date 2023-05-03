@@ -7,12 +7,11 @@
 
     $response = array();
     if(isset($_POST['login']) && !empty($_POST['login']) && isset($_POST['psw']) && !empty($_POST['psw'])){
+
         $user = $db->login($_POST['login'],$_POST['psw']);
         if($user != null){
-
-           
-
             if(needAToken($user)){
+                $_SESSION['waitingUser'] = $user;
                 // generate token
                 $randomSHA256 = hash('sha256', random_bytes(32));
                 // add token to user
@@ -21,7 +20,7 @@
                 sendTokenByMail(getPlayerMail($user), $randomSHA256);
                 $response["redirect"] = "../?registered=true";
                 $_SESSION['token'] = $randomSHA256;
-                $_SESSION['waitingUser'] = $user;
+                
             }else{
                 $_SESSION['user']=$user;
                 $response["redirect"] = "../?connected=true";
@@ -33,8 +32,6 @@
             $response["success"] = false;
             $response["errorCode"] = 601; // wrong login or password
             $response["redirect"] = "/connexionInscription?connected=false";
-            $response['login'] = $_POST['login'];
-            $response['mdp'] = $_POST['psw'];
         }
     }else{
         $response["success"] = false;

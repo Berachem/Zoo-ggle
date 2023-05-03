@@ -25,10 +25,12 @@ async function checkAll(event : React.SyntheticEvent){
     if(login!=null && psw!=null){
         let formData = new FormData()
         formData.append('login',login.value)
-        formData.append('psw',SHA256(psw.value).toString())
+        formData.append('psw',psw.value)
 
         const res = await fetch('http://localhost/backend/api/connectUser.php',{method:'POST', body:formData,credentials: 'include'}).then(res=>res.json())
-        //window.location.assign(res.redirect)
+        window.location.assign(res.redirect)
+
+    
     }
 
 }

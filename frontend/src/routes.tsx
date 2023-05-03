@@ -49,7 +49,6 @@ export const routes = [
     ),
   },
   {
-    label: "connexion",
     path: "/connexionInscription",
     icon: HomeIcon,
     element: (

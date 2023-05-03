@@ -11,7 +11,7 @@ import CardList from "../components/Zooggle/CardList";
 async function getGames(search : string){
     const formData = new FormData();
 
-    const res = await fetch('https://zoo-ggle.berachem.dev/V2/api/searchGame.php?q='+search, {
+    const res = await fetch('http://localhost/backendapi/searchGame.php?q='+search, {
         method: 'POST',
         body: formData
     }).then(res => res.json());
@@ -27,7 +27,7 @@ async function getGames(search : string){
 
 
 export default function Jouer() {
-    const SEARCH_GAME_API = "https://zoo-ggle.berachem.dev/V2/api/searchGame.php?q="; // TODO : Joshua, finir
+    const SEARCH_GAME_API = "http://localhost/backendapi/searchGame.php?q="; // TODO : Joshua, finir
     const recentsGameData = [
         {
           title: "Test",

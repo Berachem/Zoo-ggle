@@ -32,7 +32,13 @@ async function checkToken(token :string){
   let formData = new FormData()
   formData.append("token",token)
   const res = await fetch("http://localhost/backend/api/verifyToken.php",{method:"POST",body:formData,credentials: 'include'}).then(res=>res.json())
-
+  if(res.success){
+    // HELPME JOSHUA plz
+    console.log("token is valid")
+    // session storage connected
+    localStorage.setItem("connected","true")
+    localStorage.setItem("tokenUsedToConnect",token)
+  }
 
 }
 

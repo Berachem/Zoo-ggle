@@ -37,7 +37,12 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import routes from "../../routes";
 
-import { faHippo, faMoon, faSun } from "@fortawesome/free-solid-svg-icons";
+import {
+  faHippo,
+  faMoon,
+  faSun,
+  faUser,
+} from "@fortawesome/free-solid-svg-icons";
 import { Helmet } from "react-helmet";
 import {
   faAndroid,
@@ -50,15 +55,21 @@ const profileMenuItems = [
   {
     label: "Mon Profil",
     icon: UserCircleIcon,
-    onClickAction: ()=> {window.location.assign("/profile/me")}
+    onClickAction: () => {
+      window.location.assign("/profile/me");
+    },
   },
   {
     label: "Se déconnecter",
     icon: PowerIcon,
-    onClickAction:async ()=> {
-      const res = await fetch("http://localhost/backend/api/disconnect.php",{credentials:'include'}).then(res => res.json())
-      window.location.assign(res.redirect)
-    }
+    onClickAction: async () => {
+      // remove session storage
+      localStorage.removeItem("connected");
+      const res = await fetch("http://localhost/backend/api/disconnect.php", {
+        credentials: "include",
+      }).then((res) => res.json());
+      window.location.assign(res.redirect);
+    },
   },
 ];
 
@@ -68,27 +79,41 @@ function ProfileMenu() {
 
   return (
     <Menu open={isMenuOpen} handler={setIsMenuOpen} placement="bottom-end">
-      <MenuHandler>
+
+      {localStorage.getItem("connected") == "true" ? (
+        <MenuHandler>
+          <Button
+            variant="text"
+            color="blue-gray"
+            className="flex items-center gap-1 rounded-full py-0.5 pr-2 pl-0.5 lg:ml-auto"
+          >
+            <Avatar
+              variant="circular"
+              size="sm"
+              alt="candice wu"
+              className="border border-blue-500 p-0.5"
+              src={Mbappe}
+            />
+            <ChevronDownIcon
+              strokeWidth={2.5}
+              className={`h-3 w-3 transition-transform ${
+                isMenuOpen ? "rotate-180" : ""
+              }`}
+            />
+          </Button>
+        </MenuHandler>
+      ) : (
         <Button
           variant="text"
           color="blue-gray"
           className="flex items-center gap-1 rounded-full py-0.5 pr-2 pl-0.5 lg:ml-auto"
         >
-          <Avatar
-            variant="circular"
-            size="sm"
-            alt="candice wu"
-            className="border border-blue-500 p-0.5"
-            src={Mbappe}
-          />
-          <ChevronDownIcon
-            strokeWidth={2.5}
-            className={`h-3 w-3 transition-transform ${
-              isMenuOpen ? "rotate-180" : ""
-            }`}
-          />
+          <a href="/connexionInscription">
+            <FontAwesomeIcon icon={faUser} className="h-4 w-4" />
+            Connexion
+          </a>
         </Button>
-      </MenuHandler>
+      )}
       <MenuList className="p-1">
         {profileMenuItems.map(({ label, icon, onClickAction }, key) => {
           const isLastItem = key === profileMenuItems.length - 1;
@@ -222,7 +247,9 @@ function NavList(
   return (
     <ul className="mb-4 mt-2 flex flex-col gap-2 lg:mb-0 lg:mt-0 lg:flex-row lg:items-center">
       {/* <NavListMenu /> */}
-      {navListItems.map(({ label, icon, path }, key) => (
+
+
+      {navListItems.filter(({ label }) => label).map(({ label, icon, path }, key) => (
         <Typography
           key={label}
           as="a"
@@ -236,27 +263,15 @@ function NavList(
             {label}
           </MenuItem>
         </Typography>
-      ))}
+      ))} 
+
       {/* ajoute un switch pour passer du mode Idéaliste ou réaliste avec des icônes */}
 
-{/*       <span className="flex items-center gap-2 text-blue-gray-900 lg:hidden">
-        {props.backgroundMode ? <>
-         <FontAwesomeIcon icon={faSun} />
-         <Typography variant="small" color="blue-gray" className="font-normal">
-          Mode Idéaliste
-        </Typography>
-        </> : <> 
-        <FontAwesomeIcon icon={faMoon} />
-        <Typography variant="small" color="blue-gray" className="font-normal">
-          Mode Réaliste
-        </Typography>
-        </>}
-      </span> */}
       <Switch
-      /* about="Mode Réaliste ou Idéaliste"
+        /* about="Mode Réaliste ou Idéaliste"
         label={props.backgroundMode ? "Mode Réaliste" : "Mode Idéaliste"} */
         onChange={() => props.changeBackgroundMode()}
-        className="flex-shrink-0 h-5 w-9" 
+        className="flex-shrink-0 h-5 w-9"
         style={{
           backgroundColor: props.backgroundMode ? "#6b7280" : "#f59e0b",
         }}
@@ -289,11 +304,13 @@ export default function AppBar(
     );
   }, []);
 
-
   if (isLandingPage) {
-
     return (
-      <div className="flex justify-end" style={{ position: "fixed", top: 0, right: 0, zIndex: 1000 }} id="navbar">
+      <div
+        className="flex justify-end"
+        style={{ position: "fixed", top: 0, right: 0, zIndex: 1000 }}
+        id="navbar"
+      >
         <ul className="flex">
           <li className="mx-7">
             <br />
@@ -309,14 +326,20 @@ export default function AppBar(
           <li className="mx-7">
             <a href="#">
               <br />
-              <img src={googlePlayIcon} alt="google play" width={40} height={40} style={{ marginTop: 10 }} />
+              <img
+                src={googlePlayIcon}
+                alt="google play"
+                width={40}
+                height={40}
+                style={{ marginTop: 10 }}
+              />
             </a>
           </li>
         </ul>
       </div>
     );
   }
-  
+
   return (
     <Navbar
       className="mx-auto max-w-screen-xl p-2 lg:rounded-full lg:pl-6 sticky"
