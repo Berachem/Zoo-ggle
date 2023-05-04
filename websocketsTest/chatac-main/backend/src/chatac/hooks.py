@@ -2,6 +2,8 @@
 
 from typing import Dict, List, Any, Union
 import subprocess
+import requests
+from requests.exceptions import HTTPError
 
 class ChatHooks(object):
     """
@@ -75,7 +77,7 @@ class ZoogleChatHooks(ChatHooks):
     DEFAULT_DURATION = 60
     DEFAULT_ROOMS = {
         "default": {"attendee_number": 2, "duration": 120, "welcome_message": "Salut everybody tout le monde !"},
-        "solo": {"attendee_number": 1, "duration": 300, "welcome_message": "Salut toi !"}
+        "solo": {"attendee_number": 1, "duration": 120, "welcome_message": "Salut toi !"}
         }
 
     EXEC_PATH = "..\..\..\..\Zoo-ggle\\backend\server\game_motor\executables_WIN"
@@ -148,11 +150,22 @@ class ZoogleChatHooks(ChatHooks):
     async def on_word_proposed(self, chat_session_id: int, attendee_id: int, word: str, isValidWord: bool):
         attendee = self._attendees[chat_session_id][attendee_id]
         if (isValidWord):
-            attendee.score+=1
-            attendee.validWords.append(word)
-            print("Valide")
+            try:
+                url = 'http://localhost/backend/api/game/getScoreforAWord.php'
+                myobj = {'word': word}
+                response = requests.post(url, data = myobj)
+                response.raise_for_status()
+                jsonResponse = response.json()
+                print("Entire JSON response")
+                print(jsonResponse)
+                score = jsonResponse.get("score")
+                attendee.score+=score
+                attendee.validWords.append(word)
+            except HTTPError as http_err:
+                print(f'HTTP error occurred: {http_err}')
+            except Exception as err:
+                print(f'Other error occurred: {err}')   
         else:
-            print("Faux")
             attendee.falseWords.append(word)
         result = {"score":attendee.score, "validWords":attendee.validWords, "falseWords":attendee.falseWords}
         return result
@@ -163,75 +176,75 @@ class ZoogleChatHooks(ChatHooks):
     async def on_chat_session_end(self, chat_session_id: int) -> Any:
         """Send the stats for the session"""
         attendees = self._attendees[chat_session_id]
-        stats = [f"{a.identity['name']} sent {a.message_number} messages with {a.char_number} chars" for a in attendees.values()] 
+        stats = [f"{a.identity['name']} got {a.score} he proposed {a.validWords} and {a.falseWords}" for a in attendees.values()] 
         joined = "\n".join(stats)
         return f"Did you know that: {joined}"
     
 
 
-class DefaultChatHooks(ChatHooks):
-    DEFAULT_WELCOME_MESSAGE = "Welcome everybody!"
-    DEFAULT_DURATION = 60
-    DEFAULT_ROOMS = {"default": {"attendee_number": 2, "duration": 60, "welcome_message": "Welcome everybody!"}}
+# class DefaultChatHooks(ChatHooks):
+#     DEFAULT_WELCOME_MESSAGE = "Welcome everybody!"
+#     DEFAULT_DURATION = 60
+#     DEFAULT_ROOMS = {"default": {"attendee_number": 2, "duration": 60, "welcome_message": "Welcome everybody!"}}
 
-    class AttendeeInfo(object):
-        def __init__(self, identity):
-            self.identity = identity
-            self.has_left = False
-            self.message_number = 0
-            self.char_number = 0
+#     class AttendeeInfo(object):
+#         def __init__(self, identity):
+#             self.identity = identity
+#             self.has_left = False
+#             self.message_number = 0
+#             self.char_number = 0
 
-    def __init__(self):
-        self._rooms: Dict[str, Dict[str, Any]] = {}
-        self._attendees: Dict[int, List[AttendeeInfo]] = {}
+#     def __init__(self):
+#         self._rooms: Dict[str, Dict[str, Any]] = {}
+#         self._attendees: Dict[int, List[AttendeeInfo]] = {}
 
-    async def on_server_start(self, params: Dict[str, Any]) -> List[Dict[str, Any]]:
-        self._rooms = params.get('rooms', self.DEFAULT_ROOMS)
-        return self._rooms
+#     async def on_server_start(self, params: Dict[str, Any]) -> List[Dict[str, Any]]:
+#         self._rooms = params.get('rooms', self.DEFAULT_ROOMS)
+#         return self._rooms
 
-    async def on_client_connection(self, waiting_room_name: str, token: str) -> Union[dict, None, str]:
-        """We consider that the token is the nickname that is proposed by the user"""
-        if token.strip() == '':
-            return "the nickname cannot be empty"
-        elif waiting_room_name not in self._rooms:
-            return f"the waiting room {waiting_room_name} is unknown"
-        else:
-            return {"name": token}
+#     async def on_client_connection(self, waiting_room_name: str, token: str) -> Union[dict, None, str]:
+#         """We consider that the token is the nickname that is proposed by the user"""
+#         if token.strip() == '':
+#             return "the nickname cannot be empty"
+#         elif waiting_room_name not in self._rooms:
+#             return f"the waiting room {waiting_room_name} is unknown"
+#         else:
+#             return {"name": token}
 
-    async def on_chat_session_start(self, waiting_room_name: str, chat_session_id: int, attendee_identities: Dict[int, Dict[str, Any]]) -> Any:
-        self._attendees[chat_session_id] = {id: self.AttendeeInfo(x) for (id, x) in attendee_identities.items()}
-        room = self._rooms[waiting_room_name]
-        return {
-            "welcome_message": room.get("welcome_message", self.DEFAULT_WELCOME_MESSAGE), 
-            "duration": self._rooms[waiting_room_name].get("duration", self.DEFAULT_DURATION)
-        }
+#     async def on_chat_session_start(self, waiting_room_name: str, chat_session_id: int, attendee_identities: Dict[int, Dict[str, Any]]) -> Any:
+#         self._attendees[chat_session_id] = {id: self.AttendeeInfo(x) for (id, x) in attendee_identities.items()}
+#         room = self._rooms[waiting_room_name]
+#         return {
+#             "welcome_message": room.get("welcome_message", self.DEFAULT_WELCOME_MESSAGE), 
+#             "duration": self._rooms[waiting_room_name].get("duration", self.DEFAULT_DURATION)
+#         }
 
-    async def on_chat_message(self, chat_session_id: int, sender_id: int, content: Any) -> Dict[int, Any]:
-        # update the stats
+#     async def on_chat_message(self, chat_session_id: int, sender_id: int, content: Any) -> Dict[int, Any]:
+#         # update the stats
 
-        attendee = self._attendees[chat_session_id][sender_id]
-        attendee.message_number += 1
-        attendee.char_number += len(str(content))
+#         attendee = self._attendees[chat_session_id][sender_id]
+#         attendee.message_number += 1
+#         attendee.char_number += len(str(content))
 
-        i = 0
-        result = {}
-        for (id, a) in self._attendees[chat_session_id].items():
-            if not a.has_left:
-                result[id] = content
-        return result
+#         i = 0
+#         result = {}
+#         for (id, a) in self._attendees[chat_session_id].items():
+#             if not a.has_left:
+#                 result[id] = content
+#         return result
 
-    async def on_attendee_leave(self, chat_session_id: int, attendee_id: int):
-        self._attendees[chat_session_id][attendee_id].has_left = True
+#     async def on_attendee_leave(self, chat_session_id: int, attendee_id: int):
+#         self._attendees[chat_session_id][attendee_id].has_left = True
 
-    async def on_chat_session_end(self, chat_session_id: int) -> Any:
-        """Send the stats for the session"""
-        attendees = self._attendees[chat_session_id]
-        stats = [f"{a.identity['name']} sent {a.message_number} messages with {a.char_number} chars" for a in attendees.values()] 
-        joined = "\n".join(stats)
-        return f"Did you know that: {joined}"
+#     async def on_chat_session_end(self, chat_session_id: int) -> Any:
+#         """Send the stats for the session"""
+#         attendees = self._attendees[chat_session_id]
+#         stats = [f"{a.identity['name']} sent {a.message_number} messages with {a.char_number} chars" for a in attendees.values()] 
+#         joined = "\n".join(stats)
+#         return f"Did you know that: {joined}"
 
 
-class UppercaseChatHooks(ChatHooks):
+# class UppercaseChatHooks(ChatHooks):
     """
     Version of chat hooks that relays all the chat messages in uppercase
     """

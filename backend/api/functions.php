@@ -831,8 +831,28 @@ function getScoreOfPlayerInGame($idJoueur,$idGame){
             $result += 5;
         }
     }
-    
+    return $result;   
+}
 
+// Fonction qui renvoie le score obtenu pour un mot
+// paramètres : $word : le mot
+// return : le score obtenu pour le mot
+function getScoreForAWord($word){
+    if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+        exec('.\..\..\server\game_motor\executables_WIN\score_by_lenght.exe '.$word, $output);
+    } else {
+        exec('./../server/game_motor/executables_LINUX/score_by_length', $output);
+    }
+    $result = implode("\n", $output);
+    
+    // split le résultat en tableau
+    $result = trim($result);
+    $result = intval($result);
+
+    // add 5 points if the word is a animal
+    // if (in_array(strtoupper($word), $GLOBALS['animalsListUppercase'])) {
+    //     $result += 5;
+    // }
     return $result;   
 }
 
