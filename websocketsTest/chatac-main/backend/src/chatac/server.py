@@ -127,6 +127,7 @@ class ChatSession(object):
         ChatSession._COUNTER += 1
         self.clients = clients
         self.deadline = None
+        self.duration = 0
         self.welcome_message = None
         self.manager_task: Optional[Task] = None  # to be set by the manager
         self.grid = None
@@ -207,6 +208,7 @@ class ChatServer(object):
                 chat_session = ChatSession(attendees)
                 chat_session_params = await self.hooks.on_chat_session_start(waiting_room.name, chat_session.id, {id: x.identity for (id, x) in attendees.items()})
                 chat_session.deadline = time.monotonic() + chat_session_params['duration']
+                chat_session.duration = chat_session_params['duration']
                 chat_session.welcome_message = chat_session_params.get('welcome_message', '')
                 chat_session.grid = chat_session_params.get('grid', '')
                 chat_session.solutions = chat_session_params.get('solutions', [])
@@ -233,7 +235,7 @@ class ChatServer(object):
         try:
             await chat_session.send_message(None, 'chat_session_started', welcome_message=chat_session.welcome_message)
             logger.info(f"Welcome Message shown for chat session {chat_session}")
-            await chat_session.send_message(None, 'grid_reveal', grid=chat_session.grid)
+            await chat_session.send_message(None, 'grid_reveal', grid=chat_session.grid, time=chat_session.duration)
             logger.info(f"Grid revealed for chat session {chat_session}")
             
             remaining_time = chat_session.deadline - time.monotonic()

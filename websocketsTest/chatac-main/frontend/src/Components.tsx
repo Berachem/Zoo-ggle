@@ -1,4 +1,4 @@
-import React, { useEffect } from "react"
+import React, { useEffect,useState } from "react"
 
 import './Components.css'
 
@@ -101,6 +101,7 @@ export const ChatManager = (props: {socketUrl: string}) => {
     const [waitingRooms, setWaitingRooms] = React.useState<WaitingRoom[]>([])
     const [word, setWord] = React.useState("")
     const [inGameStats, setInGameStats] = React.useState<InGameStats>({score:0, validWords:[], falseWords:[]})
+    const [countDown, setCountDown] = React.useState(0);
     
     const [gridState, setGridState] = React.useState("? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ?")
 
@@ -150,6 +151,8 @@ export const ChatManager = (props: {socketUrl: string}) => {
 
             case 'grid_reveal':
                 setGridState(content.grid)
+                setCountDown((content.time*1000))
+                console.log(content.time)
                 break
 
             case 'current_ingame_stats':
@@ -262,6 +265,28 @@ export const ChatManager = (props: {socketUrl: string}) => {
         }
     }, [connected, props.socketUrl])
 
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            console.log("setInterval"+countDown)
+            setCountDown((countDown) =>countDown-1000);
+        }, 1000);
+        return () => clearInterval(interval);
+    }, [countDown]);
+      
+    const getReturnValues = (countDown:number) => {
+        // calculate time left
+        const days = Math.floor(countDown / (1000 * 60 * 60 * 24));
+        const hours = Math.floor(
+            (countDown % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+        );
+        const minutes = Math.floor((countDown % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((countDown % (1000 * 60)) / 1000);
+        
+        return minutes+"min"+seconds+"s";
+    };
+
+
     return <div className="ChatManager">
         {error !== '' && 
             <div className="Error">Error: {error} <button onClick={() => setError('')}>OK</button></div>}
@@ -281,6 +306,9 @@ export const ChatManager = (props: {socketUrl: string}) => {
             <ChatSession messages={chatState.messages} active={chatState.active} onMessageWritten={sendChatMessage} onLeaving={leaveChatSession} onClosing={closeChatSession} />
         }
         <Grid grid={gridState}></Grid>
+        <div className="WordSender">
+            txt : {getReturnValues(countDown)}
+        </div>
 
         
         <div className="WordSender">
@@ -297,19 +325,19 @@ export const ChatManager = (props: {socketUrl: string}) => {
             <h1>
                 Valides : 
             </h1>
-            {inGameStats.validWords.map(function (word) {
+            {inGameStats.validWords.map(function (list) {
                         return (
                             <p>
-                                {word}
+                                {list[0]}
                             </p>)
                     })}
             <h1>
                 Faux :
             </h1>
-            {inGameStats.falseWords.map(function (word) {
+            {inGameStats.falseWords.map(function (list) {
                         return (
                             <p>
-                                {word}
+                                {list[0]}
                             </p>)
                     })}
         </div>

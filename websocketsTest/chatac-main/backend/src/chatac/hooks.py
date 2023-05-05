@@ -1,6 +1,7 @@
 #! /usr/bin/env python3
 
 from typing import Dict, List, Any, Union
+import datetime
 import subprocess
 import requests
 from requests.exceptions import HTTPError
@@ -77,7 +78,7 @@ class ZoogleChatHooks(ChatHooks):
     DEFAULT_DURATION = 60
     DEFAULT_ROOMS = {
         "default": {"attendee_number": 2, "duration": 120, "welcome_message": "Salut everybody tout le monde !"},
-        "solo": {"attendee_number": 1, "duration": 120, "welcome_message": "Salut toi !"}
+        "solo": {"attendee_number": 1, "duration": 20, "welcome_message": "Salut toi !"}
         }
 
     EXEC_PATH = "..\..\..\..\Zoo-ggle\\backend\server\game_motor\executables_WIN"
@@ -149,6 +150,8 @@ class ZoogleChatHooks(ChatHooks):
     
     async def on_word_proposed(self, chat_session_id: int, attendee_id: int, word: str, isValidWord: bool):
         attendee = self._attendees[chat_session_id][attendee_id]
+
+        date = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         if (isValidWord):
             try:
                 url = 'http://localhost/backend/api/game/getScoreforAWord.php'
@@ -160,13 +163,13 @@ class ZoogleChatHooks(ChatHooks):
                 print(jsonResponse)
                 score = jsonResponse.get("score")
                 attendee.score+=score
-                attendee.validWords.append(word)
+                attendee.validWords.append([word,date])
             except HTTPError as http_err:
                 print(f'HTTP error occurred: {http_err}')
             except Exception as err:
                 print(f'Other error occurred: {err}')   
         else:
-            attendee.falseWords.append(word)
+            attendee.falseWords.append([word,date])
         result = {"score":attendee.score, "validWords":attendee.validWords, "falseWords":attendee.falseWords}
         return result
 
@@ -245,13 +248,13 @@ class ZoogleChatHooks(ChatHooks):
 
 
 # class UppercaseChatHooks(ChatHooks):
-    """
-    Version of chat hooks that relays all the chat messages in uppercase
-    """
-    async def on_chat_message(self, chat_session_id: int, sender_id: int, content: Any) -> Dict[int, Any]:
-        result = super(self).on_chat_message(chat_session_id, sender_id, content)
+    # """
+    # Version of chat hooks that relays all the chat messages in uppercase
+    # """
+    # async def on_chat_message(self, chat_session_id: int, sender_id: int, content: Any) -> Dict[int, Any]:
+    #     result = super(self).on_chat_message(chat_session_id, sender_id, content)
 
-        def to_upper(s):
-            return s.upper() if isinstance(s, str) else s
+    #     def to_upper(s):
+    #         return s.upper() if isinstance(s, str) else s
             
-        return {k: to_upper(v) for (k, v) in result.items()}
+    #     return {k: to_upper(v) for (k, v) in result.items()}
