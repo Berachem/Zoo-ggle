@@ -455,6 +455,12 @@ $animalsENG = array(
     "Zebra"
 );
 
+function isWordInFRAList($word, $list){
+    $word = strtolower($word);
+    $list = array_map('strtolower', $list);
+    return in_array($word, $list);
+}	
+
 
 function getDatasOfAnimalENG($animalENG){
     $curl = curl_init();
