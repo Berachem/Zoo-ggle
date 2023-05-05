@@ -834,6 +834,17 @@ function getScoreOfPlayerInGame($idJoueur,$idGame){
     return $result;   
 }
 
+// Fonction qui renvoie si le mot est un animal ou non
+// paramètres : $word : le mot
+// return : true si le mot est un animal, false sinon
+function isAnimalName($word){
+    include_once('animals/animalsData.php');
+
+    $word = strtoupper($word);
+
+    return isWordInFRAList($word, $animalsFRA) ;
+}
+
 // Fonction qui renvoie le score obtenu pour un mot
 // paramètres : $word : le mot
 // return : le score obtenu pour le mot
@@ -850,9 +861,9 @@ function getScoreForAWord($word){
     $result = intval($result);
 
     // add 5 points if the word is a animal
-    // if (in_array(strtoupper($word), $GLOBALS['animalsListUppercase'])) {
-    //     $result += 5;
-    // }
+    if (isAnimalName($word)) {
+        $result += 5;
+    }
     return $result;   
 }
 
@@ -934,6 +945,3 @@ function getUserByToken($token){
     }
     return null;
 }
-
-
-?>
