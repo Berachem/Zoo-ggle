@@ -2,7 +2,7 @@
 // GET a word and return its definition by executing java code
 
 header('Content-Type: application/json');
-header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Origin: http://localhost:3000');
 
 if (isset($_GET['word']) && !empty($_GET['word'])){
     $word = $_GET['word'];
