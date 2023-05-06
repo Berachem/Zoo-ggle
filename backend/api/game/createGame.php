@@ -24,7 +24,7 @@ if(isset($_POST["name"]) && isset($_POST["langue"]) && isset($_POST["taille"]) &
         $response["errorCode"] = 614; // error while creating game
         $response["redirect"] = 'index.php?error=true';
         header('Content-Type: application/json');
-header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Origin: http://localhost:3000');
         echo json_encode($response);
         exit;
     }
@@ -32,14 +32,14 @@ header('Access-Control-Allow-Origin: *');
     $response["success"] = true;
     $response["redirect"] = 'game.php?id='.$idGame;
     header('Content-Type: application/json');
-header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Origin: http://localhost:3000');
     echo json_encode($response);
 } else {
     $response["success"] = false;
     $response["errorCode"] = 615; // missing parameters : name, langue, taille, mode
     $response["redirect"] = 'index.php?error=true';
     header('Content-Type: application/json');
-header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Origin: http://localhost:3000');
     echo json_encode($response);
 }
 

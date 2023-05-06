@@ -19,6 +19,6 @@ $filteredAnimals = $_GET['q']  ? array_filter($animals, function($animal) use ($
 
 // Return the result as JSON
 header('Content-Type: application/json');
-header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Origin: http://localhost:3000');
 echo json_encode(array('animals' => array_values($filteredAnimals)), JSON_UNESCAPED_UNICODE);
 ?>
