@@ -507,14 +507,14 @@ function Unaccent($string)
     return preg_replace('~&([a-z]{1,2})(acute|cedil|circ|grave|lig|orn|ring|slash|th|tilde|uml);~i', '$1', htmlentities($string, ENT_QUOTES, 'UTF-8'));
 }
 
-// map to uppercase
-foreach ($animals as $key => $animal) {
-    $animals[$key] = Unaccent($animal);
-    $animals[$key] = strtoupper($animals[$key]);
-}
+// // map to uppercase
+// foreach ($animals as $key => $animal) {
+//     $animals[$key] = Unaccent($animal);
+//     $animals[$key] = strtoupper($animals[$key]);
+// }
 
-// Liste des animaux triés par ordre alphabétique (qui nous servira pour ajouter des bonus de points aux joueurs)
-$animalsListUppercase = $animals;
+// // Liste des animaux triés par ordre alphabétique (qui nous servira pour ajouter des bonus de points aux joueurs)
+// $animalsListUppercase = $animals;
 
 
 /* 

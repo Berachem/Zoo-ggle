@@ -5,6 +5,7 @@ import datetime
 import subprocess
 import requests
 from requests.exceptions import HTTPError
+import json
 
 class ChatHooks(object):
     """
@@ -76,9 +77,11 @@ class ChatHooks(object):
 class ZoogleChatHooks(ChatHooks):
     DEFAULT_WELCOME_MESSAGE = "Welcome everybody!"
     DEFAULT_DURATION = 60
+    DEFAULT_LANG = "FRA"
     DEFAULT_ROOMS = {
-        "default": {"attendee_number": 2, "duration": 120, "welcome_message": "Salut everybody tout le monde !"},
-        "solo": {"attendee_number": 1, "duration": 20, "welcome_message": "Salut toi !"}
+        "default": {"attendee_number": 2, "duration": 60, "welcome_message": "Salut everybody tout le monde !", "lang":"FRA", "mode":0},
+        "solo": {"attendee_number": 1, "duration": 120, "welcome_message": "Salut toi !", "lang":"FRA", "mode":1},
+        "4": {"attendee_number": 3, "duration": 30, "welcome_message": "!", "lang":"FRA", "mode":2}
         }
 
     EXEC_PATH = "..\..\..\..\Zoo-ggle\\backend\server\game_motor\executables_WIN"
@@ -109,7 +112,32 @@ class ZoogleChatHooks(ChatHooks):
         elif waiting_room_name not in self._rooms:
             return f"the waiting room {waiting_room_name} is unknown"
         else:
-            return {"name": token}
+            data = await self.getPlayerByToken(token)
+            if data == None:
+                return "Invalid token"
+            else:
+                return {"name": data["name"], "token": data["token"], "DatabaseId": data["id"]}
+
+    async def getPlayerByToken(self, token:str):
+        try:
+            url = 'http://localhost/backend/api/game/getPlayerByToken.php'
+            myobj = {'token': token}
+            response = requests.post(url, data = myobj)
+            response.raise_for_status()
+            jsonResponse = response.json()
+            print("Entire JSON response")
+            print(jsonResponse)
+            if (jsonResponse.get("success")):
+                data = {"name":jsonResponse.get("pseudo"),"token":token,"id":jsonResponse.get("id")}
+                return data
+            else:
+                return None                
+        except HTTPError as http_err:
+            print(f'HTTP error occurred: {http_err}')
+            return None
+        except Exception as err:
+            print(f'Other error occurred: {err}')   
+            return None
 
     async def on_chat_session_start(self, waiting_room_name: str, chat_session_id: int, attendee_identities: Dict[int, Dict[str, Any]]) -> Any:
         self._attendees[chat_session_id] = {id: self.AttendeeInfo(x) for (id, x) in attendee_identities.items()}
@@ -130,7 +158,11 @@ class ZoogleChatHooks(ChatHooks):
             "welcome_message": room.get("welcome_message", self.DEFAULT_WELCOME_MESSAGE), 
             "duration": room.get("duration", self.DEFAULT_DURATION),
             "grid": grid,
-            "solutions": solutions
+            "solutions": solutions,
+            "lang": room.get("lang", self.DEFAULT_LANG),
+            "begin": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+            "playerNumber" : room.get("attendee_number", 0),
+            "mode":room.get("mode",0)
         }
 
     async def on_chat_message(self, chat_session_id: int, sender_id: int, content: Any) -> Dict[int, Any]:
@@ -176,11 +208,34 @@ class ZoogleChatHooks(ChatHooks):
     async def on_attendee_leave(self, chat_session_id: int, attendee_id: int):
         self._attendees[chat_session_id][attendee_id].has_left = True
 
-    async def on_chat_session_end(self, chat_session_id: int) -> Any:
+    async def on_chat_session_end(self, chat_session_id: int, info: Dict[str, Any]) -> Any:
         """Send the stats for the session"""
+        print("Debut")
         attendees = self._attendees[chat_session_id]
+        infoPerson=[]
+        for key,attendee in attendees.items():
+            dico = {"id":attendee.identity["DatabaseId"],"validWords":attendee.validWords, "falseWords":attendee.falseWords, "score":attendee.score}
+            infoPerson.append(dico)
+
         stats = [f"{a.identity['name']} got {a.score} he proposed {a.validWords} and {a.falseWords}" for a in attendees.values()] 
         joined = "\n".join(stats)
+
+        try:
+            url = 'http://localhost/backend/api/game/insertEndGame.php'
+            myobj = {'infoPartie': json.dumps(info), 'infoJoueurs':json.dumps(infoPerson)}
+            response = requests.post(url, data = myobj)
+            response.raise_for_status()
+            print("AAA")
+            # print(response.text())
+            print(response.content)
+            print(response.json())
+        except HTTPError as http_err:
+            print(f'HTTP error occurred: {http_err}')
+        except Exception as err:
+            print(f'Other error occurred: {err}')  
+        
+        
+        # print(game)
         return f"Did you know that: {joined}"
     
 

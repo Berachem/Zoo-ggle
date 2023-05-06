@@ -55,6 +55,8 @@ from aiohttp import web, WSMsgType, WSCloseCode, ClientConnectionError
 from typing import Dict, Any, List
 from .hooks import ChatHooks
 from .utils import nonify_exception, cancel_and_get_result
+import math
+import datetime
 
 logger = logging.getLogger(__name__)
 
@@ -128,10 +130,14 @@ class ChatSession(object):
         self.clients = clients
         self.deadline = None
         self.duration = 0
+        self.begin = None
         self.welcome_message = None
         self.manager_task: Optional[Task] = None  # to be set by the manager
         self.grid = None
+        self.lang = None
         self.solutions = None
+        self.playerNumber = 0
+        self.mode = 0
 
         self._chat_message_queue = asyncio.Queue()  # queue for chat messages to be sent
         self._leave_queue = asyncio.Queue()  # queue for attendees that want to leave
@@ -210,8 +216,12 @@ class ChatServer(object):
                 chat_session.deadline = time.monotonic() + chat_session_params['duration']
                 chat_session.duration = chat_session_params['duration']
                 chat_session.welcome_message = chat_session_params.get('welcome_message', '')
+                chat_session.begin = chat_session_params.get('begin', '')
+                chat_session.lang = chat_session_params.get('lang', 'FRA')
                 chat_session.grid = chat_session_params.get('grid', '')
                 chat_session.solutions = chat_session_params.get('solutions', [])
+                chat_session.playerNumber = chat_session_params.get('playerNumber', 0)
+                chat_session.mode = chat_session_params.get('mode',0)
                 self._chat_sessions[chat_session.id] = chat_session
                 manager_task = asyncio.create_task(self._chat_session_manager(chat_session))
                 chat_session.manager_task = manager_task
@@ -257,16 +267,23 @@ class ChatServer(object):
                     await chat_session.remove_attendee(leave)
 
                 remaining_time = chat_session.deadline - time.monotonic()
+                print("finPlaying"+str(remaining_time))
         except asyncio.CancelledError:
             pass
         except Exception as e:
             import traceback
             traceback.print_exc()
         finally:
+            print("finito")
             # the session is over
-            exit_message = await self.hooks.on_chat_session_end(chat_session.id)
+            info = {"mode":chat_session.mode,"grille": chat_session.grid, "langue":chat_session.lang, "dateDebut":chat_session.begin,"dateFin":datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")  ,"taille": math.sqrt(len(chat_session.grid.split(" "))), "nombreMotPossibles":len(chat_session.solutions), "nombreJoueurs":chat_session.playerNumber, "nom":chat_session.lang+""+chat_session.begin}
+        
+            exit_message = await self.hooks.on_chat_session_end(chat_session.id, info)
+            print("message récup")
             await chat_session.terminate(exit_message)
+            print("terminated")
             self._chat_sessions.pop(chat_session.id)
+            print("popped")
             logger.info(f"The chat session manager for {chat_session} is ended.")
 
     async def _websocket_handler(self, request):

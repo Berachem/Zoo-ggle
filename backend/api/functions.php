@@ -707,7 +707,7 @@ function getLeaderBoardGame($idPartie){
 //              $libelleMot : libelle du mot
 //              $estValide : booléen qui indique si le mot est valide ou non
 // return : true si le mot a été inséré dans la table B_Jouer, false sinon
-function addWordPlayedByAPlayer($idJoueur,$idPartie,$libelleMot,$estValide){
+function addWordPlayedByAPlayer($idJoueur,$idPartie,$libelleMot,$estValide,$date){
     global $db;
 
     $isWordAlreadyInWordTable = function($libelleMot) {
@@ -737,7 +737,6 @@ function addWordPlayedByAPlayer($idJoueur,$idPartie,$libelleMot,$estValide){
     };
 
     if (!$isWordAlreadyProposedByPlayerInGame($idJoueur, $idPartie, $libelleMot)) {
-        $date = date("Y-m-d H:i:s");
         $query = "INSERT INTO B_Proposer VALUES(?,?,?,?,?)";
         $params = [
             [1, $idJoueur, PDO::PARAM_INT],
@@ -785,10 +784,7 @@ function endAGame($idGame){
 
     $players = getPlayers($idGame);
     foreach($players as $player){
- 
         $score = getScoreOfPlayerInGame($player->IdJoueur, $idGame);
-
-        
         $query = "UPDATE B_Jouer SET Score = ? WHERE IdJoueur = ? AND IdPartie = ?";
         $params = [
             [1, $score, PDO::PARAM_INT],
@@ -796,8 +792,41 @@ function endAGame($idGame){
             [3, $idGame, PDO::PARAM_INT]
         ];
         $db->execOnly($query, $params);
-
     }    
+}
+
+function insertGame($name, $lang, $grid, $beginDate, $endDate, $gridSize, $possibleNumberWord, $mode, $playerNumber){
+    global $db;
+    $query = "INSERT INTO b_partie (NomPartie, LangueDico,Grille,DateDebutPartie,DateFinPartie,TailleGrille,NombreMotsPossibles,Mode,EstPublic,NombreJoueursMax,IdChef) VALUES (?, ?, ?, ?, ?, ?, ?, ?, 1, ?, -1)";
+    $params = [
+        [1, $name, PDO::PARAM_STR],
+        [2, $lang, PDO::PARAM_STR],
+        [3, $grid, PDO::PARAM_STR],
+        [4, $beginDate, PDO::PARAM_STR],
+        [5, $endDate, PDO::PARAM_STR],
+        [6, $gridSize, PDO::PARAM_INT],
+        [7, $possibleNumberWord, PDO::PARAM_INT],
+        [8, $mode, PDO::PARAM_INT],
+        [9, $playerNumber, PDO::PARAM_INT]
+    ];  
+    $db->execOnly($query, $params);
+    $gameId = $db->lastInsertId();
+
+    return $gameId;
+}
+
+function insertPlayerPlayedAGame($gameId, $playerId, $score){
+    global $db;
+    $query = "INSERT INTO b_jouer 
+    (IdJoueur, IdPartie,Score)
+    VALUES
+    (?, ?, ?)";
+    $params = [
+        [1, $playerId, PDO::PARAM_INT],
+        [2, $gameId, PDO::PARAM_INT],
+        [3, $score, PDO::PARAM_INT],
+    ];  
+    $db->execOnly($query, $params);
 }
 
 // Fonction qui renvoie le score d'un joueur dans une partie

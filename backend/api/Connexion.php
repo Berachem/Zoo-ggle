@@ -151,7 +151,7 @@ class Connexion {
 use Zoogle\DotEnv;
 
 
-(new DotEnv(__DIR__.'/../.env'))->load();
+(new DotEnv(__DIR__.'/../../.env'))->load();
 // mysql:host=localhost;dbname=test;
 
 

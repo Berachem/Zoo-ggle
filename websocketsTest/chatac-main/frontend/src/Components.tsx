@@ -136,6 +136,7 @@ export const ChatManager = (props: {socketUrl: string}) => {
                 setChatState({waitingRoomName: name, startTimestamp: performance.now()})
                 break
 
+
             case 'waiting_room_left':
                 setChatState({roomSelection: true})
                 break
