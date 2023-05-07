@@ -15,8 +15,7 @@ import {
 import { Radio, Select } from "@material-tailwind/react";
 
 const API_URL_ENG = "https://api.dictionaryapi.dev/api/v2/entries/en";
-const API_URL_FR =
-  "http://localhost/backend/api/getDefinitionOfWord.php?word=";
+const API_URL_FR = "http://localhost/backend/api/getDefinitionOfWord.php?word=";
 
 function Dictionnaire() {
   const [language, setLanguage] = useState("en");
@@ -24,6 +23,30 @@ function Dictionnaire() {
   const [definitionsENG, setDefinition] = useState([]);
   const [definitionDataFR, setDefinitionFR] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+
+  const yamlStringToUI = (yamlString: string) => {
+    // yaml string looks like this:
+    /*
+"---\n\n\ntitle : tarte\ndefinitions:\n nom :\n - platIPlat, preparation a base de pate aplatie au rouleau, et d'une garniture salee ou sucrieAn - {{populairelfr}} giflelGifle ; coup de poing ; claque.\n - Chose facile a faire, qu'on fait en un tournemain.\n - Beret de chasseur alpin.\n - {(populairelfr}} Personne peu intelligente, a la reflexion lente.\n - {(desuetlfr}} fauxiffrIFaux, toc.\n - ridiculeiRidicule, bite ou laid.\n - laidiffr-nomliaid, ce qui est tarte.\n - tarteRfrITarteAn verbe :\n - "Premiere personne du singulier du present de l'indicatif de" tarter.\n - "Troisieme personne du singulier du present de l'indicatif de" tarter.\n - "Premiere personne du singulier du present du subjonctif de" tarter.\n - "Troisieme personne du singulier du present du subjonctif de" tarter.\n - "Deuvieme personne du singulier de l'imperatif present de" tarter.\n---\n\n"
+
+    */
+    // we need to remove text before "definitions:" "---\n\n\n" and the last "\n---\n\n" and then split the string by "\n\n"
+    let yamlStringWithoutFirstPart = yamlString
+      .split("\n\n")
+      .slice(3)
+      .join("\n\n");
+    let yamlStringWithoutLastPart = yamlStringWithoutFirstPart
+      .split("\n\n")
+      .slice(0, -1)
+      .join("\n\n");
+    // replace "\n" by "<br/>"
+    let yamlStringWithHTMLBreaks = yamlStringWithoutLastPart.replace(
+      /\n/g,
+      "<br/>"
+    );
+
+    return yamlStringWithHTMLBreaks;
+  };
 
   const searchDefinitionEn = async () => {
     const response = await fetch(`${API_URL_ENG}/${searchTerm}`);
@@ -51,7 +74,7 @@ function Dictionnaire() {
     const response = await fetch(`${API_URL_FR}${searchTerm}`);
     const data = await response.json(); // string yaml format
     console.log(data);
-    if(data.success){
+    if (data.success) {
       setDefinitionFR(data.definition);
     }
   };
@@ -79,12 +102,6 @@ function Dictionnaire() {
     }
 
     setIsLoading(false);
-  };
-
-  const handleCopy = () => {
-    toast.success(" Lien copié !");
-    const currentUrl = window.location.href;
-    navigator.clipboard.writeText(currentUrl);
   };
 
   const isDefinitionAvailableENG = definitionsENG.length > 0;
@@ -219,17 +236,9 @@ function Dictionnaire() {
         <div className="mt-4">
           <div className="flex flex-col items-center">
             <div className="text-center">
-              <span onClick={handleCopy} className="cursor-pointer">
-                <h1 className="text-2xl font-bold mb-2 bg-green-800 p-2 text-white rounded-full">
-                  {searchTerm}
-                  <FontAwesomeIcon
-                    icon={faLink}
-                    className="ml-2"
-                    color="white"
-                    style={{ marginRight: "0.5rem" }}
-                  />
-                </h1>
-              </span>
+              <h1 className="text-2xl font-bold mb-2 bg-green-800 p-2 text-white rounded-full">
+                {searchTerm}
+              </h1>
 
               {definitionsENG.map((definition: any, index: number) => (
                 <div
@@ -265,26 +274,26 @@ function Dictionnaire() {
                 </div>
               ))}
             </div>
-            <div className="mt-4">
-              {/* <CopyToClipboard text={currentUrl} onCopy={handleCopy}>
-                            <Button
-                                color="light-green"
-                                className="w-96"
-                            >
-                                Copier le lien
-                            </Button>
-                        </CopyToClipboard> */}
-              {/*    <Button color="light-green" className="w-96" onClick={() => {navigator.clipboard.writeText(currentUrl);}} /> */}
-            </div>
           </div>
         </div>
       )}
 
       {isDefinitionAvailableFR && searchTerm !== "" && language === "fr" && (
         <div className="mt-4">
-          <h1>{searchTerm}</h1>
-          <div className="mt-4 shadow-xl rounded-lg p-4">
-            <p className="mb-2 text-justify">{definitionDataFR}</p>
+          <div className="flex flex-col items-center">
+            <div className="text-center">
+              <h1 className="text-2xl font-bold mb-2 bg-green-800 p-2 text-white rounded-full">
+                {searchTerm}
+              </h1>
+
+              <div
+                key={definitionDataFR}
+                className="mt-4 shadow-xl rounded-lg p-4"
+                style={{ backgroundColor: "lightgreen" }}
+              >
+                {yamlStringToUI(definitionDataFR)}
+              </div>
+            </div>
           </div>
         </div>
       )}
