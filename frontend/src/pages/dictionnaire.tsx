@@ -15,7 +15,7 @@ import {
 import { Radio, Select } from "@material-tailwind/react";
 
 const API_URL_ENG = "https://api.dictionaryapi.dev/api/v2/entries/en";
-const API_URL_FR = "https://localhost:3000/backend/api/getDefinitionOfWord?word=";
+const API_URL_FR = "http://localhost:3000/backend/api/getDefinitionOfWord?word=";
 
 
 

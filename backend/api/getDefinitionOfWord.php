@@ -6,14 +6,12 @@ header('Access-Control-Allow-Origin: http://localhost:3000');
 
 if (isset($_GET['word']) && !empty($_GET['word'])){
     $word = $_GET['word'];
-    
     if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
-        exec('java -Dfile.encoding=UTF-8 -classpath "..\server\java\dico\target\classes" fr.uge.jdict.DictionarySearcher "..\server\java\dico\dico" '.$word, $output);
+        exec('java -cp "..\server\java\Dictionaries.jar" fr.uge.jdict.DictionarySearcher "..\server\java\dico\dico" yaml:'.$word , $output);
     } else {
-        exec('java -Dfile.encoding=UTF-8 -classpath "../server/java/dico/target/classes" fr.uge.jdict.DictionarySearcher "../server/java/dico/dico" '.$word, $output);
+        exec('java -cp "../server/java/Dictionaries.jar" fr.uge.jdict.DictionarySearcher "../server/java/dico/dico" yaml:'.$word , $output);
     }
     $resultCLI = implode("\n", $output);
-
     if(empty($resultCLI)){
         $response = array(
             "success" => false,
