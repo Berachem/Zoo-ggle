@@ -11,7 +11,7 @@ if (isset($_GET['word']) && !empty($_GET['word'])){
     } else {
         exec('java -cp "../server/java/Dictionaries.jar" fr.uge.jdict.DictionarySearcher "../server/java/dico/dico" yaml:'.$word , $output);
     }
-    $resultCLI = implode("\n", $output);
+    $resultCLI = implode("<br>", $output);
     if(empty($resultCLI)){
         $response = array(
             "success" => false,

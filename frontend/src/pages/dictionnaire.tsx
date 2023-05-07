@@ -16,7 +16,7 @@ import { Radio, Select } from "@material-tailwind/react";
 
 const API_URL_ENG = "https://api.dictionaryapi.dev/api/v2/entries/en";
 const API_URL_FR =
-  "http://localhost:3000/backend/api/getDefinitionOfWord.php?word=";
+  "http://localhost/backend/api/getDefinitionOfWord.php?word=";
 
 function Dictionnaire() {
   const [language, setLanguage] = useState("en");
@@ -51,7 +51,9 @@ function Dictionnaire() {
     const response = await fetch(`${API_URL_FR}${searchTerm}`);
     const data = await response.json(); // string yaml format
     console.log(data);
-    setDefinitionFR(data);
+    if(data.success){
+      setDefinitionFR(data.definition);
+    }
   };
 
   useEffect(() => {
