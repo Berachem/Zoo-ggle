@@ -24,30 +24,14 @@ function Dictionnaire() {
   const [definitionDataFR, setDefinitionFR] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
-  const yamlStringToUI = (yamlString: string) => {
-    // yaml string looks like this:
-    /*
-"---\n\n\ntitle : tarte\ndefinitions:\n nom :\n - platIPlat, preparation a base de pate aplatie au rouleau, et d'une garniture salee ou sucrieAn - {{populairelfr}} giflelGifle ; coup de poing ; claque.\n - Chose facile a faire, qu'on fait en un tournemain.\n - Beret de chasseur alpin.\n - {(populairelfr}} Personne peu intelligente, a la reflexion lente.\n - {(desuetlfr}} fauxiffrIFaux, toc.\n - ridiculeiRidicule, bite ou laid.\n - laidiffr-nomliaid, ce qui est tarte.\n - tarteRfrITarteAn verbe :\n - "Premiere personne du singulier du present de l'indicatif de" tarter.\n - "Troisieme personne du singulier du present de l'indicatif de" tarter.\n - "Premiere personne du singulier du present du subjonctif de" tarter.\n - "Troisieme personne du singulier du present du subjonctif de" tarter.\n - "Deuvieme personne du singulier de l'imperatif present de" tarter.\n---\n\n"
-
-    */
-    // we need to remove text before "definitions:" "---\n\n\n" and the last "\n---\n\n" and then split the string by "\n\n"
-    let yamlStringWithoutFirstPart = yamlString
-      .split("\n\n")
-      .slice(3)
-      .join("\n\n");
-    let yamlStringWithoutLastPart = yamlStringWithoutFirstPart
-      .split("\n\n")
-      .slice(0, -1)
-      .join("\n\n");
-    // replace "\n" by "<br/>"
-    let yamlStringWithHTMLBreaks = yamlStringWithoutLastPart.replace(
-      /\n/g,
-      "<br/>"
-    );
-
-    return yamlStringWithHTMLBreaks;
+  const yamlStringToFilteredAray = (yamlString: string) => {
+    const myarray = yamlString.split("<br>")
+    console.log(myarray)
+    const filteredArray = myarray.filter((item) => (/- [^\n]/).test(item))
+    console.log(filteredArray)
+    return filteredArray;
   };
-
+  
   const searchDefinitionEn = async () => {
     const response = await fetch(`${API_URL_ENG}/${searchTerm}`);
     const data = await response.json();
@@ -281,7 +265,7 @@ function Dictionnaire() {
       {isDefinitionAvailableFR && searchTerm !== "" && language === "fr" && (
         <div className="mt-4">
           <div className="flex flex-col items-center">
-            <div className="text-center">
+            
               <h1 className="text-2xl font-bold mb-2 bg-green-800 p-2 text-white rounded-full">
                 {searchTerm}
               </h1>
@@ -291,9 +275,9 @@ function Dictionnaire() {
                 className="mt-4 shadow-xl rounded-lg p-4"
                 style={{ backgroundColor: "lightgreen" }}
               >
-                {yamlStringToUI(definitionDataFR)}
+                {yamlStringToFilteredAray(definitionDataFR).map(s =>  <><span key={s} > {s}</span><br/></>)}
               </div>
-            </div>
+            
           </div>
         </div>
       )}
