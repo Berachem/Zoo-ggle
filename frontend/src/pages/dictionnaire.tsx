@@ -26,9 +26,7 @@ function Dictionnaire() {
 
   const yamlStringToFilteredAray = (yamlString: string) => {
     const myarray = yamlString.split("<br>")
-    console.log(myarray)
     const filteredArray = myarray.filter((item) => (/- [^\n]/).test(item))
-    console.log(filteredArray)
     return filteredArray;
   };
   
@@ -60,6 +58,8 @@ function Dictionnaire() {
     console.log(data);
     if (data.success) {
       setDefinitionFR(data.definition);
+    }else{
+      setDefinitionFR("")
     }
   };
 
