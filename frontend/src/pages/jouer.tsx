@@ -11,7 +11,7 @@ import CardList from "../components/Zooggle/CardList";
 async function getGames(search : string){
     const formData = new FormData();
 
-    const res = await fetch('http://localhost/backendapi/searchGame.php?q='+search, {
+    const res = await fetch('http://localhost/backend/api/searchGame.php?q='+search, {
         method: 'POST',
         body: formData
     }).then(res => res.json());
