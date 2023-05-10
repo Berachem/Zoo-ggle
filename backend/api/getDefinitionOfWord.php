@@ -18,8 +18,12 @@ if (isset($_GET['word']) && !empty($_GET['word'])){
         );
         echo json_encode($response);
     }else{
+        $success=true;
+        if($resultCLI==="le mot n'a pas ete trouve"){
+            $success=false;
+        }
         $response = array(
-            "success" => true,
+            "success" => $success,
             "word" => $word,
             "definition" => $resultCLI
         );
