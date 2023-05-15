@@ -80,7 +80,7 @@ class ZoogleChatHooks(ChatHooks):
     DEFAULT_LANG = "FRA"
     DEFAULT_ROOMS = {
         "default": {"attendee_number": 2, "duration": 60, "welcome_message": "Salut everybody tout le monde !", "lang":"FRA", "mode":0},
-        "solo": {"attendee_number": 1, "duration": 120, "welcome_message": "Salut toi !", "lang":"FRA", "mode":1},
+        "solo": {"attendee_number": 1, "duration": 5, "welcome_message": "Salut toi !", "lang":"FRA", "mode":1},
         "4": {"attendee_number": 3, "duration": 30, "welcome_message": "!", "lang":"FRA", "mode":2}
         }
 
@@ -142,7 +142,6 @@ class ZoogleChatHooks(ChatHooks):
     async def on_chat_session_start(self, waiting_room_name: str, chat_session_id: int, attendee_identities: Dict[int, Dict[str, Any]]) -> Any:
         self._attendees[chat_session_id] = {id: self.AttendeeInfo(x) for (id, x) in attendee_identities.items()}
         room = self._rooms[waiting_room_name]
-        # subprocess.run("dir "+self.EXEC_PATH,shell=True)
         process = subprocess.Popen([self.EXEC_PATH+'\grid_build', self.EXEC_PATH+'\..\..\data\\frequences.txt', '4', '4'], stdout=subprocess.PIPE)
         output, error = process.communicate()
         grid = output.decode()
@@ -224,10 +223,12 @@ class ZoogleChatHooks(ChatHooks):
             url = 'http://localhost/backend/api/game/insertEndGame.php'
             myobj = {'infoPartie': json.dumps(info), 'infoJoueurs':json.dumps(infoPerson)}
             response = requests.post(url, data = myobj)
+            print(response._content)
+            print(response.text)
+            print(response.text())
+            print(response.content)
             response.raise_for_status()
             print("AAA")
-            # print(response.text())
-            print(response.content)
             print(response.json())
         except HTTPError as http_err:
             print(f'HTTP error occurred: {http_err}')

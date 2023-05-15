@@ -21,8 +21,11 @@ if (isset($_POST["infoPartie"]) && isset($_POST["infoJoueurs"])){
     $possibleNumberWord = $infoPartie["nombreMotPossibles"];
     $mode = $infoPartie["mode"];
     $playerNumber = $infoPartie["nombreJoueurs"];
+    // var_dump($playerNumber);
 
     $gameId = insertGame($name, $lang, $grid, $beginDate, $endDate, $gridSize, $possibleNumberWord, $mode, $playerNumber);
+    $gameId = intval($gameId);
+    var_dump($gameId);
 
     foreach($infoJoueurs as $joueur){
         insertPlayerPlayedAGame($gameId, $joueur["id"], $joueur["score"]);
@@ -38,6 +41,7 @@ if (isset($_POST["infoPartie"]) && isset($_POST["infoJoueurs"])){
             addWordPlayedByAPlayer($joueur["id"],$gameId,$word[0],0,$word[1]);
         }
     }
-    
+}else{
+    echo json_encode(array("success" => false, "error" => "Il manque des paramètres en POST"));
 }
 ?>
