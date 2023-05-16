@@ -57,6 +57,7 @@ from .hooks import ChatHooks
 from .utils import nonify_exception, cancel_and_get_result
 import math
 import datetime
+from dateutil import parser
 
 logger = logging.getLogger(__name__)
 
@@ -75,7 +76,7 @@ class Client(object):
         self.chat_session = None
 
     def __str__(self):
-        return f"Client[id={self.id}, state={self.state}, identity={self.state}]"
+        return f"Client[id={self.id}, state={self.state}, identity={self.identity}]"
 
     async def send_message(self, kind: str, **kwargs):
         message = {'kind': kind}
@@ -85,7 +86,6 @@ class Client(object):
             return True
         except:
             return False
-
 
 class WaitingRoom(object):
     def __init__(self, name: str, info: Dict[str, Any]):
@@ -120,8 +120,6 @@ class WaitingRoom(object):
             self._queue = self._queue[self.attendee_number:]
             return attendee_ids
 
-
-
 class ChatSession(object):
     _COUNTER = 0  # for a unique id for each chat session
     def __init__(self, clients):
@@ -138,6 +136,8 @@ class ChatSession(object):
         self.solutions = None
         self.playerNumber = 0
         self.mode = 0
+        self.grid_length = 4
+        self.name=''
 
         self._chat_message_queue = asyncio.Queue()  # queue for chat messages to be sent
         self._leave_queue = asyncio.Queue()  # queue for attendees that want to leave
@@ -190,7 +190,6 @@ class ChatSession(object):
             client.state = 'connected' 
         await self.send_message(None, 'chat_session_ended', exit_message=exit_message)
 
-
 class ChatServer(object):
     def __init__(self, interface: str, port: int, hooks: ChatHooks, hooks_params: Any):
         self.interface: str = interface
@@ -209,6 +208,7 @@ class ChatServer(object):
         logger.info(f"Starting the waiting room manager for room {waiting_room}")
         try:
             while True:
+                print(self._connected_clients)
                 attendee_ids = await waiting_room.wait_for_attendees()
                 attendees = {x: self._connected_clients.get(x) for x in attendee_ids}
                 chat_session = ChatSession(attendees)
@@ -222,6 +222,8 @@ class ChatServer(object):
                 chat_session.solutions = chat_session_params.get('solutions', [])
                 chat_session.playerNumber = chat_session_params.get('playerNumber', 0)
                 chat_session.mode = chat_session_params.get('mode',0)
+                chat_session.grid_length = chat_session_params.get('grid_length',4)
+                chat_session.name = chat_session_params.get('name','')
                 self._chat_sessions[chat_session.id] = chat_session
                 manager_task = asyncio.create_task(self._chat_session_manager(chat_session))
                 chat_session.manager_task = manager_task
@@ -267,23 +269,21 @@ class ChatServer(object):
                     await chat_session.remove_attendee(leave)
 
                 remaining_time = chat_session.deadline - time.monotonic()
-                print("finPlaying"+str(remaining_time))
         except asyncio.CancelledError:
             pass
         except Exception as e:
             import traceback
             traceback.print_exc()
         finally:
-            print("finito")
             # the session is over
-            info = {"mode":chat_session.mode,"grille": chat_session.grid, "langue":chat_session.lang, "dateDebut":chat_session.begin,"dateFin":datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")  ,"taille": math.sqrt(len(chat_session.grid.split(" "))), "nombreMotPossibles":len(chat_session.solutions), "nombreJoueurs":chat_session.playerNumber, "nom":chat_session.lang+""+chat_session.begin}
+            dateTimeObj = parser.parse(chat_session.begin)
+            gameName = "Partie "+chat_session.name+" : "+dateTimeObj.strftime("%d/%m/%Y - %Hh%M")
+
+            info = {"mode":chat_session.mode,"grille": chat_session.grid, "langue":chat_session.lang, "dateDebut":chat_session.begin,"dateFin":datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")  ,"taille": chat_session.grid_length, "nombreMotPossibles":len(chat_session.solutions), "nombreJoueurs":chat_session.playerNumber, "nom":gameName}
         
             exit_message = await self.hooks.on_chat_session_end(chat_session.id, info)
-            print("message récup")
             await chat_session.terminate(exit_message)
-            print("terminated")
             self._chat_sessions.pop(chat_session.id)
-            print("popped")
             logger.info(f"The chat session manager for {chat_session} is ended.")
 
     async def _websocket_handler(self, request):
@@ -294,6 +294,7 @@ class ChatServer(object):
         ws = web.WebSocketResponse()
         await ws.prepare(request)
         client = Client(ws)
+        print("Client"+str(client))
         logger.info(f"A new websocket has been open for {client}")
         self._connected_clients[client.id] = client
 
@@ -308,6 +309,9 @@ class ChatServer(object):
 
             # we manage each message
             async for msg in ws:
+                print("Clients connectés :"+str(self._connected_clients))
+                for (k,v) in self._connected_clients.items():
+                    print(str(k)+":"+str(v))
                 print("Message received by ws")
                 if msg.type == WSMsgType.TEXT:
                     # we only accept text messages that are JSON formatted and contain a type field
@@ -331,8 +335,14 @@ class ChatServer(object):
                             else:
                                 client_identity = await self.hooks.on_client_connection(waiting_room_name, token)
                                 if not isinstance(client_identity, dict):
-                                    await client.send_message('waiting_room_join_refused', reason=str(client_identity))
+                                    await client.send_message('waiting_room_join_refused', reason=str(client_identity))        
                                 else:
+                                    for key, value in self._connected_clients.items():
+                                        if value.identity!= None and (value.state=='chatting' or value.state=='waiting') and value.identity == client_identity:
+                                            await client.send_message('waiting_room_join_refused', reason="It looks like you are already in game or in a waiting room.")
+                                            return
+                                        
+
                                     # we put the user in the waiting room
                                     waiting_room = self._waiting_rooms[waiting_room_name]
                                     if client.state == 'waiting':

@@ -79,7 +79,7 @@ export const Grid = (props: {grid: string}) => {
     return <div className="Grid">
         {
                 props.grid.split(" ").map((letter : string, index : number) => {
-                    return <div id={index.toString()}>{letter}</div>
+                    return <div key={index.toString()}>{letter}</div>
                 })
             }
     </div>
@@ -102,7 +102,6 @@ export const ChatManager = (props: {socketUrl: string}) => {
     const [word, setWord] = React.useState("")
     const [inGameStats, setInGameStats] = React.useState<InGameStats>({score:0, validWords:[], falseWords:[]})
     const [countDown, setCountDown] = React.useState(0);
-    
     const [gridState, setGridState] = React.useState("? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ?")
 
     const onNewSocketMessage = (kind: string, content: Record<string, any>) => {
@@ -227,7 +226,7 @@ export const ChatManager = (props: {socketUrl: string}) => {
     // create and configure a websocket
     useEffect(() => {
         if (connected) {
-            console.debug(`Opening the websocket with the URL ${props.socketUrl}`)
+            console.log(`Opening the websocket with the URL ${props.socketUrl}`)
             const newSocket = new WebSocket(props.socketUrl)
             setSocket(newSocket)
             newSocket.addEventListener('open', (event) => {
@@ -269,7 +268,6 @@ export const ChatManager = (props: {socketUrl: string}) => {
 
     useEffect(() => {
         const interval = setInterval(() => {
-            console.log("setInterval"+countDown)
             setCountDown((countDown) =>countDown-1000);
         }, 1000);
         return () => clearInterval(interval);

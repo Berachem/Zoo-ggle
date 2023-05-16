@@ -97,7 +97,7 @@ async function getId() {
 
 const Profile = () => {
   let { id } = useParams();
-  const PROFILE_DATA_BASE_URL = "http://localhost/backendapi/player/getUserInfos.php?profileId="
+  const PROFILE_DATA_BASE_URL = "http://localhost/backend/api/player/getUserInfos.php?profileId="
   const [profileData, setProfileData] = useState( {
     pseudo: "",
     description: "",
