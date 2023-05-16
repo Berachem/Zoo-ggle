@@ -78,10 +78,12 @@ class ZoogleChatHooks(ChatHooks):
     DEFAULT_WELCOME_MESSAGE = "Welcome everybody!"
     DEFAULT_DURATION = 60
     DEFAULT_LANG = "FRA"
+    DEFAULT_GRID_LENGTH = 4
+    DEFAULT_ATTENDEE_NUMBER=2
     DEFAULT_ROOMS = {
-        "default": {"attendee_number": 2, "duration": 60, "welcome_message": "Salut everybody tout le monde !", "lang":"FRA", "mode":0},
-        "solo": {"attendee_number": 1, "duration": 5, "welcome_message": "Salut toi !", "lang":"FRA", "mode":1},
-        "4": {"attendee_number": 3, "duration": 30, "welcome_message": "!", "lang":"FRA", "mode":2}
+        "default": {"attendee_number": 2, "duration": 60, "welcome_message": "Salut everybody tout le monde !", "lang":"FRA", "mode":0, "grid_length":4},
+        "solo": {"attendee_number": 1, "duration": 5, "welcome_message": "Salut toi !", "lang":"FRA", "mode":1, "grid_length":4},
+        "4": {"attendee_number": 3, "duration": 30, "welcome_message": "!", "lang":"FRA", "mode":2, "grid_length":4}
         }
 
     EXEC_PATH = "..\..\..\..\Zoo-ggle\\backend\server\game_motor\executables_WIN"
@@ -142,12 +144,14 @@ class ZoogleChatHooks(ChatHooks):
     async def on_chat_session_start(self, waiting_room_name: str, chat_session_id: int, attendee_identities: Dict[int, Dict[str, Any]]) -> Any:
         self._attendees[chat_session_id] = {id: self.AttendeeInfo(x) for (id, x) in attendee_identities.items()}
         room = self._rooms[waiting_room_name]
-        process = subprocess.Popen([self.EXEC_PATH+'\grid_build', self.EXEC_PATH+'\..\..\data\\frequences.txt', '4', '4'], stdout=subprocess.PIPE)
+
+        grid_length = room.get("grid_length", self.DEFAULT_GRID_LENGTH)
+        process = subprocess.Popen([self.EXEC_PATH+'\grid_build', self.EXEC_PATH+'\..\..\data\\frequences.txt', str(grid_length), str(grid_length)], stdout=subprocess.PIPE)
         output, error = process.communicate()
         grid = output.decode()
         grid = grid.strip()
         
-        cmd = [self.EXEC_PATH+'\solve.exe',self.EXEC_PATH+'\..\..\data\listeMotWindows.lex','3', '4', '4'] + grid.split(" ")
+        cmd = [self.EXEC_PATH+'\solve.exe',self.EXEC_PATH+'\..\..\data\listeMotWindows.lex','3', str(grid_length), str(grid_length)] + grid.split(" ")
         process = subprocess.Popen(cmd, stdout=subprocess.PIPE)
         output, error = process.communicate()
         solutionsString = output.decode()
@@ -160,8 +164,10 @@ class ZoogleChatHooks(ChatHooks):
             "solutions": solutions,
             "lang": room.get("lang", self.DEFAULT_LANG),
             "begin": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-            "playerNumber" : room.get("attendee_number", 0),
-            "mode":room.get("mode",0)
+            "playerNumber" : room.get("attendee_number", self.DEFAULT_ATTENDEE_NUMBER),
+            "mode":room.get("mode",0),
+            "grid_length":room.get("grid_length",self.DEFAULT_GRID_LENGTH),
+            "name":waiting_room_name,
         }
 
     async def on_chat_message(self, chat_session_id: int, sender_id: int, content: Any) -> Dict[int, Any]:
@@ -209,7 +215,7 @@ class ZoogleChatHooks(ChatHooks):
 
     async def on_chat_session_end(self, chat_session_id: int, info: Dict[str, Any]) -> Any:
         """Send the stats for the session"""
-        print("Debut")
+        print("Preparation insertion")
         attendees = self._attendees[chat_session_id]
         infoPerson=[]
         for key,attendee in attendees.items():
