@@ -423,18 +423,18 @@ function getUserStatistics($id) {
     $user[0]->gamesLost = $gamesLost[0]->gamesLost;
     
     //parties jouées, 
-    $query = "SELECT COUNT(IdProposer) as wordsProposed FROM B_Proposer WHERE IdJoueur = ?";
+    $query = "SELECT COUNT(Libelle) as wordsProposed FROM B_Proposer WHERE IdJoueur = ?";
     $params = [[1, $id, PDO::PARAM_INT]];
     $wordsProposed = $db->execQuery($query, $params);
     $user[0]->wordsProposed = $wordsProposed[0]->wordsProposed;
     //mots proposés, 
-    $query = "SELECT COUNT(IdProposer) as wordsProposed FROM B_Proposer WHERE IdJoueur = ?";
+    $query = "SELECT COUNT(Libelle) as wordsProposed FROM B_Proposer WHERE IdJoueur = ?";
     $params = [[1, $id, PDO::PARAM_INT]];
     $wordsProposed = $db->execQuery($query, $params);
     $user[0]->wordsProposed = $wordsProposed[0]->wordsProposed;
 
     //mots trouvés
-    $query = "SELECT COUNT(IdProposer) as wordsValidated FROM B_Proposer WHERE IdJoueur = ? AND EstValide = 1";
+    $query = "SELECT COUNT(Libelle) as wordsValidated FROM B_Proposer WHERE IdJoueur = ? AND EstValide = 1";
     $params = [[1, $id, PDO::PARAM_INT]];
     $wordsValidated = $db->execQuery($query, $params);
     $user[0]->wordsValidated = $wordsValidated[0]->wordsValidated;
