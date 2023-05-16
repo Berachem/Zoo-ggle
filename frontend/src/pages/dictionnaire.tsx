@@ -13,6 +13,8 @@ import {
   faSearch,
 } from "@fortawesome/free-solid-svg-icons";
 import { Radio, Select } from "@material-tailwind/react";
+import '../css/dictionnaire.css'
+import React from "react";
 
 const API_URL_ENG = "https://api.dictionaryapi.dev/api/v2/entries/en";
 const API_URL_FR = "http://localhost/backend/api/getDefinitionOfWord.php?word=";
@@ -23,6 +25,14 @@ function Dictionnaire() {
   const [definitionsENG, setDefinition] = useState([]);
   const [definitionDataFR, setDefinitionFR] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [backgroundMode, setBackgroundMode] = React.useState(
+    localStorage.getItem("BackgroundMode") === "true"
+  );
+
+  const images = [
+    "https://i.ibb.co/C5gh8yW/istockphoto-1152485418-612x612.jpg",
+    "https://media.istockphoto.com/id/523057192/photo/smart-cat.jpg?b=1&s=170667a&w=0&k=20&c=HdBAsBhQEDQ59Cgwk9SUbXF-o1eraJwpUMOmDU91wAA=",
+  ]
 
   const yamlStringToFilteredAray = (yamlString: string) => {
     const myarray = yamlString.split("<br>")
@@ -72,6 +82,13 @@ function Dictionnaire() {
     return () => clearTimeout(timeoutId);
   }, [searchTerm, language]);
 
+  useEffect(() => {
+    localStorage.setItem("BackgroundMode", backgroundMode.toString());
+  }, [backgroundMode]);
+
+
+  
+
   const searchDefinition = async () => {
     setIsLoading(true);
     switch (language) {
@@ -92,29 +109,33 @@ function Dictionnaire() {
   const isDefinitionAvailableFR = definitionDataFR !== "";
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen py-2">
+    <div className="flex flex-col items-center justify-center py-2">
       <ToastContainer />
 
       <div
-        className="flex flex-col items-center justify-center w-full max-w-2xl px-4 py-6 space-y-4 rounded-lg shadow-xl border-2 border-white
-      "
+        className="flex flex-col items-center justify-center w-full max-w-2xl px-4 py-6 space-y-4 rounded-lg shadow-xl border-2 border-white"
+      
         style={{
           width: "70%",
-          marginTop: "50px",
-          backdropFilter: "blur(40px)",
+          marginTop: "100px",
+          opacity: "0.95",
           color: "white",
-          backgroundColor: "#00000013",
+          backgroundColor: "white",
         }}
       >
-        <h1 className="text-4xl font-bold mb-2" style={{ color: "white" }}>
+        <img src={images[backgroundMode ? 1 : 0]} alt="book" width="200" height="200" />
+
+
+        <h1 className="text-4xl font-bold mb-2" style={{ color: "black" }}>
           <FontAwesomeIcon
             icon={faBook}
             className="mr-4"
-            color="white"
             style={{ marginRight: "0.5rem" }}
           />
           Dictionnaire
         </h1>
+
+
         {/* Radios diplayed in line for "Anglais" et "Francais" */}
         <div className="flex flex-row">
           <img
@@ -160,7 +181,7 @@ function Dictionnaire() {
         />
 
         {language === "en" && (
-          <p className="text-center text-sm text-white font-bold">
+          <p className="text-center text-sm text-black font-bold">
             Les définitions
             <span className="text-red-500"> Anglaises </span>
             sont fournies par{" "}
@@ -176,7 +197,7 @@ function Dictionnaire() {
         )}
 
         {language === "fr" && (
-          <p className="text-center text-sm text-white font-bold">
+          <p className="text-center text-sm text-black font-bold">
             Les définitions
             <span className="text-blue-500"> Françaises </span>
             sont fournies par le{" "}

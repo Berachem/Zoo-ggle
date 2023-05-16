@@ -1,7 +1,7 @@
 import { HomeIcon, BookOpenIcon, PlayIcon } from "@heroicons/react/24/outline";
 
 import Accueil from "./pages/accueil";
-import Jouer from "./pages/jouer";
+import Jouer from "./pages/choixPartie";
 import Dictionnaire from "./pages/dictionnaire";
 import Game from "./pages/game";
 import ConnexionInscription from "./pages/connexionInscription";
@@ -17,7 +17,7 @@ export const routes = [
   },
   {
     label: "Jouer",
-    path: "/jouer",
+    path: "/choixPartie",
     icon: PlayIcon,
     element: (
       <>
@@ -39,7 +39,7 @@ export const routes = [
   },
   {
     label: "Game",
-    path: "/game",
+    path: "/jouer",
     icon: HomeIcon,
     element: (
       <>

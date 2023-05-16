@@ -1,0 +1,111 @@
+* {
+    font-family: 'Montserrat', sans-serif;
+}
+
+.Row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+    margin-top: 100px;
+}
+
+.Card {
+    width: 500px;
+    height: 700px;
+    background-color: white;
+    border: 3px solid white;
+    border-radius: 15px;
+    padding: 1rem;
+    margin-bottom: 10px;
+    box-shadow: 0px 0px 5px 0px rgba(255, 255, 255, 0.75);
+    opacity: 0.95;
+}
+
+.CardHeader {
+    display: flex;
+}
+
+.MetaDate {
+    font-size: 0.8rem;
+    padding: 0.2rem 0.5rem;
+}
+
+.CardImage {
+    height: 300px;
+    width: 80%;
+    margin: auto;
+    margin-top: 1.5rem;
+    border-radius: 20px;
+  }
+  
+  .CardImage img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 20px;
+
+  }
+
+.CardTitle {
+    font-weight: bold;
+    margin-top: 3rem;
+    text-align: center;
+    font-size: 1.5rem;
+}
+
+h3 {
+    font-weight: bold;
+    text-align: center;
+    font-size: 3rem;
+    font-style: italic;
+}
+
+.CardDescription {
+    margin-top: 0.5rem;
+    text-align: center;
+    font-size: 1.2rem;
+    font-style: italic;
+    color : #656667;
+}
+
+.CardFooter {
+    margin-top: 1rem;
+    text-align: center;
+}
+
+.CardButton {
+    padding: 0.5rem 2rem;
+    background-color: #2196f3;
+    color: white;
+    border: none;
+    border-radius: 18px;
+    cursor: pointer;
+    font-weight: bold;
+    box-shadow: 0px 0px 5px 0px rgba(192, 192, 192, 0.75);
+    transition: all 0.3s ease 0s;
+}
+
+.Card:hover > .CardFooter> .CardButton {
+    background-color: #053606 !important;
+    transform: translateY(-7px);
+}
+
+.Card:hover {
+    box-shadow: 0px 0px 10px 0px rgba(192, 192, 192, 0.75);
+    transform: translateY(-7px);
+    transition: all 0.6s ease 0s;
+}
+
+
+
+@media (max-width: 600px) {
+    .Row {
+        margin-top: 50px;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .Card {
+        width: 90%;
+    }
+}

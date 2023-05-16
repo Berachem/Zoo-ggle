@@ -125,7 +125,7 @@ export default function Accueil() {
 
         <main className="flex flex-col items-center justify-center w-full flex-1  text-center text-gray-50">
           <img src={Logo} />
-          <a href="/jouer">
+          <a href="/choixPartie">
             <Button variant="filled" color="white" className="m-2">
               Jouer
             </Button>
