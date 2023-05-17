@@ -31,7 +31,7 @@ function Dictionnaire() {
 
   const images = [
     "https://i.ibb.co/C5gh8yW/istockphoto-1152485418-612x612.jpg",
-    "https://media.istockphoto.com/id/523057192/photo/smart-cat.jpg?b=1&s=170667a&w=0&k=20&c=HdBAsBhQEDQ59Cgwk9SUbXF-o1eraJwpUMOmDU91wAA=",
+    "https://i.ibb.co/CP83vzg/shiba.png"
   ]
 
   const yamlStringToFilteredAray = (yamlString: string) => {
@@ -132,7 +132,7 @@ function Dictionnaire() {
           backgroundColor: "white",
         }}
       >
-        <img src={images[backgroundMode ? 1 : 0]} alt="book" width="200" height="200" />
+        <img src={images[backgroundMode ? 1 : 0]} alt="book" width="200" height="200" className="border-2 border-white rounded-2xl" />
 
 
         <h1 className="text-4xl font-bold mb-2" style={{ color: "black" }}>
