@@ -58,11 +58,11 @@ export default function GameCardInfo(props: any) {
         {props.isPublic !== undefined && (
           <>
             {props.isPublic ? (
-              <span className="flex rounded-full bg-green-500 px-2 py-1 text-xs font-bold">
+              <span className="flex rounded-full bg-green-500 px-2 py-1 text-xs text-white">
                 Partie publique
               </span>
             ) : (
-              <span className="flex rounded-full bg-red-500 px-2 py-1 text-xs font-bold">
+              <span className="flex rounded-full bg-red-500 px-2 py-1 text-xs  text-white">
                 Partie privée
               </span>
             )}
@@ -72,7 +72,7 @@ export default function GameCardInfo(props: any) {
         {props.startDate && (
           <>
             <span
-              className="flex rounded-full px-2 py-1 text-xs font-bold"
+              className="flex rounded-full px-2 py-1 text-xs text-white"
               style={{ backgroundColor: "#B426BB" }}
             >
               <FontAwesomeIcon
@@ -265,7 +265,7 @@ export default function GameCardInfo(props: any) {
               {props.leaderboard.map((player: any) => (
                 <a href={"/profile/" + player.id}>
                   <span
-                    className="flex rounded-full px-2 py-1 text-xs font-bold"
+                    className="flex rounded-full px-2 py-1 text-xs text-white" 
                     style={{
                       backgroundColor: [
                         "#f1c40f",

@@ -1,0 +1,82 @@
+* {
+    font-family: 'Montserrat', sans-serif !important;
+}
+
+.decorAvatar {
+    position: absolute;
+    top: 35px;
+    left: 395px;
+    z-index: 2;
+
+}
+
+
+/* RESPONSIVE */
+
+
+@media screen and (max-width: 1867px) {
+    .decorAvatar {
+        position: absolute;
+        top: 35px;
+        left: 370px;
+        z-index: 2;
+    }
+}
+
+@media screen and (max-width: 1600px) {
+    .decorAvatar {
+        position: absolute;
+        top: 35px;
+        left: 270px;
+        z-index: 2;
+    }
+}
+
+@media screen and (max-width: 1440px) {
+    .decorAvatar {
+        position: absolute;
+        top: 35px;
+        left: 220px;
+        z-index: 2;
+    }
+}
+
+@media screen and (max-width: 1366px) {
+    .decorAvatar {
+        position: absolute;
+        top: 35px;
+        left: 130px;
+        z-index: 2;
+    }
+}
+
+
+@media screen and (max-width: 1024px) {
+    .decorAvatar {
+        position: absolute;
+        top: 35px;
+        left: 80px;
+        z-index: 2;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .decorAvatar {
+        position: absolute;
+        top: 65px;
+        left: 85px;
+        z-index: 2;
+    }
+}
+
+@media screen and (max-width: 425px) {
+    .decorAvatar {
+        position: absolute;
+        top: 65px;
+        left: 45px;
+        z-index: 2;
+    }
+}
+
+
+
