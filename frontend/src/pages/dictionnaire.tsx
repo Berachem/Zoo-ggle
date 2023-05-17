@@ -162,7 +162,7 @@ function Dictionnaire() {
             checked={language === "en"}
             onChange={(e) => setLanguage(e.target.value)}
             labelProps={{ className: "text-white" }}
-            style={{ marginRight: "3.5px" }}
+            style={{ marginRight: "5px" }}
           />
           <Radio
             color="blue"
@@ -172,7 +172,7 @@ function Dictionnaire() {
             checked={language === "fr"}
             onChange={(e) => setLanguage(e.target.value)}
             labelProps={{ className: "text-white" }}
-            style={{ marginRight: "3.5px" }}
+            style={{ marginRight: "5px" }}
           />
           <img
             alt="France"
@@ -250,7 +250,7 @@ function Dictionnaire() {
         <div className="mt-4">
           <div className="flex flex-col items-center">
             <div className="text-center">
-              <h1 className="text-2xl font-bold mb-2 bg-green-800 p-2 text-white rounded-full">
+              <h1 className="text-2xl font-bold mb-2 p-2 text-white rounded-full" style={{ backgroundColor: "#579A86" }}>
                 {searchTerm}
               </h1>
 
@@ -258,9 +258,9 @@ function Dictionnaire() {
                 <div
                   key={index}
                   className="mt-4 shadow-xl rounded-lg p-4"
-                  style={{ backgroundColor: "lightgreen" }}
+                  style={{ backgroundColor: "white" }}
                 >
-                  <h1 className="text-xl font-bold mb-2 text-justify">
+                  <h1 className="text-xl font-bold mb-2 text-justify" style={{ color: "#579A86" }}>
                     {definition.partOfSpeech === "noun"
                       ? "nom"
                       : definition.partOfSpeech === "verb"
@@ -296,14 +296,14 @@ function Dictionnaire() {
         <div className="mt-4">
           <div className="flex flex-col items-center">
             
-              <h1 className="text-2xl font-bold mb-2 bg-green-800 p-2 text-white rounded-full">
+              <h1 className="text-2xl font-bold mb-2 p-2 text-white rounded-full" style={{ backgroundColor: "#579A86" }}>
                 {searchTerm}
               </h1>
 
               <div
                 key={definitionDataFR}
                 className="mt-4 shadow-xl rounded-lg p-4"
-                style={{ backgroundColor: "lightgreen" }}
+                style={{ backgroundColor: "white", color: "black" }}
               >
                 {yamlStringToFilteredAray(definitionDataFR).map(s =>  <><span key={s} > {s}</span><br/></>)}
               </div>
