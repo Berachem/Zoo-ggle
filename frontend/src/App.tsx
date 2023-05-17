@@ -31,6 +31,7 @@ function App() {
     const newValue = !BackgroundMode;
     setBackgroundMode(newValue);
     localStorage.setItem("BackgroundMode", newValue.toString());
+    window.dispatchEvent(new Event("storage"));
   };
   
   return (

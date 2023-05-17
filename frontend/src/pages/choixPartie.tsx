@@ -6,11 +6,20 @@ import { useEffect, useState } from "react";
 export default function Jouer() {
   const [backgroundMode, setBackgroundMode] = useState(false);
 
+  
+
   useEffect(() => {
-    const backgroundMode =
-      localStorage.getItem("BackgroundMode") === "true" ? true : false;
-    setBackgroundMode(backgroundMode);
-  }, [backgroundMode]);
+    function changeBG() {
+      setBackgroundMode( localStorage.getItem("BackgroundMode") === "true");
+      console.log("backgroundMode", backgroundMode);
+    }
+  
+    window.addEventListener('storage', changeBG)
+  
+    return () => {
+      window.removeEventListener('storage', changeBG)
+    }
+  }, [])
 
   const modes = [
     {
@@ -62,34 +71,42 @@ export default function Jouer() {
         {modes.map((mode) => (
           <div className="Card">
             <div className="CardHeader">
-              <div className="MetaDate">
-                <FontAwesomeIcon
-                  icon={faClock}
-                  style={{ color: mode.couleur }}
-                />{" "}
-                {mode.temps} min
-              </div>
-              <div className="MetaDate">
-                <FontAwesomeIcon
-                  icon={faUsers}
-                  style={{ color: mode.couleur }}
-                />{" "}
-                {mode.joueurs}
-              </div>
-              <div className="MetaDate">
-                <FontAwesomeIcon
-                  icon={faTable}
-                  style={{ color: mode.couleur }}
-                />{" "}
-                {mode.grille}x{mode.grille}
+              <div className="CardHeaderIntermediaire">
+                <div className="MetaDate">
+                  <FontAwesomeIcon
+                    icon={faClock}
+                    style={{ color: mode.couleur }}
+                  />{" "}
+                  {mode.temps} min
+                </div>
+                <div className="MetaDate">
+                  <FontAwesomeIcon
+                    icon={faUsers}
+                    style={{ color: mode.couleur }}
+                  />{" "}
+                  {mode.joueurs}
+                </div>
+                <div className="MetaDate">
+                  <FontAwesomeIcon
+                    icon={faTable}
+                    style={{ color: mode.couleur }}
+                  />{" "}
+                  {mode.grille}x{mode.grille}
+                </div>
               </div>
             </div>
 
             <div className="CardImage">
+            {backgroundMode ?
               <img
-                src={backgroundMode ? mode.realImage : mode.cartoonImage}
+                src={mode.realImage} 
+                alt="mode"
+              /> :
+              <img
+                src={mode.cartoonImage}
                 alt="mode"
               />
+            }
             </div>
 
             <div className="CardTitle">
@@ -110,4 +127,3 @@ export default function Jouer() {
     </>
   );
 }
-

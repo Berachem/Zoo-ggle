@@ -83,8 +83,17 @@ function Dictionnaire() {
   }, [searchTerm, language]);
 
   useEffect(() => {
-    localStorage.setItem("BackgroundMode", backgroundMode.toString());
-  }, [backgroundMode]);
+    function changeBG() {
+      setBackgroundMode( localStorage.getItem("BackgroundMode") === "true");
+      console.log("backgroundMode", backgroundMode);
+    }
+  
+    window.addEventListener('storage', changeBG)
+  
+    return () => {
+      window.removeEventListener('storage', changeBG)
+    }
+  }, [])
 
 
   
