@@ -7,6 +7,7 @@ import Game from "./pages/game";
 import Connexion from "./pages/connexion";
 import BubbleAssistant from "./components/Zooggle/assistantBubble";
 import CreationPartie from "./pages/creationPartie";
+import WaitingRoom from "./pages/waitingRoom";
 
 export const routes = [
   {
@@ -69,6 +70,17 @@ export const routes = [
       </>
     ),
   },
+  {
+    label: "waitingRoom",
+    path: "/waitingRoom",
+    icon: HomeIcon,
+    element: (
+      <>
+        <BubbleAssistant />
+        <WaitingRoom />{" "}
+      </>
+    ),
+  }
 ];
 
 export default routes;
