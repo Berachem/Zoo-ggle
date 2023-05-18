@@ -100,8 +100,8 @@ async function getId() {
 
 const Profile = () => {
   let { id } = useParams();
-  const PROFILE_DATA_BASE_URL =
-    "http://localhost/backend/api/player/getUserInfos.php?profileId="; 
+  const PROFILE_DATA_BASE_URL = // http://localhost/backend/api/
+    "http://localhost/backend/api/player/getUserInfos.php?profileId=";  // https://zoo-ggle.berachem.dev/V2/api/
   const [profileData, setProfileData] = useState({
     pseudo: "",
     description: "",
@@ -292,14 +292,14 @@ const Profile = () => {
                 icon={faCloud}
                 style={{ marginRight: "5px" }}
               />
-              connecté{" "}
+              Connecté{" "}
               {getDifferenceTimeSentence(profileData.lastConnectionDate)}
             </span>
           </div>
 
           <div className="flex flex-col md:flex-row items-center mb-8 justify-center">
 
-            <div className="rounded-full pr-4">
+            <div className="AvatarProfilediv">
              {/*  
               ////////////////// 
              ////// DECOR 
@@ -312,7 +312,7 @@ const Profile = () => {
                 
               /> */}
               <img
-                className="w-32 h-32 rounded-full mr-0 md:mr-8 mb-4 md:mb-0 AvatarProfile"
+                className="AvatarProfile"
                 src={
                   "https://ui-avatars.com/api/?background=random&name=" +
                   profileData.pseudo

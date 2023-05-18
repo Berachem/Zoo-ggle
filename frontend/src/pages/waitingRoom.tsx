@@ -141,7 +141,7 @@ export default function WaitingRoom() {
               <p>{mode.regles}</p>
             </div>
             <div className="WaitingRoom_CardPlayers">
-              <h3>Joueurs {players.length}/{mode.joueurs}{" "}<FontAwesomeIcon icon={faUser} style={{ color: mode.couleur }} /></h3>
+              <h3>Joueurs ({players.length}/{mode.joueurs}){" "}<FontAwesomeIcon icon={faUser} style={{ color: mode.couleur }} /></h3>
               <div className="WaitingRoom_CardPlayersList">
                 {players.join(", ")}
               </div>
