@@ -31,7 +31,7 @@
         }else{
             $response["success"] = false;
             $response["errorCode"] = 601; // wrong login or password
-            $response["redirect"] = "/connexionInscription?connected=false";
+            $response["redirect"] = "/connexion?connected=false";
         }
     }else{
         $response["success"] = false;

@@ -32,7 +32,7 @@
         $response["redirect"] = "../?registered=true";
     }else{
         $response["success"] = false;
-        $response["redirect"] = "/connexionInscription?registered=false";
+        $response["redirect"] = "/connexion?registered=false";
         $response["error"] = 613; //missing parameter
     }
     header('Content-Type: application/json');

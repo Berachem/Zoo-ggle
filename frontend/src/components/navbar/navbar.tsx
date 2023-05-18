@@ -108,7 +108,7 @@ function ProfileMenu() {
           color="blue-gray"
           className="flex items-center gap-1 rounded-full py-0.5 pr-2 pl-0.5 lg:ml-auto"
         >
-          <a href="/connexionInscription">
+          <a href="/connexion">
             <FontAwesomeIcon icon={faUser} className="h-4 w-4" />
             Connexion
           </a>
