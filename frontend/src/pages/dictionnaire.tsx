@@ -15,6 +15,7 @@ import {
 import { Radio, Select } from "@material-tailwind/react";
 import '../css/dictionnaire.css'
 import React from "react";
+import { filter } from "lodash";
 
 const API_URL_ENG = "https://api.dictionaryapi.dev/api/v2/entries/en";
 const API_URL_FR = "http://localhost/backend/api/getDefinitionOfWord.php?word=";
@@ -36,7 +37,7 @@ function Dictionnaire() {
 
   const yamlStringToFilteredAray = (yamlString: string) => {
     const myarray = yamlString.split("<br>")
-    const filteredArray = myarray.filter((item) => (/- [^\n]/).test(item))
+    const filteredArray = myarray.filter((item) => (/- [^\n]/).test(item)).map(str => str.replace(/^[^A-Z]*/,""))
     return filteredArray;
   };
   
@@ -185,7 +186,7 @@ function Dictionnaire() {
         <Input
           label={"Tapez un mot"}
           type={"text"}
-          placeholder={"try..."}
+          placeholder={"essayez..."}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
 
@@ -295,19 +296,24 @@ function Dictionnaire() {
       {isDefinitionAvailableFR && searchTerm !== "" && language === "fr" && (
         <div className="mt-4">
           <div className="flex flex-col items-center">
+            <div className="text-center">
+                <h1 className="text-2xl font-bold mb-2 p-2 text-white rounded-full" style={{ backgroundColor: "#579A86" }}>
+                      {searchTerm}
+                </h1>
             
-              <h1 className="text-2xl font-bold mb-2 p-2 text-white rounded-full" style={{ backgroundColor: "#579A86" }}>
-                {searchTerm}
-              </h1>
 
-              <div
-                key={definitionDataFR}
-                className="mt-4 shadow-xl rounded-lg p-4"
-                style={{ backgroundColor: "white", color: "black" }}
-              >
-                {yamlStringToFilteredAray(definitionDataFR).map(s =>  <><span key={s} > {s}</span><br/></>)}
+                <div
+                  key={definitionDataFR}
+                  className="mt-4 shadow-xl rounded-lg p-4"
+                  style={{ backgroundColor: "white", color: "black" }}
+                >
+                  <p className="mb-2 text-left">
+                    <ol style={{listStyleType:"decimal",paddingLeft:"20px", maxWidth:"900px"}}>
+                      {yamlStringToFilteredAray(definitionDataFR).map(s => s==""? null : <li style={{marginTop:"10px"}}>{s}</li>)}
+                    </ol>
+                  </p>
+                </div>
               </div>
-            
           </div>
         </div>
       )}
