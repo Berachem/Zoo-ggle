@@ -323,7 +323,7 @@ export default function AppBar(
               }}
             ></Switch>
           </li>
-          <li className="mx-7">
+{/*           <li className="mx-7">
             <a href="#">
               <br />
               <img
@@ -334,7 +334,7 @@ export default function AppBar(
                 style={{ marginTop: 10 }}
               />
             </a>
-          </li>
+          </li> */}
         </ul>
       </div>
     );
