@@ -49,7 +49,7 @@ export const routes = [
     ),
   },
   {
-    path: "/connexionInscription",
+    path: "/connexion",
     icon: HomeIcon,
     element: (
       <>
