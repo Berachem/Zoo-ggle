@@ -93,6 +93,11 @@ class WaitingRoom(object):
         self.info = info
         self.attendee_number = info.get('attendee_number', 2)
         self.description = info.get('description', '')
+        self.grid_size = info.get('grid_size',4)
+        self.duration =  info.get('duration',3)
+        self.image_realistic =  info.get('image_realistic','')
+        self.image_cartoon =  info.get('image_cartoon','')
+        self.color =  info.get('color','')
         self._condition = asyncio.Condition()
         self._queue = [] # queue where the clients wait (we specify the ids of the clients)
         self.manager_task: Optional[Task] = None
@@ -312,7 +317,13 @@ class ChatServer(object):
         def get_waiting_rooms_desc():
             return {k: {
                     'attendee_number': v.attendee_number, 
-                    'description': v.description} for (k, v) in self._waiting_rooms.items() }
+                    'description': v.description,
+                    'grid_size':v.grid_size,
+                    'duration':v.duration,
+                    'image_realistic':v.image_realistic,
+                    'image_cartoon':v.image_cartoon,
+                    'color':v.color,
+                    } for (k, v) in self._waiting_rooms.items() }
         
         try:
             # send the waiting room list

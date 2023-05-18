@@ -81,11 +81,43 @@ class ZoogleChatHooks(ChatHooks):
     DEFAULT_GRID_LENGTH = 4
     DEFAULT_ATTENDEE_NUMBER=2
     DEFAULT_ROOMS = {
-        "default": {"attendee_number": 2, "duration": 60, "welcome_message": "Salut everybody tout le monde !", "lang":"FRA", "mode":0, "grid_length":4},
-        "solo": {"attendee_number": 1, "duration": 5, "welcome_message": "Salut toi !", "lang":"FRA", "mode":1, "grid_length":4},
-        "4": {"attendee_number": 3, "duration": 30, "welcome_message": "!", "lang":"FRA", "mode":2, "grid_length":4}
+        "default": {
+            "mode":0, 
+            "attendee_number": 2, 
+            "duration": 60, 
+            "welcome_message": "Salut everybody tout le monde !", 
+            "lang":"FRA", 
+            "grid_length":4,
+            "color":"#",
+            "image_realist":"",
+            "image_cartoon":"",
+            "rule":"Rentrez des motsd, faites des points"
+            },
+        "solo": {
+            "mode":1, 
+            "attendee_number": 1, 
+            "duration": 5, 
+            "welcome_message": "Salut toi !", 
+            "lang":"FRA", 
+            "grid_length":4,
+            "color":"#",
+            "image_realist":"",
+            "image_cartoon":"",
+            "rule":"Rentrez des motsd, faites des points"
+            },
+        "4": {
+            "mode":2, 
+            "attendee_number": 3, 
+            "duration": 30, 
+            "welcome_message": "!", 
+            "lang":"FRA",
+            "grid_length":4,
+            "color":"#",
+            "image_realist":"",
+            "image_cartoon":"",
+            "rule":"Rentrez des motsd, faites des points"
+            }
         }
-
     EXEC_PATH = "..\..\..\..\Zoo-ggle\\backend\server\game_motor\executables_WIN"
 # \Zoo-ggle\\backend\server\game_motor\executables_WIN
 
@@ -146,11 +178,10 @@ class ZoogleChatHooks(ChatHooks):
         room = self._rooms[waiting_room_name]
 
         grid_length = room.get("grid_length", self.DEFAULT_GRID_LENGTH)
-        # process = subprocess.Popen([self.EXEC_PATH+'\grid_build', self.EXEC_PATH+'\..\..\data\\frequences.txt', str(grid_length), str(grid_length)], stdout=subprocess.PIPE)
-        # output, error = process.communicate()
-        # grid = output.decode()
-        # grid = grid.strip()
-        grid = "B I S O A N E N C E R F A A A A"
+        process = subprocess.Popen([self.EXEC_PATH+'\grid_build', self.EXEC_PATH+'\..\..\data\\frequences.txt', str(grid_length), str(grid_length)], stdout=subprocess.PIPE)
+        output, error = process.communicate()
+        grid = output.decode()
+        grid = grid.strip()
         
         cmd = [self.EXEC_PATH+'\solve.exe',self.EXEC_PATH+'\..\..\data\listeMotWindows.lex','3', str(grid_length), str(grid_length)] + grid.split(" ")
         process = subprocess.Popen(cmd, stdout=subprocess.PIPE)

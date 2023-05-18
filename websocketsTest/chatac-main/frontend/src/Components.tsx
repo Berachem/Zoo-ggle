@@ -6,6 +6,11 @@ export interface WaitingRoom {
     name: string
     attendeeNumber: number
     description: string
+    grid_size:number
+    duration:number
+    image_realist:string
+    image_cartoon:string 
+    color:string
 }
 
 export interface Message {
@@ -19,6 +24,11 @@ export interface Player {
     id: number
 }
 
+export interface Grid {
+    size:number
+    content:string
+}
+
 export const WaitingRoomSelector = (props: { rooms: WaitingRoom[], onChosenRoom: (username: string, waitingRoom: string) => void }) => {
     const [username, setUsername] = React.useState("")
     const [selectedRoom, setSelectedRoom] = React.useState("")
@@ -27,14 +37,14 @@ export const WaitingRoomSelector = (props: { rooms: WaitingRoom[], onChosenRoom:
         <div>
             {props.rooms.map(room => <div key={room.name}>
                 <input type="radio" name="room" value={room.name} checked={selectedRoom === room.name} onChange={() => setSelectedRoom(room.name)} />
-                {room.name}@{room.attendeeNumber} ({room.description})
+                {room.name}:{room.attendeeNumber}player(s), {room.duration}s ({room.description})
             </div>)}
         </div>
         <button onClick={() => props.onChosenRoom(username, selectedRoom)} disabled={username === "" || selectedRoom === "" || props.rooms.findIndex(x => x.name === selectedRoom) === -1}>Join the waiting room</button>
     </div>
 }
 
-export const RoomWaiter = (props: { roomName: string, startTimestamp: number, onLeaving: () => void }) => {
+export const RoomWaiter = (props: { roomName: string, startTimestamp: number, onLeaving: () => void }, playersWaiting:Player[]) => {
     const [currentTimestamp, setCurrentTimestamp] = React.useState(performance.now())
     React.useEffect(() => {
         const handle = setInterval(() => setCurrentTimestamp(performance.now()), 1000)
@@ -43,6 +53,14 @@ export const RoomWaiter = (props: { roomName: string, startTimestamp: number, on
     return <div className="RoomWaiter">
         <div>Waiting in room {props.roomName} for {Math.floor((currentTimestamp - props.startTimestamp) / 1000)} s.</div>
         <div><button onClick={() => props.onLeaving()}>Leave the waiting room</button></div>
+
+        <p> Joueurs dans la room</p>
+                {playersWaiting.map(function (player) {
+                    return (
+                        <p>
+                            {player['pseudo']}
+                        </p>)
+                })}
     </div>
 }
 
@@ -108,11 +126,11 @@ export const ChatManager = (props: { socketUrl: string }) => {
     const [inGameStats, setInGameStats] = React.useState<InGameStats>({ score: 0, validWords: [], falseWords: [], isAnimal:false })
     const [countDown, setCountDown] = React.useState(0);
     const [deadLine, setDeadline] = React.useState(0);
-    const [gridState, setGridState] = React.useState("? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ?")
+    const [gridState, setGridState] = React.useState<Grid>({size:4,content:"? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ?"})
     const [playersWaiting, setPlayersWaiting] = React.useState<Player[]>([])
 
     const resetGameState = () => {
-        setGridState("? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ?")
+        setGridState({size:4,content:"? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ?"})
         setWord("")
         setInGameStats({ score: 0, validWords: [], falseWords: [], isAnimal:false })
         setCountDown(0)
@@ -134,7 +152,7 @@ export const ChatManager = (props: { socketUrl: string }) => {
             let waitingRooms = []
             for (let [name, v] of Object.entries(c['waiting_rooms'])) {
                 let value = v as any
-                let room: WaitingRoom = { name: name, attendeeNumber: value.attendee_number, description: value.description }
+                let room: WaitingRoom = { name: name, attendeeNumber: value.attendee_number, description: value.description, grid_size:value.grid_size, duration:value.duration, image_realist:value.image_realist, image_cartoon:value.image_cartoon, color:value.color }
                 waitingRooms.push(room)
             }
             return waitingRooms
@@ -153,7 +171,6 @@ export const ChatManager = (props: { socketUrl: string }) => {
 
             case 'waiting_room_left':
                 setChatState({ roomSelection: true })
-                resetGameState()
                 break
 
             case 'player_waiting':
@@ -166,12 +183,13 @@ export const ChatManager = (props: { socketUrl: string }) => {
                 break
 
             case 'chat_session_started':
+                resetGameState()
                 setChatState({ startTimestamp: performance.now(), messages: [], active: true })
-                addChatMessage('admin', content.welcome_message)
+                addChatMessage('Partie', content.welcome_message)
                 break
 
             case 'grid_reveal':
-                setGridState(content.grid)
+                setGridState({size:gridState.size,content:content.grid})
                 setDeadline(content.deadline * 1000)
                 setCountDown((deadLine - new Date().getTime()))
                 break
@@ -185,24 +203,21 @@ export const ChatManager = (props: { socketUrl: string }) => {
                 break
 
             case 'attendee_left':
-                addChatMessage('admin', `Attendee ${content.attendee} left the chat session.`)
+                addChatMessage('Partie', `Attendee ${content.attendee} left the chat session.`)
                 break
 
             case 'chat_session_left':
                 setChatState(oldState => ('messages' in oldState) ? { ...oldState, active: false } : oldState)
-                resetGameState()
                 break
 
             case 'chat_session_ended':
                 setChatState(oldState => ('messages' in oldState) ? { ...oldState, active: false } : oldState)
-                addChatMessage('admin', "End of the chat session due to time limit.")
-                addChatMessage('admin', content.exit_message)
-                resetGameState()
+                addChatMessage('Partie', "End of the chat session due to time limit.")
+                addChatMessage('Partie', content.exit_message)
                 break
 
             case 'server_shutdown':
                 setError('Server will shutdown now! Please reconnect later.')
-                resetGameState()
                 break
 
             default:
@@ -235,7 +250,6 @@ export const ChatManager = (props: { socketUrl: string }) => {
     }, [sendToSocket])
     const closeChatSession = React.useCallback(() => {
         setChatState({ roomSelection: true })
-        setGridState("? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ?")
     }, [])
 
 
@@ -314,33 +328,37 @@ export const ChatManager = (props: { socketUrl: string }) => {
     return <div className="ChatManager">
         {error !== '' &&
             <div className="Error">Error: {error} <button onClick={() => setError('')}>OK</button></div>}
+
+            {/* avant connection websocket */}
         {'disconnected' in chatState &&
             <div className="Disconnected">
                 <div>Disconnected</div>
                 <button onClick={() => setChatState({ connecting: true })}>Connect now</button></div>}
+
+
+                {/* Connextion (ca dure 2ms) */}
         {'connecting' in chatState &&
             <div className="Connecting">
                 <div>Connecting to server {props.socketUrl}</div>
             </div>}
+
+            {/* Choosing a room */}
         {'roomSelection' in chatState &&
             <WaitingRoomSelector rooms={waitingRooms} onChosenRoom={connectToWaitingRoom} />}
+     
+     {/* Waiting in a room */}
         {'waitingRoomName' in chatState &&
             <>
                 <RoomWaiter roomName={chatState.waitingRoomName} startTimestamp={chatState.startTimestamp} onLeaving={leaveWaitingRoom} />
-                <p> Joueurs dans la room</p>
-                {playersWaiting.map(function (player) {
-                    return (
-                        <p>
-                            {player['pseudo']}
-                        </p>)
-                })}
             </>}
+
+            {/* In game  */}
         {'messages' in chatState &&
             <>
                 <ChatSession messages={chatState.messages} active={chatState.active} onMessageWritten={sendChatMessage} onLeaving={leaveChatSession} onClosing={closeChatSession} />
 
 
-                <Grid grid={gridState}></Grid>
+                <Grid grid={gridState.content}></Grid>
                 <div className="WordSender">
                     txt : {getReturnValues(countDown)}
                 </div>
