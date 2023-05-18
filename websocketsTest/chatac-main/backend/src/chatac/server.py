@@ -208,7 +208,6 @@ class ChatServer(object):
         logger.info(f"Starting the waiting room manager for room {waiting_room}")
         try:
             while True:
-                print(self._connected_clients)
                 attendee_ids = await waiting_room.wait_for_attendees()
                 attendees = {x: self._connected_clients.get(x) for x in attendee_ids}
                 chat_session = ChatSession(attendees)
@@ -247,9 +246,8 @@ class ChatServer(object):
         try:
             await chat_session.send_message(None, 'chat_session_started', welcome_message=chat_session.welcome_message)
             logger.info(f"Welcome Message shown for chat session {chat_session}")
-            await chat_session.send_message(None, 'grid_reveal', grid=chat_session.grid, time=chat_session.duration)
+            await chat_session.send_message(None, 'grid_reveal', grid=chat_session.grid, time=chat_session.duration, deadline=time.time() + chat_session.duration)
             logger.info(f"Grid revealed for chat session {chat_session}")
-            
             remaining_time = chat_session.deadline - time.monotonic()
             while remaining_time > 0 and (chat_session.clients or chat_session.not_empty_message_queue()):
                 message_coroutine = asyncio.create_task(chat_session.get_next_message())
@@ -294,7 +292,6 @@ class ChatServer(object):
         ws = web.WebSocketResponse()
         await ws.prepare(request)
         client = Client(ws)
-        print("Client"+str(client))
         logger.info(f"A new websocket has been open for {client}")
         self._connected_clients[client.id] = client
 
@@ -309,9 +306,6 @@ class ChatServer(object):
 
             # we manage each message
             async for msg in ws:
-                print("Clients connectés :"+str(self._connected_clients))
-                for (k,v) in self._connected_clients.items():
-                    print(str(k)+":"+str(v))
                 print("Message received by ws")
                 if msg.type == WSMsgType.TEXT:
                     # we only accept text messages that are JSON formatted and contain a type field

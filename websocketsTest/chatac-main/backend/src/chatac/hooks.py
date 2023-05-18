@@ -234,7 +234,6 @@ class ZoogleChatHooks(ChatHooks):
             print(response.text())
             print(response.content)
             response.raise_for_status()
-            print("AAA")
             print(response.json())
         except HTTPError as http_err:
             print(f'HTTP error occurred: {http_err}')
@@ -242,7 +241,6 @@ class ZoogleChatHooks(ChatHooks):
             print(f'Other error occurred: {err}')  
         
         
-        # print(game)
         return f"Did you know that: {joined}"
     
 
