@@ -1,5 +1,5 @@
 import Hider from "../components/Zooggle/Hider"
-import "../css/ConnexionInscription.css"
+import "../css/Connexion.css"
 
 export default function CreationPartie() {
     return(

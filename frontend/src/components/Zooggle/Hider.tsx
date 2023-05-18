@@ -1,4 +1,4 @@
-import "../../css/ConnexionInscription.css"
+import "../../css/Connexion.css"
 
 const textes=[
     {

@@ -1,4 +1,4 @@
-import "../../css/ConnexionInscription.css"
+import "../../css/Connexion.css"
 import { ToastContainer,toast } from "react-toastify"
 import { useLocation } from "react-router-dom"
 import {SHA256} from "crypto-js";
@@ -35,7 +35,7 @@ async function checkAll(event : React.SyntheticEvent){
 
 }
 
-export default function Connexion(){
+export default function ConnexionForm(){
 
     const location = useLocation()
     const params = new URLSearchParams(location.search);

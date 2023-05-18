@@ -4,7 +4,7 @@ import Accueil from "./pages/accueil";
 import Jouer from "./pages/choixPartie";
 import Dictionnaire from "./pages/dictionnaire";
 import Game from "./pages/game";
-import ConnexionInscription from "./pages/connexionInscription";
+import Connexion from "./pages/connexion";
 import BubbleAssistant from "./components/Zooggle/assistantBubble";
 import CreationPartie from "./pages/creationPartie";
 
@@ -54,7 +54,7 @@ export const routes = [
     element: (
       <>
         <BubbleAssistant />
-        <ConnexionInscription />{" "}
+        <Connexion/>{" "}
       </>
     ),
   },

@@ -1,14 +1,14 @@
 import Inscription from "../components/Zooggle/Inscription"
-import Connexion from "../components/Zooggle/Connexion"
+import ConnexionForm from "../components/Zooggle/ConnexionForm"
 import Hider from "../components/Zooggle/Hider"
-import "../css/ConnexionInscription.css"
+import "../css/Connexion.css"
 
-export default function ConnexionInscription() {
+export default function Connexion() {
     return(
         <div style={{overflowY:"hidden"}}>
             <div  className="connecContainer">
                 <Inscription/>
-                <Connexion/>
+                <ConnexionForm/>
                 <Hider/>
             </div>
         </div>
