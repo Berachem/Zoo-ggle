@@ -120,6 +120,20 @@ class WaitingRoom(object):
             self._queue = self._queue[self.attendee_number:]
             return attendee_ids
 
+    async def send_message(self, addressees, kind, **kwargs):
+        """
+        Send a JSON message to all the clients in the waiting room
+        """
+        allClients = []
+        {x: self._connected_clients.get(x) for x in self._queue}
+        for clientId in self._queue:
+            allClients.append
+        clients = self.clients.values() if addressees is None else addressees
+        # create the sending coroutines for all the clients
+        sending_coroutines = [client.send_message(kind, **kwargs) for client in clients if client is not None]
+        # gather the coroutines in one task
+        await asyncio.gather(*sending_coroutines)
+
 class ChatSession(object):
     _COUNTER = 0  # for a unique id for each chat session
     def __init__(self, clients):
@@ -348,6 +362,9 @@ class ChatServer(object):
                                     client.waiting_room = waiting_room
                                     await client.send_message('in_waiting_room')
 
+                                    print("Join")
+                                    await self.sendPlayerWaitingInRoom(waiting_room)  
+
                         elif msg_kind == 'leave_waiting_room':
                             if client.state == 'waiting':
                                 wr = client.waiting_room
@@ -355,6 +372,8 @@ class ChatServer(object):
                                 client.state = 'connected'
                                 await client.send_message('waiting_room_left', 
                                     waiting_room_name = wr.name)
+                                print("Leave")
+                                await self.sendPlayerWaitingInRoom(waiting_room)  
                             else:
                                 await client.send_message('state_invalid', state=client.state)
                         
@@ -385,7 +404,7 @@ class ChatServer(object):
                                 else:
                                     to_send = await self.hooks.on_word_proposed(client.chat_session.id, client.id, word, False)
                                 
-                                await client.send_message('current_ingame_stats', validWords=to_send['validWords'], falseWords=to_send['falseWords'], score=to_send['score'])
+                                await client.send_message('current_ingame_stats', validWords=to_send['validWords'], falseWords=to_send['falseWords'], score=to_send['score'], isAnimal=to_send['isAnimal'])
                                 
                                 
 
@@ -417,6 +436,20 @@ class ChatServer(object):
             self._connected_clients.pop(client.id)
             logger.info(f"The client {client} has leaved")
     
+    async def sendPlayerWaitingInRoom(self,waitingRoom):
+        currentClientsWaiting = []
+        currentClientsWaitingIdentity = []
+        for clientsId in waitingRoom._queue:
+            client = self._connected_clients[clientsId]
+            currentClientsWaiting.append(client)
+            clientIdentity = client.identity
+            currentClientsWaitingIdentity.append({"pseudo":clientIdentity["name"],"id":clientIdentity["DatabaseId"]})
+        print("Clients dans la waiting room"+str(currentClientsWaiting))
+        print("Identité des client"+str(currentClientsWaitingIdentity))
+        for client in currentClientsWaiting:
+            print("Envoi à"+str(client))
+            await client.send_message('player_waiting', players=currentClientsWaitingIdentity)
+
     async def _background_tasks(self, app):
         # inspired from https://docs.aiohttp.org/en/stable/web_advanced.html#background-tasks
         

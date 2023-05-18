@@ -14,6 +14,11 @@ export interface Message {
     content: string
 }
 
+export interface Player {
+    pseudo: string
+    id: number
+}
+
 export const WaitingRoomSelector = (props: { rooms: WaitingRoom[], onChosenRoom: (username: string, waitingRoom: string) => void }) => {
     const [username, setUsername] = React.useState("")
     const [selectedRoom, setSelectedRoom] = React.useState("")
@@ -91,7 +96,7 @@ interface RoomSelectionState { roomSelection: true }
 interface WaitingState { startTimestamp: number, waitingRoomName: string }
 interface ChattingState { startTimestamp: number, messages: Message[], active: boolean }
 type ChatState = DisconnectedState | ConnectingState | RoomSelectionState | WaitingState | ChattingState
-interface InGameStats { score: number, validWords: String[], falseWords: String[] }
+interface InGameStats { score: number, validWords: String[], falseWords: String[], isAnimal:boolean }
 
 export const ChatManager = (props: { socketUrl: string }) => {
     const [chatState, setChatState] = React.useState<ChatState>({ disconnected: true })
@@ -100,10 +105,20 @@ export const ChatManager = (props: { socketUrl: string }) => {
     const [error, setError] = React.useState<string>('')
     const [waitingRooms, setWaitingRooms] = React.useState<WaitingRoom[]>([])
     const [word, setWord] = React.useState("")
-    const [inGameStats, setInGameStats] = React.useState<InGameStats>({ score: 0, validWords: [], falseWords: [] })
+    const [inGameStats, setInGameStats] = React.useState<InGameStats>({ score: 0, validWords: [], falseWords: [], isAnimal:false })
     const [countDown, setCountDown] = React.useState(0);
     const [deadLine, setDeadline] = React.useState(0);
     const [gridState, setGridState] = React.useState("? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ?")
+    const [playersWaiting, setPlayersWaiting] = React.useState<Player[]>([])
+
+    const resetGameState = () => {
+        setGridState("? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ?")
+        setWord("")
+        setInGameStats({ score: 0, validWords: [], falseWords: [], isAnimal:false })
+        setCountDown(0)
+        setDeadline(0)
+        setPlayersWaiting([])
+    }
 
     const onNewSocketMessage = (kind: string, content: Record<string, any>) => {
         console.debug("Received message from websocket", content)
@@ -136,9 +151,14 @@ export const ChatManager = (props: { socketUrl: string }) => {
                 setChatState({ waitingRoomName: name, startTimestamp: performance.now() })
                 break
 
-
             case 'waiting_room_left':
                 setChatState({ roomSelection: true })
+                resetGameState()
+                break
+
+            case 'player_waiting':
+                let pseudos: Player[] = content.players
+                setPlayersWaiting(pseudos)
                 break
 
             case 'waiting_room_join_refused':
@@ -152,12 +172,12 @@ export const ChatManager = (props: { socketUrl: string }) => {
 
             case 'grid_reveal':
                 setGridState(content.grid)
-                setDeadline(content.deadline*1000)
-                setCountDown((deadLine-new Date().getTime()))
+                setDeadline(content.deadline * 1000)
+                setCountDown((deadLine - new Date().getTime()))
                 break
 
             case 'current_ingame_stats':
-                setInGameStats({ score: content.score, validWords: content.validWords, falseWords: content.falseWords })
+                setInGameStats({ score: content.score, validWords: content.validWords, falseWords: content.falseWords, isAnimal:content.isAnimal })
                 break
 
             case 'chat_message_received':
@@ -170,16 +190,19 @@ export const ChatManager = (props: { socketUrl: string }) => {
 
             case 'chat_session_left':
                 setChatState(oldState => ('messages' in oldState) ? { ...oldState, active: false } : oldState)
+                resetGameState()
                 break
 
             case 'chat_session_ended':
                 setChatState(oldState => ('messages' in oldState) ? { ...oldState, active: false } : oldState)
                 addChatMessage('admin', "End of the chat session due to time limit.")
                 addChatMessage('admin', content.exit_message)
+                resetGameState()
                 break
 
             case 'server_shutdown':
                 setError('Server will shutdown now! Please reconnect later.')
+                resetGameState()
                 break
 
             default:
@@ -270,7 +293,7 @@ export const ChatManager = (props: { socketUrl: string }) => {
     useEffect(() => {
         var now = new Date().getTime()
         const interval = setInterval(() => {
-            setCountDown((deadLine-(now)))
+            setCountDown((deadLine - (now)))
         }, 1000);
         return () => clearInterval(interval);
     }, [countDown]);
@@ -302,7 +325,16 @@ export const ChatManager = (props: { socketUrl: string }) => {
         {'roomSelection' in chatState &&
             <WaitingRoomSelector rooms={waitingRooms} onChosenRoom={connectToWaitingRoom} />}
         {'waitingRoomName' in chatState &&
-            <RoomWaiter roomName={chatState.waitingRoomName} startTimestamp={chatState.startTimestamp} onLeaving={leaveWaitingRoom} />}
+            <>
+                <RoomWaiter roomName={chatState.waitingRoomName} startTimestamp={chatState.startTimestamp} onLeaving={leaveWaitingRoom} />
+                <p> Joueurs dans la room</p>
+                {playersWaiting.map(function (player) {
+                    return (
+                        <p>
+                            {player['pseudo']}
+                        </p>)
+                })}
+            </>}
         {'messages' in chatState &&
             <>
                 <ChatSession messages={chatState.messages} active={chatState.active} onMessageWritten={sendChatMessage} onLeaving={leaveChatSession} onClosing={closeChatSession} />
@@ -319,6 +351,9 @@ export const ChatManager = (props: { socketUrl: string }) => {
                     <button onClick={() => { proposeWord(word); setWord('') }}>Send</button>
                 </div>
                 <div>
+                    <p>
+                        {inGameStats.isAnimal?"Le dernier mot proposé est un animal":"Le dernier mots proposé n'est pas un animal"}
+                    </p>
                     <h1>
                         Score :
                     </h1>

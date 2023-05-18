@@ -146,10 +146,11 @@ class ZoogleChatHooks(ChatHooks):
         room = self._rooms[waiting_room_name]
 
         grid_length = room.get("grid_length", self.DEFAULT_GRID_LENGTH)
-        process = subprocess.Popen([self.EXEC_PATH+'\grid_build', self.EXEC_PATH+'\..\..\data\\frequences.txt', str(grid_length), str(grid_length)], stdout=subprocess.PIPE)
-        output, error = process.communicate()
-        grid = output.decode()
-        grid = grid.strip()
+        # process = subprocess.Popen([self.EXEC_PATH+'\grid_build', self.EXEC_PATH+'\..\..\data\\frequences.txt', str(grid_length), str(grid_length)], stdout=subprocess.PIPE)
+        # output, error = process.communicate()
+        # grid = output.decode()
+        # grid = grid.strip()
+        grid = "B I S O A N E N C E R F A A A A"
         
         cmd = [self.EXEC_PATH+'\solve.exe',self.EXEC_PATH+'\..\..\data\listeMotWindows.lex','3', str(grid_length), str(grid_length)] + grid.split(" ")
         process = subprocess.Popen(cmd, stdout=subprocess.PIPE)
@@ -189,6 +190,7 @@ class ZoogleChatHooks(ChatHooks):
         attendee = self._attendees[chat_session_id][attendee_id]
 
         date = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        isAnimal = False
         if (isValidWord):
             try:
                 url = 'http://localhost/backend/api/game/getScoreforAWord.php'
@@ -199,6 +201,7 @@ class ZoogleChatHooks(ChatHooks):
                 print("Entire JSON response")
                 print(jsonResponse)
                 score = jsonResponse.get("score")
+                isAnimal = jsonResponse.get("isAnimal")
                 attendee.score+=score
                 attendee.validWords.append([word,date])
             except HTTPError as http_err:
@@ -207,7 +210,7 @@ class ZoogleChatHooks(ChatHooks):
                 print(f'Other error occurred: {err}')   
         else:
             attendee.falseWords.append([word,date])
-        result = {"score":attendee.score, "validWords":attendee.validWords, "falseWords":attendee.falseWords}
+        result = {"score":attendee.score, "validWords":attendee.validWords, "falseWords":attendee.falseWords, "isAnimal":isAnimal}
         return result
 
     async def on_attendee_leave(self, chat_session_id: int, attendee_id: int):

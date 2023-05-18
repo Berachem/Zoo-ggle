@@ -889,11 +889,14 @@ function getScoreForAWord($word){
     $result = trim($result);
     $result = intval($result);
 
+    $isAnimal = false;
+
     // add 5 points if the word is a animal
     if (isAnimalName($word)) {
         $result += 5;
+        $isAnimal = true;
     }
-    return $result;   
+    return [$result,$isAnimal];   
 }
 
 /**
