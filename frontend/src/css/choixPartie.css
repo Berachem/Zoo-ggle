@@ -99,7 +99,7 @@ h3 {
 }
 
 .Card:hover > .CardFooter> .CardButton {
-    background-color: #053606 !important;
+    filter: brightness(0.8);
     transform: translateY(-7px);
 }
 
