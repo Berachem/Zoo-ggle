@@ -7,8 +7,10 @@ if (!isset($_POST["word"])) {
     exit();
 }else{
     $word = $_POST["word"];
-    $score = getScoreForAWord($word);
-    echo json_encode(array("success" => true, "score" => $score));
+    $result = getScoreForAWord($word);
+    $score = $result[0];
+    $isAnimal = $result[1];
+    echo json_encode(array("success" => true, "score" => $score, "isAnimal"=>$isAnimal));
 }
 
 
