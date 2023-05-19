@@ -87,13 +87,12 @@ export const MessageSender = (props: { onMessageWritten: (content: string) => vo
     </div>
 }
 
-export const ChatSession = (props: { messages: Message[], active: boolean, onMessageWritten: (content: string) => void, onLeaving: () => void, onClosing: () => void }) => {
+export const ChatSession = (props: { messages: Message[], active: boolean, onMessageWritten: (content: string) => void, onLeaving: () => void}) => {
     return <div className="ChatSession">
         <ChatMessagesDisplayer messages={props.messages} />
         {props.active && <MessageSender onMessageWritten={props.onMessageWritten} />}
         <div>
             <button onClick={() => props.onLeaving()} disabled={!props.active}>Leave the chat session</button>
-            <button onClick={() => props.onClosing()} disabled={props.active}>Close</button>
         </div>
     </div>
 }
@@ -214,6 +213,7 @@ export const ChatManager = (props: { socketUrl: string }) => {
                 setChatState(oldState => ('messages' in oldState) ? { ...oldState, active: false } : oldState)
                 addChatMessage('Partie', "End of the chat session due to time limit.")
                 addChatMessage('Partie', content.exit_message)
+                setChatState({ roomSelection: true })
                 break
 
             case 'server_shutdown':
@@ -241,16 +241,13 @@ export const ChatManager = (props: { socketUrl: string }) => {
     const sendChatMessage = React.useCallback((content: string) => {
         sendToSocket('send_chat_message', { content: content })
     }, [sendToSocket])
-
     const proposeWord = React.useCallback((wordProposed: string) => {
         sendToSocket('word_proposed', { content: wordProposed })
     }, [sendToSocket])
     const leaveChatSession = React.useCallback(() => {
         sendToSocket('leave_chat_session', {})
-    }, [sendToSocket])
-    const closeChatSession = React.useCallback(() => {
         setChatState({ roomSelection: true })
-    }, [])
+    }, [sendToSocket])
 
 
     useEffect(() => {
@@ -355,7 +352,7 @@ export const ChatManager = (props: { socketUrl: string }) => {
             {/* In game  */}
         {'messages' in chatState &&
             <>
-                <ChatSession messages={chatState.messages} active={chatState.active} onMessageWritten={sendChatMessage} onLeaving={leaveChatSession} onClosing={closeChatSession} />
+                <ChatSession messages={chatState.messages} active={chatState.active} onMessageWritten={sendChatMessage} onLeaving={leaveChatSession}/>
 
 
                 <Grid grid={gridState.content}></Grid>
