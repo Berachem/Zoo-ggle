@@ -3,6 +3,7 @@ import { Input, Button, Typography } from "@material-tailwind/react";
 import Logo from "../assets/images/Title.svg";
 import ZooggleCard from "../components/Zooggle/ZooggleCard"
 import GameGrid from "../components/Zooggle/GameGrid";
+import TestGrid from "../components/game/testGrid";
 import Chat from "../components/game/chat";
 import Words from "../components/game/words";
 import GameColumn from "../components/game/gameColumn";
@@ -162,8 +163,8 @@ export default function Game() {
                                 alignItems: "center"
                             }}>
                                 <Typography variant="h4"> Partie de Berachem </Typography>
-                                {(inGame || inHistory) && (<GameGrid width="big" grid="A A A A A A A A A A A A A A A A" />)}
-                                {inWaitingRoom && (<GameGrid width="big" grid="? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ?" />)}
+                                {(inGame || inHistory) && (<TestGrid height="80%" width="100%" size={4} content="A QU C A H C A T A U S A QU A W E" />)}
+                                {inWaitingRoom && (<TestGrid height="80%" width="100%" size={5} content="? ? ? ? ? ? QU ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ?" />)}
                                 <Typography variant="h4"> 3:20 </Typography>
                             </div>
                         </ZooggleCard>

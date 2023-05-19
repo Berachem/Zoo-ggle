@@ -1,0 +1,50 @@
+.testGrid{
+    display: grid;
+    width: 100%;
+    height:100%;
+    aspect-ratio:1;
+    gap:20px
+}
+
+/*hover animation with shadow  */
+.testLetterCase:hover{
+    box-shadow: 0 0 0 0.2rem rgb(255, 255, 255);
+    transition: box-shadow 0.2s;
+}
+
+.testLetterCase.selected:hover{
+    box-shadow: 0 0 0 0.2rem orange;
+    transition: box-shadow 0.2s;
+}
+
+.testLetterCase{
+    width:100%;
+    height:100%;
+
+    display:flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+
+    border-radius:20px;
+    color:white;
+    border:3px white solid;
+}
+
+.selected{
+    color:orange;
+    border:2px solid orange;
+}
+
+@media(max-width:900px ){
+    .testGrid{
+        gap:8px
+    }
+
+    .testLetterCase{
+        font-size:1.3rem !important;
+        border-radius:10px;
+        border-width:2px;
+    }
+}    
