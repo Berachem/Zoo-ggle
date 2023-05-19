@@ -1,4 +1,4 @@
-import { HomeIcon, BookOpenIcon, PlayIcon } from "@heroicons/react/24/outline";
+import { HomeIcon, BookOpenIcon, PlayIcon, ComputerDesktopIcon } from "@heroicons/react/24/outline";
 
 import Accueil from "./pages/accueil";
 import Jouer from "./pages/choixPartie";
@@ -8,6 +8,7 @@ import Connexion from "./pages/connexion";
 import BubbleAssistant from "./components/Zooggle/assistantBubble";
 import CreationPartie from "./pages/creationPartie";
 import WaitingRoom from "./pages/waitingRoom";
+import WebsocketPage from "./pages/websocketsTEST";
 
 export const routes = [
   {
@@ -80,6 +81,12 @@ export const routes = [
         <WaitingRoom />{" "}
       </>
     ),
+  },
+  {
+    label: "Websocket",
+    path: "/websocket",
+    icon: ComputerDesktopIcon,
+    element: <WebsocketPage />,
   }
 ];
 
