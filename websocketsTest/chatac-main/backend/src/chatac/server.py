@@ -410,15 +410,10 @@ class ChatServer(object):
                                 wordIsValid = word in client.chat_session.solutions
                                 if (client.chat_session.mode == 1):
                                     result = await self.hooks.on_word_proposed(client.chat_session.id, client.id, word, wordIsValid, 1)
-                                    print("result arrivé")
                                     if (result['already_found']):
-                                        print("deja trouve")
                                         await client.send_message('already_found', word=result['word'], player=result['player'])
                                     elif(wordIsValid):
-                                        print("envoie a tt le monde")
-                                        # chat_session.send_message(None, 'chat_session_started', welcome_message=chat_session.welcome_message)
                                         await client.chat_session.send_message(None,'current_ingame_stats', mode=1,stats=result['stats'])
-                                        print("fait")
                                     
                                 elif (client.chat_session.mode == 0):
                                     result = await self.hooks.on_word_proposed(client.chat_session.id, client.id, word, wordIsValid, 0)
