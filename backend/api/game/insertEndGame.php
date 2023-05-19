@@ -4,7 +4,6 @@ require_once '../Connexion.php';
 require_once '../functions.php';
 
 if (isset($_POST["infoPartie"]) && isset($_POST["infoJoueurs"])){
-    // echo json_encode(array("success" => true, "test" => "ISSET TRUE"));
     $infoPartie = $_POST["infoPartie"];
     $infoJoueurs = $_POST["infoJoueurs"];
     // echo $infoPartie;
@@ -25,7 +24,6 @@ if (isset($_POST["infoPartie"]) && isset($_POST["infoJoueurs"])){
 
     $gameId = insertGame($name, $lang, $grid, $beginDate, $endDate, $gridSize, $possibleNumberWord, $mode, $playerNumber);
     $gameId = intval($gameId);
-    var_dump($gameId);
 
     foreach($infoJoueurs as $joueur){
         insertPlayerPlayedAGame($gameId, $joueur["id"], $joueur["score"]);

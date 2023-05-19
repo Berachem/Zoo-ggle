@@ -44,7 +44,7 @@ export const WaitingRoomSelector = (props: { rooms: WaitingRoom[], onChosenRoom:
     </div>
 }
 
-export const RoomWaiter = (props: { roomName: string, startTimestamp: number, onLeaving: () => void }, playersWaiting:Player[]) => {
+export const RoomWaiter = (props: { roomName: string, startTimestamp: number, onLeaving: () => void , playersWaiting:Player[]}) => {
     const [currentTimestamp, setCurrentTimestamp] = React.useState(performance.now())
     React.useEffect(() => {
         const handle = setInterval(() => setCurrentTimestamp(performance.now()), 1000)
@@ -55,7 +55,7 @@ export const RoomWaiter = (props: { roomName: string, startTimestamp: number, on
         <div><button onClick={() => props.onLeaving()}>Leave the waiting room</button></div>
 
         <p> Joueurs dans la room</p>
-                {playersWaiting.map(function (player) {
+                {props.playersWaiting.map(function (player) {
                     return (
                         <p>
                             {player['pseudo']}
@@ -349,7 +349,7 @@ export const ChatManager = (props: { socketUrl: string }) => {
      {/* Waiting in a room */}
         {'waitingRoomName' in chatState &&
             <>
-                <RoomWaiter roomName={chatState.waitingRoomName} startTimestamp={chatState.startTimestamp} onLeaving={leaveWaitingRoom} />
+                <RoomWaiter roomName={chatState.waitingRoomName} startTimestamp={chatState.startTimestamp} onLeaving={leaveWaitingRoom} playersWaiting={playersWaiting} />
             </>}
 
             {/* In game  */}
