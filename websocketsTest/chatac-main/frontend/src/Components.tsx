@@ -6,11 +6,11 @@ export interface WaitingRoom {
     name: string
     attendeeNumber: number
     description: string
-    grid_size:number
-    duration:number
-    image_realist:string
-    image_cartoon:string 
-    color:string
+    grid_size: number
+    duration: number
+    image_realist: string
+    image_cartoon: string
+    color: string
 }
 
 export interface Message {
@@ -25,8 +25,8 @@ export interface Player {
 }
 
 export interface Grid {
-    size:number
-    content:string
+    size: number
+    content: string
 }
 
 export const WaitingRoomSelector = (props: { rooms: WaitingRoom[], onChosenRoom: (username: string, waitingRoom: string) => void }) => {
@@ -44,7 +44,7 @@ export const WaitingRoomSelector = (props: { rooms: WaitingRoom[], onChosenRoom:
     </div>
 }
 
-export const RoomWaiter = (props: { roomName: string, startTimestamp: number, onLeaving: () => void , playersWaiting:Player[]}) => {
+export const RoomWaiter = (props: { roomName: string, startTimestamp: number, onLeaving: () => void, playersWaiting: Player[] }) => {
     const [currentTimestamp, setCurrentTimestamp] = React.useState(performance.now())
     React.useEffect(() => {
         const handle = setInterval(() => setCurrentTimestamp(performance.now()), 1000)
@@ -55,12 +55,12 @@ export const RoomWaiter = (props: { roomName: string, startTimestamp: number, on
         <div><button onClick={() => props.onLeaving()}>Leave the waiting room</button></div>
 
         <p> Joueurs dans la room</p>
-                {props.playersWaiting.map(function (player) {
-                    return (
-                        <p>
-                            {player['pseudo']}
-                        </p>)
-                })}
+        {props.playersWaiting.map(function (player) {
+            return (
+                <p>
+                    {player['pseudo']}
+                </p>)
+        })}
     </div>
 }
 
@@ -87,7 +87,7 @@ export const MessageSender = (props: { onMessageWritten: (content: string) => vo
     </div>
 }
 
-export const ChatSession = (props: { messages: Message[], active: boolean, onMessageWritten: (content: string) => void, onLeaving: () => void}) => {
+export const ChatSession = (props: { messages: Message[], active: boolean, onMessageWritten: (content: string) => void, onLeaving: () => void }) => {
     return <div className="ChatSession">
         <ChatMessagesDisplayer messages={props.messages} />
         {props.active && <MessageSender onMessageWritten={props.onMessageWritten} />}
@@ -113,7 +113,18 @@ interface RoomSelectionState { roomSelection: true }
 interface WaitingState { startTimestamp: number, waitingRoomName: string }
 interface ChattingState { startTimestamp: number, messages: Message[], active: boolean }
 type ChatState = DisconnectedState | ConnectingState | RoomSelectionState | WaitingState | ChattingState
-interface InGameStats { score: number, validWords: String[], falseWords: String[], isAnimal:boolean }
+
+
+interface Mode0Stats { score: number, validWords: String[], falseWords: String[], isAnimal: boolean }
+
+interface Mode1Stats {
+    stats: Mode1StatsForAPlayer[]
+}
+
+
+interface Mode1StatsForAPlayer { pseudo: string, score: number, validWords: String[] }
+
+type InGameStats = Mode0Stats | Mode1Stats
 
 export const ChatManager = (props: { socketUrl: string }) => {
     const [chatState, setChatState] = React.useState<ChatState>({ disconnected: true })
@@ -122,16 +133,16 @@ export const ChatManager = (props: { socketUrl: string }) => {
     const [error, setError] = React.useState<string>('')
     const [waitingRooms, setWaitingRooms] = React.useState<WaitingRoom[]>([])
     const [word, setWord] = React.useState("")
-    const [inGameStats, setInGameStats] = React.useState<InGameStats>({ score: 0, validWords: [], falseWords: [], isAnimal:false })
+    const [inGameStats, setInGameStats] = React.useState<InGameStats>({ score: 0, validWords: [], falseWords: [], isAnimal: false })
     const [countDown, setCountDown] = React.useState(0);
     const [deadLine, setDeadline] = React.useState(0);
-    const [gridState, setGridState] = React.useState<Grid>({size:4,content:"? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ?"})
+    const [gridState, setGridState] = React.useState<Grid>({ size: 4, content: "? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ?" })
     const [playersWaiting, setPlayersWaiting] = React.useState<Player[]>([])
 
     const resetGameState = () => {
-        setGridState({size:4,content:"? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ?"})
+        setGridState({ size: 4, content: "? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ?" })
         setWord("")
-        setInGameStats({ score: 0, validWords: [], falseWords: [], isAnimal:false })
+        setInGameStats({ score: 0, validWords: [], falseWords: [], isAnimal: false })
         setCountDown(0)
         setDeadline(0)
         setPlayersWaiting([])
@@ -151,7 +162,7 @@ export const ChatManager = (props: { socketUrl: string }) => {
             let waitingRooms = []
             for (let [name, v] of Object.entries(c['waiting_rooms'])) {
                 let value = v as any
-                let room: WaitingRoom = { name: name, attendeeNumber: value.attendee_number, description: value.description, grid_size:value.grid_size, duration:value.duration, image_realist:value.image_realist, image_cartoon:value.image_cartoon, color:value.color }
+                let room: WaitingRoom = { name: name, attendeeNumber: value.attendee_number, description: value.description, grid_size: value.grid_size, duration: value.duration, image_realist: value.image_realist, image_cartoon: value.image_cartoon, color: value.color }
                 waitingRooms.push(room)
             }
             return waitingRooms
@@ -178,7 +189,7 @@ export const ChatManager = (props: { socketUrl: string }) => {
                 break
 
             case 'waiting_room_join_refused':
-                setError(`Cannot join the room: ${content.reason}`)
+                setError(`Impossible de rejoindre la partie: ${content.reason}`)
                 break
 
             case 'chat_session_started':
@@ -188,13 +199,19 @@ export const ChatManager = (props: { socketUrl: string }) => {
                 break
 
             case 'grid_reveal':
-                setGridState({size:gridState.size,content:content.grid})
+                setGridState({ size: gridState.size, content: content.grid })
                 setDeadline(content.deadline * 1000)
                 setCountDown((deadLine - new Date().getTime()))
                 break
 
             case 'current_ingame_stats':
-                setInGameStats({ score: content.score, validWords: content.validWords, falseWords: content.falseWords, isAnimal:content.isAnimal })
+                if (content.mode == 0) {
+                    setInGameStats({ score: content.score, validWords: content.validWords, falseWords: content.falseWords, isAnimal: content.isAnimal })
+                } else if (content.mode == 1) {
+                    console.log("reçu")
+                    console.log(content.stats)
+                    setInGameStats({ stats: content.stats })
+                }
                 break
 
             case 'chat_message_received':
@@ -202,7 +219,7 @@ export const ChatManager = (props: { socketUrl: string }) => {
                 break
 
             case 'attendee_left':
-                addChatMessage('Partie', `Attendee ${content.attendee} left the chat session.`)
+                addChatMessage('Partie', `${content.attendee} a quitté la partie.`)
                 break
 
             case 'chat_session_left':
@@ -211,13 +228,17 @@ export const ChatManager = (props: { socketUrl: string }) => {
 
             case 'chat_session_ended':
                 setChatState(oldState => ('messages' in oldState) ? { ...oldState, active: false } : oldState)
-                addChatMessage('Partie', "End of the chat session due to time limit.")
+                addChatMessage('Partie', "Fin de la partie, bien joué à tous !")
                 addChatMessage('Partie', content.exit_message)
                 setChatState({ roomSelection: true })
                 break
 
             case 'server_shutdown':
-                setError('Server will shutdown now! Please reconnect later.')
+                setError('Le serveur va se fermer. Essayer de vous reconnecter d\'ici peu.')
+                break
+
+            case 'already_found':
+                setError('Dommage le mot' + content.word + 'a déja été trouvé par ' + content.player)
                 break
 
             default:
@@ -255,7 +276,7 @@ export const ChatManager = (props: { socketUrl: string }) => {
             setConnected(true)
         } else if ('disconnected' in chatState) {
             setChatState({ connecting: true })
-            setConnected(false)
+            // setConnected(false)
         }
     }, [chatState])
 
@@ -285,8 +306,8 @@ export const ChatManager = (props: { socketUrl: string }) => {
             })
             newSocket.addEventListener('error', (event) => {
                 console.error("WebSocket error", event)
-                setChatState({ disconnected: true })
                 setError(`Websocket connection error: ${event}`)
+                setChatState({ disconnected: true })
             })
             newSocket.addEventListener('close', (event) => {
                 console.error("WebSocket closed", event)
@@ -326,34 +347,28 @@ export const ChatManager = (props: { socketUrl: string }) => {
         {error !== '' &&
             <div className="Error">Error: {error} <button onClick={() => setError('')}>OK</button></div>}
 
-            {/* avant connection websocket */}
-        {/* {'disconnected' in chatState &&
-            <div className="Disconnected">
-                <div>Disconnected</div>
-                <button onClick={() => setChatState({ connecting: true })}>Connect now</button></div>} */}
 
-
-                {/* Connextion (ca dure 2ms) */}
+        {/* Connextion (ca dure 2ms) */}
         {'connecting' in chatState &&
             <div className="Connecting">
-                <div>Connecting to server {props.socketUrl}</div>
+                <div>Connexion au serveur de jeu {props.socketUrl}</div>
+                <div>Si la connexion prend trop de temps, essayez de rafraichir la page</div>
             </div>}
 
-            {/* Choosing a room */}
+        {/* Choosing a room */}
         {'roomSelection' in chatState &&
             <WaitingRoomSelector rooms={waitingRooms} onChosenRoom={connectToWaitingRoom} />}
-     
-     {/* Waiting in a room */}
+
+        {/* Waiting in a room */}
         {'waitingRoomName' in chatState &&
             <>
                 <RoomWaiter roomName={chatState.waitingRoomName} startTimestamp={chatState.startTimestamp} onLeaving={leaveWaitingRoom} playersWaiting={playersWaiting} />
             </>}
 
-            {/* In game  */}
+        {/* In game  */}
         {'messages' in chatState &&
             <>
-                <ChatSession messages={chatState.messages} active={chatState.active} onMessageWritten={sendChatMessage} onLeaving={leaveChatSession}/>
-
+                <ChatSession messages={chatState.messages} active={chatState.active} onMessageWritten={sendChatMessage} onLeaving={leaveChatSession} />
 
                 <Grid grid={gridState.content}></Grid>
                 <div className="WordSender">
@@ -366,33 +381,58 @@ export const ChatManager = (props: { socketUrl: string }) => {
                     <button onClick={() => { proposeWord(word); setWord('') }}>Send</button>
                 </div>
                 <div>
-                    <p>
-                        {inGameStats.isAnimal?"Le dernier mot proposé est un animal":"Le dernier mots proposé n'est pas un animal"}
-                    </p>
-                    <h1>
-                        Score :
-                    </h1>
-                    <p>
-                        {inGameStats.score}
-                    </p>
-                    <h1>
-                        Valides :
-                    </h1>
-                    {inGameStats.validWords.map(function (list) {
-                        return (
+                    {"score" in inGameStats &&
+                        <>
                             <p>
-                                {list[0]}
-                            </p>)
-                    })}
-                    <h1>
-                        Faux :
-                    </h1>
-                    {inGameStats.falseWords.map(function (list) {
-                        return (
+                                {inGameStats.isAnimal ? "Le dernier mot proposé est un animal" : "Le dernier mots proposé n'est pas un animal"}
+                            </p>
+                            <h1>
+                                Score :
+                            </h1>
                             <p>
-                                {list[0]}
-                            </p>)
-                    })}
+                                {inGameStats.score}
+                            </p>
+                            <h1>
+                                Valides :
+                            </h1>
+                            {inGameStats.validWords.map(function (list) {
+                                return (
+                                    <p>
+                                        {list[0]}
+                                    </p>)
+                            })}
+                            <h1>
+                                Faux :
+                            </h1>
+                            {inGameStats.falseWords.map(function (list) {
+                                return (
+                                    <p>
+                                        {list[0]}
+                                    </p>)
+                            })}
+                        </>
+                    }
+
+                    {"stats" in inGameStats &&
+                        <>
+                            {inGameStats.stats.map(function (playerStat) {
+                                return (
+                                    <>
+                                        <h1> {playerStat.pseudo}  ({playerStat.score} point(s))</h1>
+                                        {
+                                            playerStat.validWords.map(function (word) {
+                                                return (
+                                                    <p>{word[0]}</p>
+                                                )
+                                            })
+                                        }
+                                    </>
+                                )
+                            })}
+                        </>
+                    }
+
+
                 </div>
             </>
 

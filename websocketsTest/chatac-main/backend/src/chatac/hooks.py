@@ -94,7 +94,7 @@ class ZoogleChatHooks(ChatHooks):
             "rule":"Rentrez des motsd, faites des points"
             },
         "solo": {
-            "mode":1, 
+            "mode":0, 
             "attendee_number": 1, 
             "duration": 5, 
             "welcome_message": "Salut toi !", 
@@ -106,9 +106,21 @@ class ZoogleChatHooks(ChatHooks):
             "rule":"Rentrez des motsd, faites des points"
             },
         "4": {
-            "mode":2, 
+            "mode":0, 
             "attendee_number": 3, 
             "duration": 120, 
+            "welcome_message": "!", 
+            "lang":"FRA",
+            "grid_length":4,
+            "color":"#",
+            "image_realist":"",
+            "image_cartoon":"",
+            "rule":"Rentrez des motsd, faites des points"
+            },
+        "Aigle": {
+            "mode":1, 
+            "attendee_number": 2, 
+            "duration": 240, 
             "welcome_message": "!", 
             "lang":"FRA",
             "grid_length":4,
@@ -217,11 +229,16 @@ class ZoogleChatHooks(ChatHooks):
         return result
     
     
-    async def on_word_proposed(self, chat_session_id: int, attendee_id: int, word: str, isValidWord: bool):
+    async def on_word_proposed(self, chat_session_id: int, attendee_id: int, word: str, isValidWord: bool, mode: int):
         attendee = self._attendees[chat_session_id][attendee_id]
-
         date = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         isAnimal = False
+        if mode==1:
+            for player_id in self._attendees[chat_session_id]:
+                currentAttendee = self._attendees[chat_session_id][player_id]
+                for currentWord in currentAttendee.validWords:
+                    if currentWord[0] == word:
+                        return {"already_found":True,"word":word, "player":currentAttendee.identity["name"]}
         if (isValidWord):
             try:
                 url = 'http://localhost/backend/api/game/getScoreforAWord.php'
@@ -239,9 +256,20 @@ class ZoogleChatHooks(ChatHooks):
                 print(f'HTTP error occurred: {http_err}')
             except Exception as err:
                 print(f'Other error occurred: {err}')   
+
+            players_infos=[]
+
+            if (mode==1):
+                for player_id in self._attendees[chat_session_id]:
+                    currentAttendee = self._attendees[chat_session_id][player_id]
+                    print(currentAttendee.identity["name"])
+                    players_infos.append({"pseudo":currentAttendee.identity["name"],"score":currentAttendee.score, "validWords":currentAttendee.validWords})
+                return {"already_found":False,"stats":players_infos}
+
         else:
             attendee.falseWords.append([word,date])
-        result = {"score":attendee.score, "validWords":attendee.validWords, "falseWords":attendee.falseWords, "isAnimal":isAnimal}
+
+        result = {"already_found":False,"score":attendee.score, "validWords":attendee.validWords, "falseWords":attendee.falseWords, "isAnimal":isAnimal}
         return result
 
     async def on_attendee_leave(self, chat_session_id: int, attendee_id: int):
