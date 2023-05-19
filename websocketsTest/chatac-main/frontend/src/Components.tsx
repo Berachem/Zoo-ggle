@@ -257,6 +257,7 @@ export const ChatManager = (props: { socketUrl: string }) => {
         if ('connecting' in chatState) {
             setConnected(true)
         } else if ('disconnected' in chatState) {
+            setChatState({ connecting: true })
             setConnected(false)
         }
     }, [chatState])
@@ -303,7 +304,6 @@ export const ChatManager = (props: { socketUrl: string }) => {
         }
     }, [connected, props.socketUrl])
 
-
     useEffect(() => {
         var now = new Date().getTime()
         const interval = setInterval(() => {
@@ -330,10 +330,10 @@ export const ChatManager = (props: { socketUrl: string }) => {
             <div className="Error">Error: {error} <button onClick={() => setError('')}>OK</button></div>}
 
             {/* avant connection websocket */}
-        {'disconnected' in chatState &&
+        {/* {'disconnected' in chatState &&
             <div className="Disconnected">
                 <div>Disconnected</div>
-                <button onClick={() => setChatState({ connecting: true })}>Connect now</button></div>}
+                <button onClick={() => setChatState({ connecting: true })}>Connect now</button></div>} */}
 
 
                 {/* Connextion (ca dure 2ms) */}

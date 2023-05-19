@@ -372,8 +372,6 @@ class ChatServer(object):
                                     client.state = 'waiting'
                                     client.waiting_room = waiting_room
                                     await client.send_message('in_waiting_room')
-
-                                    print("Join")
                                     await self.sendPlayerWaitingInRoom(waiting_room)  
 
                         elif msg_kind == 'leave_waiting_room':
@@ -383,7 +381,6 @@ class ChatServer(object):
                                 client.state = 'connected'
                                 await client.send_message('waiting_room_left', 
                                     waiting_room_name = wr.name)
-                                print("Leave")
                                 await self.sendPlayerWaitingInRoom(waiting_room)  
                             else:
                                 await client.send_message('state_invalid', state=client.state)
@@ -455,10 +452,7 @@ class ChatServer(object):
             currentClientsWaiting.append(client)
             clientIdentity = client.identity
             currentClientsWaitingIdentity.append({"pseudo":clientIdentity["name"],"id":clientIdentity["DatabaseId"]})
-        print("Clients dans la waiting room"+str(currentClientsWaiting))
-        print("Identité des client"+str(currentClientsWaitingIdentity))
         for client in currentClientsWaiting:
-            print("Envoi à"+str(client))
             await client.send_message('player_waiting', players=currentClientsWaitingIdentity)
 
     async def _background_tasks(self, app):

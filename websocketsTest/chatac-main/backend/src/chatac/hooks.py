@@ -108,7 +108,7 @@ class ZoogleChatHooks(ChatHooks):
         "4": {
             "mode":2, 
             "attendee_number": 3, 
-            "duration": 30, 
+            "duration": 120, 
             "welcome_message": "!", 
             "lang":"FRA",
             "grid_length":4,
@@ -249,7 +249,6 @@ class ZoogleChatHooks(ChatHooks):
 
     async def on_chat_session_end(self, chat_session_id: int, info: Dict[str, Any]) -> Any:
         """Send the stats for the session"""
-        print("Preparation insertion")
         attendees = self._attendees[chat_session_id]
         infoPerson=[]
         for key,attendee in attendees.items():
