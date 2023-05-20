@@ -5,24 +5,34 @@
 
 .WaitingRoom_Card {
     align-items: start;
-    justify-content: space-evenly;
+    justify-content: space-between;
 
     display: flex;
     flex-direction: column;
     border: 1px solid #ccc;
     border-radius: 5px;
     padding: 20px;
-    margin-bottom: 20px;
     margin: auto;
     width: 70vw;
     height: 70vh;
     margin-top: 5vw;
     background-color: rgba(255, 255, 255, 0.95);
+}
 
+.WaitingRoom_CardHeader {
+    height: fit-content;
+    /* border: 2px solid red */
+}
+
+.WaitingRoom_CardHeaderIntermediaire {
+    /* border: yellowgreen 1px solid; */
+    display: flex;
+    flex-direction: row;
+    align-items: center;
 }
 
 .WaitingRoom_CardBody {
-    /*  border: 1px solid #0eff4e;  */
+    /* border: 1px solid #0eff4e;  */
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -30,56 +40,59 @@
     justify-content: space-between;
     width: 100%;
     height: 80%;
+    flex-shrink: 1;
 }
 
 .WaitingRoom_CardLeft {
-/*   border: 1px solid #ff0000;  */
-
+    /* border: rgb(35, 221, 75) 1px solid; */
     display: flex;
     flex-direction: column;
-    width: 30%;
-}
-
-.WaitingRoom_CardHeaderIntermediaire {
-    display: flex;
-    flex-direction: row;
+    justify-content: center;
     align-items: center;
+    width: 30%;
+    height: 100%;
 }
 
-.WaitingRoom_CardHeader {
-    margin-bottom: 10px;
+.WaitingRoom_CardImage {
+    /* border: rgb(221, 35, 206) 1px solid; */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    height:30%;
+    max-height:65%;
+    flex-shrink: 1;
+    flex-grow: 1;
+    /* aspect-ratio: 1/1; */
+
 }
-
-
-.MetaDate {
-    margin-right: 10px;
-}
-
-
 
 .WaitingRoom_CardImage img {
-    width: 100%;
+    /* border: rgb(22, 110, 99) 1px solid; */
+    height: 100%;
     object-fit: cover;
     border-radius: 20px;
     aspect-ratio: 1/1;
-
 }
 
 .WaitingRoom_CardMainInfos {
+    /* border: 1px solid #3ee5eb; */
     display: flex;
     flex-direction: column;
+    height: fit-content;
 }
 
 .WaitingRoom_CardTitle {
-  /*   border: 1px solid #e80065; */
-    margin-bottom: 10px;
+    /* border: 1px solid #e80065; */
+    /* margin-bottom: 10px; */
     font-weight: bold;
     text-align: center;
     font-size: 1.5rem;
 }
 
 .WaitingRoom_CardDescription {
-/*     border: 1px solid #000000; */
+    /* border: 1px solid #000000; */
     text-align: center;
     font-size: 1.2rem;
     font-style: italic;
@@ -87,23 +100,25 @@
 }
 
 .WaitingRoom_CardRight {
- /*    border: 1px solid #4209ff; */
-    width: 65%;
+    /* border: 1px solid #4209ff; */
+    max-width: 65%;
+    flex-shrink: 1;
     padding: 0 20px;
-    border-top : 0px;
-    border-left : 6px solid ;
+    border-top: 0px;
+    border-left: 6px solid;
 }
 
 .WaitingRoom_CardRules h3,
 .WaitingRoom_CardPlayers h3 {
     margin-bottom: 10px;
 }
-.WaitingRoom_CardPlayers{
-    margin-top : 20px;
+
+.WaitingRoom_CardPlayers {
+    margin-top: 20px;
 }
 
 .WaitingRoom_CardPlayersList {
-    color : #656667;
+    color: #656667;
 }
 
 .WaitingRoom_CardButton {
@@ -124,6 +139,8 @@
 }
 
 .WaitingRoom_CardFooter {
+    /* border: 2px solid yellow; */
+    height: fit-content;
     display: flex;
     flex-direction: row;
     width: 100%;
@@ -143,48 +160,52 @@
     .WaitingRoom_CardBody {
         flex-direction: column;
         align-items: space-between;
-        
     }
+
     .WaitingRoom_CardLeft {
-        flex-direction: row;
+        flex-direction: column;
         width: 100%;
         justify-content: space-evenly;
         height: 30%;
+        max-width: auto;
+        /* overflow: hidden; */
+        flex-grow: 1;
+        flex-shrink: 1;
 
+    }
+
+    .WaitingRoom_CardImage {
+        height: 40%;
+        width: auto;
+        flex-shrink: 1;
+        flex-grow: 1;
+        /* aspect-ratio: 1/1; */
     }
 
     .WaitingRoom_CardImage img {
         width: auto;
         height: 100%;
         aspect-ratio: 1/1;
-        margin-bottom: 10px;
-
     }
 
     .WaitingRoom_CardRight {
-        border-top : 6px solid;
-        border-left : 0px solid;
-        width: 90%;
-        padding-left: 0px;
-        padding-right: 0px;
-        height: 65%;
-
-        
+        margin-top: 10px;
+        border-top: 6px solid;
+        border-left: 0px solid;
+        width: 95%;
+        max-width: 95%;
+        padding: 0 0px;
+        height: fit-content;
     }
-
-    
-
-
-
 }
 
 
 
 
 @media (max-width: 500px) {
-    
+
     /* font-size: 1rem; */
-    .WaitingRoom_CardTitle > h3 {
+    .WaitingRoom_CardTitle>h3 {
         font-size: 1.2rem;
     }
 
@@ -193,8 +214,8 @@
     }
 
     .WaitingRoom_CardRules h3,
-.WaitingRoom_CardPlayers h3 {
-    font-size: 1.2rem;
-}
+    .WaitingRoom_CardPlayers h3 {
+        font-size: 1.2rem;
+    }
 
 }

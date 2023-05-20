@@ -117,7 +117,7 @@ export default function WaitingRoom() {
         </div>
         <div className="WaitingRoom_CardBody">
           <div className="WaitingRoom_CardLeft">
-            
+
             <div className="WaitingRoom_CardImage">
               {backgroundMode ? (
                 <img src={mode.realImage} alt="mode" />
@@ -126,16 +126,16 @@ export default function WaitingRoom() {
               )}
             </div>
             <div className="WaitingRoom_CardMainInfos">
-            <div className="WaitingRoom_CardTitle">
-              Mode <h3 style={{ color: mode.couleur }}>{mode.nom}</h3>
-            </div>
-            <div className="WaitingRoom_CardDescription">
-              {mode.description}
-            </div>
+              <div className="WaitingRoom_CardTitle">
+                Mode <h3 style={{ color: mode.couleur }}>{mode.nom}</h3>
+              </div>
+              <div className="WaitingRoom_CardDescription">
+                {mode.description}
+              </div>
             </div>
           </div>
 
-          <div className="WaitingRoom_CardRight" style={{ borderColor : mode.couleur}}>
+          <div className="WaitingRoom_CardRight" style={{ borderColor: mode.couleur }}>
             <div className="WaitingRoom_CardRules">
               <h3>Règles</h3>
               <p>{mode.regles}</p>

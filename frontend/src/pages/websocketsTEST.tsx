@@ -1,5 +1,4 @@
-import React from 'react';
-import { ChatManager } from '../components/game/websocket';
+import ChatManager from '../components/game/websocket';
 
 function substituteHost(s: string): string {
   return s.replace('myhost', document.location.host).replace('myprotocol', document.location.protocol === 'http:' ? 'ws:' : 'wss:');

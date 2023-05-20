@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react"
-import './../../css/Websockets.css'
+import '../../css/Websockets.css'
 
 export interface WaitingRoom {
     name: string
@@ -124,7 +124,7 @@ interface Mode1StatsForAPlayer { pseudo: string, score: number, validWords: Stri
 
 type InGameStats = Mode0Stats | Mode1Stats
 
-export const ChatManager = (props: { socketUrl: string }) => {
+export default function  ChatManager (props: { socketUrl: string }){
     const [chatState, setChatState] = React.useState<ChatState>({ disconnected: true })
     const [connected, setConnected] = React.useState(false)
     const [socket, setSocket] = React.useState<WebSocket | null>(null)
@@ -355,7 +355,8 @@ export const ChatManager = (props: { socketUrl: string }) => {
 
         {/* Choosing a room */}
         {'roomSelection' in chatState &&
-            <WaitingRoomSelector rooms={waitingRooms} onChosenRoom={connectToWaitingRoom} />}
+        <WaitingRoomSelector rooms={waitingRooms} onChosenRoom={connectToWaitingRoom} />
+            }
 
         {/* Waiting in a room */}
         {'waitingRoomName' in chatState &&
