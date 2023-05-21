@@ -9,7 +9,7 @@
     flex-direction: column;
     height: 85vh;
     width: 20vw;
-    border-radius: 15px;
+    border-radius: 15px 0 15px 15px;
     word-break: break-word;
     background-color: rgb(255, 255, 255,0.95);
 }
@@ -17,6 +17,8 @@
 .ChatMessagesDisplayer{
     padding:10px;
     overflow-y: scroll;
+    scrollbar-color: light-gray white;
+    scrollbar-width: thin;
 }
 
 .ChatMessageDisplayer{
