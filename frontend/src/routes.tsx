@@ -9,6 +9,7 @@ import BubbleAssistant from "./components/Zooggle/assistantBubble";
 import CreationPartie from "./pages/creationPartie";
 import WaitingRoom from "./pages/waitingRoom";
 import WebsocketPage from "./pages/websocketsTEST";
+import { PageTest } from "./components/visualForGame/pageTest";
 
 export const routes = [
   {
@@ -87,6 +88,12 @@ export const routes = [
     path: "/websocket",
     icon: ComputerDesktopIcon,
     element: <WebsocketPage />,
+  },
+  {
+    label: "chatVisu",
+    path: "/chatVisu",
+    icon: ComputerDesktopIcon,
+    element: <PageTest />,
   }
 ];
 

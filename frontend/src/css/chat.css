@@ -1,0 +1,72 @@
+* {
+    font-family: "Montserrat", sans-serif;
+}
+
+.ChatSession{
+    margin: auto;
+    margin-top: 5vh;
+    display: flex;
+    flex-direction: column;
+    height: 85vh;
+    width: 20vw;
+    border-radius: 15px;
+    word-break: break-word;
+    background-color: rgb(255, 255, 255,0.95);
+}
+
+.ChatMessagesDisplayer{
+    padding:10px;
+    overflow-y: scroll;
+}
+
+.ChatMessageDisplayer{
+    display: inline-block;
+    font-size: small;
+}
+
+.Sender{
+    font-weight: bold;
+    color:#F5593D;
+}
+.Sender::after{
+    content: " : ";
+    font-weight: bold;
+    color:#F5593D;
+}
+
+.MessageSender{
+    box-shadow: 0 0 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+    border-radius: 0 0 15px 15px;
+}
+
+.InputMessage{
+    height: 7vh;
+    width: 15vw;
+    border-radius: 0 0 0 15px;
+    padding: 10px;
+}
+
+.ButtonMessage{
+    height: 7vh;
+    width: 5vw;
+    color:white;
+    background-color:#F5593D;
+    text-align: center;
+    font-weight: bold;
+    border-radius: 0 0 15px 0;
+}
+
+@media (max-width: 1100px) {
+    .ChatSession{
+        height: 80vh;
+        width: 90vw;
+    }
+
+    .InputMessage{
+        width:75vw;
+    }
+
+    .ButtonMessage{
+        width: 15vw;
+    }
+}
