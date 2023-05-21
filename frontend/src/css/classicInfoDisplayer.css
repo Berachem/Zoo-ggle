@@ -1,0 +1,42 @@
+.DisplayerContainer{
+    display: flex;
+    flex-direction: column;
+    margin: auto;
+    width:25vw;
+    padding:15px;
+}
+
+.Infos{
+    width: 25vw;
+    text-align: center;
+    font-weight: bold;
+    font-size: large;
+}
+
+.Words{
+    display: flex;
+    flex-direction: column;
+    height: 60vh;
+    overflow-y: scroll;
+    scrollbar-color: light-gray white;
+    scrollbar-width: thin;
+}
+
+.Animal{
+    color:#F5593D;
+    font-weight: bold;
+}
+
+@media (max-width: 900px) {
+    .DisplayerContainer{
+        width: 100%;
+    }
+
+    .Infos{
+        width: 100%;
+    }
+
+    .Words{
+        height: 100%;
+    }
+}

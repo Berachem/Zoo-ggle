@@ -1,6 +1,6 @@
 import "../../css/TestGrid.css";
 
-export interface TestGrid {
+export interface TestGridInterface {
     size: number
     content: string
     width?: string
@@ -11,9 +11,7 @@ function switchColor(id : string){
     document.getElementById("case"+id)?.classList.toggle("selected")
 }
 
-export default function TestGrid(props: TestGrid) {
-
-
+export const TestGrid = (props: TestGridInterface) => {
     return (
         <div style={{
             display:"flex",

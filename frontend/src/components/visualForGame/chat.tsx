@@ -33,13 +33,16 @@ export const ChatMessageDisplayer = (props: { message: Message }) => {
             </div>
 }
 
-//ELEMENT MODIFIE (diplay none sur boutton)
+//ELEMENT MODIFIE (diplay none sur boutton + voile pour le mode tel)
 export const ChatSession = (props: { messages: Message[], active: boolean, onMessageWritten: (content: string) => void, onLeaving: () => void }) => {
-    return <div className="ChatSession">
+    return <><div className="ChatSession">
         <ChatMessagesDisplayer messages={props.messages} />
         {props.active && <MessageSender onMessageWritten={props.onMessageWritten} />}
         <div style={{display:"none"}}>
             <button onClick={() => props.onLeaving()} disabled={!props.active}>Leave the chat session</button>
         </div>
+        
     </div>
+    <div className="CacheFond"></div>
+    </>
 }
