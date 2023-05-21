@@ -257,15 +257,10 @@ class ZoogleChatHooks(ChatHooks):
             except Exception as err:
                 print(f'Other error occurred: {err}')   
 
-            players_infos=[]
-
             if (mode==1):
-                for player_id in self._attendees[chat_session_id]:
-                    currentAttendee = self._attendees[chat_session_id][player_id]
-                    print(currentAttendee.identity["name"])
-                    players_infos.append({"pseudo":currentAttendee.identity["name"],"score":currentAttendee.score, "validWords":currentAttendee.validWords})
-                return {"already_found":False,"stats":players_infos}
+                return {"already_found":False,"player":attendee.identity["name"],"score":score, "word":word,"isAnimal":isAnimal }
 
+            return {"already_found":False,"score":score, "word":word,"isAnimal":isAnimal }
         else:
             attendee.falseWords.append([word,date])
 

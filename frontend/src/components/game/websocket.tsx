@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react"
+import '../../css/Websockets.css'
 
 export interface WaitingRoom {
     name: string
@@ -13,7 +14,6 @@ export interface WaitingRoom {
 
 export interface Message {
     sender: string
-    timestamp: number
     content: string
 }
 
@@ -63,9 +63,7 @@ export const RoomWaiter = (props: { roomName: string, startTimestamp: number, on
 }
 
 export const ChatMessageDisplayer = (props: { message: Message }) => {
-    const date = React.useMemo(() => new Date(props.message.timestamp).toLocaleTimeString(), [props.message.timestamp])
     return <div className="ChatMessageDisplayer">
-        <div>{date}</div>
         <div>{props.message.sender}</div>
         <div style={{ flex: 1 }}>{props.message.content}</div>
     </div>
@@ -112,43 +110,67 @@ interface WaitingState { startTimestamp: number, waitingRoomName: string }
 interface ChattingState { startTimestamp: number, messages: Message[], active: boolean }
 type ChatState = DisconnectedState | ConnectingState | RoomSelectionState | WaitingState | ChattingState
 
-
-interface Mode0Stats { score: number, validWords: String[], falseWords: String[], isAnimal: boolean }
-
-interface Mode1Stats {
-    stats: Mode1StatsForAPlayer[]
+interface WordsInfo { word: string, score: number, isAnimal: boolean }
+interface PlayerInfos { score: number, validWords: WordsInfo[] }
+interface AllPlayersInfos {
+    [pseudo: string]: PlayerInfos
 }
 
-interface Mode1StatsForAPlayer { pseudo: string, score: number, validWords: String[] }
+interface EagleModeStats {
+    playersInfo: AllPlayersInfos
+}
 
-type InGameStats = Mode0Stats | Mode1Stats
+type InGameStats = PlayerInfos | EagleModeStats
 
-export default function  ChatManager (props: { socketUrl: string }){
+// interface Mode0Stats {score: number, validWords: String[], falseWords: String[], isAnimal: boolean }
+
+// interface Mode1Stats {
+//     stats: Mode1StatsForAPlayer[]
+// }
+
+// interface Mode1StatsForAPlayer { pseudo: string, score: number, validWords: String[] }
+
+
+export default function ChatManager(props: { socketUrl: string }) {
     const [chatState, setChatState] = React.useState<ChatState>({ disconnected: true })
     const [connected, setConnected] = React.useState(false)
     const [socket, setSocket] = React.useState<WebSocket | null>(null)
     const [error, setError] = React.useState<string>('')
     const [waitingRooms, setWaitingRooms] = React.useState<WaitingRoom[]>([])
     const [word, setWord] = React.useState("")
-    const [inGameStats, setInGameStats] = React.useState<InGameStats>({ score: 0, validWords: [], falseWords: [], isAnimal: false })
+
+    const [inGameStats, setInGameStats] = React.useState<InGameStats>({ score: 0, validWords: [] })
+
     const [countDown, setCountDown] = React.useState(0);
     const [deadLine, setDeadline] = React.useState(0);
+
     const [gridState, setGridState] = React.useState<Grid>({ size: 4, content: "? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ?" })
     const [playersWaiting, setPlayersWaiting] = React.useState<Player[]>([])
+    
+    var allPlayersInfos:AllPlayersInfos;
+
+
+    useEffect(()=>{
+        console.log('Nouvel état :', inGameStats);
+        if ("playersInfo" in inGameStats){
+            allPlayersInfos = inGameStats.playersInfo
+            console.log('Nouvel allPlayersInfos :', allPlayersInfos);
+        }
+    }, [inGameStats]);
 
     const resetGameState = () => {
         setGridState({ size: 4, content: "? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ?" })
         setWord("")
-        setInGameStats({ score: 0, validWords: [], falseWords: [], isAnimal: false })
         setCountDown(0)
         setDeadline(0)
         setPlayersWaiting([])
+        setInGameStats({ score: 0, validWords: [] })
     }
 
     const onNewSocketMessage = (kind: string, content: Record<string, any>) => {
         console.debug("Received message from websocket", content)
         const addChatMessage = (sender: string, content: string) => {
-            let message: Message = { sender: sender, timestamp: Date.now(), content: content }
+            let message: Message = { sender: sender, content: content }
             setChatState(oldState => {
                 if ('messages' in oldState)
                     return { ...oldState, messages: [...oldState.messages, message] }
@@ -199,15 +221,52 @@ export default function  ChatManager (props: { socketUrl: string }){
                 setGridState({ size: gridState.size, content: content.grid })
                 setDeadline(content.deadline * 1000)
                 setCountDown((deadLine - new Date().getTime()))
+                console.log("mode"+content.mode)
+                if (content.mode == 1) {
+                    let infos: AllPlayersInfos = {}
+                    // console.log("ingameStats début "+JSON.stringify(inGameStats))
+                    for (const player of content.players){
+                        let words:WordsInfo[] = []
+                        var currentPlayerInfo:PlayerInfos =  { score: 0, validWords: words }
+                        infos[player] = currentPlayerInfo
+                    }
+                    // console.log("infos avant set"+JSON.stringify(infos))
+                    // console.log("stats avant set"+JSON.stringify(inGameStats))
+                    console.log("Clean state pour mode aigle")
+                    setInGameStats({playersInfo:infos})
+                    // console.log("stats apres set"+JSON.stringify(inGameStats))
+                }else{
+                    console.log("Clean state pour mode classique")
+                    setInGameStats({ score: 0, validWords: [] })
+                }
+                // console.log("stats début"+JSON.stringify(inGameStats))
                 break
 
-            case 'current_ingame_stats':
+            case 'word_found':
                 if (content.mode == 0) {
-                    setInGameStats({ score: content.score, validWords: content.validWords, falseWords: content.falseWords, isAnimal: content.isAnimal })
+                    setInGameStats(oldState => ('score' in oldState) ? { score: oldState.score + content.score, validWords: [...oldState.validWords, { word: content.word, score: content.score, isAnimal: content.isAnimal }] } : oldState)
                 } else if (content.mode == 1) {
-                    console.log("reçu")
-                    console.log(content.stats)
-                    setInGameStats({ stats: content.stats })
+                    console.log("Joueur :"+content.player+"a proposé le mot:"+content.word)
+                    console.log("currentStats"+JSON.stringify(inGameStats))
+                    if ('playersInfo' in inGameStats) {
+                        console.log("Récup oldPlayerStats")
+                        const oldPlayerStats: PlayerInfos = {...allPlayersInfos[content.player]}
+                        console.log("allPlayersInfos"+JSON.stringify(allPlayersInfos))
+                        console.log("oldPlayerStats"+JSON.stringify(oldPlayerStats))
+                        // console.log("allPlayersInfos :"+JSON.stringify(allPlayersInfos))
+                        // console.log("oldPlayerStats :"+JSON.stringify(oldPlayerStats))
+
+                        console.log("Mise en place nouvelle stat")
+                        var newPlayerStats: PlayerInfos = { score: oldPlayerStats.score + content.score, validWords: [...oldPlayerStats.validWords, { word: content.word, score: content.score, isAnimal: content.isAnimal }] }
+                        // console.log("newPlayerStats :"+JSON.stringify(newPlayerStats))
+                        console.log("newPlayerStats"+JSON.stringify(oldPlayerStats))
+
+                        var stats: AllPlayersInfos = allPlayersInfos
+                        stats[content.player] = newPlayerStats
+                        console.log("Mise a jour avec nouveau mot trouvé (mode aigle)")
+                        setInGameStats({ playersInfo: stats })
+                        // console.log("newstates :"+JSON.stringify(inGameStats.playersInfo))
+                    }
                 }
                 break
 
@@ -265,6 +324,7 @@ export default function  ChatManager (props: { socketUrl: string }){
     const leaveChatSession = React.useCallback(() => {
         sendToSocket('leave_chat_session', {})
         setChatState({ roomSelection: true })
+        resetGameState()
     }, [sendToSocket])
 
 
@@ -354,8 +414,8 @@ export default function  ChatManager (props: { socketUrl: string }){
 
         {/* Choosing a room */}
         {'roomSelection' in chatState &&
-        <WaitingRoomSelector rooms={waitingRooms} onChosenRoom={connectToWaitingRoom} />
-            }
+            <WaitingRoomSelector rooms={waitingRooms} onChosenRoom={connectToWaitingRoom} />
+        }
 
         {/* Waiting in a room */}
         {'waitingRoomName' in chatState &&
@@ -381,9 +441,6 @@ export default function  ChatManager (props: { socketUrl: string }){
                 <div>
                     {"score" in inGameStats &&
                         <>
-                            <p>
-                                {inGameStats.isAnimal ? "Le dernier mot proposé est un animal" : "Le dernier mots proposé n'est pas un animal"}
-                            </p>
                             <h1>
                                 Score :
                             </h1>
@@ -391,45 +448,57 @@ export default function  ChatManager (props: { socketUrl: string }){
                                 {inGameStats.score}
                             </p>
                             <h1>
-                                Valides :
+                                Mots Trouvés :
                             </h1>
                             {inGameStats.validWords.map(function (list) {
                                 return (
                                     <p>
-                                        {list[0]}
-                                    </p>)
-                            })}
-                            <h1>
-                                Faux :
-                            </h1>
-                            {inGameStats.falseWords.map(function (list) {
-                                return (
-                                    <p>
-                                        {list[0]}
+                                        {list.word} - {list.score} pts {list.isAnimal && <>C' est un animal</>}
                                     </p>)
                             })}
                         </>
                     }
 
-                    {"stats" in inGameStats &&
-                        <>
-                            {inGameStats.stats.map(function (playerStat) {
+                    {"playersInfo" in inGameStats &&
+                        <>  
+                            <h1>EAGLE</h1>
+                            {Object.keys(inGameStats.playersInfo).map(function(key) {
+                                // {console.log("JOUEUR"+key)}
+                                let playerStat = inGameStats.playersInfo[key];
+                                return (
+                                    <>
+                                        <h1> {key} - {playerStat.score} pts </h1>
+                                        {
+                                            playerStat.validWords.map(function (word) {
+                                                return (
+                                                    <p>
+                                                        {word.word} - {word.score} pts {word.isAnimal && <p>C' est un animal</p>}
+                                                    </p>
+                                                    )
+                                            })
+                                        }
+                                    </>
+                                )
+                            }
+                            )}
+                        </>
+                    }
+
+                            {/* {inGameStats.playersInfo.map(function (playerStat) {
                                 return (
                                     <>
                                         <h1> {playerStat.pseudo}  ({playerStat.score} point(s))</h1>
                                         {
                                             playerStat.validWords.map(function (word) {
                                                 return (
-                                                    <p>{word[0]}</p>
-                                                )
+                                                    <p>
+                                                        {word.word} - {word.score} pts {word.isAnimal && <>C' est un animal</>}
+                                                    </p>)
                                             })
                                         }
                                     </>
                                 )
-                            })}
-                        </>
-                    }
-
+                            })} */}
 
                 </div>
             </>

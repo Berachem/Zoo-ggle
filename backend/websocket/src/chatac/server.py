@@ -265,7 +265,12 @@ class ChatServer(object):
         try:
             await chat_session.send_message(None, 'chat_session_started', welcome_message=chat_session.welcome_message)
             logger.info(f"Welcome Message shown for chat session {chat_session}")
-            await chat_session.send_message(None, 'grid_reveal', grid=chat_session.grid, time=chat_session.duration, deadline=time.time() + chat_session.duration)
+            print(chat_session.clients)
+            pseudosClient=[]
+            for key,client in chat_session.clients.items():
+                pseudosClient.append(client.identity['name'])
+            
+            await chat_session.send_message(None, 'grid_reveal', grid=chat_session.grid, time=chat_session.duration, deadline=time.time() + chat_session.duration, mode=chat_session.mode, players=pseudosClient)
             logger.info(f"Grid revealed for chat session {chat_session}")
             remaining_time = chat_session.deadline - time.monotonic()
             while remaining_time > 0 and (chat_session.clients or chat_session.not_empty_message_queue()):
@@ -413,11 +418,12 @@ class ChatServer(object):
                                     if (result['already_found']):
                                         await client.send_message('already_found', word=result['word'], player=result['player'])
                                     elif(wordIsValid):
-                                        await client.chat_session.send_message(None,'current_ingame_stats', mode=1,stats=result['stats'])
+                                        await client.chat_session.send_message(None,'word_found', mode=1, player=result['player'],word=result['word'],score=result['score'], isAnimal=result['isAnimal'])
                                     
                                 elif (client.chat_session.mode == 0):
                                     result = await self.hooks.on_word_proposed(client.chat_session.id, client.id, word, wordIsValid, 0)
-                                    await client.send_message('current_ingame_stats', mode=0,validWords=result['validWords'], falseWords=result['falseWords'], score=result['score'], isAnimal=result['isAnimal'])
+                                    if wordIsValid:
+                                        await client.send_message('word_found', mode=0,word=result['word'],score=result['score'], isAnimal=result['isAnimal'])
                                 
                                 
 
