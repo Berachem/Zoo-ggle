@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react"
-import '../../css/webSockets.css'
 
 export interface WaitingRoom {
     name: string

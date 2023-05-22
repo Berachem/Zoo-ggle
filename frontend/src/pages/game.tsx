@@ -163,8 +163,8 @@ export default function Game() {
                                 alignItems: "center"
                             }}>
                                 <Typography variant="h4"> Partie de Berachem </Typography>
-                                {(inGame || inHistory) && (<TestGrid height="80%" width="100%" size={4} content="A QU C A H C A T A U S A QU A W E" />)}
-                                {inWaitingRoom && (<TestGrid height="80%" width="100%" size={5} content="? ? ? ? ? ? QU ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ?" />)}
+                                {(inGame || inHistory) && (<TestGrid height="80%" width="100%" size={4} content="A QU C A H C A T A U S A QU A W E" getLetter={()=>{}}/>)}
+                                {inWaitingRoom && (<TestGrid height="80%" width="100%" size={5} content="? ? ? ? ? ? QU ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ?" getLetter={()=>{}}/>)}
                                 <Typography variant="h4"> 3:20 </Typography>
                             </div>
                         </ZooggleCard>
