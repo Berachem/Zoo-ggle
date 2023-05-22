@@ -80,7 +80,7 @@ function ProfileMenu() {
   return (
     <Menu open={isMenuOpen} handler={setIsMenuOpen} placement="bottom-end">
 
-      {localStorage.getItem("connected") == "true" ? (
+      {localStorage.getItem("connected") === "true" ? (
         <MenuHandler>
           <Button
             variant="text"
@@ -92,7 +92,7 @@ function ProfileMenu() {
               size="sm"
               alt="candice wu"
               className="border border-blue-500 p-0.5"
-              src={Mbappe}
+              src="https://source.boringavatars.com/beam/120/Stefan?colors=579A86,579A86,80e8b6"
             />
             <ChevronDownIcon
               strokeWidth={2.5}
@@ -308,20 +308,23 @@ export default function AppBar(
     return (
       <div
         className="flex justify-end"
-        style={{ position: "fixed", top: 0, right: 0, zIndex: 1000 }}
+        style={{  top: 0, right: 0, zIndex: 1000 }}
         id="navbar"
       >
         <ul className="flex">
           <li className="mx-7">
             <br />
             <br />
-            <Switch
-              onChange={() => props.changeBackgroundMode()}
-              className="flex-shrink-0 h-5 w-9"
-              style={{
-                backgroundColor: props.backgroundMode ? "#6b7280" : "#f59e0b",
-              }}
-            ></Switch>
+            <span style={{color:"black",fontWeight:"bold",backgroundColor:"white",borderRadius:"15px",display:"flex",justifyContent:"space-evenly",padding:"10px",width:"250px",opacity:"0.95"}}>
+              Changer le mode 
+              <Switch
+                onChange={() => props.changeBackgroundMode()}
+                className="flex-shrink-0 h-5 w-9"
+                style={{
+                  backgroundColor: props.backgroundMode ? "#6b7280" : "#f59e0b",
+                }}
+              ></Switch>
+            </span>
           </li>
 {/*           <li className="mx-7">
             <a href="#">

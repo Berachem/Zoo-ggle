@@ -2,29 +2,22 @@ import {
   Alert,
   Button,
   Card,
-  IconButton,
-  Typography,
 } from "@material-tailwind/react";
-import Logo from "../assets/images/Title.svg";
+import LogoWhite from "../assets/images/Title.svg";
+import LogoBlack from "../assets/images/BlackTitle.png"
 import ZooggleCard from "../components/Zooggle/ZooggleCard";
 import GameGrid from "../components/Zooggle/GameGrid";
-import Title from "../components/Zooggle/Title";
-import Team from "../components/sections/teamSection";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBook } from "@fortawesome/free-solid-svg-icons";
-import Input from "../components/Zooggle/Input";
-import { useEffect, useState } from "react";
-import React from "react";
-import AnimalList from "../components/Zooggle/animalsList";
 import Footer from "../components/footer/footer";
 import { faYoutube } from "@fortawesome/free-brands-svg-icons";
 import tortue from "../assets/images/randomAnimals/tortue.jpg";
 import cameleon from "../assets/images/randomAnimals/cameleon.jpg";
 import pinguin from "../assets/images/randomAnimals/pinguin.jpg";
 import IndicatorScroll from "../components/scroll/IndicatorScroll";
-import MouseScrollIndicator from "../components/scroll/MouseScrollIndicator";
 import { ToastContainer,toast } from "react-toastify"
 import { useLocation } from "react-router-dom"
+import { useEffect, useState } from "react";
 
 //import Forest from "../assets/video/Forest.mp4"
 
@@ -33,16 +26,40 @@ async function checkToken(token :string){
   formData.append("token",token)
   const res = await fetch("http://localhost/backend/api/verifyToken.php",{method:"POST",body:formData,credentials: 'include'}).then(res=>res.json())
   if(res.success){
-    // HELPME JOSHUA plz
+    
     console.log("token is valid")
     // session storage connected
     localStorage.setItem("connected","true")
     localStorage.setItem("tokenUsedToConnect",token)
+    toast.success("Vous êtes connecté !", {
+      position: "top-right",
+      autoClose: 8000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      toastId:1
+    });
   }
 
 }
 
 export default function Accueil() {
+  const [backgroundMode, setBackgroundMode] = useState(localStorage.getItem("BackgroundMode") === "true");
+  useEffect(() => {
+    function changeBG() {
+      setBackgroundMode( localStorage.getItem("BackgroundMode") === "true");
+      console.log("backgroundMode", backgroundMode);
+    }
+  
+    window.addEventListener('storage', changeBG)
+  
+    return () => {
+      window.removeEventListener('storage', changeBG)
+    }
+  }, [])
+
   const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
   // random list of 16 letters
@@ -65,6 +82,7 @@ export default function Accueil() {
             pauseOnHover: true,
             draggable: true,
             progress: undefined,
+            toastId:2
           });
     }
     if(params.has("connected") && params.get("connected")=="true"){
@@ -87,6 +105,7 @@ export default function Accueil() {
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
+        toastId:3
       });
     }
     if(params.has("token")){
@@ -124,7 +143,11 @@ export default function Accueil() {
         {/* <MouseScrollIndicator id="discover" /> */}
 
         <main className="flex flex-col items-center justify-center w-full flex-1  text-center text-gray-50">
-          <img src={Logo} />
+          <img style={{
+            width:"500px",
+            aspectRatio:"2/1"
+
+          }}src={backgroundMode ? LogoBlack : LogoWhite} />
           <a href="/choixPartie">
             <Button variant="filled" color="white" className="m-2">
               Jouer
@@ -181,22 +204,7 @@ export default function Accueil() {
               />
             </ZooggleCard>
 
-            <div className="flex flex-row items-center justify-center">
-              <Input
-                label="Mot"
-                type="text"
-                placeholder="Mot"
-                disabled={true}
-              />
-              <Button
-                variant="filled"
-                color="green"
-                className="lg:mt-5 md:mt-5"
-                disabled={true}
-              >
-                Valider
-              </Button>
-            </div>
+
           </div>
         </div>
         <div className=" mx-auto rounded-lg p-4 max-w-screen-xl mb-4">
@@ -288,9 +296,9 @@ export default function Accueil() {
               </Card>
             </div>
 
-            <p>Vous pouvez consulter la liste des animaux juste en dessous.</p>
+           {/*  <p>Vous pouvez consulter la liste des animaux juste en dessous.</p> */}
           </div>
-          <AnimalList />
+       {/*    <AnimalList /> */}
         </div>
       </section>
 

@@ -4,7 +4,7 @@ import { faClock, faTable, faUsers } from "@fortawesome/free-solid-svg-icons";
 import { useEffect, useState } from "react";
 
 export default function Jouer() {
-  const [backgroundMode, setBackgroundMode] = useState(false);
+  const [backgroundMode, setBackgroundMode] = useState(localStorage.getItem("BackgroundMode") === "true");
 
   
 

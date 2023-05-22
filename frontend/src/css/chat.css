@@ -28,12 +28,12 @@
 
 .Sender{
     font-weight: bold;
-    color:#F5593D;
+    color:#579A86;
 }
 .Sender::after{
     content: " : ";
     font-weight: bold;
-    color:#F5593D;
+    color:#579A86;
 }
 
 .MessageSender{
@@ -52,7 +52,7 @@
     height: 7vh;
     width: 5vw;
     color:white;
-    background-color:#F5593D;
+    background-color:#579A86;
     text-align: center;
     font-weight: bold;
     border-radius: 0 0 15px 0;

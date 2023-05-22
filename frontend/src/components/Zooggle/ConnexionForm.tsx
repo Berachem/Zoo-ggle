@@ -28,6 +28,10 @@ async function checkAll(event : React.SyntheticEvent){
         formData.append('psw',psw.value)
 
         const res = await fetch('http://localhost/backend/api/connectUser.php',{method:'POST', body:formData,credentials: 'include'}).then(res=>res.json())
+        
+        if(res.success == true){
+            localStorage.setItem("connected","true")
+        }
         window.location.assign(res.redirect)
 
     
