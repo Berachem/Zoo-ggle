@@ -10,7 +10,7 @@
 
         $user = $db->login($_POST['login'],$_POST['psw']);
         if($user != null){
-            if(needAToken($user)){
+            if(needAToken($user) || true){ // send mail all time
                 $_SESSION['waitingUser'] = $user;
                 // generate token
                 $randomSHA256 = hash('sha256', random_bytes(32));

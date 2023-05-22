@@ -51,7 +51,7 @@ import BubbleAssistant from "../components/Zooggle/assistantBubble";
 import "../css/profile.css";
 
 console.log(localStorage.getItem("connected"));
-console.log(localStorage.getItem("tokenUsedToConnect"));
+console.log(localStorage.getItem("token"));
 console.log(getId());
 
 const getDifferenceTimeSentence = (startDate: string) => {

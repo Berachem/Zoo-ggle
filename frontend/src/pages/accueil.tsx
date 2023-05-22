@@ -30,7 +30,7 @@ async function checkToken(token :string){
     console.log("token is valid")
     // session storage connected
     localStorage.setItem("connected","true")
-    localStorage.setItem("tokenUsedToConnect",token)
+    localStorage.setItem("token",token)
     toast.success("Vous êtes connecté !", {
       position: "top-right",
       autoClose: 8000,
@@ -94,6 +94,7 @@ export default function Accueil() {
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
+        toastId:5
       });
     }
     if(params.has("disconnected") && params.get("disconnected")=="true"){
