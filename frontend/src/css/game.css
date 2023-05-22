@@ -50,6 +50,11 @@
     width: 7vw;
     height: 5vh;
     font-weight: bold;
+    transition: all 0.2s ease-in-out;
+}
+
+.ButtonSender:hover{
+    background-color:#4a8473;
 }
 
 @media (max-width: 1100px) {

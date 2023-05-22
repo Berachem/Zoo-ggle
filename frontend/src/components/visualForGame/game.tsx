@@ -2,6 +2,7 @@ import React from "react"
 import "../../css/game.css"
 import {TestGrid} from "../game/testGrid"
 import { ClassicInfoDisplayer } from "./classicInfoDisplayer"
+import { FFAInfoDisplayer } from "./ffaInfoDisplayer"
 
 export interface Grid {
     size: number
@@ -30,6 +31,42 @@ const wordData = [
         {"word":"patate","score":80,"isAnimal":false},
         {"word":"ananas","score":30,"isAnimal":false}
     ]
+
+const FFAData = [
+    {
+        player:"Bera",
+        words:[
+            {"word":"beau","score":60,"isAnimal":false},
+            {"word":"belle","score":70,"isAnimal":false},
+            {"word":"gnou","score":100,"isAnimal":true},
+            {"word":"beau","score":60,"isAnimal":false},
+            {"word":"belle","score":70,"isAnimal":false},
+            {"word":"gnou","score":100,"isAnimal":true},
+            {"word":"beau","score":60,"isAnimal":false},
+            {"word":"belle","score":70,"isAnimal":false},
+            {"word":"gnou","score":100,"isAnimal":true},
+            {"word":"beau","score":60,"isAnimal":false},
+            {"word":"belle","score":70,"isAnimal":false},
+            {"word":"gnou","score":100,"isAnimal":true}
+        ],
+        score:230
+    },
+    {
+        player:"Jean",
+        words:[
+            {"word":"OUI","score":30,"isAnimal":false},
+            {"word":"gnou","score":100,"isAnimal":true}
+        ],
+        score:130
+    },
+    {
+        player:"Lucas",
+        words:[
+            {"word":"puis","score":10,"isAnimal":false}
+        ],
+        score:10
+    }   
+]
 
 const score = 340
 
@@ -77,7 +114,7 @@ export const Game = () =>{
                 </div>
             </div>
 
-            <ClassicInfoDisplayer words={wordData} score={score}/>
+            <FFAInfoDisplayer info={FFAData}/>
 
         </div>
     )

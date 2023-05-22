@@ -1,0 +1,39 @@
+.ffaInfoDisplayer{
+    display: flex;
+    flex-direction: column;
+    margin: auto;
+    width:25vw;
+    padding:15px;
+    justify-content: space-evenly;
+}
+
+.User{
+    color: black;
+    font-size: large;
+    font-weight: bold;
+    word-break: break-word;
+}
+
+.UserWords{
+    display: flex;
+    flex-direction: column;
+    height: 20vh;
+    overflow-y: scroll;
+    scrollbar-color: light-gray white;
+    scrollbar-width: thin;
+    border-left: 2px solid #579A86;
+    padding-left: 10px;
+    margin-bottom: 5px;
+    
+}
+
+.Animal{
+    color:#579A86;
+    font-weight: bold;
+}
+
+@media (max-width: 900px) {
+    .ffaInfoDisplayer{
+        width: 100%;
+    }
+}

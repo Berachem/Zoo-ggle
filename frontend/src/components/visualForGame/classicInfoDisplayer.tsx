@@ -1,5 +1,7 @@
 import { divide } from "lodash"
 import "../../css/classicInfoDisplayer.css"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { faTrophy } from "@fortawesome/free-solid-svg-icons"
 
 interface WordsInfo { word: string, score: number, isAnimal: boolean }
 
@@ -24,7 +26,10 @@ export const ClassicInfoDisplayer = (props : ClassicInfoDisplayerProps)=>{
                     )
                 }
             </div>
-            <div className="Infos">Score : {props.score} </div>
+            <div className="Infos">
+                <FontAwesomeIcon icon={faTrophy} color="#E2C038" />{" "}
+                Score : {props.score} 
+            </div>
         </div>
     )
 
