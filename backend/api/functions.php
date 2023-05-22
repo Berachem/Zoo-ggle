@@ -977,3 +977,8 @@ function getUserByToken($token){
     }
     return null;
 }
+
+function getServerAuth(){
+    $ini_array = parse_ini_file("../../conf.ini", true);
+    return $ini_array["conf"]["password"];
+}

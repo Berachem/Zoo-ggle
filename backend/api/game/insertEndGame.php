@@ -3,6 +3,15 @@ require_once '../lib/parse.env.php';
 require_once '../Connexion.php';
 require_once '../functions.php';
 
+if (!isset($_POST["serverAuth"])){
+    echo json_encode(array("success" => false, "error" => "Server non authentifié, pas de paramètre en POST"));
+    exit();
+}else{
+    $serverAuth = getServerAuth();
+    if($serverAuth !=$_POST["serverAuth"]){
+        echo json_encode(array("success" => false, "error" => "Authentification invalide"));
+    }
+}
 if (isset($_POST["infoPartie"]) && isset($_POST["infoJoueurs"])){
     $infoPartie = $_POST["infoPartie"];
     $infoJoueurs = $_POST["infoJoueurs"];
