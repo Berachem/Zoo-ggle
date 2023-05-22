@@ -97,7 +97,7 @@ class ZoogleChatHooks(ChatHooks):
             },
         "Lion": {
             "mode":0, 
-            "attendee_number": 2, 
+            "attendee_number": 1, 
             "duration": 180, 
             "welcome_message": "Bonne partie à tous et que le meilleur gagne !", 
             "lang":"FRA", 
@@ -118,19 +118,8 @@ class ZoogleChatHooks(ChatHooks):
             "color":"#0D4FFB",
             "image_realist":"https://asafacon.fr/wp-content/uploads/2022/10/Quest-ce-Que-Laigle-Et-Sa-Signification-Spirituelle-Disent-728x410.jpg",
             "image_cartoon":"https://img.pixers.pics/pho_wat(s3:700/FO/79/56/57/75/700_FO79565775_6e7408d23de9d5538b2413c1bf8a1548.jpg,695,700,cms:2018/10/5bd1b6b8d04b8_220x50-watermark.png,over,475,650,jpg)/rideaux-occultants-dessin-anime-aigle-en-plein-vol.jpg.jpg",
-            "rule":"premier arrivé..."
-            },
-        "solo": {
-            "mode":1, 
-            "attendee_number": 1, 
-            "duration": 60, 
-            "welcome_message": "Bonne chance ! Trouvez vite les mots avant qu'il n'y en ai plus !", 
-            "lang":"FRA",
-            "grid_length":4,
-            "color":"#0D4FFB",
-            "image_realist":"https://asafacon.fr/wp-content/uploads/2022/10/Quest-ce-Que-Laigle-Et-Sa-Signification-Spirituelle-Disent-728x410.jpg",
-            "image_cartoon":"https://img.pixers.pics/pho_wat(s3:700/FO/79/56/57/75/700_FO79565775_6e7408d23de9d5538b2413c1bf8a1548.jpg,695,700,cms:2018/10/5bd1b6b8d04b8_220x50-watermark.png,over,475,650,jpg)/rideaux-occultants-dessin-anime-aigle-en-plein-vol.jpg.jpg",
-            "rule":"premier arrivé..."
+            "rule":"Dans une limite de temps de 3 minutes, vous devez trouver un maximum de mots en formant des chaînes de lettres contiguës.",
+            "description": "premier arrivé..."
             }
         }
     EXEC_PATH = "..\server\game_motor\executables_WIN"

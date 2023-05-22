@@ -99,6 +99,7 @@ class WaitingRoom(object):
         self.image_cartoon =  info.get('image_cartoon','')
         self.description =  info.get('description','')
         self.color =  info.get('color','')
+        self.rule = info.get('rule','')
         self._condition = asyncio.Condition()
         self._queue = [] # queue where the clients wait (we specify the ids of the clients)
         self.manager_task: Optional[Task] = None
@@ -328,7 +329,7 @@ class ChatServer(object):
                     'duration':v.duration,
                     'image_realistic':v.image_realistic,
                     'image_cartoon':v.image_cartoon,
-                    'description':v.description,
+                    'rule':v.rule,
                     'color':v.color,
                     } for (k, v) in self._waiting_rooms.items() }
         
@@ -378,7 +379,18 @@ class ChatServer(object):
                                     await waiting_room.queue_client_id(client.id)
                                     client.state = 'waiting'
                                     client.waiting_room = waiting_room
-                                    await client.send_message('in_waiting_room')
+                                    waiting_room_msg ={
+                                                        'attendee_number': waiting_room.attendee_number, 
+                                                        'description': waiting_room.description,
+                                                        'grid_size':waiting_room.grid_size,
+                                                        'duration':waiting_room.duration,
+                                                        'image_realistic':waiting_room.image_realistic,
+                                                        'image_cartoon':waiting_room.image_cartoon,
+                                                        'color':waiting_room.color,
+                                                        'rule':waiting_room.rule
+                                                        }
+                                    print(waiting_room_msg)
+                                    await client.send_message('in_waiting_room', waiting_room=waiting_room_msg)
                                     await self.sendPlayerWaitingInRoom(waiting_room)  
 
                         elif msg_kind == 'leave_waiting_room':

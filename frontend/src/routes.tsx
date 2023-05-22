@@ -72,17 +72,17 @@ export const routes = [
       </>
     ),
   },
-  {
-    label: "waitingRoom",
-    path: "/waitingRoom",
-    icon: HomeIcon,
-    element: (
-      <>
-        <BubbleAssistant />
-        <WaitingRoom />{" "}
-      </>
-    ),
-  },
+  // {
+  //   label: "waitingRoom",
+  //   path: "/waitingRoom",
+  //   icon: HomeIcon,
+  //   element: (
+  //     <>
+  //       <BubbleAssistant />
+  //       <WaitingRoom />{" "}
+  //     </>
+  //   ),
+  // },
   {
     label: "Websocket",
     path: "/websocket",

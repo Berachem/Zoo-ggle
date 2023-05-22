@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react"
+import WaitingRoom from '../../pages/waitingRoom'
 
-export interface WaitingRoom {
+export interface WaitingRoomInterface {
     name: string
     attendeeNumber: number
     description: string
@@ -9,6 +10,7 @@ export interface WaitingRoom {
     image_realist: string
     image_cartoon: string
     color: string
+    rule:string
 }
 
 export interface Message {
@@ -26,7 +28,7 @@ export interface Grid {
     content: string
 }
 
-export const WaitingRoomSelector = (props: { rooms: WaitingRoom[], onChosenRoom: (username: string, waitingRoom: string) => void }) => {
+export const WaitingRoomSelector = (props: { rooms: WaitingRoomInterface[], onChosenRoom: (username: string, waitingRoom: string) => void }) => {
     const [username, setUsername] = React.useState("")
     const [selectedRoom, setSelectedRoom] = React.useState("")
     return <div className="wsWaintingRoomSelector">
@@ -41,25 +43,25 @@ export const WaitingRoomSelector = (props: { rooms: WaitingRoom[], onChosenRoom:
     </div>
 }
 
-export const RoomWaiter = (props: { roomName: string, startTimestamp: number, onLeaving: () => void, playersWaiting: Player[] }) => {
-    const [currentTimestamp, setCurrentTimestamp] = React.useState(performance.now())
-    React.useEffect(() => {
-        const handle = setInterval(() => setCurrentTimestamp(performance.now()), 1000)
-        return () => clearTimeout(handle)
-    }, [])
-    return <div className="wsRoomWaiter">
-        <div>Waiting in room {props.roomName} for {Math.floor((currentTimestamp - props.startTimestamp) / 1000)} s.</div>
-        <div><button onClick={() => props.onLeaving()}>Leave the waiting room</button></div>
+// export const RoomWaiter = (props: { roomName: string, startTimestamp: number, onLeaving: () => void, playersWaiting: Player[] }) => {
+//     const [currentTimestamp, setCurrentTimestamp] = React.useState(performance.now())
+//     React.useEffect(() => {
+//         const handle = setInterval(() => setCurrentTimestamp(performance.now()), 1000)
+//         return () => clearTimeout(handle)
+//     }, [])
+//     return <div className="wsRoomWaiter">
+//         <div>Waiting in room {props.roomName} for {Math.floor((currentTimestamp - props.startTimestamp) / 1000)} s.</div>
+//         <div><button onClick={() => props.onLeaving()}>Leave the waiting room</button></div>
 
-        <p> Joueurs dans la room</p>
-        {props.playersWaiting.map(function (player) {
-            return (
-                <p>
-                    {player['pseudo']}
-                </p>)
-        })}
-    </div>
-}
+//         <p> Joueurs dans la room</p>
+//         {props.playersWaiting.map(function (player) {
+//             return (
+//                 <p>
+//                     {player['pseudo']}
+//                 </p>)
+//         })}
+//     </div>
+// }
 
 export const ChatMessageDisplayer = (props: { message: Message }) => {
     return <div className="wsChatMessageDisplayer">
@@ -105,7 +107,7 @@ export const Grid = (props: { grid: string }) => {
 interface DisconnectedState { disconnected: true }
 interface ConnectingState { connecting: true }
 interface RoomSelectionState { roomSelection: true }
-interface WaitingState { startTimestamp: number, waitingRoomName: string }
+interface WaitingState { startTimestamp: number, waitingRoom: WaitingRoomInterface }
 interface ChattingState { startTimestamp: number, messages: Message[], active: boolean }
 type ChatState = DisconnectedState | ConnectingState | RoomSelectionState | WaitingState | ChattingState
 
@@ -126,7 +128,7 @@ export default function ChatManager(props: { socketUrl: string }) {
     const [connected, setConnected] = React.useState(false)
     const [socket, setSocket] = React.useState<WebSocket | null>(null)
     const [error, setError] = React.useState<string>('')
-    const [waitingRooms, setWaitingRooms] = React.useState<WaitingRoom[]>([])
+    const [waitingRooms, setWaitingRooms] = React.useState<WaitingRoomInterface[]>([])
     const [word, setWord] = React.useState("")
 
     const [inGameStats, setInGameStats] = React.useState<InGameStats>({ score: 0, validWords: [] })
@@ -162,7 +164,7 @@ export default function ChatManager(props: { socketUrl: string }) {
             let waitingRooms = []
             for (let [name, v] of Object.entries(c['waiting_rooms'])) {
                 let value = v as any
-                let room: WaitingRoom = { name: name, attendeeNumber: value.attendee_number, description: value.description, grid_size: value.grid_size, duration: value.duration, image_realist: value.image_realist, image_cartoon: value.image_cartoon, color: value.color }
+                let room: WaitingRoomInterface = { name: name, attendeeNumber: value.attendee_number, description: value.description, grid_size: value.grid_size, duration: value.duration, image_realist: value.image_realist, image_cartoon: value.image_cartoon, color: value.color, rule:value.rule }
                 waitingRooms.push(room)
             }
             return waitingRooms
@@ -176,7 +178,8 @@ export default function ChatManager(props: { socketUrl: string }) {
 
             case 'in_waiting_room':
                 let name = content.waiting_room_name
-                setChatState({ waitingRoomName: name, startTimestamp: performance.now() })
+                let room:WaitingRoomInterface = { name: name, attendeeNumber: content.waiting_room.attendee_number, description: content.waiting_room.description, grid_size: content.waiting_room.grid_size, duration: content.waiting_room.duration, image_realist: content.waiting_room.image_realist, image_cartoon: content.waiting_room.image_cartoon, color: content.waiting_room.color, rule:content.waiting_room.rule }
+                setChatState({ waitingRoom: room, startTimestamp: performance.now() })
                 break
 
             case 'waiting_room_left':
@@ -209,19 +212,14 @@ export default function ChatManager(props: { socketUrl: string }) {
                         var currentPlayerInfo: PlayerInfos = { score: 0, validWords: words }
                         infos[player] = currentPlayerInfo
                     }
-                    console.log("Clean state pour mode aigle")
-                    console.log("SetIngameStats ligne223")
                     setInGameStats({ playersInfo: infos })
                 } else {
-                    console.log("Clean state pour mode classique")
-                    console.log("SetIngameStats ligne228")
                     setInGameStats({ score: 0, validWords: [] })
                 }
                 break
 
             case 'word_found':
                 if (content.mode == 0) {
-                    console.log("SetIngameStats ligne233")
                     setInGameStats(oldState => ('score' in oldState) ? { score: oldState.score + content.score, validWords: [...oldState.validWords, { word: content.word, score: content.score, isAnimal: content.isAnimal }] } : oldState)
                 } else if (content.mode == 1) {
                     setInGameStats(oldState => {
@@ -390,9 +388,11 @@ export default function ChatManager(props: { socketUrl: string }) {
         }
 
         {/* Waiting in a room */}
-        {'waitingRoomName' in chatState &&
+        {'waitingRoom' in chatState &&
             <>
-                <RoomWaiter roomName={chatState.waitingRoomName} startTimestamp={chatState.startTimestamp} onLeaving={leaveWaitingRoom} playersWaiting={playersWaiting} />
+                {/* <RoomWaiter roomName={chatState.waitingRoomName} startTimestamp={chatState.startTimestamp} onLeaving={leaveWaitingRoom} playersWaiting={playersWaiting} /> */}
+                <WaitingRoom room={chatState.waitingRoom} onLeaving={leaveWaitingRoom} playersWaiting={playersWaiting}/>
+
             </>}
 
         {/* In game  */}
