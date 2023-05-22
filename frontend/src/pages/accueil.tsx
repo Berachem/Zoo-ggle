@@ -39,6 +39,7 @@ async function checkToken(token :string){
       pauseOnHover: true,
       draggable: true,
       progress: undefined,
+      toastId:1
     });
   }
 
@@ -81,6 +82,7 @@ export default function Accueil() {
             pauseOnHover: true,
             draggable: true,
             progress: undefined,
+            toastId:2
           });
     }
     if(params.has("connected") && params.get("connected")=="true"){
@@ -103,6 +105,7 @@ export default function Accueil() {
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
+        toastId:3
       });
     }
     if(params.has("token")){
