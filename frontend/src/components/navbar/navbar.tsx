@@ -315,14 +315,16 @@ export default function AppBar(
           <li className="mx-7">
             <br />
             <br />
-            <span style={{color:"white",fontWeight:"bold",fontSize:"large",marginRight:"5px"}}>Changer le mode </span>
-            <Switch
-              onChange={() => props.changeBackgroundMode()}
-              className="flex-shrink-0 h-5 w-9"
-              style={{
-                backgroundColor: props.backgroundMode ? "#6b7280" : "#f59e0b",
-              }}
-            ></Switch>
+            <span style={{color:"black",fontWeight:"bold",backgroundColor:"white",borderRadius:"15px",display:"flex",justifyContent:"space-evenly",padding:"10px",width:"250px",opacity:"0.95"}}>
+              Changer le mode 
+              <Switch
+                onChange={() => props.changeBackgroundMode()}
+                className="flex-shrink-0 h-5 w-9"
+                style={{
+                  backgroundColor: props.backgroundMode ? "#6b7280" : "#f59e0b",
+                }}
+              ></Switch>
+            </span>
           </li>
 {/*           <li className="mx-7">
             <a href="#">
