@@ -93,9 +93,9 @@ class WaitingRoom(object):
         self.info = info
         self.attendee_number = info.get('attendee_number', 2)
         self.description = info.get('description', '')
-        self.grid_size = info.get('grid_size',4)
+        self.grid_size = info.get('grid_length',4)
         self.duration =  info.get('duration',3)
-        self.image_realistic =  info.get('image_realistic','')
+        self.image_realistic =  info.get('image_realist','')
         self.image_cartoon =  info.get('image_cartoon','')
         self.description =  info.get('description','')
         self.color =  info.get('color','')
@@ -272,7 +272,7 @@ class ChatServer(object):
             for key,client in chat_session.clients.items():
                 pseudosClient.append(client.identity['name'])
             
-            await chat_session.send_message(None, 'grid_reveal', grid=chat_session.grid, time=chat_session.duration, deadline=time.time() + chat_session.duration, mode=chat_session.mode, players=pseudosClient)
+            await chat_session.send_message(None, 'grid_reveal', grid=chat_session.grid, size=chat_session.grid_length, time=chat_session.duration, deadline=time.time() + chat_session.duration, mode=chat_session.mode, players=pseudosClient)
             logger.info(f"Grid revealed for chat session {chat_session}")
             remaining_time = chat_session.deadline - time.monotonic()
             while remaining_time > 0 and (chat_session.clients or chat_session.not_empty_message_queue()):
@@ -436,7 +436,7 @@ class ChatServer(object):
                                     
                                 elif (client.chat_session.mode == 0):
                                     result = await self.hooks.on_word_proposed(client.chat_session.id, client.id, word, wordIsValid, 0)
-                                    if wordIsValid:
+                                    if wordIsValid and result != None:
                                         await client.send_message('word_found', mode=0,word=result['word'],score=result['score'], isAnimal=result['isAnimal'])
                                 
                                 

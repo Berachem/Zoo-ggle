@@ -1,14 +1,25 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import "../css/choixPartie.css";
+import "../../css/choixPartie.css";
 import { faClock, faTable, faUsers } from "@fortawesome/free-solid-svg-icons";
 import { useEffect, useState } from "react";
+import {WaitingRoomItem} from "../../components/game/websocket"
 
-export default function Jouer() {
+interface GameSelectorProps{
+  rooms:WaitingRoomItem[]
+  onChosenRoom: (username: string, waitingRoom: string) => void
+}
+
+export default function GameSelector(props:GameSelectorProps) {
   const [backgroundMode, setBackgroundMode] = useState(localStorage.getItem("BackgroundMode") === "true");
 
-  
+  var token = localStorage.getItem("token")
+    if (token == null){
+        var tokenString = ""
+    }else{
+        var tokenString = token
+    }
 
-  useEffect(() => {
+    useEffect(() => {
     function changeBG() {
       setBackgroundMode( localStorage.getItem("BackgroundMode") === "true");
       console.log("backgroundMode", backgroundMode);
@@ -68,30 +79,30 @@ export default function Jouer() {
   return (
     <>
       <div className="Row">
-        {modes.map((mode) => (
+        {props.rooms.map((room) => (
           <div className="Card">
             <div className="CardHeader">
               <div className="CardHeaderIntermediaire">
                 <div className="MetaDate">
                   <FontAwesomeIcon
                     icon={faClock}
-                    style={{ color: mode.couleur }}
+                    style={{ color: room.color }}
                   />{" "}
-                  {mode.temps} min
+                  {room.duration/60} min
                 </div>
                 <div className="MetaDate">
                   <FontAwesomeIcon
                     icon={faUsers}
-                    style={{ color: mode.couleur }}
+                    style={{ color: room.color }}
                   />{" "}
-                  {mode.joueurs}
+                  {room.attendeeNumber}
                 </div>
                 <div className="MetaDate">
                   <FontAwesomeIcon
                     icon={faTable}
-                    style={{ color: mode.couleur }}
+                    style={{ color: room.color }}
                   />{" "}
-                  {mode.grille}x{mode.grille}
+                  {room.grid_size}x{room.grid_size}
                 </div>
               </div>
             </div>
@@ -99,24 +110,25 @@ export default function Jouer() {
             <div className="CardImage">
             {backgroundMode ?
               <img
-                src={mode.realImage} 
+                src={room.image_realist} 
                 alt="mode"
               /> :
               <img
-                src={mode.cartoonImage}
+                src={room.image_cartoon}
                 alt="mode"
               />
             }
             </div>
 
             <div className="CardTitle">
-              Mode <h3 style={{ color: mode.couleur }}>{mode.nom}</h3>
+              Mode <h3 style={{ color: room.color }}>{room.name}</h3>
             </div>
-            <div className="CardDescription">{mode.description}</div>
+            <div className="CardDescription">{room.description}</div>
             <div className="CardFooter">
               <button
+                onClick={() => props.onChosenRoom(tokenString, room.name)}
                 className="CardButton"
-                style={{ backgroundColor: mode.couleur }}
+                style={{ backgroundColor: room.color }}
               >
                 Jouer
               </button>

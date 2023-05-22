@@ -1,112 +1,92 @@
-import { Input, Button, Textarea } from "@material-tailwind/react";
-export default function chat(props: any) {
-    var activated = props.activated || false;
+import React , {useState} from "react";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faMessage } from '@fortawesome/free-solid-svg-icons';
 
-    const chatData = [
-        {
-            pseudo: "Lucas",
-            message: "Bonjour"
-        },
-        {
-            pseudo: "Berachem",
-            message: "Salut tout le monde :D"
-        },
-        {
-            pseudo: "Nidal",
-            message: "Quoicoubebou"
-        },
-        {
-            pseudo: "Lucas",
-            message: "Bla bla bla bla ! Bla bla ..."
-        },
-        {
-            pseudo: "Nidal",
-            message: "Blablablalablablablablalablablablablalablablablablalablablablablablablabla.... AHAHAHHAHAAHAH blablablablabla"
-        },
-        {
-            pseudo: "Lucas",
-            message: "Bla bla bla bla ! Bla bla ..."
-        },
-        {
-            pseudo: "Nidal",
-            message: "Blablablablablabla.... AHAHAHHAHAAHAH blablablablabla"
-        },
-        {
-            pseudo: "Lucas",
-            message: "Bla bla bla bla ! Bla bla ..."
-        },
-        {
-            pseudo: "Nidal",
-            message: "Blablablablablabla.... AHAHAHHAHAAHAH blablablablabla"
-        },
-        {
-            pseudo: "Nidal",
-            message: "Blablablablablabla.... AHAHAHHAHAAHAH blablablablabla"
-        },
-        {
-            pseudo: "Lucas",
-            message: "Bla bla bla bla ! Bla bla ..."
-        },
-        {
-            pseudo: "Nidal",
-            message: "Blablablablablabla.... AHAHAHHAHAAHAH blablablablabla"
-        },
-        {
-            pseudo: "Lucas",
-            message: "Bla bla bla bla ! Bla bla ..."
-        },
-        {
-            pseudo: "Nidal",
-            message: "Blablablablablabla.... AHAHAHHAHAAHAH blablablablabla"
-        },
-        {
-            pseudo: "Lucas",
-            message: "Bla bla bla bla ! Bla bla ..."
-        },
-        {
-            pseudo: "Nidal",
-            message: "Blablablablablabla.... AHAHAHHAHAAHAH blablablablabla"
-        },
-        {
-            pseudo: "Lucas",
-            message: "Bla bla bla bla ! Bla bla ..."
-        },
+interface ChatBlockProps{
+    messages: Message[], 
+    onMessageWritten: (content: string) => void
+}
+//PLUS DE TIMESTAMP
+export interface Message {
+    sender: string
+    content: string
+}
 
-    ];
+//ELEMENT MODIFIE (ajout class input et bouton + enlever style flex )
+export const MessageSender = (props: { onMessageWritten: (content: string) => void }) => {
+    const [content, setContent] = React.useState("")
+    return  <div className="MessageSender">
+                <input className="InputMessage" type="text" value={content} onChange={event => setContent(event.target.value)} />
+                <button className="ButtonMessage" onClick={() => { props.onMessageWritten(content); setContent('') }}>Send</button>
+            </div>
+}
 
+//PAS DE MODIF
+export const ChatMessagesDisplayer = (props: { messages: Message[] }) => {
+    return <ol className="ChatMessagesDisplayer">
+        {props.messages.map((x, i) => <li key={i}><ChatMessageDisplayer message={x} /></li>)}
+    </ol>
+}
+
+//ELEMENT MODIFIE (ajout classname, balise span au lieu de div et plus de dive "message" )
+export const ChatMessageDisplayer = (props: { message: Message }) => {
+    //const date = React.useMemo(() => new Date(props.message.timestamp).toLocaleTimeString(), [props.message.timestamp])
+    //la div Date à été viré de l'html si jamais
+    return  <div className="ChatMessageDisplayer">
+                <span className="Sender">{props.message.sender}</span>
+                {props.message.content}
+            </div>
+}
+
+//ELEMENT MODIFIE (diplay none sur boutton + voile pour le mode tel)
+export const ChatSession = (props: { messages: Message[], onMessageWritten: (content: string) => void}) => {
+    return <><div className="ChatSession">
+        <ChatMessagesDisplayer messages={props.messages} />
+        <MessageSender onMessageWritten={props.onMessageWritten}/>
+        
+    </div>
+    <div className="CacheFond"></div>
+    </>
+}
+
+export const ChatBlock = (props:ChatBlockProps) => {
+    //==pour le bouton en mode telephone==
+    const [showChat, setShowChat] = useState(true);
+    const [showChatButton, setShowChatButton] = useState(false);
+    const toggleChat = () => {
+        setShowChat(!showChat);
+    };
+    React.useEffect(() => {
+        function handleResize() {
+            if (window.innerWidth > 1100) {
+                setShowChatButton(false);
+                setShowChat(true);
+            } else {
+                if (!showChatButton) {
+                    setShowChat(false);
+                }
+                setShowChatButton(true);
+            }
+        }
+        window.addEventListener('resize', handleResize)
+        window.addEventListener('load', handleResize);
+    })
+    //====================================
+
+    //oui le chat ne fait rien je reprend juste le visuel
     return (
-        <div style={{
-            width: "100%",
-            height: "100%",
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "space-between",
-        }}>
-            <div style={{
-                flexGrow:"1",
-                margin: "1rem",
-                overflowY:"scroll"
-            }} className="customScroll">
-                {chatData.map(function (chat) {
-                    return (
-                        <p style={{wordBreak:"break-word"}}>
-                            <b>{chat.pseudo}</b> : {chat.message}
-                        </p>)
-                })}
-            </div>
-            <div style={{
-                width: "100%",
-                display: "flex",
-                flexDirection: "row",
-                flexWrap: "nowrap",
-            }}>
-                <div className="relative  flex w-full max-w-[24rem]" style={{ margin: "auto", backgroundColor: "#FFFFFF", borderRadius: "0.5rem" }}>
-                    <Input type="text" label="Message" color="green" disabled={!activated} />
-                    <Button size="sm" color={!activated ? "gray" : "green"} className="!absolute right-1 top-1 rounded" disabled={!activated}>
-                        Envoyer
-                    </Button>
-                </div>
-            </div>
-        </div>
-    )
+        <>
+
+            {(showChat) && (<ChatSession messages={props.messages} onMessageWritten={props.onMessageWritten}/>)}
+            {showChatButton && 
+                (
+                    <div className="fixed bottom-5 left-5 z-50">
+                        <button className="flex items-center justify-center bg-orange-700 text-white rounded-full w-12 h-12" onClick={toggleChat}>
+                            <FontAwesomeIcon icon={faMessage} size='1x' className='text-white' />
+                        </button>
+                    </div>
+                )
+            }
+        </>
+    );
 }

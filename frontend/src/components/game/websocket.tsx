@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from "react"
 import WaitingRoom from './waitingRoom'
+import GameSelector from './gameSelector'
+import { ChatBlock, Message } from './chat'
+import { Game, WordsInfo, PlayerInfos, FFAPlayersInfos, EagleModeStats, InGameStats, Grid } from "./game"
 
 export interface WaitingRoomItem {
     name: string
@@ -10,12 +13,7 @@ export interface WaitingRoomItem {
     image_realist: string
     image_cartoon: string
     color: string
-    rule:string
-}
-
-export interface Message {
-    sender: string
-    content: string
+    rule: string
 }
 
 export interface Player {
@@ -23,88 +21,12 @@ export interface Player {
     id: number
 }
 
-export interface Grid {
-    size: number
-    content: string
-}
-
-
 interface DisconnectedState { disconnected: true }
 interface ConnectingState { connecting: true }
 interface RoomSelectionState { roomSelection: true }
 interface WaitingState { startTimestamp: number, waitingRoom: WaitingRoomItem }
 interface ChattingState { startTimestamp: number, messages: Message[], active: boolean }
 type ChatState = DisconnectedState | ConnectingState | RoomSelectionState | WaitingState | ChattingState
-
-interface WordsInfo { word: string, score: number, isAnimal: boolean }
-interface PlayerInfos { score: number, validWords: WordsInfo[] }
-interface AllPlayersInfos {
-    [pseudo: string]: PlayerInfos
-}
-
-interface EagleModeStats {
-    playersInfo: AllPlayersInfos
-}
-
-type InGameStats = PlayerInfos | EagleModeStats
-
-
-export const WaitingRoomSelector = (props: { rooms: WaitingRoomItem[], onChosenRoom: (username: string, waitingRoom: string) => void }) => {
-    const [username, setUsername] = React.useState("")
-    const [selectedRoom, setSelectedRoom] = React.useState("")
-    return <div className="wsWaintingRoomSelector">
-        <div>Username: <input type="text" value={username} onChange={event => setUsername(event.target.value)} /></div>
-        <div>
-            {props.rooms.map(room => <div key={room.name}>
-                <input type="radio" name="room" value={room.name} checked={selectedRoom === room.name} onChange={() => setSelectedRoom(room.name)} />
-                {room.name}:{room.attendeeNumber}player(s), {room.duration}s ({room.description})
-            </div>)}
-        </div>
-        <button onClick={() => props.onChosenRoom(username, selectedRoom)} disabled={username === "" || selectedRoom === "" || props.rooms.findIndex(x => x.name === selectedRoom) === -1}>Join the waiting room</button>
-    </div>
-}
-
-
-export const ChatMessageDisplayer = (props: { message: Message }) => {
-    return <div className="wsChatMessageDisplayer">
-        <div>{props.message.sender}</div>
-        <div style={{ flex: 1 }}>{props.message.content}</div>
-    </div>
-}
-
-export const ChatMessagesDisplayer = (props: { messages: Message[] }) => {
-    return <ol className="wsChatMessagesDisplayer">
-        {props.messages.map((x, i) => <li key={i}><ChatMessageDisplayer message={x} /></li>)}
-    </ol>
-}
-
-export const MessageSender = (props: { onMessageWritten: (content: string) => void }) => {
-    const [content, setContent] = React.useState("")
-    return <div className="wsMessageSender">
-        <input type="text" value={content} style={{ flex: 1 }} onChange={event => setContent(event.target.value)} />
-        <button onClick={() => { props.onMessageWritten(content); setContent('') }}>Send</button>
-    </div>
-}
-
-export const ChatSession = (props: { messages: Message[], active: boolean, onMessageWritten: (content: string) => void, onLeaving: () => void }) => {
-    return <div className="wsChatSession">
-        <ChatMessagesDisplayer messages={props.messages} />
-        {props.active && <MessageSender onMessageWritten={props.onMessageWritten} />}
-        <div>
-            <button onClick={() => props.onLeaving()} disabled={!props.active}>Leave the chat session</button>
-        </div>
-    </div>
-}
-
-export const Grid = (props: { grid: string }) => {
-    return <div className="wsGrid">
-        {
-            props.grid.split(" ").map((letter: string, index: number) => {
-                return <div key={index.toString()}>{letter}</div>
-            })
-        }
-    </div>
-}
 
 export default function ChatManager(props: { socketUrl: string }) {
     const [chatState, setChatState] = React.useState<ChatState>({ disconnected: true })
@@ -114,7 +36,7 @@ export default function ChatManager(props: { socketUrl: string }) {
     const [waitingRooms, setWaitingRooms] = React.useState<WaitingRoomItem[]>([])
     const [word, setWord] = React.useState("")
 
-    const [inGameStats, setInGameStats] = React.useState<InGameStats>({ score: 0, validWords: [] })
+    const [inGameStats, setInGameStats] = React.useState<InGameStats>({ score: 0, words: [] })
 
     const [countDown, setCountDown] = React.useState(0);
     const [deadLine, setDeadline] = React.useState(0);
@@ -122,15 +44,13 @@ export default function ChatManager(props: { socketUrl: string }) {
     const [gridState, setGridState] = React.useState<Grid>({ size: 4, content: "? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ?" })
     const [playersWaiting, setPlayersWaiting] = React.useState<Player[]>([])
 
-
-
     const resetGameState = () => {
         setGridState({ size: 4, content: "? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ?" })
         setWord("")
         setCountDown(0)
         setDeadline(0)
         setPlayersWaiting([])
-        setInGameStats({ score: 0, validWords: [] })
+        setInGameStats({ score: 0, words: [] })
     }
 
     const onNewSocketMessage = (kind: string, content: Record<string, any>) => {
@@ -147,7 +67,7 @@ export default function ChatManager(props: { socketUrl: string }) {
             let waitingRooms = []
             for (let [name, v] of Object.entries(c['waiting_rooms'])) {
                 let value = v as any
-                let room: WaitingRoomItem = { name: name, attendeeNumber: value.attendee_number, description: value.description, grid_size: value.grid_size, duration: value.duration, image_realist: value.image_realistic, image_cartoon: value.image_cartoon, color: value.color, rule:value.rule }
+                let room: WaitingRoomItem = { name: name, attendeeNumber: value.attendee_number, description: value.description, grid_size: value.grid_size, duration: value.duration, image_realist: value.image_realistic, image_cartoon: value.image_cartoon, color: value.color, rule: value.rule }
                 waitingRooms.push(room)
             }
             return waitingRooms
@@ -161,7 +81,7 @@ export default function ChatManager(props: { socketUrl: string }) {
 
             case 'in_waiting_room':
                 let name = content.waiting_room_name
-                let room:WaitingRoomItem = { name: name, attendeeNumber: content.waiting_room.attendee_number, description: content.waiting_room.description, grid_size: content.waiting_room.grid_size, duration: content.waiting_room.duration, image_realist: content.waiting_room.image_realistic, image_cartoon: content.waiting_room.image_cartoon, color: content.waiting_room.color, rule:content.waiting_room.rule }
+                let room: WaitingRoomItem = { name: name, attendeeNumber: content.waiting_room.attendee_number, description: content.waiting_room.description, grid_size: content.waiting_room.grid_size, duration: content.waiting_room.duration, image_realist: content.waiting_room.image_realistic, image_cartoon: content.waiting_room.image_cartoon, color: content.waiting_room.color, rule: content.waiting_room.rule }
                 setChatState({ waitingRoom: room, startTimestamp: performance.now() })
                 break
 
@@ -185,36 +105,36 @@ export default function ChatManager(props: { socketUrl: string }) {
                 break
 
             case 'grid_reveal':
-                setGridState({ size: gridState.size, content: content.grid })
+                setGridState({ size: content.size, content: content.grid })
                 setDeadline(content.deadline * 1000)
                 setCountDown((deadLine - new Date().getTime()))
                 if (content.mode == 1) {
-                    let infos: AllPlayersInfos = {}
+                    let infos: FFAPlayersInfos = {}
                     for (const player of content.players) {
                         let words: WordsInfo[] = []
-                        var currentPlayerInfo: PlayerInfos = { score: 0, validWords: words }
+                        var currentPlayerInfo: PlayerInfos = { score: 0, words: words }
                         infos[player] = currentPlayerInfo
                     }
                     setInGameStats({ playersInfo: infos })
                 } else {
-                    setInGameStats({ score: 0, validWords: [] })
+                    setInGameStats({ score: 0, words: [] })
                 }
                 break
 
             case 'word_found':
                 if (content.mode == 0) {
-                    setInGameStats(oldState => ('score' in oldState) ? { score: oldState.score + content.score, validWords: [...oldState.validWords, { word: content.word, score: content.score, isAnimal: content.isAnimal }] } : oldState)
+                    setInGameStats(oldState => ('score' in oldState) ? { score: oldState.score + content.score, words: [...oldState.words, { word: content.word, score: content.score, isAnimal: content.isAnimal }] } : oldState)
                 } else if (content.mode == 1) {
                     setInGameStats(oldState => {
                         if ('playersInfo' in oldState) {
                             var oldPlayerStats: PlayerInfos = { ...oldState.playersInfo[content.player] }
 
                             var word: WordsInfo = { score: content.score, word: content.word, isAnimal: content.isAnimal }
-                            var newPlayerStats: PlayerInfos = { ...oldPlayerStats, score: oldPlayerStats.score + content.score, validWords: [...oldPlayerStats.validWords, word] }
+                            var newPlayerStats: PlayerInfos = { ...oldPlayerStats, score: oldPlayerStats.score + content.score, words: [...oldPlayerStats.words, word] }
                             var player: string = content.player
-                            var stats: AllPlayersInfos = { ...oldState.playersInfo }
+                            var stats: FFAPlayersInfos = { ...oldState.playersInfo }
                             stats[player] = newPlayerStats
-                            return {playersInfo:stats}
+                            return { playersInfo: stats }
                         }
                         else {
                             return oldState
@@ -353,7 +273,7 @@ export default function ChatManager(props: { socketUrl: string }) {
     };
 
 
-    return <div className="wsChatManager">
+    return <div>
         {error !== '' &&
             <div className="wsError">Error: {error} <button onClick={() => setError('')}>OK</button></div>}
 
@@ -367,79 +287,32 @@ export default function ChatManager(props: { socketUrl: string }) {
 
         {/* Choosing a room */}
         {'roomSelection' in chatState &&
-            <WaitingRoomSelector rooms={waitingRooms} onChosenRoom={connectToWaitingRoom} />
+            <GameSelector rooms={waitingRooms} onChosenRoom={connectToWaitingRoom} />
         }
 
         {/* Waiting in a room */}
         {'waitingRoom' in chatState &&
             <>
-                <WaitingRoom room={chatState.waitingRoom} onLeaving={leaveWaitingRoom} playersWaiting={playersWaiting}/>
-
+                <WaitingRoom room={chatState.waitingRoom} onLeaving={leaveWaitingRoom} playersWaiting={playersWaiting} />
             </>}
 
         {/* In game  */}
         {'messages' in chatState &&
             <>
-                <ChatSession messages={chatState.messages} active={chatState.active} onMessageWritten={sendChatMessage} onLeaving={leaveChatSession} />
+                <div style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    flexWrap: "nowrap",
+                    justifyContent: "space-evenly",
+                    width: "100vw"
+                }}>
 
-                <Grid grid={gridState.content}></Grid>
-                <div className="wsWordSender">
-                    txt : {getReturnValues(countDown)}
-                </div>
-
-
-                <div className="wsWordSender">
-                    <input type="text" value={word} style={{ flex: 1 }} onChange={event => setWord(event.target.value)} />
-                    <button onClick={() => { proposeWord(word); setWord('') }}>Send</button>
-                </div>
-                <div>
-                    {"score" in inGameStats &&
-                        <>
-                            <h1>
-                                Score :
-                            </h1>
-                            <p>
-                                {inGameStats.score}
-                            </p>
-                            <h1>
-                                Mots Trouvés :
-                            </h1>
-                            {inGameStats.validWords.map(function (list) {
-                                return (
-                                    <p key={list.word}>
-                                        {list.word} - {list.score} pts {list.isAnimal && <>C' est un animal</>}
-                                    </p>)
-                            })}
-                        </>
-                    }
-
-                    {"playersInfo" in inGameStats &&
-                        <>
-                            <h1>EAGLE</h1>
-                            {Object.keys(inGameStats.playersInfo).map(function (key) {
-                                let playerStat = inGameStats.playersInfo[key];
-                                return (
-                                    <React.Fragment key={key}>
-                                        <h1> {key} - {playerStat.score} pts </h1>
-                                        {
-                                            playerStat.validWords.map(function (word) {
-                                                return (
-                                                    <p key={word.word}>
-                                                        {word.word} - {word.score} pts {word.isAnimal && <p>C' est un animal</p>}
-                                                    </p>
-                                                )
-                                            })
-                                        }
-                                    </React.Fragment>
-                                )
-                            }
-                            )}
-                        </>
-                    }
+                    <Game grid={gridState} game_stats={inGameStats} propose_word={proposeWord} countdown={countDown} />
+                    <ChatBlock messages={chatState.messages} onMessageWritten={sendChatMessage} />
                 </div>
             </>
 
         }
 
     </div>
-}
+}  

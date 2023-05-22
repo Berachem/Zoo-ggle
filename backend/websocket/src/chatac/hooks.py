@@ -84,7 +84,7 @@ class ZoogleChatHooks(ChatHooks):
     DEFAULT_ROOMS = {
         "Paresseux": {
             "mode":0, 
-            "attendee_number": 2, 
+            "attendee_number": 1, 
             "duration": 300, 
             "welcome_message": "Bonne chance à tous, prenez votre temps, mais n'en perdez pas trop !", 
             "lang":"FRA", 
@@ -110,7 +110,7 @@ class ZoogleChatHooks(ChatHooks):
             },
         "Aigle": {
             "mode":1, 
-            "attendee_number": 3, 
+            "attendee_number": 1, 
             "duration": 240, 
             "welcome_message": "Bonne chance ! Trouvez vite les mots avant qu'il n'y en ai plus !", 
             "lang":"FRA",
@@ -169,17 +169,17 @@ class ZoogleChatHooks(ChatHooks):
             url = 'http://localhost/backend/api/game/getPlayerByToken.php'
             myobj = {'token': token, 'serverAuth':serverAuth}
             response = requests.post(url, data = myobj)
-            # response.raise_for_status()
-            # jsonResponse = response.json()
-            # print("Entire JSON response")
-            # print(jsonResponse)
-            response = requests.post(url, data = myobj)
-            print(response._content)
-            print(response.text)
-            print(response.text())
-            print(response.content)
             response.raise_for_status()
-            print(response.json())
+            jsonResponse = response.json()
+            print("Entire JSON response")
+            print(jsonResponse)
+            # response = requests.post(url, data = myobj)
+            # print(response._content)
+            # print(response.text)
+            # print(response.text())
+            # print(response.content)
+            # response.raise_for_status()
+            # print(response.json())
             if (jsonResponse.get("success")):
                 data = {"name":jsonResponse.get("pseudo"),"token":token,"id":jsonResponse.get("id")}
                 return data
@@ -246,6 +246,10 @@ class ZoogleChatHooks(ChatHooks):
                 for currentWord in currentAttendee.validWords:
                     if currentWord[0] == word:
                         return {"already_found":True,"word":word, "player":currentAttendee.identity["name"]}
+        else:
+            for currentWord in attendee.validWords:
+                if currentWord[0] == word:
+                    return None
         if (isValidWord):
             serverAuth = self.get_server_auth()
             try:

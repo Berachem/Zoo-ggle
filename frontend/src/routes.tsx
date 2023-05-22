@@ -1,15 +1,11 @@
 import { HomeIcon, BookOpenIcon, PlayIcon, ComputerDesktopIcon } from "@heroicons/react/24/outline";
 
 import Accueil from "./pages/accueil";
-import Jouer from "./pages/choixPartie";
 import Dictionnaire from "./pages/dictionnaire";
-import Game from "./pages/game";
 import Connexion from "./pages/connexion";
 import BubbleAssistant from "./components/Zooggle/assistantBubble";
 import CreationPartie from "./pages/creationPartie";
-import WaitingRoom from "./components/game/waitingRoom";
-import WebsocketPage from "./pages/websocketsTEST";
-import { PageTest } from "./components/visualForGame/pageTest";
+import Jouer from "./pages/jouer";
 
 export const routes = [
   {
@@ -19,17 +15,6 @@ export const routes = [
     element: <Accueil />,
   },
   {
-    label: "Jouer",
-    path: "/choixPartie",
-    icon: PlayIcon,
-    element: (
-      <>
-        <BubbleAssistant />
-        <Jouer />
-      </>
-    ),
-  },
-  {
     label: "Dictionnaire",
     path: "/dictionnaire",
     icon: BookOpenIcon,
@@ -37,17 +22,6 @@ export const routes = [
       <>
         <BubbleAssistant />
         <Dictionnaire />
-      </>
-    ),
-  },
-  {
-    label: "Game",
-    path: "/jouer",
-    icon: HomeIcon,
-    element: (
-      <>
-        <BubbleAssistant />
-        <Game />{" "}
       </>
     ),
   },
@@ -72,28 +46,11 @@ export const routes = [
       </>
     ),
   },
-  // {
-  //   label: "waitingRoom",
-  //   path: "/waitingRoom",
-  //   icon: HomeIcon,
-  //   element: (
-  //     <>
-  //       <BubbleAssistant />
-  //       <WaitingRoom />{" "}
-  //     </>
-  //   ),
-  // },
   {
-    label: "Websocket",
-    path: "/websocket",
+    label: "Jouer",
+    path: "/jouer",
     icon: ComputerDesktopIcon,
-    element: <WebsocketPage />,
-  },
-  {
-    label: "chatVisu",
-    path: "/chatVisu",
-    icon: ComputerDesktopIcon,
-    element: <PageTest />,
+    element: <Jouer />,
   }
 ];
 
