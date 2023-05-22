@@ -1,6 +1,6 @@
 import React from "react"
 import "../../css/game.css"
-import {TestGrid} from "../game/testGrid"
+import {TestGrid} from "../game/TestGrid"
 import { ClassicInfoDisplayer } from "./classicInfoDisplayer"
 import { FFAInfoDisplayer } from "./ffaInfoDisplayer"
 
@@ -100,6 +100,10 @@ export const Game = () =>{
         return minutes + "min" + seconds + "s";
     };
     
+    function getLetter(letter : string){
+        console.log(letter)
+        setWord(word+letter)   
+    }
 
     return (
         <div className="container">
@@ -107,9 +111,9 @@ export const Game = () =>{
 
             <div className="gridContainer">
                 <div className="Timer">{getReturnValues(countDown)}</div>
-                <TestGrid content={gridState.content} size={gridState.size}/>
+                <TestGrid content={gridState.content} size={gridState.size} getLetter={getLetter}/>
                 <div className="containerSender">
-                    <input className="WordSender" type="text" value={word} onChange={event => setWord(event.target.value)} />
+                    <input id="input" className="WordSender" type="text" value={word} onChange={event => setWord(event.target.value)} />
                     <button className="ButtonSender" onClick={() => { proposeWord(word); setWord('') }}>Proposer</button>
                 </div>
             </div>

@@ -5,13 +5,24 @@ export interface TestGridInterface {
     content: string
     width?: string
     height?: string
+    getLetter : (letter : string) => void
 }
 
-function switchColor(id : string){
-    document.getElementById("case"+id)?.classList.toggle("selected")
-}
+
 
 export const TestGrid = (props: TestGridInterface) => {
+
+    function switchColor(id : string){
+        const letter = document.getElementById("case"+id)
+        if(letter!=null){
+            letter.classList.toggle("selected")
+            if(letter.classList.contains("selected")){
+                console.log("APPELE AVEC "+letter.innerHTML)
+                props.getLetter(letter.innerHTML)
+            }   
+        }     
+    }
+
     return (
         <div style={{
             display:"flex",

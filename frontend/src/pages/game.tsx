@@ -3,7 +3,7 @@ import { Input, Button, Typography } from "@material-tailwind/react";
 import Logo from "../assets/images/Title.svg";
 import ZooggleCard from "../components/Zooggle/ZooggleCard"
 import GameGrid from "../components/Zooggle/GameGrid";
-import {TestGrid} from "../components/game/testGrid";
+import {TestGrid} from "../components/game/TestGrid";
 import Chat from "../components/game/chat";
 import Words from "../components/game/words";
 import GameColumn from "../components/game/gameColumn";
