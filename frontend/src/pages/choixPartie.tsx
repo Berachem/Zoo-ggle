@@ -43,7 +43,7 @@ export default function Jouer() {
       joueurs: 2,
       dictionnaire: "fr",
       grille: 4,
-      couleur: "#F5593D",
+      couleur: "#579A86",
       cartoonImage:
         "https://cdn.discordapp.com/attachments/890989295794552832/1108097595299090652/1f981.png",
       realImage:
