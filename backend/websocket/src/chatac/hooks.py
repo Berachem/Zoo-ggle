@@ -6,6 +6,7 @@ import subprocess
 import requests
 from requests.exceptions import HTTPError
 import json
+from configparser import ConfigParser
 
 class ChatHooks(object):
     """
@@ -81,53 +82,55 @@ class ZoogleChatHooks(ChatHooks):
     DEFAULT_GRID_LENGTH = 4
     DEFAULT_ATTENDEE_NUMBER=2
     DEFAULT_ROOMS = {
-        "default": {
+        "Paresseux": {
             "mode":0, 
             "attendee_number": 2, 
-            "duration": 60, 
-            "welcome_message": "Salut everybody tout le monde !", 
+            "duration": 300, 
+            "welcome_message": "Bonne chance à tous, prenez votre temps, mais n'en perdez pas trop !", 
+            "lang":"FRA", 
+            "grid_length":5,
+            "color":"#579A86",
+            "image_realist":"https://fac.img.pmdstatic.net/fit/https.3A.2F.2Fi.2Epmdstatic.2Enet.2Ffac.2F2021.2F09.2F02.2F0110eda7-6a0b-4ead-8290-cf7656479290.2Ejpeg/1200x1200/quality/80/crop-from/center/focus-point/1949%2C1436/tout-savoir-sur-le-paresseux.jpeg",
+            "image_cartoon":"https://st4.depositphotos.com/2633985/21923/v/450/depositphotos_219232430-stock-illustration-sloth-hanging-on-tree-branch.jpg",
+            "rule":"Dans une limite de temps de 5 minutes, vous devez trouver un maximum de mots en formant des chaînes de lettres contiguës.",
+            "description": "prenez votre temps...",
+            },
+        "Lion": {
+            "mode":0, 
+            "attendee_number": 2, 
+            "duration": 180, 
+            "welcome_message": "Bonne partie à tous et que le meilleur gagne !", 
             "lang":"FRA", 
             "grid_length":4,
-            "color":"#",
-            "image_realist":"",
-            "image_cartoon":"",
-            "rule":"Rentrez des motsd, faites des points"
-            },
-        "solo": {
-            "mode":0, 
-            "attendee_number": 1, 
-            "duration": 5, 
-            "welcome_message": "Salut toi !", 
-            "lang":"FRA", 
-            "grid_length":4,
-            "color":"#",
-            "image_realist":"",
-            "image_cartoon":"",
-            "rule":"Rentrez des motsd, faites des points"
-            },
-        "4": {
-            "mode":0, 
-            "attendee_number": 3, 
-            "duration": 120, 
-            "welcome_message": "!", 
-            "lang":"FRA",
-            "grid_length":4,
-            "color":"#",
-            "image_realist":"",
-            "image_cartoon":"",
-            "rule":"Rentrez des motsd, faites des points"
+            "color":"#F5593D",
+            "image_realist":"https://www.larousse.fr/encyclopedie/data/images/1316665-Lion.jpg",
+            "image_cartoon":"https://cdn.discordapp.com/attachments/890989295794552832/1108097595299090652/1f981.png",
+            "rule":"Dans une limite de temps de 3 minutes, vous devez trouver un maximum de mots en formant des chaînes de lettres contiguës.",
+            "description": "classique",
             },
         "Aigle": {
             "mode":1, 
-            "attendee_number": 2, 
+            "attendee_number": 3, 
             "duration": 240, 
-            "welcome_message": "!", 
+            "welcome_message": "Bonne chance ! Trouvez vite les mots avant qu'il n'y en ai plus !", 
             "lang":"FRA",
             "grid_length":4,
-            "color":"#",
-            "image_realist":"",
-            "image_cartoon":"",
-            "rule":"Rentrez des motsd, faites des points"
+            "color":"#0D4FFB",
+            "image_realist":"https://asafacon.fr/wp-content/uploads/2022/10/Quest-ce-Que-Laigle-Et-Sa-Signification-Spirituelle-Disent-728x410.jpg",
+            "image_cartoon":"https://img.pixers.pics/pho_wat(s3:700/FO/79/56/57/75/700_FO79565775_6e7408d23de9d5538b2413c1bf8a1548.jpg,695,700,cms:2018/10/5bd1b6b8d04b8_220x50-watermark.png,over,475,650,jpg)/rideaux-occultants-dessin-anime-aigle-en-plein-vol.jpg.jpg",
+            "rule":"premier arrivé..."
+            },
+        "solo": {
+            "mode":1, 
+            "attendee_number": 1, 
+            "duration": 60, 
+            "welcome_message": "Bonne chance ! Trouvez vite les mots avant qu'il n'y en ai plus !", 
+            "lang":"FRA",
+            "grid_length":4,
+            "color":"#0D4FFB",
+            "image_realist":"https://asafacon.fr/wp-content/uploads/2022/10/Quest-ce-Que-Laigle-Et-Sa-Signification-Spirituelle-Disent-728x410.jpg",
+            "image_cartoon":"https://img.pixers.pics/pho_wat(s3:700/FO/79/56/57/75/700_FO79565775_6e7408d23de9d5538b2413c1bf8a1548.jpg,695,700,cms:2018/10/5bd1b6b8d04b8_220x50-watermark.png,over,475,650,jpg)/rideaux-occultants-dessin-anime-aigle-en-plein-vol.jpg.jpg",
+            "rule":"premier arrivé..."
             }
         }
     EXEC_PATH = "..\server\game_motor\executables_WIN"
@@ -164,15 +167,30 @@ class ZoogleChatHooks(ChatHooks):
             else:
                 return {"name": data["name"], "token": data["token"], "DatabaseId": data["id"]}
 
+    def get_server_auth(self):
+        parser = ConfigParser() 
+        # subprocess.Popen(['dir .'], stdout=subprocess.PIPE)
+        # "..\server\game_motor\executables_WIN"
+        parser.read('..\\conf.ini')
+        return parser.get('conf', 'password')
+    
     async def getPlayerByToken(self, token:str):
+        serverAuth = self.get_server_auth()
         try:
             url = 'http://localhost/backend/api/game/getPlayerByToken.php'
-            myobj = {'token': token}
+            myobj = {'token': token, 'serverAuth':serverAuth}
             response = requests.post(url, data = myobj)
             response.raise_for_status()
             jsonResponse = response.json()
             print("Entire JSON response")
             print(jsonResponse)
+            # response = requests.post(url, data = myobj)
+            # print(response._content)
+            # print(response.text)
+            # print(response.text())
+            # print(response.content)
+            # response.raise_for_status()
+            # print(response.json())
             if (jsonResponse.get("success")):
                 data = {"name":jsonResponse.get("pseudo"),"token":token,"id":jsonResponse.get("id")}
                 return data
@@ -240,9 +258,10 @@ class ZoogleChatHooks(ChatHooks):
                     if currentWord[0] == word:
                         return {"already_found":True,"word":word, "player":currentAttendee.identity["name"]}
         if (isValidWord):
+            serverAuth = self.get_server_auth()
             try:
                 url = 'http://localhost/backend/api/game/getScoreforAWord.php'
-                myobj = {'word': word}
+                myobj = {'word': word,'serverAuth':serverAuth}
                 response = requests.post(url, data = myobj)
                 response.raise_for_status()
                 jsonResponse = response.json()
@@ -281,9 +300,10 @@ class ZoogleChatHooks(ChatHooks):
         stats = [f"{a.identity['name']} got {a.score} he proposed {a.validWords} and {a.falseWords}" for a in attendees.values()] 
         joined = "\n".join(stats)
 
+        serverAuth = self.get_server_auth()
         try:
             url = 'http://localhost/backend/api/game/insertEndGame.php'
-            myobj = {'infoPartie': json.dumps(info), 'infoJoueurs':json.dumps(infoPerson)}
+            myobj = {'infoPartie': json.dumps(info), 'infoJoueurs':json.dumps(infoPerson),'serverAuth':serverAuth}
             response = requests.post(url, data = myobj)
             print(response._content)
             print(response.text)
