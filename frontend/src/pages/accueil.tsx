@@ -33,11 +33,20 @@ async function checkToken(token :string){
   formData.append("token",token)
   const res = await fetch("http://localhost/backend/api/verifyToken.php",{method:"POST",body:formData,credentials: 'include'}).then(res=>res.json())
   if(res.success){
-    // HELPME JOSHUA plz
+    
     console.log("token is valid")
     // session storage connected
     localStorage.setItem("connected","true")
     localStorage.setItem("tokenUsedToConnect",token)
+    toast.success("Vous êtes connecté !", {
+      position: "top-right",
+      autoClose: 8000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
   }
 
 }
@@ -181,22 +190,7 @@ export default function Accueil() {
               />
             </ZooggleCard>
 
-            <div className="flex flex-row items-center justify-center">
-              <Input
-                label="Mot"
-                type="text"
-                placeholder="Mot"
-                disabled={true}
-              />
-              <Button
-                variant="filled"
-                color="green"
-                className="lg:mt-5 md:mt-5"
-                disabled={true}
-              >
-                Valider
-              </Button>
-            </div>
+
           </div>
         </div>
         <div className=" mx-auto rounded-lg p-4 max-w-screen-xl mb-4">
@@ -288,9 +282,9 @@ export default function Accueil() {
               </Card>
             </div>
 
-            <p>Vous pouvez consulter la liste des animaux juste en dessous.</p>
+           {/*  <p>Vous pouvez consulter la liste des animaux juste en dessous.</p> */}
           </div>
-          <AnimalList />
+       {/*    <AnimalList /> */}
         </div>
       </section>
 

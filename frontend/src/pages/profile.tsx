@@ -55,6 +55,8 @@ console.log(localStorage.getItem("tokenUsedToConnect"));
 console.log(getId());
 
 const getDifferenceTimeSentence = (startDate: string) => {
+ console.log(startDate);
+
   // french to english (day/month/year -> year/month/day)
   const dateArray = startDate.split("/");
   const newDate = dateArray[2] + "/" + dateArray[1] + "/" + dateArray[0];
@@ -292,8 +294,9 @@ const Profile = () => {
                 icon={faCloud}
                 style={{ marginRight: "5px" }}
               />
-              Connecté{" "}
-              {getDifferenceTimeSentence(profileData.lastConnectionDate)}
+              Dernière connexion le{" "}
+
+              {profileData.lastConnectionDate}
             </span>
           </div>
 
@@ -372,7 +375,7 @@ const Profile = () => {
               </div>
             </div>
           </div>
-
+          {(profileData.isPublic || ownProfile) && <>
           <Title variant="h4" style={{ color: "#579A86" }}>
             Informations
           </Title>
@@ -511,6 +514,7 @@ const Profile = () => {
           )}
 
           <br />
+          </> }
         </div>
       </div>
     </>

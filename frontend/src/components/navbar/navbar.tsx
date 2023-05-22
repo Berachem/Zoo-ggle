@@ -80,7 +80,7 @@ function ProfileMenu() {
   return (
     <Menu open={isMenuOpen} handler={setIsMenuOpen} placement="bottom-end">
 
-      {localStorage.getItem("connected") == "true" ? (
+      {localStorage.getItem("connected") === "true" ? (
         <MenuHandler>
           <Button
             variant="text"
@@ -92,7 +92,7 @@ function ProfileMenu() {
               size="sm"
               alt="candice wu"
               className="border border-blue-500 p-0.5"
-              src={Mbappe}
+              src="https://source.boringavatars.com/beam/120/Stefan?colors=579A86,579A86,80e8b6"
             />
             <ChevronDownIcon
               strokeWidth={2.5}
