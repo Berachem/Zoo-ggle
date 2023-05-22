@@ -97,6 +97,7 @@ class WaitingRoom(object):
         self.duration =  info.get('duration',3)
         self.image_realistic =  info.get('image_realistic','')
         self.image_cartoon =  info.get('image_cartoon','')
+        self.description =  info.get('description','')
         self.color =  info.get('color','')
         self._condition = asyncio.Condition()
         self._queue = [] # queue where the clients wait (we specify the ids of the clients)
@@ -327,6 +328,7 @@ class ChatServer(object):
                     'duration':v.duration,
                     'image_realistic':v.image_realistic,
                     'image_cartoon':v.image_cartoon,
+                    'description':v.description,
                     'color':v.color,
                     } for (k, v) in self._waiting_rooms.items() }
         
