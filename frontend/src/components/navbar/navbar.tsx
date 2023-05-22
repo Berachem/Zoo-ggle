@@ -308,13 +308,14 @@ export default function AppBar(
     return (
       <div
         className="flex justify-end"
-        style={{ position: "fixed", top: 0, right: 0, zIndex: 1000 }}
+        style={{  top: 0, right: 0, zIndex: 1000 }}
         id="navbar"
       >
         <ul className="flex">
           <li className="mx-7">
             <br />
             <br />
+            <span style={{color:"white",fontWeight:"bold",fontSize:"large",marginRight:"5px"}}>Changer le mode </span>
             <Switch
               onChange={() => props.changeBackgroundMode()}
               className="flex-shrink-0 h-5 w-9"
