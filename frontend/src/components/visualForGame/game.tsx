@@ -1,6 +1,6 @@
 import React from "react"
 import "../../css/game.css"
-import {TestGrid} from "../game/TestGrid"
+import {TestGrid} from "../game/testGrid"
 import { ClassicInfoDisplayer } from "./classicInfoDisplayer"
 
 export interface Grid {
