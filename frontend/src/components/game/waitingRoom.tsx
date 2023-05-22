@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
-import "../css/WaitingRoom.css";
+import "../../css/WaitingRoom.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faClock, faTable, faUser, faUsers } from "@fortawesome/free-solid-svg-icons";
-import {Player, WaitingRoomInterface} from "../components/game/websocket"
+import {Player, WaitingRoomItem} from "../../components/game/websocket"
 
 
 interface WaitingRoomProps{
-  room:WaitingRoomInterface
+  room:WaitingRoomItem
   onLeaving:() => void
   playersWaiting: Player[]
 }
@@ -37,7 +37,7 @@ export default function WaitingRoom(props: WaitingRoomProps) {
           <div className="WaitingRoom_CardHeaderIntermediaire">
             <div className="MetaDate">
               <FontAwesomeIcon icon={faClock} style={{ color: props.room.color }} />{" "}
-              {props.room.duration} min
+              {props.room.duration/60} min
             </div>
             <div className="MetaDate">
               <FontAwesomeIcon icon={faUsers} style={{ color: props.room.color }} />{" "}

@@ -922,12 +922,10 @@ function needAToken($user){
 // return : rien
 function addTokenToUser($idJoueur, $token){
     global $db;
-    $dateExpiration = date("Y-m-d H:i:s", strtotime('+1 hour'));
-    $query = "INSERT INTO B_Authentification (Token, DateExpiration, IdJoueur) VALUES (?,?,?)";
+    $query = "INSERT INTO B_Authentification (Token, DateExpiration, IdJoueur) VALUES (?,NOW() + INTERVAL 1 HOUR,?)";
     $params = [
         [1, $token, PDO::PARAM_STR],
-        [2, $dateExpiration, PDO::PARAM_STR],
-        [3, $idJoueur, PDO::PARAM_INT]
+        [2, $idJoueur, PDO::PARAM_INT]
     ];
     $db->execOnly($query, $params);
 
@@ -969,7 +967,7 @@ function getLastDateTokenUser($idJoueur){
 // return : les informations du joueur
 function getUserByToken($token){
     global $db;
-    $query = "SELECT * FROM B_Joueur WHERE IdJoueur = (SELECT IdJoueur FROM B_Authentification WHERE Token = ?)";
+    $query = "SELECT * FROM B_Joueur WHERE IdJoueur = (SELECT IdJoueur FROM B_Authentification WHERE Token = ? AND DateExpiration>NOW())";
     $params = [[1, $token, PDO::PARAM_STR]];
     $result = $db->execQuery($query, $params);
     if (count($result) > 0){

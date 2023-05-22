@@ -169,17 +169,17 @@ class ZoogleChatHooks(ChatHooks):
             url = 'http://localhost/backend/api/game/getPlayerByToken.php'
             myobj = {'token': token, 'serverAuth':serverAuth}
             response = requests.post(url, data = myobj)
-            response.raise_for_status()
-            jsonResponse = response.json()
-            print("Entire JSON response")
-            print(jsonResponse)
-            # response = requests.post(url, data = myobj)
-            # print(response._content)
-            # print(response.text)
-            # print(response.text())
-            # print(response.content)
             # response.raise_for_status()
-            # print(response.json())
+            # jsonResponse = response.json()
+            # print("Entire JSON response")
+            # print(jsonResponse)
+            response = requests.post(url, data = myobj)
+            print(response._content)
+            print(response.text)
+            print(response.text())
+            print(response.content)
+            response.raise_for_status()
+            print(response.json())
             if (jsonResponse.get("success")):
                 data = {"name":jsonResponse.get("pseudo"),"token":token,"id":jsonResponse.get("id")}
                 return data

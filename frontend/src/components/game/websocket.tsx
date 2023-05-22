@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react"
-import WaitingRoom from '../../pages/waitingRoom'
+import WaitingRoom from './waitingRoom'
 
-export interface WaitingRoomInterface {
+export interface WaitingRoomItem {
     name: string
     attendeeNumber: number
     description: string
@@ -28,7 +28,28 @@ export interface Grid {
     content: string
 }
 
-export const WaitingRoomSelector = (props: { rooms: WaitingRoomInterface[], onChosenRoom: (username: string, waitingRoom: string) => void }) => {
+
+interface DisconnectedState { disconnected: true }
+interface ConnectingState { connecting: true }
+interface RoomSelectionState { roomSelection: true }
+interface WaitingState { startTimestamp: number, waitingRoom: WaitingRoomItem }
+interface ChattingState { startTimestamp: number, messages: Message[], active: boolean }
+type ChatState = DisconnectedState | ConnectingState | RoomSelectionState | WaitingState | ChattingState
+
+interface WordsInfo { word: string, score: number, isAnimal: boolean }
+interface PlayerInfos { score: number, validWords: WordsInfo[] }
+interface AllPlayersInfos {
+    [pseudo: string]: PlayerInfos
+}
+
+interface EagleModeStats {
+    playersInfo: AllPlayersInfos
+}
+
+type InGameStats = PlayerInfos | EagleModeStats
+
+
+export const WaitingRoomSelector = (props: { rooms: WaitingRoomItem[], onChosenRoom: (username: string, waitingRoom: string) => void }) => {
     const [username, setUsername] = React.useState("")
     const [selectedRoom, setSelectedRoom] = React.useState("")
     return <div className="wsWaintingRoomSelector">
@@ -43,25 +64,6 @@ export const WaitingRoomSelector = (props: { rooms: WaitingRoomInterface[], onCh
     </div>
 }
 
-// export const RoomWaiter = (props: { roomName: string, startTimestamp: number, onLeaving: () => void, playersWaiting: Player[] }) => {
-//     const [currentTimestamp, setCurrentTimestamp] = React.useState(performance.now())
-//     React.useEffect(() => {
-//         const handle = setInterval(() => setCurrentTimestamp(performance.now()), 1000)
-//         return () => clearTimeout(handle)
-//     }, [])
-//     return <div className="wsRoomWaiter">
-//         <div>Waiting in room {props.roomName} for {Math.floor((currentTimestamp - props.startTimestamp) / 1000)} s.</div>
-//         <div><button onClick={() => props.onLeaving()}>Leave the waiting room</button></div>
-
-//         <p> Joueurs dans la room</p>
-//         {props.playersWaiting.map(function (player) {
-//             return (
-//                 <p>
-//                     {player['pseudo']}
-//                 </p>)
-//         })}
-//     </div>
-// }
 
 export const ChatMessageDisplayer = (props: { message: Message }) => {
     return <div className="wsChatMessageDisplayer">
@@ -104,31 +106,12 @@ export const Grid = (props: { grid: string }) => {
     </div>
 }
 
-interface DisconnectedState { disconnected: true }
-interface ConnectingState { connecting: true }
-interface RoomSelectionState { roomSelection: true }
-interface WaitingState { startTimestamp: number, waitingRoom: WaitingRoomInterface }
-interface ChattingState { startTimestamp: number, messages: Message[], active: boolean }
-type ChatState = DisconnectedState | ConnectingState | RoomSelectionState | WaitingState | ChattingState
-
-interface WordsInfo { word: string, score: number, isAnimal: boolean }
-interface PlayerInfos { score: number, validWords: WordsInfo[] }
-interface AllPlayersInfos {
-    [pseudo: string]: PlayerInfos
-}
-
-interface EagleModeStats {
-    playersInfo: AllPlayersInfos
-}
-
-type InGameStats = PlayerInfos | EagleModeStats
-
 export default function ChatManager(props: { socketUrl: string }) {
     const [chatState, setChatState] = React.useState<ChatState>({ disconnected: true })
     const [connected, setConnected] = React.useState(false)
     const [socket, setSocket] = React.useState<WebSocket | null>(null)
     const [error, setError] = React.useState<string>('')
-    const [waitingRooms, setWaitingRooms] = React.useState<WaitingRoomInterface[]>([])
+    const [waitingRooms, setWaitingRooms] = React.useState<WaitingRoomItem[]>([])
     const [word, setWord] = React.useState("")
 
     const [inGameStats, setInGameStats] = React.useState<InGameStats>({ score: 0, validWords: [] })
@@ -164,7 +147,7 @@ export default function ChatManager(props: { socketUrl: string }) {
             let waitingRooms = []
             for (let [name, v] of Object.entries(c['waiting_rooms'])) {
                 let value = v as any
-                let room: WaitingRoomInterface = { name: name, attendeeNumber: value.attendee_number, description: value.description, grid_size: value.grid_size, duration: value.duration, image_realist: value.image_realist, image_cartoon: value.image_cartoon, color: value.color, rule:value.rule }
+                let room: WaitingRoomItem = { name: name, attendeeNumber: value.attendee_number, description: value.description, grid_size: value.grid_size, duration: value.duration, image_realist: value.image_realistic, image_cartoon: value.image_cartoon, color: value.color, rule:value.rule }
                 waitingRooms.push(room)
             }
             return waitingRooms
@@ -178,7 +161,7 @@ export default function ChatManager(props: { socketUrl: string }) {
 
             case 'in_waiting_room':
                 let name = content.waiting_room_name
-                let room:WaitingRoomInterface = { name: name, attendeeNumber: content.waiting_room.attendee_number, description: content.waiting_room.description, grid_size: content.waiting_room.grid_size, duration: content.waiting_room.duration, image_realist: content.waiting_room.image_realist, image_cartoon: content.waiting_room.image_cartoon, color: content.waiting_room.color, rule:content.waiting_room.rule }
+                let room:WaitingRoomItem = { name: name, attendeeNumber: content.waiting_room.attendee_number, description: content.waiting_room.description, grid_size: content.waiting_room.grid_size, duration: content.waiting_room.duration, image_realist: content.waiting_room.image_realistic, image_cartoon: content.waiting_room.image_cartoon, color: content.waiting_room.color, rule:content.waiting_room.rule }
                 setChatState({ waitingRoom: room, startTimestamp: performance.now() })
                 break
 
@@ -390,7 +373,6 @@ export default function ChatManager(props: { socketUrl: string }) {
         {/* Waiting in a room */}
         {'waitingRoom' in chatState &&
             <>
-                {/* <RoomWaiter roomName={chatState.waitingRoomName} startTimestamp={chatState.startTimestamp} onLeaving={leaveWaitingRoom} playersWaiting={playersWaiting} /> */}
                 <WaitingRoom room={chatState.waitingRoom} onLeaving={leaveWaitingRoom} playersWaiting={playersWaiting}/>
 
             </>}

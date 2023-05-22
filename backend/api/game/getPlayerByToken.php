@@ -20,6 +20,10 @@ if (!isset($_POST["token"])) {
 }else{
     $token = $_POST["token"];
     $data = getUserByToken($token);
+    if (is_null($data)){
+        echo json_encode(array("success" => false, "error" => "Token invalide"));
+        exit();
+    }
     echo json_encode(array("success" => true, "pseudo" => $data->Pseudo,"id" => $data->IdJoueur));
 }
 ?>
