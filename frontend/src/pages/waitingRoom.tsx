@@ -41,7 +41,7 @@ export default function WaitingRoom() {
       joueurs: 2,
       dictionnaire: "fr",
       grille: 4,
-      couleur: "#579A86",
+      couleur: "#F5593D",
       cartoonImage:
         "https://cdn.discordapp.com/attachments/890989295794552832/1108097595299090652/1f981.png",
       realImage:
