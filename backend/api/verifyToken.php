@@ -14,17 +14,20 @@ if (isset($_POST['token']) ) {
     if (isExpiredToken($_POST['token'])) {
         $response["success"] = false;
         $response["errorCode"] = 610; // token expired
-        //$response["redirect"] = "../index.php?tokenExpired=true";
         echo json_encode($response);
         exit();
     }
     if ( ( isset($_SESSION['token']) && isset($_SESSION['waitingUser']) ) && $_SESSION['token'] == $_POST['token']) {
+       
+        //actualisation des variables
         $_SESSION['user'] = $_SESSION['waitingUser'];
         unset($_SESSION['waitingUser']);
         //unset($_SESSION['token']);
+        actualiseConnexionDate($_SESSION['user']);
+
+        //renvoie de la réponse
         $response['user'] = $_SESSION['user'];
         $response["success"] = true;
-        //$response["redirect"] = "../index.php?connected=true";
         echo json_encode($response);
         exit();
     }

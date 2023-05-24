@@ -10,7 +10,7 @@
 
         $user = $db->login($_POST['login'],$_POST['psw']);
         if($user != null){
-            if(needAToken($user) || true){ // send mail all time
+            if(needAToken($user)){
                 $_SESSION['waitingUser'] = $user;
                 // generate token
                 $randomSHA256 = hash('sha256', random_bytes(32));
@@ -22,12 +22,12 @@
                 $_SESSION['token'] = $randomSHA256;
                 
             }else{
+                actualiseConnexionDate($user);
                 $_SESSION['user']=$user;
                 $response["redirect"] = "../?connected=true";
+                $response["token"] = getUserLastToken($user);
             }
-            $response["success"] = true;
-            $response["userId"] = $user;
-
+            $response["success"] = true; 
         }else{
             $response["success"] = false;
             $response["errorCode"] = 601; // wrong login or password

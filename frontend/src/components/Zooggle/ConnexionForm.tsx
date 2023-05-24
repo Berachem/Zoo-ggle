@@ -31,6 +31,7 @@ async function checkAll(event : React.SyntheticEvent){
         
         if(res.success == true){
             localStorage.setItem("connected","true")
+            localStorage.setItem("token",res.token)
         }
         window.location.assign(res.redirect)
 

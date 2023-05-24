@@ -2,12 +2,12 @@
 // Fichier qui contient toutes les fonctions utilisées dans le site
 
 /*
-     * Effectue une recherche avec les éléments de $text dans le paramètre $parameter
-     * Renvoie le resultat de la commande sous forme de PDOStatment
-     *
-     * $text : le texte saisi par l'utilisateur
-     *
-     */
+* Effectue une recherche avec les éléments de $text dans le paramètre $parameter
+* Renvoie le resultat de la commande sous forme de PDOStatment
+*
+* $text : le texte saisi par l'utilisateur
+*
+*/
 function recherchePartie(string $text){
     global $db;
 
@@ -47,7 +47,6 @@ function getRecentGame(){
     $request = "SELECT * FROM B_Partie WHERE DateFinPartie IS NULL LIMIT 20";
     return $db->execQuery($request);
 }
-
 
 // Fonction qui renvoie les infos d'une partie en fonction de son id
 // paramètres : $id : id de la partie
@@ -142,7 +141,6 @@ function getGameNotStartedYet($id) {
     return $result[0]->IdPartie;
 }
 
-
 // Fonction qui renvoie la partie en cours du joueur $id (en regardant si le score est à -1, si la date de début existe et que la date de fin est null)
 // paramètres : $id : id du joueur
 // return : l'id de la partie en cours du joueur $id
@@ -174,9 +172,6 @@ function getGameInProgressStartedForUser($id) {
     }
     return $result[0];
 }
-
-
-
 
 // Fonction qui renvoie l'email du joueur $id
 // paramètres : $id : id du joueur
@@ -267,9 +262,6 @@ function getAllWordsListByPlayerInGame($userID, $gameID){
     return $words;
 }
 
-
-
-
 // Fonction qui un int pour savoir si le joueur $id a gagnée la partie $idPartie (0 si perdu, 1 si gagné, 2 si égalité)
 // en comparant le score du joueur avec le score de tous les autres joueurs de la partie
 // paramètres : $idJoueur : id du joueur, $idPartie : id de la partie
@@ -294,7 +286,6 @@ function getVerdictForGamePlayer($userID, $gameID){
     }
 }
 
-
 /*
 Fonction qui renvoie le pseudo d'un joueur à partir de son ID
 paramètres : $id : id du joueur
@@ -307,7 +298,6 @@ function getPseudoById($id) {
     $pseudo = $db->execQuery($query, $params);
     return $pseudo[0]->Pseudo;
 }
-
 
 // fonction qui renvoie le lien vers l'image du joueur à partir de son ID
 // paramètres : $id : id du joueur
@@ -323,7 +313,6 @@ function getLogoPathById($id) {
         return "assets/playersLogos/" . $hash[0]->Logo;
     }
 }
-
 
 // Fonction qui renvoie les informations d'une partie à partir de son ID 
 // paramètres : $id : id de la partie
@@ -532,9 +521,6 @@ function getValidWordsForGrid($grid, $gridSize) {
     return explode(" ", $result);
 }
 
-
-
-
 /*
 Fonction qui crée un booléen si l'opération a réussi ou non
 paramètres : $id : id de la partie
@@ -592,9 +578,6 @@ function createGame($id, $name, $langue, $tailleGrille, $mode, $public, $nbJoueu
     } else {
         return false;
     } 
-
-    
-
 }
 
 // Fonction qui renvoie le nombre de joueurs dans le salon d'attente d'une partie $idPartie
@@ -611,14 +594,12 @@ function getNbPlayersInWaitingRoom($idPartie) {
     return $result[0]->nombre;
 }
 
-
 // Fonction qui renvoie la liste des parties publiques (en fonction de la langue, du mode, du nombre de joueurs et du nom)
 // paramètres : $langue : langue du dictionnaire
 //              $mode : mode de la partie
 //              $nbJoueurs : nombre de joueurs max de la partie
 //              $name : nom de la partie
 // return : la liste des parties publiques
-
 function getPublicGames($langue, $mode, $nbJoueurs, $name) {
     global $db;
     $query = "SELECT * FROM B_Partie WHERE EstPublic = 1 AND DateDebutPartie IS NULL";
@@ -649,7 +630,6 @@ function getPublicGames($langue, $mode, $nbJoueurs, $name) {
 
     return $games;
 }
-
 
 // Fonction qui renvoie la liste des Pseudo, Logo, Score, IdJoueur et IdPartie des joueurs de la dernière partie jouée par un utilisateur 
 // order by Score DESC
@@ -686,12 +666,10 @@ function editPublicProfileDatas($idJoueur, $mail, $pseudo, $description, $logo, 
 }
 
 
-
 // Fonction qui renvoie la liste des Pseudo, Logo, Score, IdJoueur et IdPartie des joueurs de la partie $idPartie
 // order by Score DESC
 // paramètres : $idPartie : id de la partie
 // return : la liste des Pseudo, Logo, Score, IdJoueur
-
 function getLeaderBoardGame($idPartie){
     global $db;
     $query = "SELECT B_Joueur.Pseudo, B_Joueur.Logo, B_Jouer.Score, B_Joueur.IdJoueur, B_Partie.IdPartie FROM B_Joueur, B_Jouer, B_Partie WHERE B_Joueur.IdJoueur = B_Jouer.IdJoueur AND B_Jouer.IdPartie = B_Partie.IdPartie AND B_Partie.IdPartie = ? ORDER BY Score DESC";
@@ -752,7 +730,6 @@ function addWordPlayedByAPlayer($idJoueur,$idPartie,$libelleMot,$estValide,$date
 
 
 }
-
 
 // Fonction qui formatte une date au format français
 // paramètres : $date : date à formater
@@ -908,13 +885,14 @@ function getScoreForAWord($word){
  */
 function needAToken($user){
     global $db;
-    $query = "SELECT DateCreationCompte FROM B_Joueur WHERE IdJoueur=:id";
+    return isExpiredToken(getUserLastToken($user));
+
+   /*  $query = "SELECT DateCreationCompte FROM B_Joueur WHERE IdJoueur=:id";
     $parameters = [[":id",$user]];
     $dateConnec = new DateTime(($db->execQuery($query,$parameters))[0]->DateCreationCompte);
     $interval = $dateConnec->diff(new DateTime());
-    return $interval->d > 3;
+    return $interval->d > 3; */
 }
-
 
 // Fonction qui ajoute un token à un utilisateur avec un temps d'expiration de 1 heure
 // paramètres : $idJoueur : id du joueur
@@ -922,7 +900,7 @@ function needAToken($user){
 // return : rien
 function addTokenToUser($idJoueur, $token){
     global $db;
-    $query = "INSERT INTO B_Authentification (Token, DateExpiration, IdJoueur) VALUES (?,NOW() + INTERVAL 1 HOUR,?)";
+    $query = "INSERT INTO B_Authentification (Token, DateExpiration, IdJoueur) VALUES (?,NOW() + INTERVAL 1 DAY,?)"; //1 HOUR
     $params = [
         [1, $token, PDO::PARAM_STR],
         [2, $idJoueur, PDO::PARAM_INT]
@@ -962,6 +940,20 @@ function getLastDateTokenUser($idJoueur){
     return null;
 }
 
+// Fonction qui renvoie le dernier token de l'utilisateur
+// paramètres : $idJoueur : id du joueur
+// return : le dernier token de l'utilisateur ou null si il n'y en a pas
+function getUserLastToken($idJoueur){
+    global $db;
+    $query = "SELECT * FROM B_Authentification WHERE IdJoueur = ? ORDER BY DateExpiration DESC";
+    $params = [[1, $idJoueur, PDO::PARAM_INT]];
+    $result = $db->execQuery($query, $params);
+    if (count($result) > 0){
+        return $result[0]->Token;
+    }
+    return null;
+}
+
 // Fonction qui renvoie les informations d'un joueurs à partir de son token
 // paramètres : $token : token du joueur
 // return : les informations du joueur
@@ -974,6 +966,16 @@ function getUserByToken($token){
         return $result[0];
     }
     return null;
+}
+
+//Fonction qui actualise la date de connexion d'un utilisateur
+//paramètres : $user : l'id du joueur
+//return : void
+function actualiseConnexionDate($user){
+    global $db;
+    $query = "UPDATE B_Joueur SET DateDerniereConnexion=NOW() WHERE IdJoueur=?";
+    $params = [[1, $user, PDO::PARAM_STR]];
+    $db->execOnly($query, $params);
 }
 
 function getServerAuth(){

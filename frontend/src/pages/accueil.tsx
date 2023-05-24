@@ -26,12 +26,22 @@ async function checkToken(token :string){
   formData.append("token",token)
   const res = await fetch("http://localhost/backend/api/verifyToken.php",{method:"POST",body:formData,credentials: 'include'}).then(res=>res.json())
   if(res.success){
-    
-    console.log("token is valid")
+
     // session storage connected
     localStorage.setItem("connected","true")
     localStorage.setItem("token",token)
     toast.success("Vous êtes connecté !", {
+      position: "top-right",
+      autoClose: 8000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      toastId:1
+    });
+  }else{
+    toast.warning("Le lien n'est pas bon (ou trop vieux)!", {
       position: "top-right",
       autoClose: 8000,
       hideProgressBar: false,
@@ -50,7 +60,6 @@ export default function Accueil() {
   useEffect(() => {
     function changeBG() {
       setBackgroundMode( localStorage.getItem("BackgroundMode") === "true");
-      console.log("backgroundMode", backgroundMode);
     }
   
     window.addEventListener('storage', changeBG)
