@@ -1,20 +1,8 @@
 import "../../css/Connexion.css"
 import { ToastContainer,toast } from "react-toastify"
 import { useLocation } from "react-router-dom"
-import {SHA256} from "crypto-js";
+import ConnexionProps from "../../pages/connexion"
 
-function switchForm(){
-    let connexion = document.getElementById("connexion")
-    let inscription = document.getElementById("inscription")
-
-    if(connexion !== null){
-        connexion.classList.toggle("telHidden")
-    }
-    if(inscription !== null){
-        inscription.classList.toggle("telHidden")
-    }
-
-}
 
 async function checkAll(event : React.SyntheticEvent){
     event.preventDefault()
@@ -40,7 +28,7 @@ async function checkAll(event : React.SyntheticEvent){
 
 }
 
-export default function ConnexionForm(){
+export default function ConnexionForm(props : ConnexionProps){
 
     const location = useLocation()
     const params = new URLSearchParams(location.search);
@@ -60,14 +48,14 @@ export default function ConnexionForm(){
         <>
         <ToastContainer/>
 
-        <form id="connexion" action="" method="POST" className="connecForm telHidden" onSubmit={checkAll}>
+        <form id="connexion" action="" method="POST" className="connecForm" onSubmit={checkAll}>
             <span className="titleTel">Connexion</span>
             <span className="connecLabel">Pseudo</span>
             <input type="text" className="connecInput" id="login" required/>
             <span className="connecLabel">Mot de passe</span>
             <input type="password" className="connecInput" id="psw" required/>
             <input type="submit" className="connecSubmit" value="se connecter"/>
-            <span className="telSwitch" onClick={(event: React.MouseEvent<HTMLElement>) => {switchForm()}}>Appuyez ici pour s'inscrire</span>
+            <span className="telSwitch" onClick={props.switchSide}>Appuyez ici pour s'inscrire</span>
         </form>
         </>
     )

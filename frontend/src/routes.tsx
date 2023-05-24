@@ -4,7 +4,6 @@ import Accueil from "./pages/accueil";
 import Dictionnaire from "./pages/dictionnaire";
 import Connexion from "./pages/connexion";
 import BubbleAssistant from "./components/Zooggle/assistantBubble";
-import CreationPartie from "./pages/creationPartie";
 import Jouer from "./pages/jouer";
 
 export const routes = [
@@ -32,17 +31,6 @@ export const routes = [
       <>
         <BubbleAssistant />
         <Connexion/>{" "}
-      </>
-    ),
-  },
-  {
-    label: "creation",
-    path: "/creationPartie",
-    icon: HomeIcon,
-    element: (
-      <>
-        <BubbleAssistant />
-        <CreationPartie />{" "}
       </>
     ),
   },

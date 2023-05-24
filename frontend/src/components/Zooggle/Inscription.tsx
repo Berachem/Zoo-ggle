@@ -2,19 +2,7 @@
 import "../../css/Connexion.css"
 import { ToastContainer,toast } from "react-toastify"
 import { useLocation } from "react-router-dom"
-
-function switchForm(){
-    let connexion = document.getElementById("connexion")
-    let inscription = document.getElementById("inscription")
-
-    if(connexion !== null){
-        connexion.classList.toggle("telHidden")
-    }
-    if(inscription !== null){
-        inscription.classList.toggle("telHidden")
-    }
-
-}
+import ConnexionProps from "../../pages/connexion"
 
 let globalresult = false;
 
@@ -157,7 +145,7 @@ async function callBDDPseudo(login : string){
     }
 }
 
-export default function Inscription(){
+export default function Inscription(props : ConnexionProps){
 
     const location = useLocation()
     const params = new URLSearchParams(location.search);
@@ -177,7 +165,7 @@ export default function Inscription(){
         <>
         <ToastContainer/>
 
-        <form action="" method="POST" className="connecForm" id="inscription" onSubmit={checkAll}>
+        <form action="" method="POST" className="connecForm telHidden" id="inscription" onSubmit={checkAll}>
             <span className="titleTel">Inscription</span>
             <div className="telErrors">
                 <span id="telloginError"></span><br/>
@@ -210,7 +198,7 @@ export default function Inscription(){
             
             <input type="submit" className="connecSubmit" value="s'inscrire"/>
 
-            <span className="telSwitch" onClick={(event: React.MouseEvent<HTMLElement>) => {switchForm()}}>Appuyez ici pour se connecter</span>
+            <span className="telSwitch" onClick={props.switchSide}>Appuyez ici pour se connecter</span>
         </form>
         </>
     )
