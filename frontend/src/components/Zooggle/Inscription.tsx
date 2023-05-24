@@ -194,7 +194,7 @@ export default function Inscription(props : ConnexionProps){
             
 
             <span className="connecLabel">Votre Description</span>
-            <textarea id="descInscription" cols={30} rows={10} className="connecInput desc"></textarea>
+            <textarea id="descInscription" cols={30} rows={10} className="connecInput desc" maxLength={150}></textarea>
             
             <input type="submit" className="connecSubmit" value="s'inscrire"/>
 

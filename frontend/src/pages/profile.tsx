@@ -344,7 +344,9 @@ const Profile = () => {
                 {profileData.pseudo}
               </div>
               <div className="text-xl text-grey mb-2">
-                {profileData.description}
+                <div style={{maxWidth:"30vw",wordBreak:"break-all"}}>
+                  {profileData.description}
+                </div>
               </div>
               {/* button to copy url link */}
               <div className="flex justify-center md:justify-start">
@@ -549,7 +551,7 @@ const Profile = () => {
               </div>
 
               <span className="connecLabel">Votre Description</span>
-              <textarea id="descInscription" cols={30} rows={10} className="connecInput desc"></textarea>
+              <textarea id="descInscription" cols={30} rows={10} className="connecInput desc" maxLength={150}></textarea>
 
               <input type="submit" className="connecSubmit" value="Modifier son profil"/>
         </form>
