@@ -91,8 +91,20 @@ async function checkAll(event : React.SyntheticEvent){
       formData.append('desc',description.value)
       formData.append('public',pvalue.toString())
 
-      //const res = await fetch('http://localhost/backend/api/registerUser.php',{method:'POST', body:formData,credentials: 'include'}).then(res=>res.json())
-      //toggle le formulaire
+      const res = await fetch('http://localhost/backend/api/modifUser.php',{method:'POST', body:formData,credentials: 'include'}).then(res=>res.json())
+      switchForm()
+      if(res.success){
+        window.location.reload()
+      }else{
+        toast.warning("Erreur lors de la modification", {
+          position: "top-right",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          progress: undefined,
+        });
+      }
   }
 }
 
@@ -524,7 +536,7 @@ const Profile = () => {
       {/* Formulaire de modification de profile */}
       <div className="back hidden" id="modifForm">
         <form onSubmit={checkAll} className="connecForm profile">
-                <FontAwesomeIcon icon={faXmark} size="2x" color="black" onClick={switchForm}/>
+              <FontAwesomeIcon icon={faXmark} size="2x" color="black" onClick={switchForm}/>
               <span className="title">Modifier ses informations</span>
               <span className="connecLabel">Pseudo</span>
               <input type="text" className="connecInput" id="Inscriptionlogin" onKeyUp={checkPseudo}/>
