@@ -158,7 +158,7 @@ export default function Accueil() {
             aspectRatio:"2/1"
 
           }}src={backgroundMode ? LogoBlack : LogoWhite} />
-          <a href="/choixPartie">
+          <a href="/Jouer">
             <Button variant="filled" color="white" className="m-2">
               Jouer
             </Button>

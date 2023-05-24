@@ -1,25 +1,15 @@
 // return profile page
 //
 
-import React, { useState } from "react";
-import ReactDOM from "react-dom/client";
-import { BrowserRouter, Routes, Route, useParams } from "react-router-dom";
-import LianeDecorAvatar from "../assets/images/circulaire_avatar_liane.png";
+import { useState } from "react";
+import { useParams } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 // icone victoire, joué, défaite, mots trouvés, mot le plus long, moyenne de mots par partie
 import {
   faTrophy,
   faGamepad,
-  faTimes,
-  faCheck,
-  faSearch,
-  faBirthdayCake,
   faCalendar,
-  faTimesCircle,
   faBook,
-  faRotateBack,
-  faBookBookmark,
-  faSadCry,
   faThumbsDown,
   faExclamationTriangle,
   faCrown,
@@ -29,65 +19,88 @@ import {
   faCloud,
   faLink,
   faEdit,
+  faCross,
+  faCrosshairs,
+  faXmark,
 } from "@fortawesome/free-solid-svg-icons";
-import { Avatar, Typography, Button, Alert } from "@material-tailwind/react";
-import {
-  MapPinIcon,
-  BriefcaseIcon,
-  BuildingLibraryIcon,
-} from "@heroicons/react/24/solid";
-import Footer from "../components/footer/footer";
-import CardWithImage from "../components/card/card";
 import { useEffect } from "react";
 import { BounceLoader } from "react-spinners";
-import { isUndefined } from "lodash";
 import Title from "../components/Zooggle/Title";
 import GameGrid from "../components/Zooggle/GameGrid";
 import GameCard from "../components/Zooggle/GameCard";
 import GameCardInfo from "../components/Zooggle/GameCardInfo";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import BubbleAssistant from "../components/Zooggle/assistantBubble";
 import "../css/profile.css";
 
-console.log(localStorage.getItem("connected"));
-console.log(localStorage.getItem("token"));
-console.log(getId());
+//fonction pour la modification du profil
+var globalresult = false
 
-const getDifferenceTimeSentence = (startDate: string) => {
- console.log(startDate);
-
-  // french to english (day/month/year -> year/month/day)
-  const dateArray = startDate.split("/");
-  const newDate = dateArray[2] + "/" + dateArray[1] + "/" + dateArray[0];
-
-  // get difference between current date and start date
-  const date = new Date(newDate);
-  const currentDate = new Date();
-  const difference = currentDate.getTime() - date.getTime();
-  const differenceInDays = Math.floor(difference / (1000 * 3600 * 24));
-  const differenceInHours = Math.floor(
-    (difference % (1000 * 3600 * 24)) / (1000 * 3600)
-  );
-  const differenceInMinutes = Math.floor(
-    (difference % (1000 * 3600)) / (1000 * 60)
-  );
-  const differenceInSeconds = Math.floor((difference % (1000 * 60)) / 1000);
-
-  // return sentence
-  if (differenceInDays > 0) {
-    return "il y a " + differenceInDays + " jours";
-  } else if (differenceInHours > 0) {
-    return "il y a " + differenceInHours + " heures";
-  } else if (differenceInMinutes > 0) {
-    return "il y a " + differenceInMinutes + " minutes";
-  } else if (differenceInSeconds > 0) {
-    return "il y a " + differenceInSeconds + " secondes";
-  } else {
-    return "il y a quelques secondes";
+function checkPseudo(){
+  console.log("APPELE")
+  let pseudo = document.getElementById("Inscriptionlogin") as HTMLInputElement;
+  let error = document.getElementById("error");
+  console.log("ELEMENT RECUP")
+  if(pseudo!=null && error!=null){
+      error.innerHTML = "";
+      if(pseudo.value.trim() == ""){
+          error.innerHTML = "Un pseudo est requis";
+          error.style.color = 'red';
+          error.style.fontSize = "small"
+          return  false;
+      }
+      callBDDPseudo(pseudo.value);
+      return true;
   }
-};
+  
+}
 
+async function callBDDPseudo(login : string){
+  const res = await fetch('http://localhost/backend/api/checkPseudo.php?login='+login).then(res => res.json())
+
+  if(res.retour!="ok"){
+      let error = document.getElementById("error")
+      if(error!=null){
+          error.innerHTML = "pseudo déjà pris."
+          error.style.color = 'red'
+          error.style.fontSize = "small"
+          globalresult = true
+      }     
+  }else{
+      globalresult = false
+  }
+}
+
+async function checkAll(event : React.SyntheticEvent){
+  event.preventDefault()
+
+  //pour que les 4 messages s'affichent d'un coup et non pas en 4 submit
+  
+  let pseudo = checkPseudo();
+  if( pseudo && !globalresult){
+      let pseudo = document.getElementById("Inscriptionlogin") as HTMLInputElement;
+      let description = document.getElementById("descInscription") as HTMLInputElement;
+      let pub = document.getElementById("public") as HTMLInputElement
+      let pvalue=0
+      if(pub.checked){
+          pvalue=1
+      }
+
+      let formData = new FormData()
+      formData.append('login',pseudo.value)
+      formData.append('desc',description.value)
+      formData.append('public',pvalue.toString())
+
+      //const res = await fetch('http://localhost/backend/api/registerUser.php',{method:'POST', body:formData,credentials: 'include'}).then(res=>res.json())
+      //toggle le formulaire
+  }
+}
+
+function switchForm(){
+  document.getElementById("modifForm")?.classList.toggle("hidden")
+}
+
+//fonction pour la récupération des statistiques
 async function getId() {
   const res = await fetch("http://localhost/backend/api/isConnected.php", {
     credentials: "include",
@@ -100,6 +113,7 @@ async function getId() {
   }
 }
 
+//pages profile en elle même
 const Profile = () => {
   let { id } = useParams();
   const PROFILE_DATA_BASE_URL = // http://localhost/backend/api/
@@ -303,17 +317,6 @@ const Profile = () => {
           <div className="flex flex-col md:flex-row items-center mb-8 justify-center">
 
             <div className="AvatarProfilediv">
-             {/*  
-              ////////////////// 
-             ////// DECOR 
-             //////////////////
-             
-             <img
-                className="w-64 h-64 rounded-full mr-0 md:mr-8 mb-4 md:mb-0 decorAvatar"
-                src={LianeDecorAvatar}
-                alt="LianeDécor"
-                
-              /> */}
               <img
                 className="AvatarProfile"
                 src={
@@ -359,10 +362,10 @@ const Profile = () => {
 
                 {/* button to edit profile */}
                 {ownProfile && (
-                  <a href="/profile/edit">
                     <button
                       className="text-white font-bold py-2 px-4 rounded-full ml-2"
                       style={{ backgroundColor: "#083628" }}
+                      onClick={switchForm}
                     >
                       <FontAwesomeIcon
                         icon={faEdit}
@@ -370,7 +373,6 @@ const Profile = () => {
                       />
                       modifier
                     </button>
-                  </a>
                 )}
               </div>
             </div>
@@ -516,6 +518,28 @@ const Profile = () => {
           <br />
           </> }
         </div>
+      </div>
+
+      {/* Formulaire de modification de profile */}
+      <div className="back hidden" id="modifForm">
+        <form onSubmit={checkAll} className="connecForm profile">
+                <FontAwesomeIcon icon={faXmark} size="2x" color="black" onClick={switchForm}/>
+              <span className="title">Modifier ses informations</span>
+              <span className="connecLabel">Pseudo</span>
+              <input type="text" className="connecInput" id="Inscriptionlogin" onKeyUp={checkPseudo}/>
+              <span className="error" id="error"></span>
+
+              <span className="connecLabel">Le type de compte</span>
+              <div className="radioContainer">
+                  <div><label htmlFor="non-public">Privé</label><input type="radio" name="privatisation" value="prive" id="non-public" checked/></div>
+                  <div><label htmlFor="public">Public</label><input type="radio" name="privatisation" value="public" id="public"/></div>
+              </div>
+
+              <span className="connecLabel">Votre Description</span>
+              <textarea id="descInscription" cols={30} rows={10} className="connecInput desc"></textarea>
+
+              <input type="submit" className="connecSubmit" value="Modifier son profil"/>
+        </form>
       </div>
     </>
   );
