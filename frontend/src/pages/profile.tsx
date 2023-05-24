@@ -339,8 +339,9 @@ const Profile = () => {
                 <button
                   className="text-white font-bold py-2 px-4 rounded-full"
                   style={{ backgroundColor: "#579A86" }}
-                  onClick={() => {
-                    navigator.clipboard.writeText(window.location.href);
+                  onClick={async() => {
+                    const id = await getId()
+                    navigator.clipboard.writeText(window.location.href.replace("me",id));
                     /* toast notify */
                     toast.info("🎉 Lien copié !", {
                       position: "top-right",
