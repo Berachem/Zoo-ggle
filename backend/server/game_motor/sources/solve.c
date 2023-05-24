@@ -100,12 +100,12 @@ void main(int argc, char *argv[]){
     
     
     int i;
-    for (i = 4; i < argc; i++) {
+    for (i = 5; i < argc; i++) {
        // replace QU by $ in the grid
         if (argv[i][0] == 'Q' && argv[i][1] == 'U') {
-            gridList[i-4] = '*';
+            gridList[i-5] = '*';
         } else {
-            gridList[i-4] = argv[i][0];
+            gridList[i-5] = argv[i][0];
         }
     }
     
