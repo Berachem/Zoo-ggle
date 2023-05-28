@@ -84,6 +84,8 @@ function App() {
               </>
             }
           />
+
+          <Route path="/historique/:idgame/:idplayer" element={<></>} /> {/* Accès historique d'une partie avec une POV */}
         </Routes>
       </>
     </BrowserRouter>
