@@ -158,11 +158,24 @@ export default function Accueil() {
             aspectRatio:"2/1"
 
           }}src={backgroundMode ? LogoBlack : LogoWhite} />
-          <a href="/Jouer">
+          
+          {(localStorage.getItem("connected") === "true") && 
+            <a href="/Jouer">
+              <Button variant="filled" color="white" className="m-2">
+                Jouer
+              </Button>
+            </a>
+          }
+          {!(localStorage.getItem("connected") === "true") && 
+          <a href="/connexion">
             <Button variant="filled" color="white" className="m-2">
-              Jouer
+              Connexion
             </Button>
           </a>
+          }
+          
+        
+        
         </main>
       </div>
 
