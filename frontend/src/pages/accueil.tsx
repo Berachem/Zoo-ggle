@@ -126,38 +126,22 @@ export default function Accueil() {
     }
 
   return (
-    /*
-        ----si un jour on trouve une video d'assez bonne qualité----
-        <video autoPlay muted loop id="myVideo" style={{
-            position: "fixed",
-            right: "0",
-            bottom: "0",
-            minWidth: "100%",
-            minHeight: "100%",
-            zIndex: "-1",
-            objectFit: "cover"
-        }}>
-         <source src={Forest} type="video/mp4"/>
-        </video>*/
     <>
       <ToastContainer/>
+      <IndicatorScroll />
       <div
         style={{
           display: "flex",
           flexDirection: "column",
           minHeight: "100vh",
-          margin: "auto",
+          alignItems: "center",
+          paddingTop:"15vh",
         }}
       >
-        <IndicatorScroll />
-        {/* <MouseScrollIndicator id="discover" /> */}
-
-        <main className="flex flex-col items-center justify-center w-full flex-1  text-center text-gray-50">
           <img style={{
             width:"500px",
-            aspectRatio:"2/1"
-
-          }}src={backgroundMode ? LogoBlack : LogoWhite} />
+            aspectRatio:"2/0.5",
+          }}src={LogoWhite} />
           
           {(localStorage.getItem("connected") === "true") && 
             <a href="/Jouer">
@@ -173,23 +157,7 @@ export default function Accueil() {
             </Button>
           </a>
           }
-          
-        
-        
-        </main>
       </div>
-
-      {/* <ZooggleCard width="50vw" >
-                        <Title variant="h4">Les règles du Boggle</Title>
-                        <Typography>
-                                Dans une limite de temps de 3 minutes, vous devez trouver un maximum de mots en formant des chaînes de  lettres contiguës. Plus le mot est long, plus les points qu'il vous rapporte sont importants.<br/><br/>
-                                Vous pouvez passer d'une lettre à la suivante située directement à gauche, à droite, en haut, en bas, ou sur l'une des quatre cases diagonales.<br/><br/>
-                                Regardez l'exemple de grille à coté:
-                        </Typography>
-                    </ZooggleCard>  
-                    <ZooggleCard width="">
-                        <GameGrid width="big" grid="? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ?"/>     
-                    </ZooggleCard> */}
 
       {/* landing page décrivant Zoo-ggle (dérivé du jeu de grille Boggle) */}
 
