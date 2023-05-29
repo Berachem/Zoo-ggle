@@ -1,52 +1,6 @@
 <?php
 // Fichier qui contient toutes les fonctions utilisées dans le site
 
-/*
-* Effectue une recherche avec les éléments de $text dans le paramètre $parameter
-* Renvoie le resultat de la commande sous forme de PDOStatment
-*
-* $text : le texte saisi par l'utilisateur
-*
-*/
-function recherchePartie(string $text){
-    global $db;
-
-    //le bind de PHP n'aime pas les accents, du coup on vient tous les remplacer,
-    // le LIKE de SQL va rattraper la différence par la suite
-    $search  = array('À', 'Á', 'Â', 'Ã', 'Ä', 'Å', 'Ç', 'È', 'É', 'Ê', 'Ë', 'Ì', 'Í', 'Î', 'Ï', 'Ò', 'Ó', 'Ô', 'Õ', 'Ö', 'Ù', 'Ú', 'Û', 'Ü', 'Ý', 'à', 'á', 'â', 'ã', 'ä', 'å', 'ç', 'è', 'é', 'ê', 'ë', 'ì', 'í', 'î', 'ï', 'ð', 'ò', 'ó', 'ô', 'õ', 'ö', 'ù', 'ú', 'û', 'ü', 'ý', 'ÿ');
-    $replace = array('A', 'A', 'A', 'A', 'A', 'A', 'C', 'E', 'E', 'E', 'E', 'I', 'I', 'I', 'I', 'O', 'O', 'O', 'O', 'O', 'U', 'U', 'U', 'U', 'Y', 'a', 'a', 'a', 'a', 'a', 'a', 'c', 'e', 'e', 'e', 'e', 'i', 'i', 'i', 'i', 'o', 'o', 'o', 'o', 'o', 'o', 'u', 'u', 'u', 'u', 'y', 'y');
-    $text = str_replace($search, $replace, $text);
-    $text = str_replace("'","' ",$text);
-
-    $arrayOfword = explode(" ",$text);
-    $request = "SELECT * FROM B_Partie WHERE NomPartie";
-
-    //on commence par préparer la requette
-    $numberOfParameters = 0;
-    $parameters=array();
-    foreach ($arrayOfword as $mot){
-        if(strlen($mot)>2){              //on enlève toutes les particules (de,la,l'...)
-            $numberOfParameters++;
-            if($numberOfParameters==1){
-                $request.=" LIKE(CONCAT('%', :$mot, '%'))";
-            }else {
-                $request .= " OR NomPartie LIKE(CONCAT('%', :$mot, '%'))";
-            }
-            $parameters[] = [":$mot", $mot];
-        }
-    }
-    $request.=" AND DateFinPartie IS NULL";
-    return $db->execQuery($request,$parameters);
-}
-
-/*
-* Fonction qui vient récupérer toutes les games lancées qui ne sont pas finies
-*/
-function getRecentGame(){
-    global $db;
-    $request = "SELECT * FROM B_Partie WHERE DateFinPartie IS NULL LIMIT 20";
-    return $db->execQuery($request);
-}
 
 // Fonction qui renvoie les infos d'une partie en fonction de son id
 // paramètres : $id : id de la partie
@@ -74,103 +28,6 @@ function getPlayers($id) {
         return null;
     }
     return $result;
-}
-
-// Fonction qui renvoie true si la partie a commencé, false sinon
-// paramètres : $idGame : id de la partie
-// return : true si la partie a commencé, false sinon
-function getGameStarted($idGame) {
-    global $db;
-    $query = "SELECT DateDebutPartie FROM B_Partie WHERE IdPartie = ? AND DateDebutPartie IS NOT NULL";
-    $params = [[1, $idGame, PDO::PARAM_INT]];
-    $result = $db->execQuery($query, $params);
-    if (count($result) == 0) {
-        return null;
-    }
-    return $result[0]->DateDebutPartie != null;
-}
-
-// Fonction qui renvoie true si la partie est terminée, false sinon 
-// paramètres : $idGame : id de la partie
-// return : true si la partie est terminée, false sinon
-function getGameEnded($idGame) {
-    global $db;
-    $query = "SELECT DateFinPartie FROM B_Partie WHERE IdPartie = ? AND DateFinPartie IS NOT NULL";
-    $params = [[1, $idGame, PDO::PARAM_INT]];
-    $result = $db->execQuery($query, $params);
-    if (count($result) == 0) {
-        return null;
-    }
-    return $result[0]->DateFinPartie != null;
-}
-
-// Fonction qui lance la partie $id
-// paramètres : $id : id de la partie
-// return : true si la partie a commencé, false sinon
-function startGame($id) {
-    global $db;
-    $query = "UPDATE B_Partie SET DateDebutPartie = NOW() WHERE IdPartie = ?"; // TODO: DateFinPartie = NOW() + DUREE DE LA PARTIE
-    $params = [[1, $id, PDO::PARAM_INT]];
-    $db->execQuery($query, $params);
-
-    // On récupère les joueurs de la partie
-    $players = getPlayers($id);
-    // On leur donne un score de 0
-    foreach ($players as $player) {
-        $query = "UPDATE B_Jouer SET Score = 0 WHERE IdJoueur = ? AND IdPartie = ?";
-        $params = [
-            [1, $player->IdJoueur, PDO::PARAM_INT],
-            [2, $id, PDO::PARAM_INT]
-        ];
-        $db->execQuery($query, $params);
-
-    }
-}
-
-// Fonction qui renvoie l'id de la partie non commencée du joueur $id
-// paramètres : $id : id du joueur
-// return : l'id de la partie non commencée du joueur $id
-function getGameNotStartedYet($id) {
-    global $db;
-    $query = "SELECT IdPartie FROM B_Jouer WHERE IdJoueur = ? AND IdPartie IN (SELECT IdPartie FROM B_Partie WHERE DateDebutPartie IS NULL)";
-    $params = [[1, $id, PDO::PARAM_INT]];
-    $result = $db->execQuery($query, $params);
-    if (count($result) == 0) {
-        return null;
-    }
-    return $result[0]->IdPartie;
-}
-
-// Fonction qui renvoie la partie en cours du joueur $id (en regardant si le score est à -1, si la date de début existe et que la date de fin est null)
-// paramètres : $id : id du joueur
-// return : l'id de la partie en cours du joueur $id
-function getGameInProgressStartedOrNotForUser($id) {
-    global $db;
-    $query = "SELECT * FROM B_Partie bp WHERE bp.IdPartie IN (SELECT b.IdPartie FROM B_Jouer b WHERE b.IdJoueur = ? AND b.Score = -1 AND b.IdPartie IN (SELECT IdPartie FROM B_Partie WHERE DateFinPartie IS NULL))";
-    $params = [
-        [1, $id, PDO::PARAM_INT]
-    ];
-    $result = $db->execQuery($query, $params);
-    if (count($result) == 0) {
-        return null;
-    }
-    return $result[0];
-}
-
-// Fonction qui renvoie la partie en cours du joueur $id (en regardant si le score est à -1, si la date de début existe et que la date de fin est null)
-// paramètres : $id : id du joueur
-// return : l'id de la partie en cours du joueur $id
-function getGameInProgressStartedForUser($id) {
-    global $db;
-    $query = "SELECT * FROM B_Partie bp WHERE bp.IdPartie IN (SELECT b.IdPartie FROM B_Jouer b WHERE b.IdJoueur = ? AND b.Score > -1 AND b.IdPartie IN (SELECT IdPartie FROM B_Partie WHERE DateFinPartie IS NULL))";
-    $params = [
-        [1, $id, PDO::PARAM_INT]
-    ];
-    $result = $db->execQuery($query, $params);
-    if (count($result) == 0) {
-        return null;
-    }
-    return $result[0];
 }
 
 // Fonction qui renvoie l'email du joueur $id
@@ -203,63 +60,6 @@ function checkMail($mail) {
         return true;
     }
     return false;
-}
-
-// Fonction qui ajoute un joueur dans le salon de la partie $idPartie (en créant une ligne dans la table B_Jouer avec le score à -1))
-// paramètres : $idJoueur : id du joueur, $idPartie : id de la partie
-// return : rien (exécute une requête)
-function addPlayerToWaitingRoomForGame($userID, $gameID){
-    global $db;
-    $query = "INSERT INTO B_Jouer (IdJoueur, IdPartie, Score) VALUES (?, ?, -1)";
-    $params = [[1, $userID, PDO::PARAM_INT], [2, $gameID, PDO::PARAM_INT]];
-    $db->execQuery($query, $params);
-}
-
-// Fonction qui retire un joueur du salon de la partie $idPartie (en retirant la ligne dans la table B_Jouer))
-// paramètres : $idJoueur : id du joueur, $idPartie : id de la partie
-// return : rien (exécute une requête)
-function removePlayerFromWaitingRoomForGame($userID, $gameID){
-    global $db;
-    $query = "DELETE FROM B_Jouer WHERE IdJoueur = ? AND IdPartie = ?";
-    $params = [[1, $userID, PDO::PARAM_INT], [2, $gameID, PDO::PARAM_INT]];
-    $db->execQuery($query, $params, false, false);
-}
-
-// Fonction qui ferme la partie $gameID (en retirant la ligne dans la table B_Partie) après avoir retiré tout les joueurs de la partie)
-// paramètres : $gameID : id de la partie
-// return : rien (exécute une requête)
-function closeWaitingRoomForGame($gameID){
-    $players = getPlayers($gameID);
-    foreach($players as $player){
-        removePlayerFromWaitingRoomForGame($player,$gameID);
-    }
-    global $db;
-    $query = "DELETE FROM B_Partie WHERE IdPartie = ?";
-    $params = [[1, $gameID, PDO::PARAM_INT]];
-    $db->execQuery($query, $params, false, false);
-}
-
-
-// Fonction qui renvoie la liste des mots valides pour la partie $idPartie proposés par le joueur $id
-// paramètres : $idJoueur : id du joueur, $idPartie : id de la partie
-// return : la liste des mots valides pour la partie $idPartie proposés par le joueur $id
-function getValidsWordsListByPlayerInGame($userID, $gameID){
-    global $db;
-    $query = "SELECT Libelle FROM B_Proposer WHERE IdJoueur = ? AND IdPartie = ? AND EstValide = 1";
-    $params = [[1, $userID, PDO::PARAM_INT], [2, $gameID, PDO::PARAM_INT]];
-    $words = $db->execQuery($query, $params);
-    return $words;
-}
-
-// Fonction qui renvoie la liste des mots pour la partie $idPartie proposés par le joueur $id
-// paramètres : $idJoueur : id du joueur, $idPartie : id de la partie
-// return : la liste des mots pour la partie $idPartie proposés par le joueur $id
-function getAllWordsListByPlayerInGame($userID, $gameID){
-    global $db;
-    $query = "SELECT Libelle FROM B_Proposer WHERE IdJoueur = ? AND IdPartie = ?";
-    $params = [[1, $userID, PDO::PARAM_INT], [2, $gameID, PDO::PARAM_INT]];
-    $words = $db->execQuery($query, $params);
-    return $words;
 }
 
 // Fonction qui un int pour savoir si le joueur $id a gagnée la partie $idPartie (0 si perdu, 1 si gagné, 2 si égalité)
@@ -457,8 +257,6 @@ function getAllValidsWordsProposedByUser($id) {
     return $words;
 }
 
-
-
 // Fonction qui renvoie toutes les informations de toutes les parties jouées par un joueur à partir de son ID
 // paramètres : $id : id du joueur
 // return : toutes les informations de toutes les parties jouées par le joueur $id
@@ -469,7 +267,6 @@ function getAllGamesPlayedByUser($id) {
     $games = $db->execQuery($query, $params);
     return $games;
 }
-
 
 // fonction qui renvoie une grille de taille $tailleGrille (sous forme de liste avec toutes les lettres)
 // paramètres : $tailleGrille : taille de la grille
@@ -488,13 +285,36 @@ function getRandomGrid($tailleGrille) {
     return $result;
 }
 
+
+// Fonction qui renvoie la liste des mots valides pour la partie $idPartie proposés par le joueur $id
+// paramètres : $idJoueur : id du joueur, $idPartie : id de la partie
+// return : la liste des mots valides pour la partie $idPartie proposés par le joueur $id
+function getValidsWordsListByPlayerInGame($userID, $gameID){
+    global $db;
+    $query = "SELECT Libelle FROM B_Proposer WHERE IdJoueur = ? AND IdPartie = ? AND EstValide = 1";
+    $params = [[1, $userID, PDO::PARAM_INT], [2, $gameID, PDO::PARAM_INT]];
+    $words = $db->execQuery($query, $params);
+    return $words;
+}
+
+// Fonction qui renvoie la liste des mots pour la partie $idPartie proposés par le joueur $id
+// paramètres : $idJoueur : id du joueur, $idPartie : id de la partie
+// return : la liste des mots pour la partie $idPartie proposés par le joueur $id
+function getAllWordsListByPlayerInGame($userID, $gameID){
+    global $db;
+    $query = "SELECT Libelle FROM B_Proposer WHERE IdJoueur = ? AND IdPartie = ?";
+    $params = [[1, $userID, PDO::PARAM_INT], [2, $gameID, PDO::PARAM_INT]];
+    $words = $db->execQuery($query, $params);
+    return $words;
+}
+
 // Fonction qui renvoie la liste des mots valides pour saisie par l'utilisateur (sous forme de liste) dans la partie $idPartie
 // paramètres : $idJoueur : id du joueur
 //               $idPartie : id de la partie
 // return : la liste des mots valides pour saisie par l'utilisateur dans la partie $idPartie
 function getValidWordsForUser($idJoueur,$idPartie) {
     global $db;
-    $query = "SELECT Libelle FROM B_Proposer WHERE IdPartie = ? AND EstValide = 1 AND IdJoueur = ?";
+    $query = "SELECT Libelle FROM B_Proposer WHERE IdPartie = ? AND EstValide = 1 AND IdJoueur = ? ORDER BY DateProposition DESC";
     $params = [
         [1, $idPartie, PDO::PARAM_INT],
         [2, $idJoueur, PDO::PARAM_INT]
@@ -519,116 +339,6 @@ function getValidWordsForGrid($grid, $gridSize) {
     }
     $result = implode("\n", $output);
     return explode(" ", $result);
-}
-
-/*
-Fonction qui crée un booléen si l'opération a réussi ou non
-paramètres : $id : id de la partie
-             $idJoueur : id du joueur
-             $word : mot proposé
-return : true si l'opération a réussi, false sinon
-*/
-function createGame($id, $name, $langue, $tailleGrille, $mode, $public, $nbJoueurs) {
-    $grid = implode(" ",getRandomGrid($tailleGrille));
-    $words = getValidWordsForGrid($grid, $tailleGrille);
-    $nbWords = count($words);
-
-    global $db;
-
-    $query = "INSERT INTO B_Partie (NomPartie, LangueDico, Grille, TailleGrille, NombreMotsPossibles, Mode, EstPublic, NombreJoueursMax, IdChef) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-    $params = [
-        [1, $name, PDO::PARAM_STR],
-        [2, $langue, PDO::PARAM_STR],
-        [3, $grid, PDO::PARAM_STR],
-        [4, $tailleGrille, PDO::PARAM_INT],
-        [5, $nbWords, PDO::PARAM_INT],
-        [6, $mode, PDO::PARAM_INT],
-        [7, $public],
-        [8, $nbJoueurs, PDO::PARAM_INT],
-        [9, $id, PDO::PARAM_INT]
-    ];
-    $result = $db->execQuery($query, $params,false,false);
-
-    // récupère l'id de la partie créée
-    $query = "SELECT IdPartie FROM B_Partie WHERE NomPartie = ? AND LangueDico = ? AND Grille = ? AND TailleGrille = ? AND NombreMotsPossibles = ? AND Mode = ? AND EstPublic = ? AND NombreJoueursMax = ? AND IdChef = ?";
-    $params = [
-        [1, $name, PDO::PARAM_STR],
-        [2, $langue, PDO::PARAM_STR],
-        [3, $grid, PDO::PARAM_STR],
-        [4, $tailleGrille, PDO::PARAM_INT],
-        [5, $nbWords, PDO::PARAM_INT],
-        [6, $mode, PDO::PARAM_INT],
-        [7, $public],
-        [8, $nbJoueurs, PDO::PARAM_INT],
-        [9, $id, PDO::PARAM_INT]
-    ];
-    $result = $db->execQuery($query, $params);
-
-    // si la partie a bien été créée, on ajoute le joueur à la table B_Jouer
-    if ($result) {
-        $idPartie = $result[0]->IdPartie;
-        $query = "INSERT INTO B_Jouer (IdJoueur, IdPartie, Score) VALUES (?, ?, ?)";
-        $params = [
-            [1, $id, PDO::PARAM_INT],
-            [2, $idPartie, PDO::PARAM_INT],
-            [3, -1, PDO::PARAM_INT]
-        ];
-        $result = $db->execQuery($query, $params,false,false);
-        return true;
-    } else {
-        return false;
-    } 
-}
-
-// Fonction qui renvoie le nombre de joueurs dans le salon d'attente d'une partie $idPartie
-// (on compte le nombre de Score à -1 dans la table B_Jouer)
-// paramètres : $idPartie : id de la partie
-// return : le nombre de joueurs dans le salon d'attente de la partie $idPartie
-function getNbPlayersInWaitingRoom($idPartie) {
-    global $db;
-    $query = "SELECT COUNT(Score) as nombre FROM B_Jouer WHERE IdPartie = ? AND Score = -1";
-    $params = [
-        [1, $idPartie, PDO::PARAM_INT]
-    ];
-    $result = $db->execQuery($query, $params);
-    return $result[0]->nombre;
-}
-
-// Fonction qui renvoie la liste des parties publiques (en fonction de la langue, du mode, du nombre de joueurs et du nom)
-// paramètres : $langue : langue du dictionnaire
-//              $mode : mode de la partie
-//              $nbJoueurs : nombre de joueurs max de la partie
-//              $name : nom de la partie
-// return : la liste des parties publiques
-function getPublicGames($langue, $mode, $nbJoueurs, $name) {
-    global $db;
-    $query = "SELECT * FROM B_Partie WHERE EstPublic = 1 AND DateDebutPartie IS NULL";
-    $params = [];
-    $i = 1;
-    if(!empty($langue)){
-        $query .= " AND LangueDico LIKE ?";
-        $params[] = [$i++, $langue, PDO::PARAM_STR];
-    }
-    if(!empty($mode)){
-        $query .= " AND Mode = ?";
-        $params[] = [$i++, $mode, PDO::PARAM_INT];
-    }
-    if(!empty($nbJoueurs)){
-        $query .= " AND NombreJoueursMax = ?";
-        $params[] = [$i++, $nbJoueurs, PDO::PARAM_INT];
-    }
-    if(!empty($name)){
-        $query .= " AND NomPartie LIKE ?";
-        $params[] = [$i++, $name, PDO::PARAM_STR];
-    }
-    $games = $db->execQuery($query, $params);
-
-    // filter all games that are already full (getNbPlayersInWaitingRoom($idPartie) >= NombreJoueursMax)
-    $games = array_filter($games, function($game) {
-        return getNbPlayersInWaitingRoom($game->IdPartie) < $game->NombreJoueursMax;
-    });
-
-    return $games;
 }
 
 // Fonction qui renvoie la liste des Pseudo, Logo, Score, IdJoueur et IdPartie des joueurs de la dernière partie jouée par un utilisateur 
@@ -678,6 +388,21 @@ function getLeaderBoardGame($idPartie){
     return $result;
 }
 
+function getPlayerGameInfos($idPartie,$idJoueur){
+    global $db;
+    $query = "SELECT * FROM B_Jouer WHERE B_Jouer.IdPartie = ? AND B_Jouer.IdJoueur = ?";
+    $params = [[1, $idPartie, PDO::PARAM_INT],[2, $idJoueur, PDO::PARAM_INT]];
+    $result = $db->execQuery($query, $params);
+    return $result[0];
+}
+
+function getProposedWordsCount($playerId,$gameId){
+    global $db;
+    $query = "SELECT * FROM B_Proposer WHERE B_Proposer.IdPartie = ? AND B_Proposer.IdJoueur = ?";
+    $params = [[1, $gameId, PDO::PARAM_INT],[2, $playerId, PDO::PARAM_INT]];
+    $result = $db->execCount($query, $params);
+    return $result;
+}
 
 // Fonction qui insère un mot jouée par un utilisateur durant une partie et par la même occasion le mot dans la table des Mots.
 // paramètres : $idJoueur : id du joueur
@@ -740,38 +465,6 @@ function formatDateToSentence($date){
     return 'le '.$date;
 }
 
-// Fonction qui termine une partie et effectue les mises à jour nécessaires (sur les scores, dates de fin)
-// paramètres : $idGame : id de la partie
-// return : true si la partie a été terminée, false sinon
-function endAGame($idGame){
-    global $db;
-    $game = getGameInfos($idGame);
-    $words = getValidWordsForGrid($game->Grille, $game->TailleGrille);
-    $nbWords = count($words);
-
-    //pour chaque joueur mettre a jour score de fin
-    $date = date("Y-m-d H:i:s");
-    $query = "UPDATE B_Partie SET DateFinPartie = ?, NombreMotsPossibles = ? WHERE IdPartie = ?";
-    $params = [
-        [1, $date, PDO::PARAM_STR],
-        [2, $nbWords, PDO::PARAM_INT],
-        [3, $idGame, PDO::PARAM_INT]
-    ];  
-    $db->execOnly($query, $params);
-
-    $players = getPlayers($idGame);
-    foreach($players as $player){
-        $score = getScoreOfPlayerInGame($player->IdJoueur, $idGame);
-        $query = "UPDATE B_Jouer SET Score = ? WHERE IdJoueur = ? AND IdPartie = ?";
-        $params = [
-            [1, $score, PDO::PARAM_INT],
-            [2, $player->IdJoueur, PDO::PARAM_INT],
-            [3, $idGame, PDO::PARAM_INT]
-        ];
-        $db->execOnly($query, $params);
-    }    
-}
-
 function insertGame($name, $lang, $grid, $beginDate, $endDate, $gridSize, $possibleNumberWord, $mode, $playerNumber){
     global $db;
     $query = "INSERT INTO b_partie (NomPartie, LangueDico,Grille,DateDebutPartie,DateFinPartie,TailleGrille,NombreMotsPossibles,Mode,EstPublic,NombreJoueursMax,IdChef) VALUES (?, ?, ?, ?, ?, ?, ?, ?, 1, ?, -1)";
@@ -806,40 +499,6 @@ function insertPlayerPlayedAGame($gameId, $playerId, $score){
     $db->execOnly($query, $params);
 }
 
-// Fonction qui renvoie le score d'un joueur dans une partie
-// paramètres : $idJoueur : id du joueur
-//              $idGame : id de la partie
-// return : le score du joueur dans la partie
-function getScoreOfPlayerInGame($idJoueur,$idGame){
-    global $db;
-    $allValidWords = getValidWordsForUser($idJoueur, $idGame);
-    $allValidWords = array_map(function($word) {
-        return $word->Libelle;
-    }, $allValidWords);
-    $allValidWords = array_unique($allValidWords);
-    $allValidWordsString = implode(" ", $allValidWords);
-
-   
-    if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
-        exec('.\..\server\game_motor\sources\score.exe '.$allValidWordsString, $output);
-    } else {
-        exec('./../server/game_motor/executables_LINUX/score_by_length '.$allValidWordsString, $output);
-    }
-    $result = implode("\n", $output);
-    
-    // split le résultat en tableau
-    $result = trim($result);
-    $result = intval($result);
-
-    // add 5 points for each animal in $animalsListUppercase (already in uppercase)
-    foreach($allValidWords as $word){
-        if (in_array(strtoupper($word), $GLOBALS['animalsListUppercase'])) {
-            $result += 5;
-        }
-    }
-    return $result;   
-}
-
 // Fonction qui renvoie si le mot est un animal ou non
 // paramètres : $word : le mot
 // return : true si le mot est un animal, false sinon
@@ -848,7 +507,7 @@ function isAnimalName($word){
 
     $word = strtoupper($word);
 
-    return isWordInFRAList($word, $animalsFRA) ;
+    return isWordInFRAList($word) ;
 }
 
 // Fonction qui renvoie le score obtenu pour un mot

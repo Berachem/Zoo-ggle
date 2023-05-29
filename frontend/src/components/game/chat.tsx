@@ -73,7 +73,6 @@ export const ChatBlock = (props:ChatBlockProps) => {
     })
     //====================================
 
-    //oui le chat ne fait rien je reprend juste le visuel
     return (
         <>
 

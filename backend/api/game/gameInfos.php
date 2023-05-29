@@ -1,6 +1,6 @@
 <?php
 
-// API qui renvoie les infos de la partie en cours du user qui a déjà commencée (mais pas finie)
+// API qui renvoie les infos de la partie 
 // renvois un JSON avec les infos suivantes :
 // - liste des joueurs
 // - si la partie est terminée ou non
@@ -10,45 +10,67 @@ require_once '../Connexion.php';
 require_once '../functions.php';
 
 if (isset($_GET["idPartie"])) {
-    $game = getGameInfos($_GET["idPartie"]);
-    if ($game) {
-        $players = getPlayers($game->IdPartie);
-        // map
-        $players = array_map(function($player){
-            return $player->Pseudo;
-        }, $players);
+    if (isset($_GET["idJoueur"])) {
+        $gameId = $_GET["idPartie"];
+        $game = getGameInfos($gameId);
+        $playerId = $_GET["idJoueur"];
+        if ($game) {
 
-        $gameEnded = getGameEnded($game->IdPartie);
-        // $timePassed (minutes : secondes)
-        $timePassed = time() - $game->DateDebutPartie;
-        $timePassed = gmdate("i:s", $timePassed);
-        // to String
-        $timePassed = strval($timePassed);
-        $score = getScoreOfPlayerInGame($game->IdChef, $game->IdPartie);
-        if ($gameEnded)
-            $leaderboard = getLeaderBoardGame($game->IdPartie);
-            
-        // map
-        $validWords = array_map(function($word){
-            return $word->Libelle;
-        }, $validWords);
+            $leaderboard = getLeaderBoardGame($gameId);
+            $playerGameInfos = getPlayerGameInfos($gameId,$playerId);
+            $score = $playerGameInfos->Score;
+            $foundedWordsCount = count(getValidWordsForUser($playerId,$gameId));
 
-        $infos = array(
-            "success" => true,
-            "players" => $players,
-            "gameEnded" => $gameEnded ? 1 : 0,
-            "timePassed" => $timePassed,
-            "foundedWords" => $validWords,
-            "IdChef" => $game->IdChef,
-            "score" => $score,
-            "leaderboard" => $leaderboard
-        );
-        echo json_encode($infos);
+            $proposedWordsCounts = getProposedWordsCount($playerId,$gameId);
+            if ($game->Mode == 0){
+                $validWords = getValidWordsForUser($playerId,$gameId);
+                $wordInfos = array_map(function ($word) {
+                    $wordInfo = getScoreForAWord($word->Libelle);
+                    return ["word"=>$word->Libelle, "score"=>$wordInfo[0], "isAnimal"=>$wordInfo[1]];
+                }, $validWords);
+                $foundedWordsCount = count($validWords);
+            }else if ($game->Mode == 1){
+                $allPlayersWordInfos = [];
+                foreach ($leaderboard as $player){
+                    $validWords = getValidWordsForUser($player->IdJoueur,$player->IdPartie);
+                    $wordInfos = array_map(function ($word) {
+                        $wordInfo = getScoreForAWord($word->Libelle);
+                        return ["word"=>$word->Libelle, "score"=>$wordInfo[0], "isAnimal"=>$wordInfo[1]];
+                    }, $validWords);
+                    $allPlayersWordInfos[$player->Pseudo]=["score"=>$player->Score,"words"=>$wordInfos];
+                }
+                $wordInfos= $allPlayersWordInfos;
+            }
+
+            $infos = array(
+                "success" => true,
+                "gameInfos" => $game,
+                "foundedWords" => $wordInfos,
+                "proposedWordsCount" => $proposedWordsCounts,
+                "score" => $score,
+                "leaderboard" => $leaderboard,
+                "foundedWordsCount" => $foundedWordsCount
+
+            );
+            header('Content-Type: application/json');
+        header('Access-Control-Allow-Origin: http://localhost:3000');
+            echo json_encode($infos);
+        } else {
+            $infos = array(
+                "success" => false,
+                "error" => "Invalid game ID"
+            );
+            header('Content-Type: application/json');
+        header('Access-Control-Allow-Origin: http://localhost:3000');
+            echo json_encode($infos);
+        }
     } else {
         $infos = array(
             "success" => false,
-            "error" => "Invalid game ID"
+            "error" => "Missing player ID parameter"
         );
+        header('Content-Type: application/json');
+    header('Access-Control-Allow-Origin: http://localhost:3000');
         echo json_encode($infos);
     }
 } else {
@@ -56,7 +78,7 @@ if (isset($_GET["idPartie"])) {
         "success" => false,
         "error" => "Missing game ID parameter"
     );
+    header('Content-Type: application/json');
+header('Access-Control-Allow-Origin: http://localhost:3000');
     echo json_encode($infos);
 }
-
-?>

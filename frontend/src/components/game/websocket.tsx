@@ -260,6 +260,10 @@ export default function ChatManager(props: { socketUrl: string }) {
         return () => clearInterval(interval);
     }, [countDown]);
 
+    useEffect(()=>{
+        console.log(inGameStats)
+    },[inGameStats])
+
     const getReturnValues = (countDown: number) => {
         // calculate time left
         const days = Math.floor(countDown / (1000 * 60 * 60 * 24));
