@@ -4,7 +4,6 @@ import {
   Card,
 } from "@material-tailwind/react";
 import LogoWhite from "../assets/images/Title.svg";
-import LogoBlack from "../assets/images/BlackTitle.png"
 import ZooggleCard from "../components/Zooggle/ZooggleCard";
 import GameGrid from "../components/Zooggle/GameGrid";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -135,7 +134,7 @@ export default function Accueil() {
           flexDirection: "column",
           minHeight: "100vh",
           alignItems: "center",
-          paddingTop:"15vh",
+          paddingTop:"calc(50vh - 200px)",
         }}
       >
           <img style={{
