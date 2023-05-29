@@ -1,7 +1,5 @@
 import React from "react";
 import Logo from "../../assets/images/zooggle_lion_logo_blue.png";
-import Mbappe from "../../assets/images/mbappe.jpg";
-import googlePlayIcon from "../../assets/images/icons/google_play_icon.png";
 import {
   Navbar,
   MobileNav,
@@ -17,38 +15,19 @@ import {
   IconButton,
 } from "@material-tailwind/react";
 import {
-  CubeTransparentIcon,
   UserCircleIcon,
-  CodeBracketSquareIcon,
   Square3Stack3DIcon,
   ChevronDownIcon,
   PowerIcon,
   RocketLaunchIcon,
   Bars2Icon,
-  HomeIcon,
-  UserIcon,
-  UserGroupIcon,
-  BookmarkIcon,
-  BookOpenIcon,
-  PlayIcon,
 } from "@heroicons/react/24/outline";
-
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-
 import routes from "../../routes";
-
 import {
-  faHippo,
-  faMoon,
-  faSun,
   faUser,
 } from "@fortawesome/free-solid-svg-icons";
-import { Helmet } from "react-helmet";
-import {
-  faAndroid,
-  faGooglePay,
-  faGooglePlay,
-} from "@fortawesome/free-brands-svg-icons";
+
 
 // profile menu component
 const profileMenuItems = [
@@ -246,9 +225,6 @@ function NavList(
 ) {
   return (
     <ul className="mb-4 mt-2 flex flex-col gap-2 lg:mb-0 lg:mt-0 lg:flex-row lg:items-center">
-      {/* <NavListMenu /> */}
-
-
       {navListItems.filter(({ label }) => label).map(({ label, icon, path }, key) => (
         <Typography
           key={label}
@@ -290,12 +266,6 @@ export default function AppBar(
   const toggleIsNavOpen = () => setIsNavOpen((cur) => !cur);
   const isLandingPage = window.location.pathname === "/";
 
-  /*   React.useEffect(() => {
-    window.addEventListener(
-      "resize",
-      () => window.innerWidth >= 960 && setIsNavOpen(false)
-    );
-  }, []); */
   // same but also set navbar width to 100% after scrolling
   React.useEffect(() => {
     window.addEventListener(
@@ -326,18 +296,6 @@ export default function AppBar(
               ></Switch>
             </span>
           </li>
-{/*           <li className="mx-7">
-            <a href="#">
-              <br />
-              <img
-                src={googlePlayIcon}
-                alt="google play"
-                width={40}
-                height={40}
-                style={{ marginTop: 10 }}
-              />
-            </a>
-          </li> */}
         </ul>
       </div>
     );

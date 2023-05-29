@@ -536,7 +536,7 @@ const Profile = () => {
       </div>
 
       {/* Formulaire de modification de profile */}
-      <div className="back hidden" id="modifForm">
+      <div className="back hiddenProfile" id="modifForm">
         <form onSubmit={checkAll} className="connecForm profile">
               <FontAwesomeIcon icon={faXmark} size="2x" color="black" onClick={switchForm}/>
               <span className="title">Modifier ses informations</span>

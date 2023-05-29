@@ -6,7 +6,7 @@ import Connexion from "./pages/connexion";
 import BubbleAssistant from "./components/Zooggle/assistantBubble";
 import Jouer from "./pages/jouer";
 
-export const routes = [
+export var routes = [
   {
     label: "Accueil",
     path: "/",
@@ -33,13 +33,18 @@ export const routes = [
         <Connexion/>{" "}
       </>
     ),
-  },
-  {
-    label: "Jouer",
-    path: "/jouer",
-    icon: ComputerDesktopIcon,
-    element: <Jouer />,
   }
 ];
+
+if(localStorage.getItem("connected") === "true"){
+  routes.push(
+    {
+      label: "Jouer",
+      path: "/jouer",
+      icon: ComputerDesktopIcon,
+      element: <Jouer />,
+    }
+  )
+}
 
 export default routes;

@@ -41,6 +41,7 @@ export default function ConnexionForm(props : ConnexionProps){
             pauseOnHover: true,
             draggable: true,
             progress: undefined,
+            toastId:1
           });
     }
 
