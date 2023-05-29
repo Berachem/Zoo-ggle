@@ -1,4 +1,4 @@
-import { HomeIcon, BookOpenIcon, PlayIcon, ComputerDesktopIcon } from "@heroicons/react/24/outline";
+import { HomeIcon, BookOpenIcon, ComputerDesktopIcon } from "@heroicons/react/24/outline";
 
 import Accueil from "./pages/accueil";
 import Dictionnaire from "./pages/dictionnaire";
