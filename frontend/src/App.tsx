@@ -1,23 +1,12 @@
 import React from "react";
-import logo from "./logo.svg";
-import ReactDOM from "react-dom/client";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import "./App.css";
-import AppBar from "./components/navbar/navbar";
 import Profile from "./pages/profile";
-import Footer from "./components/footer/footer";
 import NavBar from "./components/navbar/navbar";
 import Background from "./components/Zooggle/Background";
-
-// Test de la librairie react-toastify pour les notifications (à supprimer)
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import Dictionnaire from "./pages/dictionnaire";
 import routes from "./routes";
 import Page404 from "./pages/erreur404";
-import { Navbar } from "@material-tailwind/react";
 import BubbleAssistant from "./components/Zooggle/assistantBubble";
-import MinimalistNavbar from "./components/navbar/minimalistNavbar";
 
 function App() {
   // ici on met les routes de notre application
@@ -45,8 +34,6 @@ function App() {
           changeBackgroundMode={changeBackgroundMode}
           backgroundMode={BackgroundMode}
         />)}
-
-        {window.location.pathname === "/game" && (<MinimalistNavbar />)}
 
        
         <Routes>
