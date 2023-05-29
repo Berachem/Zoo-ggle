@@ -18,8 +18,6 @@ import { ToastContainer,toast } from "react-toastify"
 import { useLocation } from "react-router-dom"
 import { useEffect, useState } from "react";
 
-//import Forest from "../assets/video/Forest.mp4"
-
 async function checkToken(token :string){
   let formData = new FormData()
   formData.append("token",token)
@@ -55,14 +53,13 @@ async function checkToken(token :string){
 }
 
 export default function Accueil() {
+  const [bouton,setBouton] = useState("connexion")
   const [backgroundMode, setBackgroundMode] = useState(localStorage.getItem("BackgroundMode") === "true");
   useEffect(() => {
     function changeBG() {
       setBackgroundMode( localStorage.getItem("BackgroundMode") === "true");
     }
-  
     window.addEventListener('storage', changeBG)
-  
     return () => {
       window.removeEventListener('storage', changeBG)
     }
@@ -79,50 +76,70 @@ export default function Accueil() {
     return letters;
   };
 
+  //check connexion/inscription toast
   const location = useLocation()
-    const params = new URLSearchParams(location.search);
-    if(params.has("registered") && params.get("registered")=="true"){
-        toast.success("Regardez vos mail pour vous connecter !", {
-            position: "top-right",
-            autoClose: 8000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            toastId:2
-          });
+  const params = new URLSearchParams(location.search);
+  if(params.has("registered") && params.get("registered")=="true"){
+      toast.success("Regardez vos mail pour vous connecter !", {
+          position: "top-right",
+          autoClose: 8000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          toastId:2
+        });
+  }
+  if(params.has("connected") && params.get("connected")=="true"){
+    toast.success("Vous êtes connecté !", {
+      position: "top-right",
+      autoClose: 8000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      toastId:5
+    });
+  }
+  if(params.has("disconnected") && params.get("disconnected")=="true"){
+    toast.info("Vous êtes déconnecté !", {
+      position: "top-right",
+      autoClose: 8000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      toastId:3
+    });
+  }
+  if(params.has("token")){
+    let token = params.get("token")
+    if(token!=null){
+      checkToken(token)
     }
-    if(params.has("connected") && params.get("connected")=="true"){
-      toast.success("Vous êtes connecté !", {
-        position: "top-right",
-        autoClose: 8000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        toastId:5
-      });
-    }
-    if(params.has("disconnected") && params.get("disconnected")=="true"){
-      toast.info("Vous êtes déconnecté !", {
-        position: "top-right",
-        autoClose: 8000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        toastId:3
-      });
-    }
-    if(params.has("token")){
-      let token = params.get("token")
-      if(token!=null){
-        checkToken(token)
+  }
+
+  //cleanup localStorage when session is over   
+  async function checkConnexion(){
+    const res = await fetch("http://localhost/backend/api/isConnected.php", {
+      credentials: "include",
+      }).then((res) => res.json());
+  
+      if (!res.success) {
+        localStorage.setItem("connected","false")
+        localStorage.setItem("token","NONE")
+        setBouton("connexion")
+      }else{
+        setBouton("Jouer")
       }
-    }
+  }
+
+  if(localStorage.getItem("connected") === "true"){
+    checkConnexion() 
+  }
 
   return (
     <>
@@ -141,21 +158,11 @@ export default function Accueil() {
             width:"500px",
             aspectRatio:"2/0.5",
           }}src={LogoWhite} />
-          
-          {(localStorage.getItem("connected") === "true") && 
-            <a href="/Jouer">
-              <Button variant="filled" color="white" className="m-2">
-                Jouer
-              </Button>
-            </a>
-          }
-          {!(localStorage.getItem("connected") === "true") && 
-          <a href="/connexion">
+          <a href={"/"+bouton}>
             <Button variant="filled" color="white" className="m-2">
-              Connexion
+              {bouton}
             </Button>
           </a>
-          }
       </div>
 
       {/* landing page décrivant Zoo-ggle (dérivé du jeu de grille Boggle) */}
