@@ -18,6 +18,7 @@ import Page404 from "./pages/erreur404";
 import { Navbar } from "@material-tailwind/react";
 import BubbleAssistant from "./components/Zooggle/assistantBubble";
 import MinimalistNavbar from "./components/navbar/minimalistNavbar";
+import Historique from "./pages/historique";
 
 function App() {
   // ici on met les routes de notre application
@@ -85,7 +86,7 @@ function App() {
             }
           />
 
-          <Route path="/historique/:idgame/:idplayer" element={<></>} /> {/* Accès historique d'une partie avec une POV */}
+          <Route path="/historique/game/:idgame/player/:idplayer" element={<Historique />} />
         </Routes>
       </>
     </BrowserRouter>
