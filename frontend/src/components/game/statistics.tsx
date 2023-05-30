@@ -60,7 +60,7 @@ export const Statistics = (props: StatisticsProps) => {
                                     place += 1
                                     return (
                                         <>
-                                            <p>{place==1?"1er":place+"ème"} : {key} - {props.leaderBoard[key]} pts</p>
+                                            <p>{place==1?"1er":place+"ème"} : <i>{key}</i> avec {props.leaderBoard[key]} pts</p>
                                         </>
                                     )
                                 }
@@ -68,10 +68,10 @@ export const Statistics = (props: StatisticsProps) => {
                         </div>
                         <div className="StatsTitle">Statistiques :</div>
                         <div className="StatsInfos">
-                            <p>{props.stats.foundableWords} - Mots trouvables</p>
-                            <p>{props.stats.proposedWords} - Mots proposés</p>
-                            <p>{props.stats.foundedWords} - Mots trouvés</p>
-                            <p>{props.stats.completion}% - Complétion</p>
+                            <p>Mots trouvables : {props.stats.foundableWords}</p>
+                            <p>Mots proposés : {props.stats.proposedWords}</p>
+                            <p> Mots trouvés : {props.stats.foundedWords}</p>
+                            <p>Complétion : {props.stats.completion}% </p>
                         </div>
 
 

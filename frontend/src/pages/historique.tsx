@@ -75,7 +75,7 @@ export default function Historique() {
         //   id = idUser;
         // }
 
-        const response = await fetch("http://localhost/backend/api/game/gameInfos.php?idPartie=254&idJoueur=8");
+        const response = await fetch("http://localhost/backend/api/game/gameInfos.php?idPartie=33&idJoueur=23");
         const data = await response.json();
         console.log(data);
         var mode: number = data.gameInfos.Mode;

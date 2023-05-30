@@ -5,7 +5,7 @@
 .StatsSession{
     /* margin: auto; */
     margin-top: 5vh;
-padding:15px;
+    padding:15px;
     display: flex;
     flex-direction: column;
     height: 85vh;
@@ -23,6 +23,7 @@ padding:15px;
     text-align: center;
     font-weight: bold;
     font-size: large;
+    color:#579A86;
 }
 
 .StatsInfos{
@@ -30,6 +31,7 @@ padding:15px;
     flex-direction: column;
     height: 60vh;
     width: 100%;
+    text-align: justify;
     /* overflow-y: scroll;
     scrollbar-color: lightgray white;
     scrollbar-width: thin; */
