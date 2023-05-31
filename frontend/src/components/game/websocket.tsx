@@ -181,18 +181,16 @@ export default function ChatManager(props: { socketUrl: string }) {
                 break
 
             case 'already_found':
-                if (content.isAnimal){
-                    toast.warning('Dommage le mot ' + content.word + 'a déja été trouvé par ' + content.player, {
-                        position: "top-right",
-                        autoClose: 3000,
-                        hideProgressBar: false,
-                        closeOnClick: true,
-                        pauseOnHover: true,
-                        draggable: true,
-                        progress: undefined,
-                        toastId:98
-                      });
-                }
+                toast.warning('Trop tard ! Le mot ' + content.word + ' a déja été trouvé par ' + content.player, {
+                    position: "top-right",
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    toastId:98,
+                    });
                 // setError('Dommage le mot' + content.word + 'a déja été trouvé par ' + content.player)
                 break
 
@@ -302,8 +300,7 @@ export default function ChatManager(props: { socketUrl: string }) {
         return minutes + "min" + seconds + "s";
     };
 
-
-    return <div>
+    return <>
         <ToastContainer/>
         {error !== '' &&
             <div className="wsError">Error: {error} <button onClick={() => setError('')}>OK</button></div>}
@@ -345,5 +342,5 @@ export default function ChatManager(props: { socketUrl: string }) {
 
         }
 
-    </div>
+    </>
 }  
