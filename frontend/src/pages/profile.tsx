@@ -127,6 +127,7 @@ async function getId() {
 
 //pages profile en elle même
 const Profile = () => {
+
   let { id } = useParams();
   const PROFILE_DATA_BASE_URL = // http://localhost/backend/api/
     "http://localhost/backend/api/player/getUserInfos.php?profileId=";  // https://zoo-ggle.berachem.dev/V2/api/
@@ -150,6 +151,8 @@ const Profile = () => {
   const [userFound, setUserFound] = useState(true);
   const [isFetching, setIsFetching] = useState(false);
   const [pseudoSearch, setPseudoSearch] = useState("");
+  const [profileId, setProfileId] = useState<undefined|number>(undefined);
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -166,6 +169,7 @@ const Profile = () => {
         }
         setOwnProfile(true);
         id = idUser;
+        setProfileId(idUser)
       }
 
       const response = await fetch(PROFILE_DATA_BASE_URL + id);
@@ -525,7 +529,7 @@ const Profile = () => {
                   numberWordsProposed={game.numberWordsProposed}
                   percentageWordsFound={game.percentageWordsFound}
                   canJoin={false}
-                  playerId={id}
+                  playerId={profileId}
                   gameId={game.id}
                 />
               </GameCard>

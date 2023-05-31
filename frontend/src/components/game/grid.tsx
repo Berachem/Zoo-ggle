@@ -1,20 +1,21 @@
-import "../../css/TestGrid.css";
+import "../../css/Grid.css";
 
-export interface TestGridInterface {
+export interface GridProps {
     size: number
     content: string
     width?: string
     height?: string
     getLetter : (letter : string) => void
+    in_game: boolean
 }
 
 
 
-export const TestGrid = (props: TestGridInterface) => {
+export const Grid = (props: GridProps) => {
 
     function switchColor(id : string){
         const letter = document.getElementById("case"+id)
-        if(letter!=null){
+        if(letter!=null && props.in_game){
             letter.classList.toggle("selected")
             if(letter.classList.contains("selected")){
                 console.log("APPELE AVEC "+letter.innerHTML)

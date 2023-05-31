@@ -1,16 +1,18 @@
 import React from "react"
 import "../../css/game.css"
-import {TestGrid} from "../game/testGrid"
+import {Grid} from "./grid"
 import { ClassicInfoDisplayer } from "./classicInfoDisplayer"
 import { FFAInfoDisplayer } from "./ffaInfoDisplayer"
 
-export interface Grid {
+export interface GridInterface {
     size: number
     content: string
 }
 
 export interface WordsInfo { word: string, score: number, isAnimal: boolean }
 export interface PlayerInfos { score: number, words: WordsInfo[] }
+
+
 export interface FFAPlayersInfos {
     [pseudo: string]: PlayerInfos
 }
@@ -22,10 +24,11 @@ export interface EagleModeStats {
 export type InGameStats = PlayerInfos | EagleModeStats
 
 interface GameProps{
-    grid:Grid
+    grid:GridInterface
     game_stats:InGameStats
     propose_word:(word:string)=>void
     countdown:number
+    in_game:boolean
 }
 
 
@@ -52,13 +55,12 @@ export const Game = (props:GameProps) =>{
     return (
         <div className="container">
             
-
             <div className="gridContainer">
                 <div className="Timer">{getReturnValues(props.countdown)}</div>
-                <TestGrid content={props.grid.content} size={props.grid.size} getLetter={getLetter}/>
+                <Grid content={props.grid.content} size={props.grid.size} getLetter={getLetter} in_game={props.in_game}/>
                 <div className="containerSender">
-                    <input id="input" className="WordSender" type="text" value={word} onChange={event => setWord(event.target.value)} />
-                    <button className="ButtonSender" onClick={() => { props.propose_word(word); setWord('') }}>Proposer</button>
+                    <input id="input" className="WordSender" type="text" disabled={!props.in_game} value={word} onChange={event => setWord(event.target.value)} />
+                    <button className="ButtonSender" disabled={!props.in_game} onClick={() => { props.propose_word(word); setWord('') }}>Proposer</button>
                 </div>
             </div>
 

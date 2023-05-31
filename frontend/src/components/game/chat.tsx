@@ -1,6 +1,7 @@
 import React , {useState} from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMessage } from '@fortawesome/free-solid-svg-icons';
+import "../../css/chat.css";
 
 interface ChatBlockProps{
     messages: Message[], 

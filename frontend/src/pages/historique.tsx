@@ -1,35 +1,8 @@
 import { useState } from "react";
 import { useParams } from "react-router-dom";
-import { Game,InGameStats, Grid } from '../components/game/game';
+import { Game,InGameStats, GridInterface } from '../components/game/game';
 import { Statistics, LeaderBoard, StatisticsContent } from "../components/game/statistics";
 import { useLocation } from "react-router-dom"
-
-// export interface Grid {
-//     size: number
-//     content: string
-// }
-
-// export interface WordsInfo { word: string, score: number, isAnimal: boolean }
-// export interface PlayerInfos { score: number, words: WordsInfo[] }
-// export interface FFAPlayersInfos {
-//     [pseudo: string]: PlayerInfos
-// }
-
-// export interface EagleModeStats {
-//     playersInfo: FFAPlayersInfos
-// }
-
-// export type InGameStats = PlayerInfos | EagleModeStats
-
-// interface GameProps{
-//     grid:Grid
-//     game_stats:InGameStats
-//     propose_word:(word:string)=>void
-//     countdown:number
-// }
-
-
-
 
 export default function Historique() {
 
@@ -54,7 +27,7 @@ export default function Historique() {
 
     const [leaderBoard, setLeaderBoard] = useState<LeaderBoard>({ "Lucas": 5, "Jo": 8, "Nidal": 15 })
 
-    const [gridState, setGridState] = useState<Grid>({ size: 4, content: "? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ?" })
+    const [gridState, setGridState] = useState<GridInterface>({ size: 4, content: "? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ?" })
 
     const location = useLocation()
     const params = new URLSearchParams(location.search);
@@ -74,19 +47,19 @@ export default function Historique() {
         //   setOwnProfile(true);
         //   id = idUser;
         // }
-
+        console.log("http://localhost/backend/api/game/gameInfos.php?idPartie="+params.get("idPartie")+"&idJoueur="+params.get("idJoueur"))
         const response = await fetch("http://localhost/backend/api/game/gameInfos.php?idPartie="+params.get("idPartie")+"&idJoueur="+params.get("idJoueur"));
         const data = await response.json();
         console.log(data);
         var mode: number = data.gameInfos.Mode;
         if (mode == 0) {
             const stats: InGameStats = { playersInfo: data.foundedWords };
-            setInGameStats({ score: data.gameInfos.Score, words: data.foundedWords });
+            setInGameStats({ score: data.score, words: data.foundedWords });
         } else if (mode == 1) {
             const stats: InGameStats = { playersInfo: data.foundedWords };
             setInGameStats(stats);
         }
-        const grid: Grid = { size: data.gameInfos.TailleGrille, content: data.gameInfos.Grille }
+        const grid: GridInterface = { size: data.gameInfos.TailleGrille, content: data.gameInfos.Grille }
         setGridState(grid)
         var diff = Math.abs(new Date(data.gameInfos.DateFinPartie).getTime() - new Date(data.gameInfos.DateDebutPartie).getTime());
         setCountDown(diff)
@@ -176,7 +149,7 @@ export default function Historique() {
                 width: "100vw"
             }}>
 
-                <Game grid={gridState} game_stats={inGameStats} propose_word={() => { }} countdown={countDown} />
+                <Game grid={gridState} game_stats={inGameStats} propose_word={() => { }} countdown={countDown} in_game={false}/>
                 <Statistics leaderBoard={leaderBoard} stats={statistics} />
             </div>
         </>

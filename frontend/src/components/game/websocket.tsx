@@ -2,7 +2,9 @@ import React, { useEffect, useState } from "react"
 import WaitingRoom from './waitingRoom'
 import GameSelector from './gameSelector'
 import { ChatBlock, Message } from './chat'
-import { Game, WordsInfo, PlayerInfos, FFAPlayersInfos, EagleModeStats, InGameStats, Grid } from "./game"
+import { Game, WordsInfo, PlayerInfos, FFAPlayersInfos, EagleModeStats, InGameStats, GridInterface } from "./game"
+import "../../css/websocket.css";
+import { ToastContainer,toast } from "react-toastify"
 
 export interface WaitingRoomItem {
     name: string
@@ -41,7 +43,7 @@ export default function ChatManager(props: { socketUrl: string }) {
     const [countDown, setCountDown] = React.useState(0);
     const [deadLine, setDeadline] = React.useState(0);
 
-    const [gridState, setGridState] = React.useState<Grid>({ size: 4, content: "? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ?" })
+    const [gridState, setGridState] = React.useState<GridInterface>({ size: 4, content: "? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ?" })
     const [playersWaiting, setPlayersWaiting] = React.useState<Player[]>([])
 
     const resetGameState = () => {
@@ -122,6 +124,18 @@ export default function ChatManager(props: { socketUrl: string }) {
                 break
 
             case 'word_found':
+                if (content.isAnimal){
+                    toast.success("Bravo vous avez trouvé un animal !", {
+                        position: "top-right",
+                        autoClose: 3000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        toastId:99
+                      });
+                }
                 if (content.mode == 0) {
                     setInGameStats(oldState => ('score' in oldState) ? { score: oldState.score + content.score, words: [...oldState.words, { word: content.word, score: content.score, isAnimal: content.isAnimal }] } : oldState)
                 } else if (content.mode == 1) {
@@ -167,7 +181,19 @@ export default function ChatManager(props: { socketUrl: string }) {
                 break
 
             case 'already_found':
-                setError('Dommage le mot' + content.word + 'a déja été trouvé par ' + content.player)
+                if (content.isAnimal){
+                    toast.warning('Dommage le mot ' + content.word + 'a déja été trouvé par ' + content.player, {
+                        position: "top-right",
+                        autoClose: 3000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        toastId:98
+                      });
+                }
+                // setError('Dommage le mot' + content.word + 'a déja été trouvé par ' + content.player)
                 break
 
             default:
@@ -278,6 +304,7 @@ export default function ChatManager(props: { socketUrl: string }) {
 
 
     return <div>
+        <ToastContainer/>
         {error !== '' &&
             <div className="wsError">Error: {error} <button onClick={() => setError('')}>OK</button></div>}
 
@@ -311,7 +338,7 @@ export default function ChatManager(props: { socketUrl: string }) {
                     width: "100vw"
                 }}>
 
-                    <Game grid={gridState} game_stats={inGameStats} propose_word={proposeWord} countdown={countDown} />
+                    <Game grid={gridState} game_stats={inGameStats} propose_word={proposeWord} countdown={countDown} in_game={true}/>
                     <ChatBlock messages={chatState.messages} onMessageWritten={sendChatMessage} />
                 </div>
             </>
