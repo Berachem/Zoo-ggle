@@ -72,7 +72,7 @@ function App() {
             }
           />
 
-          <Route path="/historique/game/:idgame/player/:idplayer" element={<Historique />} />
+          <Route path="/historique" element={<Historique />} />
         </Routes>
       </>
     </BrowserRouter>

@@ -50,6 +50,10 @@ const getDifferenceTimeSentence = (startDate: string) => {
   }
 };
 
+function goToHistoric(gameId : number, playerId : number){
+  window.location.assign("/historique?idPartie="+gameId+"&idJoueur="+playerId)
+}
+
 export default function GameCardInfo(props: any) {
   return (
     <div className="cardInfo">
@@ -320,6 +324,11 @@ export default function GameCardInfo(props: any) {
           </>
         )}
       </p>
+      <div style={{display:"flex",margin:"auto"}}>
+        <Button size="sm" color="orange" className="rounded" onClick={()=>{goToHistoric(props.gameId,props.playerId)}}>Voir l'historique</Button>
+      </div>
+
+
       {props.endDate != null && !props.endDate && (
         <>
           <Alert color="green" className="rounded">

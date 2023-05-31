@@ -1,8 +1,8 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useParams } from "react-router-dom";
-import { ChatBlock } from '../components/game/chat';
-import { Game, WordsInfo, PlayerInfos, FFAPlayersInfos, EagleModeStats, InGameStats, Grid } from '../components/game/game';
+import { Game,InGameStats, Grid } from '../components/game/game';
 import { Statistics, LeaderBoard, StatisticsContent } from "../components/game/statistics";
+import { useLocation } from "react-router-dom"
 
 // export interface Grid {
 //     size: number
@@ -56,8 +56,8 @@ export default function Historique() {
 
     const [gridState, setGridState] = useState<Grid>({ size: 4, content: "? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ?" })
 
-
-
+    const location = useLocation()
+    const params = new URLSearchParams(location.search);
 
     const fetchData = async () => {
         // setIsFetching(true);
@@ -75,7 +75,7 @@ export default function Historique() {
         //   id = idUser;
         // }
 
-        const response = await fetch("http://localhost/backend/api/game/gameInfos.php?idPartie=33&idJoueur=23");
+        const response = await fetch("http://localhost/backend/api/game/gameInfos.php?idPartie="+params.get("idPartie")+"&idJoueur="+params.get("idJoueur"));
         const data = await response.json();
         console.log(data);
         var mode: number = data.gameInfos.Mode;

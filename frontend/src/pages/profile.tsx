@@ -525,6 +525,8 @@ const Profile = () => {
                   numberWordsProposed={game.numberWordsProposed}
                   percentageWordsFound={game.percentageWordsFound}
                   canJoin={false}
+                  playerId={id}
+                  gameId={game.id}
                 />
               </GameCard>
             )
