@@ -4,7 +4,7 @@ import {
   Card,
 } from "@material-tailwind/react";
 import LogoWhite from "../assets/images/Title.svg";
-import ZooggleCard from "../components/Zooggle/ZooggleCard";
+
 import GameGrid from "../components/Zooggle/GameGrid";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBook } from "@fortawesome/free-solid-svg-icons";
@@ -165,8 +165,6 @@ export default function Accueil() {
           </a>
       </div>
 
-      {/* landing page décrivant Zoo-ggle (dérivé du jeu de grille Boggle) */}
-
       <section className="bg-white dark:bg-gray-900" id="discover">
         <div className="gap-16 items-center py-8 px-4 mx-auto max-w-screen-xl lg:grid lg:grid-cols-2 lg:py-16 lg:px-6">
           <div className="font-light text-gray-500 sm:text-lg dark:text-gray-400">
@@ -188,18 +186,20 @@ export default function Accueil() {
             <Alert color="green" className="rounded-lg text-center">
               Voici un exemple de grille de jeu :
             </Alert>
-            <ZooggleCard
-              width=""
-              backdropFilter="blur(0px)"
-              color="black"
-              key={randomGridForDemo().join(" ")}
-            >
+            <div 
+              style={{
+              width:"",
+              backdropFilter:"blur(0px)",
+              color:"black"}}
+              key={randomGridForDemo().join(" ")}>
+            
               <GameGrid
                 width="big"
                 grid={randomGridForDemo().join(" ")}
                 key={randomGridForDemo().join(" ")}
               />
-            </ZooggleCard>
+            </div>
+           
 
 
           </div>
@@ -292,16 +292,11 @@ export default function Accueil() {
                 />
               </Card>
             </div>
-
-           {/*  <p>Vous pouvez consulter la liste des animaux juste en dessous.</p> */}
           </div>
-       {/*    <AnimalList /> */}
         </div>
       </section>
 
       <Footer />
-
-      {/* <Team /> */}
     </>
   );
 }
