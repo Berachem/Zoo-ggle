@@ -1,9 +1,9 @@
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { Game,InGameStats, GridInterface } from '../components/game/game';
 import { Statistics, LeaderBoard, StatisticsContent } from "../components/game/statistics";
 import { useLocation } from "react-router-dom";
-import { BounceLoader } from "react-spinners";
+import { ToastContainer,toast } from "react-toastify"
 
 export default function Historique() {
 
@@ -31,6 +31,20 @@ export default function Historique() {
 
     const location = useLocation()
     const params = new URLSearchParams(location.search);
+    if(params.has("redirection")){
+        if(params.get("redirection")=="1"){
+            toast.success("Vous êtes maintenant dans l'historique. Merci d'avoir joué !", {
+                position: "top-right",
+                autoClose: 8000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                toastId:1
+              });
+        }
+    }
 
     const fetchData = async () => {
         console.log("http://localhost/backend/api/game/gameInfos.php?idPartie="+params.get("idPartie")+"&idJoueur="+params.get("idJoueur"))
@@ -79,11 +93,14 @@ export default function Historique() {
         setStats(tmpStatistics);
 
     };
+    useEffect(()=>{
+        fetchData();
+    },[])
     
-    fetchData();
 
     return (
         <>
+            <ToastContainer/>
             <div style={{
                 display: "flex",
                 flexDirection: "row",

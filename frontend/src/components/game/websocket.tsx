@@ -49,7 +49,7 @@ export default function ChatManager(props: { socketUrl: string }) {
 
     var goToHistorique = (gameId:number) => {
         console.log("gameId :"+gameId+" Player id :"+playerId)
-        window.location.assign("/historique?idPartie="+gameId+"&idJoueur="+playerId)
+        window.location.assign("/historique?idPartie="+gameId+"&idJoueur="+playerId+"&redirection=1")
     }
 
     const resetGameState = () => {
@@ -182,7 +182,7 @@ export default function ChatManager(props: { socketUrl: string }) {
                 // setChatState({ roomSelection: true })
                 // console.log(content.gameId +"et"+content.playerId)
                 goToHistorique(content.gameId)
-                window.location.assign("/historique?idPartie="+content.gameId+"&idJoueur="+content.playerId)
+                window.location.assign("/historique?idPartie="+content.gameId+"&idJoueur="+content.playerId+"&redirection=1")
                 break
 
             case 'server_shutdown':
