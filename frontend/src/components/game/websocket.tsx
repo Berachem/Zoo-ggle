@@ -234,6 +234,21 @@ export default function ChatManager(props: { socketUrl: string }) {
         }
     }, [chatState])
 
+    useEffect(() => {
+        if (error != ""){
+            toast.error(error, {
+                position: "top-right",
+                autoClose: false,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                toastId:400
+              });
+        }
+    }, [error])
+
     // create and configure a websocket
     useEffect(() => {
         if (connected) {
@@ -302,11 +317,10 @@ export default function ChatManager(props: { socketUrl: string }) {
 
     return <>
         <ToastContainer/>
-        {error !== '' &&
+        {/* {error !== '' &&
             <div className="wsError">Error: {error} <button onClick={() => setError('')}>OK</button></div>}
+ */}
 
-
-        {/* Connextion (ca dure 2ms) */}
         {'connecting' in chatState &&
             <div className="wsConnecting">
                 <div>Connexion au serveur de jeu {props.socketUrl}</div>

@@ -127,8 +127,15 @@ async function getId() {
 
 //pages profile en elle même
 const Profile = () => {
+    // ============= All the states================
+    const [ownProfile, setOwnProfile] = useState(false);
+    const [userFound, setUserFound] = useState(true);
+    const [isFetching, setIsFetching] = useState(false);
+    const [pseudoSearch, setPseudoSearch] = useState("");
+    const [profileId, setProfileId] = useState<undefined|number>(undefined);
 
   let { id } = useParams();
+
   const PROFILE_DATA_BASE_URL = // http://localhost/backend/api/
     "http://localhost/backend/api/player/getUserInfos.php?profileId=";  // https://zoo-ggle.berachem.dev/V2/api/
   const [profileData, setProfileData] = useState({
@@ -146,12 +153,7 @@ const Profile = () => {
     games: [],
   });
 
-  // ============= All the states================
-  const [ownProfile, setOwnProfile] = useState(false);
-  const [userFound, setUserFound] = useState(true);
-  const [isFetching, setIsFetching] = useState(false);
-  const [pseudoSearch, setPseudoSearch] = useState("");
-  const [profileId, setProfileId] = useState<undefined|number>(undefined);
+
 
 
   useEffect(() => {
@@ -170,6 +172,8 @@ const Profile = () => {
         setOwnProfile(true);
         id = idUser;
         setProfileId(idUser)
+      }else{
+        setProfileId(parseInt(id))
       }
 
       const response = await fetch(PROFILE_DATA_BASE_URL + id);
@@ -375,7 +379,7 @@ const Profile = () => {
                     icon={faLink}
                     style={{ marginRight: "5px" }}
                   />
-                  copier
+                  Copier
                 </button>
                 <ToastContainer />
 
@@ -390,7 +394,7 @@ const Profile = () => {
                         icon={faEdit}
                         style={{ marginRight: "5px" }}
                       />
-                      modifier
+                      Modifier
                     </button>
                 )}
               </div>

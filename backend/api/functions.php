@@ -201,12 +201,12 @@ function getUserStatistics($id) {
     $user[0]->gamesPlayed = $gamesPlayed[0]->gamesPlayed;
 
     // parties gagnées, 
-    $query = "SELECT COUNT(IdPartie) as gamesWon FROM B_Jouer WHERE IdJoueur = ? AND Score >=(SELECT MAX(Score) FROM B_Jouer WHERE IdPartie = B_Jouer.IdPartie)";
+    $query = "SELECT COUNT(Jouer.IdPartie) as gamesWon FROM B_Jouer AS Jouer WHERE Jouer.IdJoueur = ? AND Jouer.Score >=(SELECT MAX(B.Score) FROM B_Jouer AS B WHERE Jouer.IdPartie = B.IdPartie)";
     $params = [[1, $id, PDO::PARAM_INT]];
     $gamesWon = $db->execQuery($query, $params);
     $user[0]->gamesWon = $gamesWon[0]->gamesWon;
     // parties perdues,
-    $query = "SELECT COUNT(IdPartie) as gamesLost FROM B_Jouer WHERE IdJoueur = ? AND Score <(SELECT MAX(Score) FROM B_Jouer WHERE IdPartie = B_Jouer.IdPartie)";
+    $query = "SELECT COUNT(Jouer.IdPartie) as gamesLost FROM B_Jouer AS Jouer WHERE Jouer.IdJoueur = ? AND Jouer.Score <(SELECT MAX(B.Score) FROM B_Jouer AS B WHERE Jouer.IdPartie = B.IdPartie)";
     $params = [[1, $id, PDO::PARAM_INT]];
     $gamesLost = $db->execQuery($query, $params);
     $user[0]->gamesLost = $gamesLost[0]->gamesLost;
@@ -262,7 +262,7 @@ function getAllValidsWordsProposedByUser($id) {
 // return : toutes les informations de toutes les parties jouées par le joueur $id
 function getAllGamesPlayedByUser($id) {
     global $db;
-    $query = "SELECT * FROM B_Jouer, B_Partie WHERE B_Jouer.IdPartie = B_Partie.IdPartie AND B_Jouer.IdJoueur = ?";
+    $query = "SELECT * FROM B_Jouer, B_Partie WHERE B_Jouer.IdPartie = B_Partie.IdPartie AND B_Jouer.IdJoueur = ? ORDER BY DateDebutPartie DESC";
     $params = [[1, $id, PDO::PARAM_INT]];
     $games = $db->execQuery($query, $params);
     return $games;

@@ -2,7 +2,8 @@ import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { Game,InGameStats, GridInterface } from '../components/game/game';
 import { Statistics, LeaderBoard, StatisticsContent } from "../components/game/statistics";
-import { useLocation } from "react-router-dom"
+import { useLocation } from "react-router-dom";
+import { BounceLoader } from "react-spinners";
 
 export default function Historique() {
 
@@ -20,13 +21,12 @@ export default function Historique() {
         proposedWords: 0,
         foundedWords: 0,
         completion: 0,
-        lang: "",
+        lang: "?",
         numberPlayer: 0,
-        gameMode: "",
+        gameMode: "?",
     });
 
-    const [leaderBoard, setLeaderBoard] = useState<LeaderBoard>({ "Lucas": 5, "Jo": 8, "Nidal": 15 })
-
+    const [leaderBoard, setLeaderBoard] = useState<LeaderBoard>({ "Joueur 1": 29, "Joueur 2": 18, "Joueur 3": 15 })
     const [gridState, setGridState] = useState<GridInterface>({ size: 4, content: "? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ?" })
 
     const location = useLocation()
@@ -50,10 +50,15 @@ export default function Historique() {
         console.log("http://localhost/backend/api/game/gameInfos.php?idPartie="+params.get("idPartie")+"&idJoueur="+params.get("idJoueur"))
         const response = await fetch("http://localhost/backend/api/game/gameInfos.php?idPartie="+params.get("idPartie")+"&idJoueur="+params.get("idJoueur"));
         const data = await response.json();
+        
+      if (data.success === false) {
+        // setUserFound(false);
+        // setIsFetching(false);
+        return;
+      }
         console.log(data);
         var mode: number = data.gameInfos.Mode;
         if (mode == 0) {
-            const stats: InGameStats = { playersInfo: data.foundedWords };
             setInGameStats({ score: data.score, words: data.foundedWords });
         } else if (mode == 1) {
             const stats: InGameStats = { playersInfo: data.foundedWords };
@@ -84,60 +89,21 @@ export default function Historique() {
             numberPlayer: data.gameInfos.NombreJoueursMax,
             gameMode: data.gameInfos.Mode == 1 ? "Aigle" : "Classique",
         }
-
-        setStats(tmpStatistics)
-
-        // const userProfileData = {
-        //   pseudo: data.profileInfos[0].Pseudo,
-        //   description: data.profileInfos[0].Description,
-        //   gamesWon: parseInt(data.profileInfos[0].gamesWon),
-        //   gamesPlayed: parseInt(data.profileInfos[0].gamesPlayed),
-        //   gamesLost: parseInt(data.profileInfos[0].gamesLost),
-        //   wordsFound: isNaN(parseInt(data.profileInfos[0].wordsFound))
-        //     ? 0
-        //     : parseInt(data.profileInfos[0].wordsFound),
-        //   longestWord: "",
-        //   averageWordsPerGame: 0,
-        //   isPublic: parseInt(data.profileInfos[0].ProfilPublic) === 1,
-        //   inscriptionDate: new Date(
-        //     data.profileInfos[0].DateCreationCompte
-        //   ).toLocaleDateString(),
-        //   lastConnectionDate: new Date(
-        //     data.profileInfos[0].DateDerniereConnexion
-        //   ).toLocaleDateString(),
-        //   email: data.profileInfos[0].Mail,
-        //   games: data.allGamesDetails.map((game: any) => {
-        //     return {
-        //       id: game.IdPartie,
-        //       name: game.NomPartie,
-        //       score: game.Score,
-        //       lang: game.LangueDico,
-        //       grid: game.Grille,
-        //       startDate: new Date(game.DateDebutPartie).toLocaleDateString(),
-        //       endDate: new Date(game.DateFinPartie).toLocaleDateString(),
-        //       size: game.TailleGrille,
-        //       mode: game.Mode,
-        //       isPublic: game.EstPublic,
-        //       maxPlayers: game.NombreJoueursMax,
-        //       leaderboard: game.leaderboard.map((player: any) => {
-        //         return {
-        //           pseudo: player.Pseudo,
-        //           score: player.Score,
-        //           id: player.IdJoueur,
-        //         };
-        //       }),
-        //       numberWordsFound: game.validWordsNumber,
-        //       numberWordsProposed: game.wordProposedNumber,
-        //       // round
-        //       percentageWordsFound: Math.round(game.validWordPercentage),
-        //     };
-        //   }),
-        // };
-        // setProfileData(userProfileData);
-
         // setIsFetching(false);
+        setStats(tmpStatistics);
+
     };
+    
     fetchData();
+
+    // if (isFetching) {
+    //     // bouncing loader
+    //     return (
+    //       <div className="flex justify-center items-center h-screen">
+    //         <BounceLoader color={"#E6EBF1"} loading={isFetching} size={150} />
+    //       </div>
+    //     );
+    //   }
 
     return (
         <>
