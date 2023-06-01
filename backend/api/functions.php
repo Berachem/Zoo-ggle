@@ -361,18 +361,16 @@ function getLeaderBoardLastGameOfUser($idJoueur){
 //              $logo : logo du joueur
 //              $profilPublic : profil public du joueur
 // return : true si la modification a été effectuée, false sinon
-function editPublicProfileDatas($idJoueur, $mail, $pseudo, $description, $logo, $profilPublic){
+function editPublicProfileDatas($idJoueur, $pseudo, $description, $profilPublic){
     global $db;
-    $query = "UPDATE B_Joueur SET Mail = ?, Pseudo = ?, Description = ?, Logo = ?, ProfilPublic = ? WHERE IdJoueur = ?";
+    $query = "UPDATE B_Joueur SET Pseudo = ?, Description = ?, ProfilPublic = ? WHERE IdJoueur = ?";
     $params = [
-        [$mail, PDO::PARAM_STR],
-        [$pseudo, PDO::PARAM_STR],
-        [$description, PDO::PARAM_STR],
-        [$logo, PDO::PARAM_STR],
-        [$profilPublic, PDO::PARAM_INT],
-        [$idJoueur, PDO::PARAM_INT],
+        [1,$pseudo, PDO::PARAM_STR],
+        [2,$description, PDO::PARAM_STR],
+        [3,$profilPublic, PDO::PARAM_INT],
+        [4,$idJoueur, PDO::PARAM_INT]
     ];
-    return $db->execQuery($query, $params);
+    return $db->execOnly($query, $params);
 }
 
 
