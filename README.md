@@ -65,12 +65,14 @@ Pour exécuter le projet Zoo-ggle sur votre machine locale, suivez les étapes s
 3. Accédez au répertoire du projet : `cd Zoo-ggle`
 4. Installez les dépendances nécessaires pour le côté client en exécutant la commande : `npm install`
 5. Installez les dépendances nécessaires pour le côté serveur en exécutant la commande : `pip install -r requirements.txt`
-6. Configurez la base de données MySQL en utilisant les informations fournies dans le fichier de configuration.
+6. Configurez la base de données MySQL en utilisant le dump SQL fourni dans le dossier et mettez le sur votre Laragon ou Xampp en local.
 7. Démarrez le serveur de développement pour le côté client en exécutant la commande : `npm start`
 8. Exécutez la commande : `python -m venv venv` puis ` .\venv\Scripts\activate.ps1` pour activer l'environnement virtuel Python.
 9. Démarrez le serveur de développement pour le côté serveur en exécutant la commande : `chatac-server -i localhost -p 8090`
 10. Ouvrez votre navigateur et accédez à l'adresse : `http://localhost:3000`
 11. Vous pouvez maintenant jouer à Zoo-ggle !
+
+(__Bonus :__ Vous pouvez aussi utiliser un tunnel HTTP pour rendre votre serveur accessible depuis l'extérieur en utilisant un service comme [ngrok](https://ngrok.com/))
 
 
 ### Equipe de développement
