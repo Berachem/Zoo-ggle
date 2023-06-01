@@ -48,6 +48,7 @@ if (isset($_POST["infoPartie"]) && isset($_POST["infoJoueurs"])){
             addWordPlayedByAPlayer($joueur["id"],$gameId,$word[0],0,$word[1]);
         }
     }
+    echo json_encode(array("success" => true, "gameId" => $gameId));
 }else{
     echo json_encode(array("success" => false, "error" => "Il manque des paramètres en POST"));
 }

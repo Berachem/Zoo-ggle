@@ -33,20 +33,6 @@ export default function Historique() {
     const params = new URLSearchParams(location.search);
 
     const fetchData = async () => {
-        // setIsFetching(true);
-        // /:id use params to get the id of the user
-
-        // if (id === undefined) {
-        //   const idUser = await getId();
-
-        //   if (idUser === -1) {
-        //     setUserFound(false);
-        //     setIsFetching(false);
-        //     return;
-        //   }
-        //   setOwnProfile(true);
-        //   id = idUser;
-        // }
         console.log("http://localhost/backend/api/game/gameInfos.php?idPartie="+params.get("idPartie")+"&idJoueur="+params.get("idJoueur"))
         const response = await fetch("http://localhost/backend/api/game/gameInfos.php?idPartie="+params.get("idPartie")+"&idJoueur="+params.get("idJoueur"));
         const data = await response.json();
@@ -95,15 +81,6 @@ export default function Historique() {
     };
     
     fetchData();
-
-    // if (isFetching) {
-    //     // bouncing loader
-    //     return (
-    //       <div className="flex justify-center items-center h-screen">
-    //         <BounceLoader color={"#E6EBF1"} loading={isFetching} size={150} />
-    //       </div>
-    //     );
-    //   }
 
     return (
         <>

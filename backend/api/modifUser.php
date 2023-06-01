@@ -5,7 +5,7 @@ require_once 'Connexion.php';
 require_once 'functions.php';
 
 $response=[];
-if(isset($_POST["login"]) && !empty($_POST["login"]) && isset($_POST["desc"]) && !empty($_POST["desc"]) && isset($_POST["public"])){
+if(isset($_POST["login"]) && !empty($_POST["login"]) && isset($_POST["desc"]) && isset($_POST["public"])){
     editPublicProfileDatas($_SESSION["user"], $_POST["login"],$_POST["desc"],$_POST["public"]);
     $response["success"]=true;
 }else{

@@ -186,7 +186,7 @@ class ChatSession(object):
         """
         clients = self.clients.values() if addressees is None else addressees
         # create the sending coroutines for all the clients
-        sending_coroutines = [client.send_message(kind, **kwargs) for client in clients if client is not None]
+        sending_coroutines = [client.send_message(kind, playerId=client.identity["DatabaseId"], **kwargs) for client in clients if client is not None]
         # gather the coroutines in one task
         await asyncio.gather(*sending_coroutines)
     
@@ -203,13 +203,13 @@ class ChatSession(object):
         # warn the attendee itself that its query has been acknowledged
         await self.put_in_message_queue([attendee.id], 'chat_session_left')
 
-    async def terminate(self, exit_message=''):
+    async def terminate(self, gameId):
         """
         Terminate the chat session for everybody
         """
         for client in self.clients.values():
             client.state = 'connected' 
-        await self.send_message(None, 'chat_session_ended', exit_message=exit_message)
+        await self.send_message(None, 'chat_session_ended', gameId=gameId)
 
 class ChatServer(object):
     def __init__(self, interface: str, port: int, hooks: ChatHooks, hooks_params: Any):
@@ -305,8 +305,8 @@ class ChatServer(object):
 
             info = {"mode":chat_session.mode,"grille": chat_session.grid, "langue":chat_session.lang, "dateDebut":chat_session.begin,"dateFin":datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")  ,"taille": chat_session.grid_length, "nombreMotPossibles":len(chat_session.solutions), "nombreJoueurs":chat_session.playerNumber, "nom":gameName}
         
-            exit_message = await self.hooks.on_chat_session_end(chat_session.id, info)
-            await chat_session.terminate(exit_message)
+            gameId = await self.hooks.on_chat_session_end(chat_session.id, info)
+            await chat_session.terminate(gameId)
             self._chat_sessions.pop(chat_session.id)
             logger.info(f"The chat session manager for {chat_session} is ended.")
 
@@ -390,7 +390,9 @@ class ChatServer(object):
                                                         'rule':waiting_room.rule
                                                         }
                                     print(waiting_room_msg)
-                                    await client.send_message('in_waiting_room', waiting_room=waiting_room_msg)
+                                    playerId = client.identity["DatabaseId"]
+                                    print(playerId)
+                                    await client.send_message('in_waiting_room', waiting_room=waiting_room_msg,playerId=playerId )
                                     await self.sendPlayerWaitingInRoom(waiting_room)  
 
                         elif msg_kind == 'leave_waiting_room':

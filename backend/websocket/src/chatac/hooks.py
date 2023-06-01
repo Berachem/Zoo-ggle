@@ -98,7 +98,7 @@ class ZoogleChatHooks(ChatHooks):
         "Lion": {
             "mode":0, 
             "attendee_number": 1, 
-            "duration": 180, 
+            "duration": 15, 
             "welcome_message": "Bonne partie à tous et que le meilleur gagne !", 
             "lang":"FRA", 
             "grid_length":4,
@@ -298,19 +298,21 @@ class ZoogleChatHooks(ChatHooks):
             url = 'http://localhost/backend/api/game/insertEndGame.php'
             myobj = {'infoPartie': json.dumps(info), 'infoJoueurs':json.dumps(infoPerson),'serverAuth':serverAuth}
             response = requests.post(url, data = myobj)
-            print(response._content)
-            print(response.text)
-            print(response.text())
-            print(response.content)
             response.raise_for_status()
-            print(response.json())
+            jsonResponse = response.json()
+            print("Entire JSON response")
+            print(jsonResponse)
+            # print(response._content)
+            # print(response.text)
+            # print(response.text())
+            # print(response.content)
+            # print(response.json())
+            return jsonResponse.get("gameId")
         except HTTPError as http_err:
             print(f'HTTP error occurred: {http_err}')
         except Exception as err:
             print(f'Other error occurred: {err}')  
-        
-        
-        return f"Did you know that: {joined}"
+        return -1
     
 
 

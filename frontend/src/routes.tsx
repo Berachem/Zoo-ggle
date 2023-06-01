@@ -1,4 +1,4 @@
-import { HomeIcon, BookOpenIcon, ComputerDesktopIcon } from "@heroicons/react/24/outline";
+import { HomeIcon, BookOpenIcon, PlayIcon } from "@heroicons/react/24/outline";
 
 import Accueil from "./pages/accueil";
 import Dictionnaire from "./pages/dictionnaire";
@@ -41,7 +41,7 @@ if(localStorage.getItem("connected") === "true"){
     {
       label: "Jouer",
       path: "/jouer",
-      icon: ComputerDesktopIcon,
+      icon: PlayIcon,
       element: <Jouer />,
     }
   )

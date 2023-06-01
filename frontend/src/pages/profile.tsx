@@ -109,7 +109,7 @@ async function checkAll(event : React.SyntheticEvent){
 }
 
 function switchForm(){
-  document.getElementById("modifForm")?.classList.toggle("hidden")
+  document.getElementById("modifForm")?.classList.toggle("hiddenProfile")
 }
 
 //fonction pour la récupération des statistiques

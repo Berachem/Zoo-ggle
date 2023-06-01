@@ -37,6 +37,7 @@ export default function ChatManager(props: { socketUrl: string }) {
     const [error, setError] = React.useState<string>('')
     const [waitingRooms, setWaitingRooms] = React.useState<WaitingRoomItem[]>([])
     const [word, setWord] = React.useState("")
+    const [playerId, setPlayerId] = React.useState(-1);
 
     const [inGameStats, setInGameStats] = React.useState<InGameStats>({ score: 0, words: [] })
 
@@ -45,6 +46,11 @@ export default function ChatManager(props: { socketUrl: string }) {
 
     const [gridState, setGridState] = React.useState<GridInterface>({ size: 4, content: "? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ?" })
     const [playersWaiting, setPlayersWaiting] = React.useState<Player[]>([])
+
+    var goToHistorique = (gameId:number) => {
+        console.log("gameId :"+gameId+" Player id :"+playerId)
+        window.location.assign("/historique?idPartie="+gameId+"&idJoueur="+playerId)
+    }
 
     const resetGameState = () => {
         setGridState({ size: 4, content: "? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ?" })
@@ -85,6 +91,7 @@ export default function ChatManager(props: { socketUrl: string }) {
                 let name = content.waiting_room_name
                 let room: WaitingRoomItem = { name: name, attendeeNumber: content.waiting_room.attendee_number, description: content.waiting_room.description, grid_size: content.waiting_room.grid_size, duration: content.waiting_room.duration, image_realist: content.waiting_room.image_realistic, image_cartoon: content.waiting_room.image_cartoon, color: content.waiting_room.color, rule: content.waiting_room.rule }
                 setChatState({ waitingRoom: room, startTimestamp: performance.now() })
+                setPlayerId(oldState => content.playerId)
                 break
 
             case 'waiting_room_left':
@@ -172,8 +179,10 @@ export default function ChatManager(props: { socketUrl: string }) {
             case 'chat_session_ended':
                 setChatState(oldState => ('messages' in oldState) ? { ...oldState, active: false } : oldState)
                 addChatMessage('Partie', "Fin de la partie, bien joué à tous !")
-                addChatMessage('Partie', content.exit_message)
-                setChatState({ roomSelection: true })
+                // setChatState({ roomSelection: true })
+                // console.log(content.gameId +"et"+content.playerId)
+                goToHistorique(content.gameId)
+                window.location.assign("/historique?idPartie="+content.gameId+"&idJoueur="+content.playerId)
                 break
 
             case 'server_shutdown':
@@ -233,6 +242,10 @@ export default function ChatManager(props: { socketUrl: string }) {
             // setConnected(false)
         }
     }, [chatState])
+
+    useEffect(() => {
+        console.log("ID : "+playerId)
+    }, [playerId])
 
     useEffect(() => {
         if (error != ""){

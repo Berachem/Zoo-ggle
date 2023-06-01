@@ -25,7 +25,7 @@
 }
 
 .grid > div.selected:hover{
-    box-shadow: 0 0 0 0.2rem orange;
+    box-shadow: 0 0 0 0.2rem #579A86;
     transition: box-shadow 0.2s;
 }
 
@@ -62,8 +62,8 @@
 }
 
 .selected{
-    color:orange;
-    border:2px solid orange;
+    color:#579A86;
+    border:2px solid #579A86;
 }
 
 @media(max-width:900px ){
