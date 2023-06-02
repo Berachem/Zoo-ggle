@@ -12,3 +12,10 @@
 
 - Passage en mode API REST
 
+## 3.0.0 (01/06/2023)
+
+#### Cleanup
+
+- suppression de fichiers inutiles
+- suppression de fonctions inutiles dans le fichier `functions.php (-400 lignes)` 
+
