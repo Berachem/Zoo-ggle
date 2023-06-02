@@ -75,6 +75,9 @@ Pour exécuter le projet Zoo-ggle sur votre machine locale, suivez les étapes s
 
 (__Bonus :__ Vous pouvez aussi utiliser un tunnel HTTP pour rendre votre serveur accessible depuis l'extérieur en utilisant un service comme [ngrok](https://ngrok.com/))
 
+(__Help :__ Vous avez aussi des README.md dans les dossiers frontend et backend pour vous aider à installer/Tester chaque partie de notre projet)
+
+
 
 ### Equipe de développement
 
@@ -88,7 +91,7 @@ L'équipe de développement est composée de :
 
 ### Documents de conception
 
-[Note d'intention.pdf](https://github.com/Berachem/Zoo-ggle/files/9818120/Note.d.intention.pdf)
+Consultez le dossier [Documents](./docs) pour retrouver les documents de conception du projet.
 
 [![My Skills](https://skillicons.dev/icons?i=figma)](https://www.figma.com/file/ih2HV31Co3sSWCgXnjEdbG/Zoo-ggle?type=design&node-id=0%3A1&t=tIQLUInMQl6C3LwK-1) 
 
