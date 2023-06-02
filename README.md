@@ -2,30 +2,6 @@
 
 <img src="https://i.ibb.co/mhH0Nrb/image.png">
 
-<!--
-<table border="0">
-    <tr>
-        <td>
-            <img src="https://i.ibb.co/mhH0Nrb/image.png">
-            ____________________________________
-        </td>
-        <td>
-            <img src="./screenshots/Remise.png">
-            ___________________________________________________________________________________________________________________________________
-        </td>
-        <td>
-            <img src="./screenshots/Remise.png">
-            ___________________________________________________________________________________________________________________________________
-        </td>
-        <td>
-            <img src="./screenshots/Graphique.png">
-            _______________________________________________________________________
-        </td>
-    </tr>
-</table>
--->
-
-
 Zoo-ggle est un projet transversal de développement d'un site web mettant en œuvre plusieurs langages de programmation, avec pour thème principal les animaux. Ce jeu vous permet de jouer en ligne avec vos amis et de mettre votre vocabulaire à l'épreuve ! Avec un mode réaliste et idéaliste ! 
 
 ## Technologies utilisées
