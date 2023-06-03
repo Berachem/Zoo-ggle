@@ -2,6 +2,10 @@
     font-family: "Montserrat", sans-serif;
 }
 
+.leaderBoardToProfile{
+    color:#579A86;
+    text-decoration: underline;
+}
 .StatsSession{
     margin-top: 5vh;
     padding:15px;

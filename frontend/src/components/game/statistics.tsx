@@ -4,7 +4,12 @@ import { faChartSimple, faMessage } from '@fortawesome/free-solid-svg-icons';
 import "../../css/statistics.css"
 
 export interface LeaderBoard {
-    [pseudo: string]: number
+    [pseudo: string]: LeaderBoardInfo
+}
+
+export interface LeaderBoardInfo{
+    score: number
+    databaseId:number
 }
 
 export interface StatisticsContent {
@@ -60,7 +65,7 @@ export const Statistics = (props: StatisticsProps) => {
                                     place += 1
                                     return (
                                         <>
-                                            <p>{place==1?"1er":place+"ème"} : <i>{key}</i> avec {props.leaderBoard[key]} pts</p>
+                                            <p>{place==1?"1er":place+"ème"} : <i><a className="leaderBoardToProfile" target="_blank" href={"/profile/"+props.leaderBoard[key].databaseId}>{key}</a></i> avec {props.leaderBoard[key].score} pts</p>
                                         </>
                                     )
                                 }

@@ -18,7 +18,7 @@ export const MessageSender = (props: { onMessageWritten: (content: string) => vo
     const [content, setContent] = React.useState("")
     return  <div className="MessageSender">
                 <input className="InputMessage" type="text" value={content} onChange={event => setContent(event.target.value)} />
-                <button className="ButtonMessage" onClick={() => { props.onMessageWritten(content); setContent('') }}>Send</button>
+                <button className="ButtonMessage" onClick={() => { props.onMessageWritten(content); setContent('') }}>Envoyer</button>
             </div>
 }
 

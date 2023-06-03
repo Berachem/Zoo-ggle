@@ -267,7 +267,6 @@ class ChatServer(object):
         try:
             await chat_session.send_message(None, 'chat_session_started', welcome_message=chat_session.welcome_message)
             logger.info(f"Welcome Message shown for chat session {chat_session}")
-            print(chat_session.clients)
             pseudosClient=[]
             for key,client in chat_session.clients.items():
                 pseudosClient.append(client.identity['name'])
@@ -389,9 +388,7 @@ class ChatServer(object):
                                                         'color':waiting_room.color,
                                                         'rule':waiting_room.rule
                                                         }
-                                    print(waiting_room_msg)
                                     playerId = client.identity["DatabaseId"]
-                                    print(playerId)
                                     await client.send_message('in_waiting_room', waiting_room=waiting_room_msg,playerId=playerId )
                                     await self.sendPlayerWaitingInRoom(waiting_room)  
 

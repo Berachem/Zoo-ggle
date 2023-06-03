@@ -26,7 +26,7 @@ export default function Historique() {
         gameMode: "?",
     });
 
-    const [leaderBoard, setLeaderBoard] = useState<LeaderBoard>({ "Joueur 1": 29, "Joueur 2": 18, "Joueur 3": 15 })
+    const [leaderBoard, setLeaderBoard] = useState<LeaderBoard>({ "Joueur 1": {score:29,databaseId:-1}, "Joueur 2": {score:18,databaseId:-1}, "Joueur 3": {score:15,databaseId:-1} })
     const [gridState, setGridState] = useState<GridInterface>({ size: 4, content: "? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ?" })
 
     const location = useLocation()
@@ -72,7 +72,7 @@ export default function Historique() {
 
         const tmpLeaderBoard: LeaderBoard = {};
         data.leaderboard.forEach((player: any) => {
-            tmpLeaderBoard[player.Pseudo] = player.Score
+            tmpLeaderBoard[player.Pseudo] = {score : player.Score, databaseId:player.IdJoueur}
         });
         setLeaderBoard(tmpLeaderBoard)
 

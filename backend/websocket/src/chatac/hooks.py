@@ -84,7 +84,7 @@ class ZoogleChatHooks(ChatHooks):
     DEFAULT_ROOMS = {
         "Paresseux": {
             "mode":0, 
-            "attendee_number": 1, 
+            "attendee_number": 3, 
             "duration": 300, 
             "welcome_message": "Bonne chance à tous, prenez votre temps, mais n'en perdez pas trop !", 
             "lang":"FRA", 
@@ -97,28 +97,28 @@ class ZoogleChatHooks(ChatHooks):
             },
         "Lion": {
             "mode":0, 
-            "attendee_number": 1, 
-            "duration": 15, 
+            "attendee_number": 2, 
+            "duration": 180, 
             "welcome_message": "Bonne partie à tous et que le meilleur gagne !", 
             "lang":"FRA", 
             "grid_length":4,
             "color":"#F5593D",
             "image_realist":"https://www.larousse.fr/encyclopedie/data/images/1316665-Lion.jpg",
-            "image_cartoon":"https://cdn.discordapp.com/attachments/890989295794552832/1108097595299090652/1f981.png",
+            "image_cartoon":"https://i.pinimg.com/564x/3e/e2/ce/3ee2cef761489c55e63c9791cf814c67.jpg",
             "rule":"Dans une limite de temps de 3 minutes, vous devez trouver un maximum de mots en formant des chaînes de lettres contiguës.",
             "description": "classique",
             },
         "Aigle": {
             "mode":1, 
-            "attendee_number": 1, 
+            "attendee_number": 2, 
             "duration": 240, 
             "welcome_message": "Bonne chance ! Trouvez vite les mots avant qu'il n'y en ai plus !", 
             "lang":"FRA",
             "grid_length":4,
             "color":"#0D4FFB",
             "image_realist":"https://asafacon.fr/wp-content/uploads/2022/10/Quest-ce-Que-Laigle-Et-Sa-Signification-Spirituelle-Disent-728x410.jpg",
-            "image_cartoon":"https://img.pixers.pics/pho_wat(s3:700/FO/79/56/57/75/700_FO79565775_6e7408d23de9d5538b2413c1bf8a1548.jpg,695,700,cms:2018/10/5bd1b6b8d04b8_220x50-watermark.png,over,475,650,jpg)/rideaux-occultants-dessin-anime-aigle-en-plein-vol.jpg.jpg",
-            "rule":"Dans une limite de temps de 3 minutes, vous devez trouver un maximum de mots en formant des chaînes de lettres contiguës.",
+            "image_cartoon":"https://i.pinimg.com/564x/e0/0e/5d/e00e5d3873a71085bb7c5a3c75fa77d1.jpg",
+            "rule":"Vous avez 4 minutes pour trouver un maximum de mots dans la grille, mais faites attention vous devez être plus rapide que vos adversaires. Une fois un mot trouvé par quelqu'un vous ne pourrez plus le proposer. Bonne chance !",
             "description": "premier arrivé..."
             }
         }
@@ -173,13 +173,6 @@ class ZoogleChatHooks(ChatHooks):
             jsonResponse = response.json()
             print("Entire JSON response")
             print(jsonResponse)
-            # response = requests.post(url, data = myobj)
-            # print(response._content)
-            # print(response.text)
-            # print(response.text())
-            # print(response.content)
-            # response.raise_for_status()
-            # print(response.json())
             if (jsonResponse.get("success")):
                 data = {"name":jsonResponse.get("pseudo"),"token":token,"id":jsonResponse.get("id")}
                 return data
@@ -302,11 +295,6 @@ class ZoogleChatHooks(ChatHooks):
             jsonResponse = response.json()
             print("Entire JSON response")
             print(jsonResponse)
-            # print(response._content)
-            # print(response.text)
-            # print(response.text())
-            # print(response.content)
-            # print(response.json())
             return jsonResponse.get("gameId")
         except HTTPError as http_err:
             print(f'HTTP error occurred: {http_err}')

@@ -48,7 +48,6 @@ export default function ChatManager(props: { socketUrl: string }) {
     const [playersWaiting, setPlayersWaiting] = React.useState<Player[]>([])
 
     var goToHistorique = (gameId:number) => {
-        console.log("gameId :"+gameId+" Player id :"+playerId)
         window.location.assign("/historique?idPartie="+gameId+"&idJoueur="+playerId+"&redirection=1")
     }
 
@@ -179,8 +178,6 @@ export default function ChatManager(props: { socketUrl: string }) {
             case 'chat_session_ended':
                 setChatState(oldState => ('messages' in oldState) ? { ...oldState, active: false } : oldState)
                 addChatMessage('Partie', "Fin de la partie, bien joué à tous !")
-                // setChatState({ roomSelection: true })
-                // console.log(content.gameId +"et"+content.playerId)
                 goToHistorique(content.gameId)
                 window.location.assign("/historique?idPartie="+content.gameId+"&idJoueur="+content.playerId+"&redirection=1")
                 break
@@ -243,9 +240,6 @@ export default function ChatManager(props: { socketUrl: string }) {
         }
     }, [chatState])
 
-    useEffect(() => {
-        console.log("ID : "+playerId)
-    }, [playerId])
 
     useEffect(() => {
         if (error != ""){
@@ -312,9 +306,6 @@ export default function ChatManager(props: { socketUrl: string }) {
         return () => clearInterval(interval);
     }, [countDown]);
 
-    useEffect(()=>{
-        console.log(inGameStats)
-    },[inGameStats])
 
     const getReturnValues = (countDown: number) => {
         // calculate time left
@@ -330,9 +321,6 @@ export default function ChatManager(props: { socketUrl: string }) {
 
     return <>
         <ToastContainer/>
-        {/* {error !== '' &&
-            <div className="wsError">Error: {error} <button onClick={() => setError('')}>OK</button></div>}
- */}
 
         {'connecting' in chatState &&
             <div className="wsConnecting">
