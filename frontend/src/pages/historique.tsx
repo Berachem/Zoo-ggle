@@ -47,7 +47,6 @@ export default function Historique() {
     }
 
     const fetchData = async () => {
-        console.log("http://localhost/backend/api/game/gameInfos.php?idPartie="+params.get("idPartie")+"&idJoueur="+params.get("idJoueur"))
         const response = await fetch("http://localhost/backend/api/game/gameInfos.php?idPartie="+params.get("idPartie")+"&idJoueur="+params.get("idJoueur"));
         const data = await response.json();
         
@@ -56,7 +55,6 @@ export default function Historique() {
         // setIsFetching(false);
         return;
       }
-        console.log(data);
         var mode: number = data.gameInfos.Mode;
         if (mode == 0) {
             setInGameStats({ score: data.score, words: data.foundedWords });
@@ -72,7 +70,7 @@ export default function Historique() {
 
         const tmpLeaderBoard: LeaderBoard = {};
         data.leaderboard.forEach((player: any) => {
-            tmpLeaderBoard[player.Pseudo] = {score : player.Score, databaseId:player.IdJoueur}
+            tmpLeaderBoard[player.Pseudo] = {score : player.Score, databaseId:player.dJoueur}
         });
         setLeaderBoard(tmpLeaderBoard)
 
