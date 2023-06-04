@@ -1,4 +1,4 @@
-# Changelog for Backend (PHP)
+# Changelog for Backend (C)
 
 ## 1.0.0 (10/01/2023)
 
@@ -10,5 +10,5 @@
 
 #### Fixes
 
-- Correction de légers bugs du solve 
+- Correction d'un léger bug lors du passage des paramètres à la fonction solve 
 

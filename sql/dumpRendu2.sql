@@ -14,6 +14,12 @@
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
+
+-- Listage de la structure de la base pour mysql
+DROP DATABASE IF EXISTS `mysql`;
+CREATE DATABASE IF NOT EXISTS `mysql` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
+USE `mysql`;
+
 -- Listage de la structure de table mysql. b_authentification
 DROP TABLE IF EXISTS `b_authentification`;
 CREATE TABLE IF NOT EXISTS `b_authentification` (
@@ -23,9 +29,9 @@ CREATE TABLE IF NOT EXISTS `b_authentification` (
   `IdJoueur` int NOT NULL,
   PRIMARY KEY (`IdAuth`),
   KEY `IdJoueur` (`IdJoueur`)
-) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB AUTO_INCREMENT=29 DEFAULT CHARSET=utf8mb3;
 
--- Listage des données de la table mysql.b_authentification : ~25 rows (environ)
+-- Listage des données de la table mysql.b_authentification : ~21 rows (environ)
 DELETE FROM `b_authentification`;
 INSERT INTO `b_authentification` (`IdAuth`, `Token`, `DateExpiration`, `IdJoueur`) VALUES
 	(1, 'qzdzqdq', '2023-01-21 18:41:26', 23),
@@ -52,7 +58,8 @@ INSERT INTO `b_authentification` (`IdAuth`, `Token`, `DateExpiration`, `IdJoueur
 	(24, '83d038567aa61b9b609eec46745fd9e6866c3f63e6a77c3d1993d3859620825b', '2023-05-23 00:12:45', 8),
 	(25, '4d01ab8def4a7edbaa67644c869b77cec89b5871721d50eb3e951dfb75021815', '2023-05-23 00:20:26', 8),
 	(26, 'd1e08b4ae9a3edab17a13c99b73cd9978ae1d872f6f116b8f99cf532695d492c', '2023-05-30 17:37:40', 22),
-	(27, '0ad7abfdca4b542b786cbce9a4dd7da18bf7d8307a659d7365ef9bc3b3b07f89', '2023-06-02 19:53:22', 33);
+	(27, '0ad7abfdca4b542b786cbce9a4dd7da18bf7d8307a659d7365ef9bc3b3b07f89', '2023-06-02 19:53:22', 33),
+	(28, '8e1f21cf4e1cd13b8d5159319c4cd04dd86f792e01e0f149de5613eaaa80029e', '2023-06-04 15:51:40', 22);
 
 -- Listage de la structure de table mysql. b_jouer
 DROP TABLE IF EXISTS `b_jouer`;
@@ -64,7 +71,7 @@ CREATE TABLE IF NOT EXISTS `b_jouer` (
   KEY `IdPartie` (`IdPartie`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
--- Listage des données de la table mysql.b_jouer : ~355 rows (environ)
+-- Listage des données de la table mysql.b_jouer : ~288 rows (environ)
 DELETE FROM `b_jouer`;
 INSERT INTO `b_jouer` (`IdJoueur`, `IdPartie`, `Score`) VALUES
 	(8, 38, 6),
@@ -137,6 +144,10 @@ INSERT INTO `b_jouer` (`IdJoueur`, `IdPartie`, `Score`) VALUES
 	(8, 283, 0),
 	(8, 284, 2),
 	(8, 285, 2),
+	(8, 313, 2),
+	(8, 314, 0),
+	(8, 315, 3),
+	(8, 316, 14),
 	(22, 37, 0),
 	(22, 38, 2),
 	(22, 39, 5),
@@ -328,6 +339,8 @@ INSERT INTO `b_jouer` (`IdJoueur`, `IdPartie`, `Score`) VALUES
 	(22, 231, 0),
 	(22, 252, 9),
 	(22, 254, 8),
+	(22, 313, 6),
+	(22, 314, 0),
 	(23, 39, 4),
 	(23, 41, 1),
 	(23, 47, 0),
@@ -386,49 +399,17 @@ CREATE TABLE IF NOT EXISTS `b_joueur` (
 -- Listage des données de la table mysql.b_joueur : ~11 rows (environ)
 DELETE FROM `b_joueur`;
 INSERT INTO `b_joueur` (`IdJoueur`, `Mail`, `MotDePasse`, `Pseudo`, `Description`, `Logo`, `DateCreationCompte`, `ProfilPublic`, `DateDerniereConnexion`) VALUES
-	(1, 'bera@gmail.com', 'd4c11669cc2cbab33bc256c245cb9ae6e911cbf1c89ec6b20f2f68c4bcfd72cc', 'bera', '', NULL, '2023-01-18 23:25:19', 1, '2023-01-19 21:32:44'),
+	(1, 'berachem.markria@gmail.com', '9af15b336e6a9619928537df30b2e6a2376569fcf9d7e773eccede65606529a0', 'bera', '', NULL, '2023-01-18 23:25:19', 1, '2023-01-19 21:32:44'),
 	(2, 'beraaaa@gmail.com', '3b27e5ec3328a37c535329bb5344babb7b4b87a4878e09b7f859dd5fd12d1177', 'beraaaa', 'beraaaa', NULL, '2023-01-19 13:24:52', 0, '2023-01-19 15:46:33'),
 	(7, 'berachem.bidule@gmail.com', '6bea537bf3af29d246a24a0fcc159a2685ad045edf89709ae2b2b0bb49033d29', 'bidule', 'dsfds', NULL, '2023-01-20 17:38:58', 1, '2023-01-20 20:22:49'),
-	(8, 'koda16.77@gmail.com', '9af15b336e6a9619928537df30b2e6a2376569fcf9d7e773eccede65606529a0', 'Lucas', 'Je suis un test', NULL, '2023-01-20 17:41:10', 1, '2023-06-01 17:53:15'),
+	(8, 'koda16.77@gmail.com', '9af15b336e6a9619928537df30b2e6a2376569fcf9d7e773eccede65606529a0', 'Lucas', 'J\'adore le boggle, surtout Zoogle, c\'est trop bien !!! :D\r\n', NULL, '2023-01-20 17:41:10', 0, '2023-06-03 16:16:30'),
 	(9, 'berachem.machin@gmail.com', '17febc00139b9f8f44b95e704dc3cdf22619a0732ad4c1d0ebbcc81afb44c3fa', 'machin', 'dfds', NULL, '2023-01-20 18:34:11', 0, '2023-01-20 21:02:27'),
 	(12, 'bogglefan@aol.fr', '017b93f406f4399a02d9b17fb178fac73b441eb42e4d8847f58295beedaa21de', 'Test2', '', NULL, '2023-01-20 23:02:50', 0, '2023-01-20 23:08:53'),
 	(13, 'berachem.France93@gmail.com', 'db9d0a7090ad603e3d6d0fe98274e46d4a681d38583ec592624a76509331646a', 'France93@', 'France93@', NULL, '2023-01-20 23:03:01', 0, '2023-01-21 20:00:27'),
 	(14, 'Markria93@gmail.com', '27309c00cfe69f7d2411af1906490f53195cef436f6bba86ceda2c3a94b5c77c', 'Markria93@', 'Markria93@', NULL, '2023-01-21 00:06:17', 1, '2023-04-30 14:51:25'),
-	(22, 'lucas26.leveque@gmail.com', '9af15b336e6a9619928537df30b2e6a2376569fcf9d7e773eccede65606529a0', 'Lucas_', 'J\'adore le Boggle', NULL, '2023-01-21 16:29:52', 1, '2023-05-29 17:38:19'),
+	(22, 'lucas26.leveque@gmail.com', '9af15b336e6a9619928537df30b2e6a2376569fcf9d7e773eccede65606529a0', 'Lucas_', 'J\'adore le Boggle', NULL, '2023-01-21 16:29:52', 1, '2023-06-03 15:51:58'),
 	(23, 'berachem.bot@gmail.com', '9af15b336e6a9619928537df30b2e6a2376569fcf9d7e773eccede65606529a0', 'Berachem93--', 'L\'île de la Cité au XVIIIe siècle, par de Nicolas Raguenet', NULL, '2023-01-21 17:41:20', 0, '2023-01-21 20:00:49'),
 	(33, 'lucas.leveque@edu.univ-eiffel.fr', 'ec010e9c19387634eb8f3858374970daa449b2db8880f10da9ccd3e8b0bf8e0f', 'AAAA', 'aaaa', NULL, '2023-06-01 19:53:22', 1, '2023-06-01 19:53:51');
-
--- Listage de la structure de table mysql. b_message
-DROP TABLE IF EXISTS `b_message`;
-CREATE TABLE IF NOT EXISTS `b_message` (
-  `IdMessage` int NOT NULL AUTO_INCREMENT,
-  `Contenu` varchar(200) DEFAULT NULL,
-  `DateMessage` datetime DEFAULT NULL,
-  `IdPartie` int NOT NULL,
-  `IdJoueur` int NOT NULL,
-  PRIMARY KEY (`IdMessage`),
-  KEY `IdPartie` (`IdPartie`),
-  KEY `IdJoueur` (`IdJoueur`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
-
--- Listage des données de la table mysql.b_message : ~0 rows (environ)
-DELETE FROM `b_message`;
-
--- Listage de la structure de table mysql. b_messageprive
-DROP TABLE IF EXISTS `b_messageprive`;
-CREATE TABLE IF NOT EXISTS `b_messageprive` (
-  `IdMessagePrive` int NOT NULL AUTO_INCREMENT,
-  `ContenuMessagePrive` varchar(200) DEFAULT NULL,
-  `DateMessagePrive` date DEFAULT NULL,
-  `IdJoueur` int NOT NULL,
-  `IdJoueur_1` int NOT NULL,
-  PRIMARY KEY (`IdMessagePrive`),
-  KEY `IdJoueur` (`IdJoueur`),
-  KEY `IdJoueur_1` (`IdJoueur_1`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
-
--- Listage des données de la table mysql.b_messageprive : ~0 rows (environ)
-DELETE FROM `b_messageprive`;
 
 -- Listage de la structure de table mysql. b_mot
 DROP TABLE IF EXISTS `b_mot`;
@@ -437,7 +418,7 @@ CREATE TABLE IF NOT EXISTS `b_mot` (
   PRIMARY KEY (`Libelle`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
--- Listage des données de la table mysql.b_mot : ~195 rows (environ)
+-- Listage des données de la table mysql.b_mot : ~264 rows (environ)
 DELETE FROM `b_mot`;
 INSERT INTO `b_mot` (`Libelle`) VALUES
 	('ALI'),
@@ -488,6 +469,7 @@ INSERT INTO `b_mot` (`Libelle`) VALUES
 	('DICO'),
 	('DIRE'),
 	('DIS'),
+	('DISA'),
 	('DON'),
 	('DORS'),
 	('DOS'),
@@ -499,6 +481,9 @@ INSERT INTO `b_mot` (`Libelle`) VALUES
 	('FAN'),
 	('FBI'),
 	('FEE'),
+	('FELE'),
+	('FELEE'),
+	('FON'),
 	('GATE'),
 	('GATEE'),
 	('GIE'),
@@ -514,6 +499,7 @@ INSERT INTO `b_mot` (`Libelle`) VALUES
 	('IRONIE'),
 	('J1'),
 	('KOI'),
+	('LAIE'),
 	('LAIT'),
 	('LAOS'),
 	('LAQUE'),
@@ -522,8 +508,11 @@ INSERT INTO `b_mot` (`Libelle`) VALUES
 	('LARDS'),
 	('LAX'),
 	('LENA'),
+	('LEON'),
 	('LES'),
 	('LET'),
+	('LIE'),
+	('LIEE'),
 	('LIEN'),
 	('LILI'),
 	('LINS'),
@@ -545,17 +534,22 @@ INSERT INTO `b_mot` (`Libelle`) VALUES
 	('MER'),
 	('MET'),
 	('MIE'),
+	('MIEL'),
 	('MIRA'),
 	('MOD'),
 	('MOOC'),
 	('MUSEE'),
 	('NAIN'),
 	('NEIGE'),
+	('NEM'),
 	('NEONES'),
 	('NET'),
+	('NIA'),
+	('NIER'),
 	('NIL'),
 	('NOEL'),
 	('NOIE'),
+	('NONE'),
 	('NOTRE'),
 	('NUE'),
 	('ODE'),
@@ -583,6 +577,8 @@ INSERT INTO `b_mot` (`Libelle`) VALUES
 	('QZDQZDZQ'),
 	('QZDSQSDZQ'),
 	('QZDZQSD'),
+	('RAI'),
+	('RAIE'),
 	('RALE'),
 	('RALES'),
 	('RANG'),
@@ -600,9 +596,12 @@ INSERT INTO `b_mot` (`Libelle`) VALUES
 	('REPU'),
 	('RES'),
 	('RESTE'),
+	('RIA'),
+	('RIAI'),
 	('RIEN'),
 	('RIME'),
 	('RIN'),
+	('RIRE'),
 	('RIS'),
 	('RITES'),
 	('RIULA'),
@@ -616,6 +615,7 @@ INSERT INTO `b_mot` (`Libelle`) VALUES
 	('RUESGA'),
 	('RURAL'),
 	('SA'),
+	('SAI'),
 	('SAIT'),
 	('SARE'),
 	('SAUNERA'),
@@ -632,6 +632,7 @@ INSERT INTO `b_mot` (`Libelle`) VALUES
 	('SID'),
 	('SIE'),
 	('SIL'),
+	('SIR'),
 	('SOI'),
 	('SOIR'),
 	('SOL'),
@@ -725,9 +726,9 @@ CREATE TABLE IF NOT EXISTS `b_partie` (
   `IdChef` int NOT NULL,
   PRIMARY KEY (`IdPartie`),
   KEY `IdChef` (`IdChef`)
-) ENGINE=InnoDB AUTO_INCREMENT=313 DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB AUTO_INCREMENT=317 DEFAULT CHARSET=utf8mb3;
 
--- Listage des données de la table mysql.b_partie : ~247 rows (environ)
+-- Listage des données de la table mysql.b_partie : ~262 rows (environ)
 DELETE FROM `b_partie`;
 INSERT INTO `b_partie` (`IdPartie`, `NomPartie`, `LangueDico`, `Grille`, `DateDebutPartie`, `DateFinPartie`, `TailleGrille`, `NombreMotsPossibles`, `Mode`, `EstPublic`, `NombreJoueursMax`, `IdChef`) VALUES
 	(33, 'Salut', 'FRA', 'O A A E O O S I S F L A S Y A C', '2023-01-21 20:01:32', '2023-01-21 20:03:50', 4, 209, 0, 1, 1, 23),
@@ -1009,7 +1010,11 @@ INSERT INTO `b_partie` (`IdPartie`, `NomPartie`, `LangueDico`, `Grille`, `DateDe
 	(309, 'Partie Lion : 01/06/2023 - 20h21', 'FRA', 'E E E E E N M N D M E S O Y A L', '2023-06-01 20:21:12', '2023-06-01 20:21:27', 4, 329, 0, 1, 1, -1),
 	(310, 'Partie Lion : 01/06/2023 - 20h22', 'FRA', 'I L R D R A R B I B N B M R C R', '2023-06-01 20:22:04', '2023-06-01 20:22:04', 4, 125, 0, 1, 1, -1),
 	(311, 'Partie Lion : 01/06/2023 - 20h22', 'FRA', 'T T R S H C G S T T A S C H H D', '2023-06-01 20:22:06', '2023-06-01 20:22:21', 4, 97, 0, 1, 1, -1),
-	(312, 'Partie Lion : 01/06/2023 - 20h22', 'FRA', 'S E T R E E N A O R E I E E T T', '2023-06-01 20:22:26', '2023-06-01 20:22:41', 4, 474, 0, 1, 1, -1);
+	(312, 'Partie Lion : 01/06/2023 - 20h22', 'FRA', 'S E T R E E N A O R E I E E T T', '2023-06-01 20:22:26', '2023-06-01 20:22:41', 4, 474, 0, 1, 1, -1),
+	(313, 'Partie Aigle : 03/06/2023 - 15h52', 'FRA', 'P D A S R N I R R R A E R I A I', '2023-06-03 15:52:52', '2023-06-03 15:56:52', 4, 311, 1, 1, 2, -1),
+	(314, 'Partie Aigle : 03/06/2023 - 15h58', 'FRA', 'I A O E M O I O R E O I O F Y N', '2023-06-03 15:58:56', '2023-06-03 16:02:56', 4, 147, 1, 1, 2, -1),
+	(315, 'Partie Lion : 03/06/2023 - 16h35', 'FRA', 'E C H H D D S S E T L M I E E H', '2023-06-03 16:35:07', '2023-06-03 16:35:22', 4, 152, 0, 1, 1, -1),
+	(316, 'Partie Lion : 03/06/2023 - 16h36', 'FRA', 'N O E O F N E I E E L A N M I O', '2023-06-03 16:36:57', '2023-06-03 16:39:57', 4, 241, 0, 1, 1, -1);
 
 -- Listage de la structure de table mysql. b_proposer
 DROP TABLE IF EXISTS `b_proposer`;
@@ -1024,7 +1029,7 @@ CREATE TABLE IF NOT EXISTS `b_proposer` (
   KEY `Libelle` (`Libelle`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
--- Listage des données de la table mysql.b_proposer : ~307 rows (environ)
+-- Listage des données de la table mysql.b_proposer : ~298 rows (environ)
 DELETE FROM `b_proposer`;
 INSERT INTO `b_proposer` (`IdJoueur`, `IdPartie`, `Libelle`, `DateProposition`, `EstValide`) VALUES
 	(8, 38, 'INEE', '2023-05-07 00:48:06', 1),
@@ -1246,6 +1251,24 @@ INSERT INTO `b_proposer` (`IdJoueur`, `IdPartie`, `Libelle`, `DateProposition`, 
 	(8, 284, 'NEIGE', '2023-06-01 19:48:34', 1),
 	(8, 285, 'CITA', '2023-06-01 19:49:38', 1),
 	(8, 285, 'TOP', '2023-06-01 19:49:33', 1),
+	(8, 313, 'NIER', '2023-06-03 15:53:29', 1),
+	(8, 313, 'RAI', '2023-06-03 15:53:20', 1),
+	(8, 315, 'ETE', '2023-06-03 16:35:14', 1),
+	(8, 315, 'TEL', '2023-06-03 16:35:21', 1),
+	(8, 315, 'TELE', '2023-06-03 16:35:19', 1),
+	(8, 316, 'FELE', '2023-06-03 16:37:41', 1),
+	(8, 316, 'FELEE', '2023-06-03 16:37:44', 1),
+	(8, 316, 'FON', '2023-06-03 16:37:02', 1),
+	(8, 316, 'LAIE', '2023-06-03 16:39:08', 1),
+	(8, 316, 'LEON', '2023-06-03 16:38:55', 1),
+	(8, 316, 'LIE', '2023-06-03 16:38:36', 1),
+	(8, 316, 'LIEE', '2023-06-03 16:38:38', 1),
+	(8, 316, 'LIEN', '2023-06-03 16:38:41', 1),
+	(8, 316, 'LOI', '2023-06-03 16:37:14', 1),
+	(8, 316, 'MIEL', '2023-06-03 16:38:13', 1),
+	(8, 316, 'NEM', '2023-06-03 16:37:23', 1),
+	(8, 316, 'NOEL', '2023-06-03 16:37:07', 1),
+	(8, 316, 'NONE', '2023-06-03 16:37:54', 1),
 	(22, 38, 'SEINS', '2023-05-07 00:48:16', 1),
 	(22, 39, 'BARCA', '2023-05-07 00:54:02', 1),
 	(22, 39, 'QSZD', '2023-05-07 00:53:36', 0),
@@ -1280,6 +1303,15 @@ INSERT INTO `b_proposer` (`IdJoueur`, `IdPartie`, `Libelle`, `DateProposition`, 
 	(22, 254, 'ETE', '2023-05-29 18:21:30', 1),
 	(22, 254, 'ROC', '2023-05-29 18:21:41', 1),
 	(22, 254, 'TES', '2023-05-29 18:22:01', 1),
+	(22, 313, 'DISA', '2023-06-03 15:54:32', 1),
+	(22, 313, 'NIA', '2023-06-03 15:54:50', 1),
+	(22, 313, 'RAIE', '2023-06-03 15:55:16', 1),
+	(22, 313, 'RIA', '2023-06-03 15:53:41', 1),
+	(22, 313, 'RIAI', '2023-06-03 15:55:02', 0),
+	(22, 313, 'RIRE', '2023-06-03 15:53:47', 0),
+	(22, 313, 'RIS', '2023-06-03 15:53:11', 1),
+	(22, 313, 'SAI', '2023-06-03 15:55:11', 1),
+	(22, 313, 'SIR', '2023-06-03 15:53:32', 0),
 	(23, 39, 'CALON', '2023-05-07 00:53:26', 1),
 	(23, 39, 'CRA', '2023-05-07 00:53:23', 1),
 	(23, 39, 'CRAS', '2023-05-07 00:53:24', 1),
@@ -1340,4 +1372,3 @@ INSERT INTO `b_proposer` (`IdJoueur`, `IdPartie`, `Libelle`, `DateProposition`, 
 /*!40014 SET FOREIGN_KEY_CHECKS=IFNULL(@OLD_FOREIGN_KEY_CHECKS, 1) */;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40111 SET SQL_NOTES=IFNULL(@OLD_SQL_NOTES, 1) */;
-

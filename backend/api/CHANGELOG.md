@@ -11,6 +11,7 @@
 #### Features
 
 - Passage en mode API REST
+- Ajout/Modification de quelques API afin de s'adapter au mieux au fonctionnement du websocket et du reste du projet
 
 ## 3.0.0 (01/06/2023)
 
