@@ -52,6 +52,15 @@ export const Game = (props:GameProps) =>{
         setWord(word+letter)   
     }
 
+    function pressEnter(e:any){
+        if(e.key === 'Enter') {
+            props.propose_word(word); 
+            setWord('')
+        }
+    }
+
+    
+
     return (
         <div className="container">
             
@@ -59,7 +68,7 @@ export const Game = (props:GameProps) =>{
                 <div className="Timer">{getReturnValues(props.countdown)}</div>
                 <Grid content={props.grid.content} size={props.grid.size} getLetter={getLetter} in_game={props.in_game}/>
                 <div className="containerSender">
-                    <input id="input" className="WordSender" type="text" disabled={!props.in_game} value={word} onChange={event => setWord(event.target.value)} />
+                    <input id="input" className="WordSender" onKeyDown={event => pressEnter(event)} type="text" disabled={!props.in_game} value={word} onChange={event => setWord(event.target.value.toUpperCase())} />
                     <button className="ButtonSender" disabled={!props.in_game} onClick={() => { props.propose_word(word); setWord('') }}>Proposer</button>
                 </div>
             </div>

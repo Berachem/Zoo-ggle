@@ -4,6 +4,7 @@
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {Grid} from "./../components/game/grid"
 // icone victoire, joué, défaite, mots trouvés, mot le plus long, moyenne de mots par partie
 import {
   faTrophy,
@@ -517,7 +518,8 @@ const Profile = () => {
                 numberWordsProposed={game.numberWordsProposed}
                 percentageWordsFound={game.percentageWordsFound}
               >
-                <GameGrid grid={game.grid} width="small" />
+                <Grid content={game.grid} size={game.size} width={"20vw"} getLetter={()=>{}} in_game={false}/>
+                
                 <GameCardInfo
                   title={game.name}
                   lang={game.language}

@@ -15,9 +15,15 @@ export interface Message {
 
 //ELEMENT MODIFIE (ajout class input et bouton + enlever style flex )
 export const MessageSender = (props: { onMessageWritten: (content: string) => void }) => {
+    function pressEnter(e:any){
+        if(e.key === 'Enter') {
+            props.onMessageWritten(content); 
+            setContent('') 
+        }
+    }
     const [content, setContent] = React.useState("")
     return  <div className="MessageSender">
-                <input className="InputMessage" type="text" value={content} onChange={event => setContent(event.target.value)} />
+                <input className="InputMessage" type="text" onKeyDown={event => pressEnter(event)} value={content} onChange={event => setContent(event.target.value)} />
                 <button className="ButtonMessage" onClick={() => { props.onMessageWritten(content); setContent('') }}>Envoyer</button>
             </div>
 }

@@ -55,7 +55,7 @@ Pour exécuter le projet Zoo-ggle sur votre machine locale, suivez les étapes s
 
 
 
-### Equipe de développement
+## Equipe de développement
 
 Ce projet a été réalisé dans un cadre d'un projet universitaire en deuxième année de BUT Informatique à l'IUT de Marne-la-vallée. 
 
@@ -71,5 +71,14 @@ Consultez le dossier [Documents](./docs) pour retrouver les documents de concept
 
 [![My Skills](https://skillicons.dev/icons?i=figma)](https://www.figma.com/file/ih2HV31Co3sSWCgXnjEdbG/Zoo-ggle?type=design&node-id=0%3A1&t=tIQLUInMQl6C3LwK-1) 
 
+### Correspondance répertoires 
+Voici tous les répertoires attendus, et leurs équivalents dans notre projets
+
+- docs/ => [./docs/](./docs)
+- engine/ => [./backend/server/game_motor/](./backend/server/game_motor/)
+- jdict/ => [./backend/server/java/](./backend/server/java/)
+- webserver/ => [./backend/api/](./backend/api/)
+- gameserver/ => [./backend/websocket/](./backend/websocket/)
+- gamefrontend/ => [./frontend/](./frontend/)
 
 

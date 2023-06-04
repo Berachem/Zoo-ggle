@@ -70,7 +70,7 @@ export default function Historique() {
 
         const tmpLeaderBoard: LeaderBoard = {};
         data.leaderboard.forEach((player: any) => {
-            tmpLeaderBoard[player.Pseudo] = {score : player.Score, databaseId:player.dJoueur}
+            tmpLeaderBoard[player.Pseudo] = {score : player.Score, databaseId:player.IdJoueur}
         });
         setLeaderBoard(tmpLeaderBoard)
 
