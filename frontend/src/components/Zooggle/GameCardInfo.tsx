@@ -73,7 +73,7 @@ export default function GameCardInfo(props: any) {
           </>
         )}
 
-        {props.startDate && (
+{/*         {props.startDate && (
           <>
             <span
               className="flex rounded-full px-2 py-1 text-xs text-white"
@@ -87,7 +87,7 @@ export default function GameCardInfo(props: any) {
               {getDifferenceTimeSentence(props.startDate)}
             </span>
           </>
-        )}
+        )} */}
       </div>
       <p className="infos">
         {props.score !== undefined && (
