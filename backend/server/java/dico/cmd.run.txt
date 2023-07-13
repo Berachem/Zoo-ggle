@@ -1,0 +1,7 @@
+!!!!! LES PATHS DEPENDENT DE LA OU TU ES !!!!!!
+
+## DictionarySearcher 
+java -classpath "Zoo-ggle\java\dico\target\classes" fr.uge.jdict.DictionarySearcher XXXX XXXX
+
+## DictionaryMaker
+java -classpath "Zoo-ggle\java\dico\target\classes" fr.uge.jdict.DictionaryMaker XXXX XXXX XXXX

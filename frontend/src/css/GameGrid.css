@@ -1,0 +1,101 @@
+:root{
+    --big-height : 55vh;
+    --big-width: min(30vw,var(--big-height));
+    --big-between:1rem;
+    --big-font:3rem;
+
+    --small-width:20vw;
+    --small-between:0.5rem;
+    --small-font:2rem;
+}
+
+.grid{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.grid > div{
+    border-radius: 10px;
+}
+/*hover animation with shadow  */
+.grid > div:hover{
+    box-shadow: 0 0 0 0.2rem rgb(255, 255, 255);
+    transition: box-shadow 0.2s;
+}
+
+.grid > div.selected:hover{
+    box-shadow: 0 0 0 0.2rem #579A86;
+    transition: box-shadow 0.2s;
+}
+
+.grid.big{
+    width: var(--big-width);
+    
+}
+
+.grid.small{
+    width: var(--small-width);
+    
+}
+
+.letter{
+    text-align: center;
+    border-radius:2px;
+    border:2px white solid;
+}
+
+.letter.big{
+    width: calc((var(--big-width)/ 4) - (var(--big-between) * 2));
+    height: calc((var(--big-width)/ 4) - (var(--big-between) * 2));
+    line-height: calc((var(--big-width)/ 4) - (var(--big-between) * 2));
+    margin: var(--big-between);
+    font-size: var(--big-font);
+}
+
+.letter.small{
+    width: calc((var(--small-width)/ 4) - (var(--small-between) * 2));
+    height: calc((var(--small-width)/ 4) - (var(--small-between) * 2));
+    line-height: calc((var(--small-width)/ 4) - (var(--small-between) * 2));
+    margin: var(--small-between);
+    font-size: var(--small-font);
+}
+
+.selected{
+    color:#579A86;
+    border:2px solid #579A86;
+}
+
+@media(max-width:900px ){
+    :root{
+        --big-width: min(60vw,var(--big-height));
+        --big-between:0.5rem;
+        --small-between:0.2rem;
+        --small-font:1.5rem;
+    }
+    .grid > div{
+        border-radius: 5px;
+    }
+}    
+
+@media(max-width:500px ){
+    :root{
+        --small-width:30vw;
+        --small-font:1rem;
+        --small-between:0.1rem
+    }
+}
+
+@media(max-height:700px ){
+    :root{
+        --big-height: 45vh;
+        --big-between:0.5rem;
+        --big-font:3rem;
+    }
+}
+
+@media(max-width:1200px ){
+    :root{
+        --big-between:0.5rem;
+    }
+}

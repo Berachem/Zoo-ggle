@@ -1,0 +1,121 @@
+* {
+    font-family: "Montserrat", sans-serif;
+}
+
+.ChatSession{
+    margin-top: 5vh;
+    display: flex;
+    flex-direction: column;
+    height: 85vh;
+    width: 20vw;
+    border-radius: 15px 0 15px 15px;
+    word-break: break-word;
+    background-color: rgb(255, 255, 255,0.95);
+    justify-content: space-between;
+}
+
+.ChatMessagesDisplayer{
+    padding:10px;
+    overflow-y: scroll;
+    scrollbar-color: lightgray white;
+    scrollbar-width: thin;
+}
+
+.ChatMessagesDisplayer::-webkit-scrollbar {
+    display: block;
+    width: 10px;
+    height: 10px;
+}
+
+.ChatMessagesDisplayer::-webkit-scrollbar-button {
+    display: none;
+}
+
+.ChatMessagesDisplayer::-webkit-scrollbar-track {
+    background-color: white;
+    border-radius: 24px;
+}
+
+.ChatMessagesDisplayer::-webkit-scrollbar-track-piece {
+    background-color: white;
+    /* border-radius: 24px; */
+}
+  
+.ChatMessagesDisplayer::-webkit-scrollbar-thumb {
+    background-color: lightgray;
+    /* border-radius: 24px; */
+}
+
+.ChatMessageDisplayer{
+    display: inline-block;
+    font-size: small;
+}
+
+.Sender{
+    font-weight: bold;
+    color:#579A86;
+}
+.Sender::after{
+    content: " : ";
+    font-weight: bold;
+    color:#579A86;
+}
+
+.MessageSender{
+    box-shadow: 0 0 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+    border-radius: 0 0 15px 15px;
+}
+
+.InputMessage{
+    height: 7vh;
+    width: 15vw;
+    border-radius: 0 0 0 15px;
+    padding: 10px;
+}
+
+.ButtonMessage{
+    height: 7vh;
+    width: 5vw;
+    color:white;
+    background-color:#579A86;
+    text-align: center;
+    font-weight: bold;
+    border-radius: 0 0 15px 0;
+    transition: all 0.2s ease-in-out;
+}
+
+.ButtonMessage:hover{
+    background-color:#4a8473;
+}
+
+.CacheFond{
+    display: none;
+}
+
+@media (max-width: 1100px) {
+    .ChatSession{
+        position: fixed;
+        height: 80vh;
+        width: 90vw;
+        z-index: 2;
+    }
+
+    .CacheFond{
+        display: block;
+        position: fixed;
+        top:0;
+        left:0;
+        width: 100vw;
+        height: 100vh;
+        z-index: 1;
+        background-color: rgba(0, 0, 0, 0.5);
+    }
+
+    .InputMessage{
+        width:75vw;
+    }
+
+    .ButtonMessage{
+        width: 15vw;
+    }
+}

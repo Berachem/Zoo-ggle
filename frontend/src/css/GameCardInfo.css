@@ -1,0 +1,26 @@
+
+.cardInfo{
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+    width:max-content;
+}
+.cardInfo > div{
+    margin-bottom: 0.7rem;
+}
+
+.title{
+   font-weight: bold;
+   font-size: 1.5rem;
+}
+
+.infos{
+    margin-bottom: 1rem;
+}
+
+@media(max-width:900px ){
+    .cardInfo{
+        margin: 0.5rem;
+        width: 100%;
+    }
+}

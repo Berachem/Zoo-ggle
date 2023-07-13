@@ -1,0 +1,125 @@
+* {
+    font-family: 'Montserrat', sans-serif;
+}
+
+.Row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+    margin-top:6vh
+}
+
+.Card {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    width: 30vw;
+    height: 85vh;
+    background-color: rgba(255, 255, 255, 0.95);
+    border: 3px solid white;
+    border-radius: 15px;
+    padding: 0.25rem;
+    margin-bottom: 10px;
+    box-shadow: 0px 0px 5px 0px rgba(255, 255, 255, 0.75);
+    
+}
+
+.CardHeader {
+    display: flex;
+    align-items: end;
+    flex-direction: column;
+    width: 100%;
+}
+
+.CardHeaderIntermediaire{
+    display: flex;
+    align-items: start;
+    flex-direction: column;
+
+}
+
+.MetaDate {
+    font-size: 0.8rem;
+    padding: 0.2rem 0.5rem;
+}
+
+.CardImage {
+    width: 70%;
+    margin: auto;
+    margin-bottom: 0;
+    margin-top: 0.25rem;
+    border-radius: 20px;
+    aspect-ratio: 1/1;
+}
+  
+.CardImage img {
+    width: 100%;
+    object-fit: cover;
+    border-radius: 20px;
+    aspect-ratio: 1/1;
+}
+
+.CardTitle {
+    font-weight: bold;
+    text-align: center;
+    font-size: 1.5rem;
+}
+
+h3 {
+    font-weight: bold;
+    text-align: center;
+    font-size: 2rem;
+    font-style: italic;
+}
+
+.CardDescription {
+   
+    text-align: center;
+    font-size: 1.2rem;
+    font-style: italic;
+    color : #656667;
+}
+
+.CardFooter {
+   
+    text-align: center;
+}
+
+.CardButton {
+    padding: 0.5rem 2rem;
+    margin-top:2px;
+    background-color: #2196f3;
+    color: white;
+    border: none;
+    border-radius: 18px;
+    cursor: pointer;
+    font-weight: bold;
+    box-shadow: 0px 0px 5px 0px rgba(192, 192, 192, 0.75);
+    transition: all 0.3s ease 0s;
+}
+
+.Card:hover > .CardFooter> .CardButton {
+    filter: brightness(0.8);
+    transform: translateY(-7px);
+}
+
+.Card:hover {
+    box-shadow: 0px 0px 10px 0px rgba(192, 192, 192, 0.75);
+    transform: translateY(-7px);
+    transition: all 0.6s ease 0s;
+}
+
+
+
+@media (max-width: 900px) {
+    .Row {
+        margin-top: 50px;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .Card {
+        width: 90vw;
+        height: 70vh;
+    }
+}

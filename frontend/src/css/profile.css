@@ -1,0 +1,144 @@
+* {
+  font-family: 'Montserrat', sans-serif !important;
+}
+
+.AvatarProfilediv{
+    position: relative;
+    border-radius: 9999px;
+    display: flex;
+    flex-direction: column;
+    margin-right: 2rem;
+
+}
+
+.AvatarProfilediv > .AvatarProfile{
+    width: 8rem;
+    height: 8rem;
+    border-radius: 9999px;
+    margin-right: 0;
+    margin-bottom: 1rem; 
+}
+
+.AvatarProfilediv:after{ 
+    content: "";
+    position:absolute; 
+    background-image: url('../assets/images/circulaire_avatar_liane.png');
+    background-size:  100% 100%;
+    width: 120%;
+    height: 120%;
+    left: -8%;
+    top: -15%;
+    z-index: 999;
+}
+
+.back{
+    position: fixed;
+    top:0;
+    left:0;
+    width:100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.hiddenProfile{
+    display:none
+}
+
+.connecForm{
+    display: flex;
+    flex-direction: column;
+    width: 30vw;
+    height: 80vh;
+    padding: 0.5vw;
+    padding-left: 4vw;
+    padding-right: 4vw;
+    color: #333333;
+    justify-content: center;
+}
+
+.profile{
+    background-color: white;
+    border-radius: 15px;
+    position: fixed;
+    top:10vh;
+    left:35vw;
+    z-index: 99999;
+}
+
+.title{
+    font-weight: bold;
+    font-size: 2rem;
+    text-align: center;
+}
+
+.radioContainer{
+    display: flex;
+    flex-direction: row;
+    padding: 0.5vw;
+    justify-content: space-evenly;
+    border-radius: 18px;
+    border: 1.5px solid rgb(175, 175, 175);
+    height: 6vh;
+    align-items: center;
+}
+input[type=radio]{
+    margin-left:5px;
+}
+
+.connecLabel{
+    margin-top: 2vh;
+    margin-left:0.5vw;
+    font-style: italic;
+}
+
+.connecInput{
+    background-color: none;
+    border-radius: 18px;
+    border:1px solid black;
+    height: 5vh;
+    padding: 3px;
+    padding-left: 10px;
+}
+
+.connecInput.desc{
+    height: 15vh;
+    resize: none;
+}
+
+.connecSubmit{
+    border-radius: 18px;
+    color: white;
+    background-color: #579a86;
+    margin-top:4vh;
+    margin-left:1vw;
+    margin-right: 1vw;
+    height:6vh;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+    transition: all 0.3s cubic-bezier(.25,.8,.25,1);
+}
+.connecSubmit:hover{
+    box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+}
+
+
+@media(max-width:900px ){
+    .connecForm{
+        width: 100vw;
+    }
+    .profile{
+        left:0
+    }
+}
+
+@media screen and (max-width: 720px) {
+
+    .AvatarProfilediv{
+        margin-right: 0rem;
+    }
+
+}
+
+
+
+
+

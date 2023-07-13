@@ -1,0 +1,45 @@
+* {
+    font-family: "Montserrat", sans-serif;
+}
+
+.leaderBoardToProfile{
+    color:#579A86;
+    text-decoration: underline;
+}
+.StatsSession{
+    margin-top: 5vh;
+    padding:15px;
+    display: flex;
+    flex-direction: column;
+    height: 85vh;
+    width: 20vw;
+    border-radius: 15px 15px 15px 15px;
+    word-break: break-word;
+    background-color: white;
+    justify-content: space-between;
+}
+
+.StatsTitle{
+    width: 100%;
+    text-align: center;
+    font-weight: bold;
+    font-size: large;
+    color:#579A86;
+}
+
+.StatsInfos{
+    display: flex;
+    flex-direction: column;
+    height: 60vh;
+    width: 100%;
+    text-align: justify;
+}
+
+@media (max-width: 1100px) {
+    .StatsSession{
+        position: fixed;
+        height: 80vh;
+        width: 90vw;
+        z-index: 2;
+    }
+}

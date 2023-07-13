@@ -2,30 +2,6 @@
 
 <img src="https://i.ibb.co/mhH0Nrb/image.png">
 
-<!--
-<table border="0">
-    <tr>
-        <td>
-            <img src="https://i.ibb.co/mhH0Nrb/image.png">
-            ____________________________________
-        </td>
-        <td>
-            <img src="./screenshots/Remise.png">
-            ___________________________________________________________________________________________________________________________________
-        </td>
-        <td>
-            <img src="./screenshots/Remise.png">
-            ___________________________________________________________________________________________________________________________________
-        </td>
-        <td>
-            <img src="./screenshots/Graphique.png">
-            _______________________________________________________________________
-        </td>
-    </tr>
-</table>
--->
-
-
 Zoo-ggle est un projet transversal de développement d'un site web mettant en œuvre plusieurs langages de programmation, avec pour thème principal les animaux. Ce jeu vous permet de jouer en ligne avec vos amis et de mettre votre vocabulaire à l'épreuve ! Avec un mode réaliste et idéaliste ! 
 
 ## Technologies utilisées
@@ -42,11 +18,12 @@ Le site web Zoo-ggle utilise une combinaison de langages de programmation côté
 - JavaScript : Le langage de programmation de script utilisé pour rendre les pages web interactives.
 - TailwindCSS : Un framework CSS utilisé pour faciliter le développement et la personnalisation de l'interface utilisateur.
 
+
 ### Côté serveur
 [![My Skills](https://skillicons.dev/icons?i=php,python,mysql)](https://skillicons.dev)
-- Python : Un langage de programmation polyvalent utilisé pour la mise en œuvre d'un système de websocket permettant la communication en temps réel entre les clients et le serveur.
-- PHP : Un langage de script côté serveur utilisé pour la logique métier et la gestion des requêtes.
-- MySQL : Un système de gestion de base de données relationnelle utilisé pour stocker et récupérer les données du jeu.
+- Python : Un langage de programmation polyvalent utilisé pour la mise en œuvre d'un système de websocket permettant la communication en temps réel entre les clients et le serveur basé sur [Chatac](https://gitlab.com/codefish42/chatac).
+- PHP : Un langage de script côté serveur utilisé pour la logique métier et la gestion des requêtes (par API).
+- MySQL : Un système de gestion de base de données relationnelle utilisé pour stocker et récupérer les données du jeu : [Modèle Conceptuel de données](https://github.com/Berachem/Zoo-ggle/files/9818120/Note.d.intention.pdf)
 
 ### Autres composants
 [![My Skills](https://skillicons.dev/icons?i=c,java)](https://skillicons.dev)
@@ -54,7 +31,7 @@ Le site web Zoo-ggle utilise une combinaison de langages de programmation côté
 En plus des langages mentionnés ci-dessus, Zoo-ggle utilise également d'autres composants essentiels pour son fonctionnement :
 
 - Algorithmes de vérification en langage C : Ces algorithmes ont été développés en langage C pour garantir des performances optimales lors de la vérification des mots sur les grilles de jeu.
-- Dictionnaire de mots en Java : Le dictionnaire de mots utilisé pour valider les mots saisis par les joueurs a été développé en Java, offrant ainsi une recherche rapide et efficace des mots valides.
+- Dictionnaire de mots en Java : Le dictionnaire de mots utilisé pour donner les définitions en Java, offrant ainsi une recherche rapide et efficace des mots dans le dictionnaire.
 
 ## Installation et utilisation
 
@@ -62,18 +39,24 @@ Pour exécuter le projet Zoo-ggle sur votre machine locale, suivez les étapes s
 
 1. Assurez-vous d'avoir installé Node.js, npm, Python, PHP et MySQL sur votre machine.
 2. Clonez ce dépôt de projet sur votre machine : `git clone https://github.com/Berachem/Zoo-ggle.git`
-3. Accédez au répertoire du projet : `cd Zoo-ggle`
+3. Accédez au répertoire du projet : `cd Zoo-ggle/frontend`
 4. Installez les dépendances nécessaires pour le côté client en exécutant la commande : `npm install`
-5. Installez les dépendances nécessaires pour le côté serveur en exécutant la commande : `pip install -r requirements.txt`
-6. Configurez la base de données MySQL en utilisant les informations fournies dans le fichier de configuration.
+5. Attendez patiemment que l'installation soit terminée 🙂.
+6. Configurez la base de données MySQL en utilisant le dump SQL fourni dans le dossier et mettez le sur votre Laragon ou Xampp en local.
 7. Démarrez le serveur de développement pour le côté client en exécutant la commande : `npm start`
 8. Exécutez la commande : `python -m venv venv` puis ` .\venv\Scripts\activate.ps1` pour activer l'environnement virtuel Python.
 9. Démarrez le serveur de développement pour le côté serveur en exécutant la commande : `chatac-server -i localhost -p 8090`
-10. Ouvrez votre navigateur et accédez à l'adresse : `http://localhost:3000`
-11. Vous pouvez maintenant jouer à Zoo-ggle !
+10. Copier le dossier backend dans votre laragon pour pouvoir l'utiliser en localhost
+11. Ouvrez votre navigateur et accédez à l'adresse : `http://localhost:3000`
+12. Vous pouvez maintenant jouer à Zoo-ggle !
+
+(__Bonus :__ Vous pouvez aussi utiliser un tunnel HTTP pour rendre votre serveur accessible depuis l'extérieur en utilisant un service comme [ngrok](https://ngrok.com/))
+
+(__Help :__ Vous avez aussi des README.md dans les dossiers frontend et backend pour vous aider à installer/Tester chaque partie de notre projet)
 
 
-### Equipe de développement
+
+## Equipe de développement
 
 Ce projet a été réalisé dans un cadre d'un projet universitaire en deuxième année de BUT Informatique à l'IUT de Marne-la-vallée. 
 
@@ -85,6 +68,18 @@ L'équipe de développement est composée de :
 
 ### Documents de conception
 
-[Note d'intention.pdf](https://github.com/Berachem/Zoo-ggle/files/9818120/Note.d.intention.pdf)
+Consultez le dossier [Documents](./docs) pour retrouver les documents de conception du projet.
 
 [![My Skills](https://skillicons.dev/icons?i=figma)](https://www.figma.com/file/ih2HV31Co3sSWCgXnjEdbG/Zoo-ggle?type=design&node-id=0%3A1&t=tIQLUInMQl6C3LwK-1) 
+
+### Correspondance répertoires 
+Voici tous les répertoires attendus, et leurs équivalents dans notre projets
+
+- docs/ => [./docs/](./docs)
+- engine/ => [./backend/server/game_motor/](./backend/server/game_motor/)
+- jdict/ => [./backend/server/java/](./backend/server/java/)
+- webserver/ => [./backend/api/](./backend/api/)
+- gameserver/ => [./backend/websocket/](./backend/websocket/)
+- gamefrontend/ => [./frontend/](./frontend/)
+
+

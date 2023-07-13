@@ -1,0 +1,29 @@
+<?php
+
+require_once '../lib/parse.env.php';
+require_once '../Connexion.php';
+require_once '../functions.php';
+// recupère le token entré par l'utilisateur en POST afin de renvoyer le score obtenu avec ce dernier
+
+if (!isset($_POST["serverAuth"])){
+    echo json_encode(array("success" => false, "error" => "Server non authentifié, pas de paramètre en POST"));
+    exit();
+}else{
+    $serverAuth = getServerAuth();
+    if($serverAuth !=$_POST["serverAuth"]){
+        echo json_encode(array("success" => false, "error" => "Authentification invalide"));
+    }
+}
+if (!isset($_POST["token"])) {
+    echo json_encode(array("success" => false, "error" => "Pas de token en POST"));
+    exit();
+}else{
+    $token = $_POST["token"];
+    $data = getUserByToken($token);
+    if (is_null($data)){
+        echo json_encode(array("success" => false, "error" => "Token invalide"));
+        exit();
+    }
+    echo json_encode(array("success" => true, "pseudo" => $data->Pseudo,"id" => $data->IdJoueur));
+}
+?>

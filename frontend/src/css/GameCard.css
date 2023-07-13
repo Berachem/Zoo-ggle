@@ -1,0 +1,25 @@
+
+.card{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    background-color: #00000013;
+    border:3px solid white;
+    padding:1rem;
+    margin:auto;
+    margin-bottom: 10px;
+    justify-content: space-evenly;
+    border-radius: 15px;
+}
+@media(max-width:900px){
+    .card{
+        justify-content: center;
+    }
+}
+@media(max-width:500px ){
+    .card{
+        width: 100%;
+        
+    }
+    
+}
