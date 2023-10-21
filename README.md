@@ -33,6 +33,8 @@ En plus des langages mentionnés ci-dessus, Zoo-ggle utilise également d'autres
 - Algorithmes de vérification en langage C : Ces algorithmes ont été développés en langage C pour garantir des performances optimales lors de la vérification des mots sur les grilles de jeu.
 - Dictionnaire de mots en Java : Le dictionnaire de mots utilisé pour donner les définitions en Java, offrant ainsi une recherche rapide et efficace des mots dans le dictionnaire.
 
+![image](https://github.com/Berachem/Zoo-ggle/assets/61350744/f6192cc5-4453-445b-95c0-0d8042e1c054)
+
 ## Installation et utilisation
 
 Pour exécuter le projet Zoo-ggle sur votre machine locale, suivez les étapes suivantes :
